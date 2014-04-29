@@ -1,0 +1,41 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/library_container"
+    android:orientation="vertical">
+    
+    
+    <RelativeLayout 
+        android:id="@+id/lib_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <ImageButton 
+            android:id="@+id/ibtn_add_library"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/add_to_library_image_selector"
+            android:contentDescription="@string/library_add"/>
+        
+    </RelativeLayout>
+    
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/lib_bar">
+        
+		<ListView 
+		    android:id="@+id/library_list"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"/>
+    </RelativeLayout>
+    
+    
+    
+</RelativeLayout>

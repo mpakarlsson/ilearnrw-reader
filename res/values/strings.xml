@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Reader</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="logo_ilearnrw">iLearnRw</string>
+
+    <!-- Login activity -->
+    <string name="username">Username :</string>
+    <string name="password">Password :</string>
+    <string name="login_username_hint">Enter your username</string>
+    <string name="login_password_hint">Enter your password</string>
+    <string name="login">Login</string>
+
+    <!-- Library activity -->
+    <string name="title_activity_library">LibraryActivity</string>
+    <string name="library_add">Add new item to library</string>
+    
+    
+    <string name="title_activity_reader">ReaderActivity</string>
+    <string name="title_Presentation_Module">PresentationModule</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_mode">ModeActivity</string>
+    
+    
+    <!-- Search fragment -->
+    <!-- <string name="search_hint">Search</string> -->
+    
+    <!-- Content descriptions -->
+	<string name="content_descr_btn_lib">Back to library</string>
+	<string name="content_descr_btn_mode">Change mode</string>
+	<string name="content_descr_btn_next">Next sentence</string>
+	<string name="content_descr_btn_play">Play</string>
+	<string name="content_descr_btn_previous">Previous sentence</string>
+	<string name="content_descr_btn_search">Search</string>
+	<string name="content_descr_btn_settings">Settings</string>
+	
+	<!-- Radio buttons -->
+	<string name="mode_listen">Listen</string>
+	<string name="mode_highlight">Guidance</string>
+	<string name="mode_chunking">Chunking</string>
+
+</resources>

@@ -1,0 +1,132 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/reader_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:baselineAligned="false">
+    
+    <RelativeLayout 
+        android:id="@+id/reader_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/LightGrey">
+        
+        <ImageButton 
+	        android:id="@+id/ibtn_lib_reader"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        style="?android:attr/buttonBarButtonStyle"
+	        android:src="@drawable/lib"
+	        android:contentDescription="@string/content_descr_btn_lib"
+	        android:layout_alignParentLeft="true"/>
+        
+        <ImageButton 
+	        android:id="@+id/ibtn_search_reader"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        style="?android:attr/buttonBarButtonStyle"
+	        android:src="@drawable/search"
+	        android:contentDescription="@string/content_descr_btn_search"
+	        android:layout_toRightOf="@id/ibtn_lib_reader"/>
+        
+        <TextView 
+	        android:id="@+id/tv_book_title_reader"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Book Title"
+	        android:layout_toRightOf="@id/ibtn_search_reader"
+	        android:layout_alignParentRight="true"
+	        android:gravity="center_horizontal"
+	        android:textSize="40sp"/>    
+
+        
+        
+    </RelativeLayout>
+	
+	<LinearLayout 
+        android:id="@+id/reader_body"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <WebView 
+	        android:id="@+id/webview_reader"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"/>
+	</LinearLayout>
+	 
+	<RelativeLayout 
+        android:id="@+id/reader_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/LightGrey">
+	    
+	    <ImageButton 
+	        android:id="@+id/ibtn_mode_reader"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        style="?android:attr/buttonBarButtonStyle"
+	       	android:src="@drawable/mode"
+	        android:contentDescription="@string/content_descr_btn_mode"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginTop="10dp"
+	        android:layout_marginBottom="5dp"/>
+	    
+		<ImageButton 
+	        android:id="@+id/ibtn_settings_reader"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        style="?android:attr/buttonBarButtonStyle"
+	        android:src="@drawable/settings"
+	        android:contentDescription="@string/content_descr_btn_settings"
+	        android:layout_alignParentRight="true"
+	        android:layout_marginTop="10dp"
+	        android:layout_marginBottom="5dp"/>
+		
+			    
+		<LinearLayout 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_toRightOf="@id/ibtn_mode_reader"
+	        android:layout_toLeftOf="@id/ibtn_settings_reader" >
+	        
+	        <ImageButton 
+		        android:id="@+id/ibtn_prev_reader"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        style="?android:attr/buttonBarButtonStyle"
+		        android:src="@drawable/previous"
+		        android:contentDescription="@string/content_descr_btn_previous"
+		        android:layout_weight="1"
+		        android:layout_marginTop="10dp"
+		        android:layout_marginBottom="5dp"/>
+		
+			<ImageButton 
+		        android:id="@+id/ibtn_play_reader"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        style="?android:attr/buttonBarButtonStyle"
+		        android:src="@drawable/play"
+		        android:contentDescription="@string/content_descr_btn_play"
+		        android:layout_weight="1"
+		        android:layout_marginTop="10dp"
+		        android:layout_marginBottom="5dp"/>
+		
+			<ImageButton 
+		        android:id="@+id/ibtn_next_reader"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        style="?android:attr/buttonBarButtonStyle"
+		       	android:src="@drawable/next"
+		        android:contentDescription="@string/content_descr_btn_next"
+		        android:layout_weight="1"
+		        android:layout_marginTop="10dp"
+		        android:layout_marginBottom="5dp"/>
+			
+	    </LinearLayout>
+	</RelativeLayout>
+
+</LinearLayout>

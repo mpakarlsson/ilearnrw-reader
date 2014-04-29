@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="500dp"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:baselineAligned="true" >
+    
+    <com.example.reader.types.ExtendedEditText 
+        android:id="@+id/et_search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="9"
+        android:inputType="text"/>
+    
+    <ImageButton 
+        android:id="@+id/ibtn_search_activity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/search_mini"
+        style="?android:attr/buttonBarButtonStyle"/>
+    
+
+</LinearLayout>
