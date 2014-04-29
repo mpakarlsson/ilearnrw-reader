@@ -1,14 +1,5 @@
-bin
-/
+bin/
 gen/
-.settings
-/
-.classpath
-
-.project
-
-lint.xml
-
+.settings/
 proguard-project.txt
-
 project.properties
