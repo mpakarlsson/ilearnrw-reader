@@ -352,7 +352,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		String retrieveBodyContent =
 				"function getBodyContent(str) {" +
 				"	var bodyHTML = document.body.innerHTML;" +
-				"	ReaderInterface.splitSentencesSpeak(bodyHTML, 0);" +
+				"	ReaderInterface.splitSentencesSpeak(bodyHTML, 0, 'button');" +
 				"}";
 		
 		
@@ -383,7 +383,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 							"part = part.substring(lastIndex);" +
 							"body = body.substring(body.indexOf(this.id));" +
 							"body = part + body;" +
-							"ReaderInterface.splitSentencesSpeak(body, this.id);" +
+							"ReaderInterface.splitSentencesSpeak(body, this.id, 'click');" +
 						"};" +					
 					"}" +
 				"}";
@@ -455,7 +455,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		}
 		
 		@JavascriptInterface
-		public void splitSentencesSpeak(String html, String id){			
+		public void splitSentencesSpeak(String html, String id, String clickType){			
 			
 			if(tts.isSpeaking()){
 				// TODO: clear the queue, a problem that occurs when you queue_flush is that sometimes it doesn't reset the color in OnDone method
@@ -469,15 +469,12 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				}
 			});
 			
-			
-			
 			String tempString = Html.fromHtml(html).toString();
 
 			int pos = -1;
 			for(int i=id.length() - 1; i>=0; i--){
 				Character c = id.charAt(i);
-				
-				
+
 				if(Character.isDigit(c)){
 					pos = i;
 				} else if(Character.isLetter(c)){
@@ -504,7 +501,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				}
 			}
 		
-			tts.speak(sentencesRemoved, sentId);
+			tts.speak(sentencesRemoved, sentId, clickType);
 		}		
 		
 		@JavascriptInterface
