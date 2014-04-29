@@ -48,6 +48,9 @@
             android:label="@string/title_activity_mode" 
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
         </activity>
+        <activity  android:name="com.example.reader.AddToLibrary"
+            android:label="@string/title_activity_add_to_device" >
+        </activity>
     </application>
 
 </manifest>

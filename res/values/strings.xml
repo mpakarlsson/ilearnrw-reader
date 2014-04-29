@@ -5,6 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="logo_ilearnrw">iLearnRw</string>
+    <string name="dialog_title_add_to_device">Add to Device from</string>
 
     <!-- Login activity -->
     <string name="username">Username :</string>
@@ -22,6 +23,7 @@
     <string name="title_Presentation_Module">PresentationModule</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_mode">ModeActivity</string>
+    <string name="title_activity_add_to_device">AddToDevice</string>
     
     
     <!-- Search fragment -->
@@ -40,5 +42,12 @@
 	<string name="mode_listen">Listen</string>
 	<string name="mode_highlight">Guidance</string>
 	<string name="mode_chunking">Chunking</string>
+	
+	
+	
+	<string-array name="add_to_device_array">
+	    <item>Device</item>
+	    <item>Online Resource Bank</item>
+	</string-array>
 
 </resources>

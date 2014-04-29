@@ -52,6 +52,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private static float touchPosX, touchPosY;
 	private static String html;
 	
+	private final static int SEARCH = 0;
+	private final static int TTS = 1;
+	
 	public static enum ReaderMode {
 		Listen("Listen", 0),
 		Guidance("Guidance", 1),
@@ -115,7 +118,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	
 		Intent checkTTSIntent = new Intent(); 
 		checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-		startActivityForResult(checkTTSIntent, 0);
+		startActivityForResult(checkTTSIntent, TTS);
 		
 		cbHighlight = this;
 		cbSpoken = this;
@@ -180,8 +183,24 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
-		if(tts==null)
-			tts = new TTS(ReaderActivity.this, cbHighlight, cbSpoken, requestCode, resultCode, data);
+		if(resultCode == RESULT_OK){
+		
+			switch (requestCode) {
+			case SEARCH:
+			{
+				String searchString = data.getStringExtra("searchString");
+			}
+				break;
+			case TTS:
+			{
+				if(tts==null)
+					tts = new TTS(ReaderActivity.this, cbHighlight, cbSpoken, requestCode, resultCode, data);
+			}
+				break;
+			default:
+				break;
+			}			
+		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -225,7 +244,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			search_intent.putExtra("posX", ibtn_search.getX());
 			search_intent.putExtra("posY", (ibtn_search.getY()+ibtn_search.getHeight()));
 			search_intent.putExtra("imageHeight", ibtn_search.getHeight());
-			startActivity(search_intent);
+			startActivityForResult(search_intent, SEARCH);
 			break;
 			
 		case R.id.ibtn_mode_reader:
@@ -455,12 +474,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		}
 		
 		@JavascriptInterface
-		public void splitSentencesSpeak(String html, String id, String clickType){			
-			
-			if(tts.isSpeaking()){
-				// TODO: clear the queue, a problem that occurs when you queue_flush is that sometimes it doesn't reset the color in OnDone method
-			}
-			
+		public void splitSentencesSpeak(String html, String id, String clickType){						
 			runOnUiThread(new Runnable() {
 				
 				@Override
@@ -500,7 +514,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 					sentencesRemoved.add(sentences[i].trim());
 				}
 			}
-		
+			
 			tts.speak(sentencesRemoved, sentId, clickType);
 		}		
 		

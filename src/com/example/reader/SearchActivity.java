@@ -71,7 +71,10 @@ public class SearchActivity extends Activity implements OnClickListener, OnEdito
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.ibtn_search_activity:
-			Toast.makeText(getBaseContext(), "Clicked search button", Toast.LENGTH_SHORT).show();
+			Intent intent=new Intent();
+		    intent.putExtra("searchString", search.getText().toString());
+		    setResult(RESULT_OK, intent);
+		    finish();
 			break;
 
 		default:

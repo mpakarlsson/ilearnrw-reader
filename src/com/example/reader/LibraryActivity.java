@@ -11,14 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -106,6 +110,31 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		switch (v.getId()) {
 		case R.id.ibtn_add_library:
 			// TODO: create popup window that lets you choose how to add new items to "Library" folder, choices "Device" & "Online Resource bank"
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			LayoutInflater inflater = getLayoutInflater();
+			View convertView = (View) inflater.inflate(R.layout.dialog_add_to_device, null);
+			builder.setView(convertView);
+			builder.setTitle(getString(R.string.dialog_title_add_to_device));
+			final ListView lv = (ListView) convertView.findViewById(R.id.lv_add_to_device);
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.add_to_device_array));
+			lv.setAdapter(adapter);
+			
+			lv.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int pos, long id) {
+				
+					Toast.makeText(getBaseContext(), "Id : " + id + " pos " + pos, Toast.LENGTH_SHORT).show();
+					Intent intent = new Intent(getBaseContext(), AddToLibrary.class);
+					intent.putExtra("option", lv.getItemAtPosition(pos).toString());
+					startActivity(intent);
+				}
+			});
+			
+			
+			builder.show();
 			break;
 
 		default:
