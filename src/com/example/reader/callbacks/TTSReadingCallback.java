@@ -1,6 +1,7 @@
 package com.example.reader.callbacks;
 
-public interface TTSFinishedReadingCallback {
+public interface TTSReadingCallback {
 	public void OnFinishedReading();
+	public void OnStartedReading();
 }
 

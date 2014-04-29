@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import com.example.reader.callbacks.TTSFinishedReadingCallback;
+import com.example.reader.callbacks.TTSReadingCallback;
 import com.example.reader.callbacks.TTSHighlightCallback;
 import com.example.reader.tts.TTS;
 
@@ -37,7 +37,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ReaderActivity extends Activity implements OnClickListener, OnLongClickListener, OnTouchListener, TTSHighlightCallback, TTSFinishedReadingCallback {
+public class ReaderActivity extends Activity implements OnClickListener, OnLongClickListener, OnTouchListener, TTSHighlightCallback, TTSReadingCallback {
 
 	public static TextView tv_title;
 	public static WebView reader;
@@ -47,7 +47,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	public static ReaderStatus reader_status;
 	private TTS tts;
 	private TTSHighlightCallback cbHighlight;
-	private TTSFinishedReadingCallback cbSpoken;
+	private TTSReadingCallback cbSpoken;
 	private String sentenceColor;
 	private static float touchPosX, touchPosY;
 	private static String html;
@@ -560,14 +560,23 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	@Override
 	public void OnFinishedReading() {
 		this.runOnUiThread(new Runnable(){
-
 			@Override
 			public void run() {
 				setPlayStatus(ReaderStatus.Disabled);
 			}
-			 
 		});
 		
+		
+	}
+
+	@Override
+	public void OnStartedReading() {
+		this.runOnUiThread(new Runnable(){
+			@Override
+			public void run() {
+				setPlayStatus(ReaderStatus.Enabled);
+			}
+		});
 		
 	}
 }

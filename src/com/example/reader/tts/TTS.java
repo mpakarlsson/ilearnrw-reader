@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
 
-import com.example.reader.callbacks.TTSFinishedReadingCallback;
+import com.example.reader.callbacks.TTSReadingCallback;
 import com.example.reader.callbacks.TTSHighlightCallback;
 
 import android.content.Context;
@@ -29,14 +29,14 @@ public class TTS implements OnInitListener{
 	private String chosenVoice;
 	private Context context;
 	private TTSHighlightCallback cbHighlight;
-	private TTSFinishedReadingCallback cbFinished;
+	private TTSReadingCallback cbReading;
 	private LinkedList<Integer> positionList;
 	
-	public TTS(Context context, final TTSHighlightCallback cbHighlight, final TTSFinishedReadingCallback cbFinished, int requestCode, int resultCode, Intent data){
+	public TTS(Context context, final TTSHighlightCallback cbHighlight, final TTSReadingCallback cbReading, int requestCode, int resultCode, Intent data){
 		
 		this.context = context;
 		this.cbHighlight = cbHighlight;
-		this.cbFinished = cbFinished;
+		this.cbReading = cbReading;
 		positionList = new LinkedList<Integer>();
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -68,6 +68,7 @@ public class TTS implements OnInitListener{
 				public void onStart(String utteranceId) {
 					
 					int id = positionList.getFirst();
+					cbReading.OnStartedReading();
 					
 					if(utteranceId.equals("speak")){
 						Log.d("Speak: Done", "Done");
@@ -93,7 +94,7 @@ public class TTS implements OnInitListener{
 						//currentId++;
 					}else if(utteranceId.equals("lastSpeak")){
 						cbHighlight.OnRemoveHighlight(Integer.toString(id));
-						cbFinished.OnFinishedReading();
+						cbReading.OnFinishedReading();
 					}
 				}
 			});
@@ -146,9 +147,12 @@ public class TTS implements OnInitListener{
 				if(clickType.equals("button")){
 						positionList.clear();
 				} else if(clickType.equals("click")){
+					if(tts.isSpeaking()){
 						int currId = positionList.pollFirst();
 						positionList.clear();
 						positionList.add(currId);
+					} else 
+						positionList.clear();
 				}
 			}
 			
