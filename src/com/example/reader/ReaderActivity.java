@@ -41,8 +41,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 
 	public static TextView tv_title;
 	public static WebView reader;
-	public static ImageButton ibtn_lib, ibtn_search, ibtn_mode, ibtn_prev, ibtn_play, ibtn_next, ibtn_settings;
-	public static RelativeLayout top, bottom;
+	public static ImageButton ibtn_lib, ibtn_search, ibtn_mode, ibtn_prev, ibtn_play, ibtn_next, ibtn_settings, ibtn_search_forward, ibtn_search_back;
+	public static RelativeLayout top, bottom, searchbar;
 	public static ReaderMode reader_mode;
 	public static ReaderStatus reader_status;
 	private TTS tts;
@@ -52,8 +52,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private static float touchPosX, touchPosY;
 	private static String html;
 	
-	private final static int SEARCH = 0;
-	private final static int TTS = 1;
+	private final static int FLAG_SEARCH = 10000;
+	private final static int FLAG_MODE = 10001;
 	
 	public static enum ReaderMode {
 		Listen("Listen", 0),
@@ -118,7 +118,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	
 		Intent checkTTSIntent = new Intent(); 
 		checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-		startActivityForResult(checkTTSIntent, TTS);
+		startActivityForResult(checkTTSIntent, 0);
 		
 		cbHighlight = this;
 		cbSpoken = this;
@@ -140,6 +140,17 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		reader_status = ReaderStatus.Disabled;
 		ibtn_play.setImageResource(R.drawable.play);
 		
+		
+		searchbar = (RelativeLayout) findViewById(R.id.search_buttons_layout);
+		ibtn_search_forward = (ImageButton) findViewById(R.id.ibtn_search_forward);
+		ibtn_search_back = (ImageButton) findViewById(R.id.ibtn_search_back);
+		ibtn_search_forward.setOnClickListener(this);
+		ibtn_search_back.setOnClickListener(this);
+		
+		
+		
+		searchbar.setVisibility(RelativeLayout.GONE);
+		
 		// TODO: Create settings menu, 
 		// * tts options, "Pitch", "SpeechRate", "Language"(dropdown with available languages)
 		// * reader options, "FontSize", "Font" 
@@ -149,7 +160,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	@Override
 	protected void onResume() {
 		super.onResume();
-	
+		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		int mode = prefs.getInt("readerMode", -1);
 		if(mode==-1){
@@ -182,24 +193,45 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(tts==null)
+			tts = new TTS(ReaderActivity.this, cbHighlight, cbSpoken, requestCode, resultCode, data);
 		
-		if(resultCode == RESULT_OK){
-		
-			switch (requestCode) {
-			case SEARCH:
-			{
+		switch (requestCode) {
+		case FLAG_SEARCH:
+		{
+			if(resultCode == RESULT_OK){
 				String searchString = data.getStringExtra("searchString");
+				searchbar.setVisibility(RelativeLayout.VISIBLE);
+				reader.findAllAsync(searchString);
 			}
-				break;
-			case TTS:
-			{
-				if(tts==null)
-					tts = new TTS(ReaderActivity.this, cbHighlight, cbSpoken, requestCode, resultCode, data);
+		}
+			break;
+			
+		case FLAG_MODE:
+		{
+			if(resultCode == RESULT_OK){
+				int mode = data.getExtras().getInt("chosenMode");
+				Log.d("onActivityResult - FLAG_MODE", "Chosen mode: " + Integer.toString(mode));
+				
+				switch(mode){
+				case 0:
+					reader_mode = ReaderMode.Listen;
+					break;
+				case 1:
+					reader_mode = ReaderMode.Guidance;
+					break;
+				case 2: 
+					reader_mode = ReaderMode.Chunking;
+					break;
+				default:
+					reader_mode = ReaderMode.Listen;
+					break;
+				}
 			}
-				break;
-			default:
-				break;
-			}			
+		}
+			break;
+		default:
+			break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -244,7 +276,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			search_intent.putExtra("posX", ibtn_search.getX());
 			search_intent.putExtra("posY", (ibtn_search.getY()+ibtn_search.getHeight()));
 			search_intent.putExtra("imageHeight", ibtn_search.getHeight());
-			startActivityForResult(search_intent, SEARCH);
+			startActivityForResult(search_intent, FLAG_SEARCH);
 			break;
 			
 		case R.id.ibtn_mode_reader:
@@ -253,7 +285,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			mode_intent.putExtra("posY", (bottom.getY()-ibtn_mode.getHeight()));
 			mode_intent.putExtra("imageHeight", ibtn_mode.getHeight());
 			mode_intent.putExtra("readerMode", reader_mode);
-			startActivity(mode_intent);
+			startActivityForResult(mode_intent, FLAG_MODE);
 			break;
 			
 		case R.id.ibtn_settings_reader:
@@ -278,6 +310,14 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_next_reader:
+			break;
+			
+		case R.id.ibtn_search_forward:
+			reader.findNext(true);
+			break;
+			
+		case R.id.ibtn_search_back:
+			reader.findNext(false);
 			break;
 
 		default:
@@ -431,8 +471,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			reader.loadUrl("javascript:setOnClickEvents();");
-			reader.loadUrl("javascript:createSentClickEvents();");
-			reader.loadUrl("javascript:highlight('s0', 'LightGreen');");
+			
+			/*reader.loadUrl("javascript:highlight('s0', 'LightGreen');");
 			reader.loadUrl("javascript:highlight('s1', '#00FF66');");
 			reader.loadUrl("javascript:highlight('sent0', '#FF3300');");
 			reader.loadUrl("javascript:highlight('sent1', '#0066FF');");
@@ -440,7 +480,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			reader.loadUrl("javascript:highlight('sent5', '#FF6633');");
 			reader.loadUrl("javascript:highlight('sent6', '#9933FF');");
 			reader.loadUrl("javascript:highlight('sent6', '#9933FF');");
-			reader.loadUrl("javascript:ReaderInterface.showToast('onPageFinished');");
+			reader.loadUrl("javascript:ReaderInterface.showToast('onPageFinished');");*/
 		}	
 	};
 	

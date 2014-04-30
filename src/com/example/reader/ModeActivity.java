@@ -3,6 +3,7 @@ package com.example.reader;
 import com.example.reader.ReaderActivity.ReaderMode;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
@@ -94,7 +95,9 @@ public class ModeActivity extends Activity {
 	        	break;
 	    }
 	    
-	    setResult(RESULT_OK);
+	    Intent intent=new Intent();
+	    intent.putExtra("chosenMode", mode);
+	    setResult(RESULT_OK, intent);
 	    finish();
 	}
 	

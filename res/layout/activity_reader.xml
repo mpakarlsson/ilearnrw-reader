@@ -31,19 +31,47 @@
 	        android:contentDescription="@string/content_descr_btn_search"
 	        android:layout_toRightOf="@id/ibtn_lib_reader"/>
         
+        <RelativeLayout
+        android:id="@+id/search_buttons_layout"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:background="@color/LightGrey"
+        android:gravity="center_vertical"
+        android:layout_toRightOf="@id/ibtn_search_reader"
+        android:layout_marginTop="10dp">
+        
+	        <ImageButton
+	            android:id="@+id/ibtn_search_back"
+	            android:layout_height="wrap_content"
+	            android:layout_width="wrap_content"
+	            style="?android:attr/buttonBarStyle"
+	            android:src="@drawable/search_prev_image_selector"
+	            android:contentDescription="@string/content_descr_btn_settings"/>
+	        
+	        <ImageButton
+	            android:id="@+id/ibtn_search_forward"
+	            android:layout_height="wrap_content"
+	            android:layout_width="wrap_content"
+	            style="?android:attr/buttonBarStyle"
+	            android:src="@drawable/search_next_image_selector"
+	            android:contentDescription="@string/content_descr_btn_settings"
+	            android:layout_marginLeft="5dp"
+	            android:layout_toRightOf="@id/ibtn_search_back"/>
+        </RelativeLayout>
+    
+        
         <TextView 
 	        android:id="@+id/tv_book_title_reader"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:text="Book Title"
-	        android:layout_toRightOf="@id/ibtn_search_reader"
+	        android:layout_toRightOf="@id/search_buttons_layout"
 	        android:layout_alignParentRight="true"
 	        android:gravity="center_horizontal"
-	        android:textSize="40sp"/>    
-
+	        android:textSize="40sp"/>
         
-        
-    </RelativeLayout>
+	</RelativeLayout>
+    
 	
 	<LinearLayout 
         android:id="@+id/reader_body"
