@@ -19,7 +19,7 @@
     <string name="title_activity_library">LibraryActivity</string>
     <string name="library_add">Add new item to library</string>
     <string name="library_location">Library</string>
-    <string name="library_remove_item_confirmation">Are you sure you want to remove \u0020</string>
+    <string name="library_remove_item_confirmation">Are you sure you want to remove\u0020</string>
     <string-array name="library_context_menu">
         <item>Edit</item>
         <item>Delete</item>
@@ -31,6 +31,7 @@
     <string name="title_Presentation_Module">PresentationModule</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_mode">ModeActivity</string>
+    <string name="title_activity_rename">RenameActivity</string>
     <string name="title_activity_add_to_device">AddToDevice</string>
     
     

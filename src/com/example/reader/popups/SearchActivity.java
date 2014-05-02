@@ -42,7 +42,6 @@ public class SearchActivity extends Activity implements OnClickListener, OnEdito
 		search = (ExtendedEditText) findViewById(R.id.et_search);
 		search.setOnEditorActionListener(this);
 		search.setActivity(this);
-		// TODO: Close search activity with one back button press even if keyboard is active
 	
 		ibtn_search = (ImageButton) findViewById(R.id.ibtn_search_activity);
 		ibtn_search.setOnClickListener(this);	
@@ -96,8 +95,6 @@ public class SearchActivity extends Activity implements OnClickListener, OnEdito
 		
 		return false;
 	}
-
-	
 
 	private void hideKeyboard(){
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);

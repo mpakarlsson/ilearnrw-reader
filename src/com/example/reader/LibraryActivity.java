@@ -1,6 +1,7 @@
 package com.example.reader;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,8 +9,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import com.example.reader.popups.RenameActivity;
 import com.example.reader.utils.FileHelper;
 
 import android.app.Activity;
@@ -43,6 +47,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	public AlertDialog dialog;
 	
 	public static final int FLAG_ADD_TO_DEVICE = 10000;
+	public static final int FLAG_UPDATE_FILE_NAME = 10001;
 	
 	
 	@Override
@@ -82,6 +87,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		for(File f : library_files){
 			values.add(new LibraryItem(f.getName(), f));
 		}
+		sortValues();
 		
 		LibraryAdapter adapter = new LibraryAdapter(this, R.layout.library_row, values);
 
@@ -143,6 +149,13 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		
 		if(menuItemName.equals("Edit")){
 			Toast.makeText(this, "EDIT", Toast.LENGTH_SHORT).show();
+			
+			Intent i = new Intent(this, RenameActivity.class);
+			i.putExtra("file", values.get(info.position).getFile());
+			i.putExtra("name", listItemName);
+			i.putExtra("pos", info.position);
+			startActivityForResult(i, FLAG_UPDATE_FILE_NAME);
+			
 		} else if(menuItemName.equals("Delete")){
 			final int pos = info.position;
 			
@@ -178,8 +191,34 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 					
 					if(f!=null && name!= null){
 						values.add(new LibraryItem(name, f));
+						sortValues();
 						((ArrayAdapter)library.getAdapter()).notifyDataSetChanged();
 					}
+					break;
+					
+				case FLAG_UPDATE_FILE_NAME:
+					
+					Bundle b = data.getExtras();
+					
+					int pos = b.getInt("pos");
+					String updatedName = b.getString("name");
+					File origFile = (File) b.get("file");
+					File updatedFile =  new File(getDir(getString(R.string.library_location), MODE_PRIVATE), updatedName);
+					
+					try {
+						FileHelper.copy(origFile, updatedFile);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					
+					values.remove(pos);
+					values.add(new LibraryItem(updatedName, updatedFile));
+					
+					sortValues();
+					
+					origFile.delete();
+					((ArrayAdapter)library.getAdapter()).notifyDataSetChanged();
+					
 					break;
 
 				default:
@@ -242,5 +281,14 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		intent.putExtra("title", f.getName());
 		this.startActivity(intent);
 
-	}	
+	}
+	
+	private void sortValues(){
+		Collections.sort(values, new Comparator<LibraryItem>() {
+			@Override
+			public int compare(LibraryItem lhs, LibraryItem rhs) {
+				return lhs.getName().compareToIgnoreCase(rhs.getName());
+			}
+		});
+	}
 }

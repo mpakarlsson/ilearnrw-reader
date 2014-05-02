@@ -1,9 +1,6 @@
 package com.example.reader.popups;
 
 import com.example.reader.R;
-import com.example.reader.ReaderActivity;
-import com.example.reader.R.id;
-import com.example.reader.R.layout;
 import com.example.reader.ReaderActivity.ReaderMode;
 
 import android.app.Activity;
