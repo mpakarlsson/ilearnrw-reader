@@ -9,6 +9,7 @@
         android:targetSdkVersion="19" />
     
 	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -38,17 +39,17 @@
             android:label="@string/title_Presentation_Module" >
         </activity>
         <activity
-            android:name="com.example.reader.SearchActivity"
+            android:name="com.example.reader.popups.SearchActivity"
             android:label="@string/title_activity_search" 
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
          <activity
-            android:name="com.example.reader.ModeActivity"
+            android:name="com.example.reader.popups.ModeActivity"
             android:label="@string/title_activity_mode" 
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
         </activity>
-        <activity  android:name="com.example.reader.AddToLibrary"
+        <activity android:name="com.example.reader.AddToLibraryActivity"
             android:label="@string/title_activity_add_to_device" >
         </activity>
     </application>

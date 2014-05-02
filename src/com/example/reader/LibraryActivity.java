@@ -10,12 +10,16 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.reader.utils.FileHelper;
+
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,12 +33,16 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Toast;
 
-public class LibraryActivity extends Activity implements OnClickListener , OnItemClickListener, OnItemLongClickListener{
+public class LibraryActivity extends Activity implements OnClickListener , OnItemClickListener{
 
 	public static ImageButton btn_add;
 	public static ListView library;
-	public static String lib_location = "Library";
 	public static ArrayList<File> library_files;
+	public ArrayList<LibraryItem> values;
+	
+	public AlertDialog dialog;
+	
+	public static final int FLAG_ADD_TO_DEVICE = 10000;
 	
 	
 	@Override
@@ -46,9 +54,9 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		btn_add = (ImageButton) findViewById(R.id.ibtn_add_library);
 		btn_add.setOnClickListener(this);
 		
-		File dir = getDir(lib_location, MODE_PRIVATE);
+		File dir = getDir(getString(R.string.library_location), MODE_PRIVATE);
 		
-		library_files = (ArrayList<File>) getListFiles(dir);
+		library_files = (ArrayList<File>) FileHelper.getFileList(dir);
 		
 		// Copies the files from 'res/raw' into the 'Library' folder, used for testing
 		if(library_files.isEmpty()){
@@ -59,8 +67,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		        try {
 					int resourceID=fields[count].getInt(fields[count]);
 					InputStream is = getResources().openRawResource(resourceID);
-					WriteToFile(is, fields[count].getName() + ".html", dir);
-		        
+					FileHelper.WriteToFile(is, fields[count].getName() + ".html", dir);		        
 		        } catch (IllegalAccessException e) {
 					e.printStackTrace();
 				} catch (IllegalArgumentException e) {
@@ -68,10 +75,10 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				}
 		    }
 		    
-		    library_files = (ArrayList<File>) getListFiles(dir);
+		    library_files = (ArrayList<File>) FileHelper.getFileList(dir);
 		}
 		
-		ArrayList<LibraryItem> values = new ArrayList<LibraryItem>();
+		values = new ArrayList<LibraryItem>();
 		for(File f : library_files){
 			values.add(new LibraryItem(f.getName(), f));
 		}
@@ -81,7 +88,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		library = (ListView) findViewById(R.id.library_list);
 		library.setAdapter(adapter);
 		library.setOnItemClickListener(this);
-		library.setOnItemLongClickListener(this);
+		registerForContextMenu(library);
 	}
 
 	@Override
@@ -90,6 +97,28 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.library, menu);
 		return true;
+	}
+	
+	
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		switch (v.getId()) {
+		case R.id.library_list:
+			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+			menu.setHeaderTitle(values.get(info.position).getName());
+			String[] menuItems = getResources().getStringArray(R.array.library_context_menu);
+			
+			for(int i=0; i<menuItems.length; i++){
+				menu.add(Menu.NONE, i, i, menuItems[i]);
+			}
+			break;
+
+		default:
+			break;
+		}
+		
 	}
 
 	@Override
@@ -105,12 +134,68 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	}
 	
 	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+		int menuItemIndex = item.getItemId();
+		String[] menuItems = getResources().getStringArray(R.array.library_context_menu);
+		String menuItemName = menuItems[menuItemIndex];
+		String listItemName = values.get(info.position).getName();
+		
+		if(menuItemName.equals("Edit")){
+			Toast.makeText(this, "EDIT", Toast.LENGTH_SHORT).show();
+		} else if(menuItemName.equals("Delete")){
+			final int pos = info.position;
+			
+			new AlertDialog.Builder(this)
+				.setTitle(getString(R.string.library_remove_item_confirmation) + listItemName)
+				.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						values.remove(pos);
+						((ArrayAdapter<LibraryItem>)library.getAdapter()).notifyDataSetChanged();
+					}
+				})
+				.setNegativeButton(getString(android.R.string.no), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {}
+				}).show();			
+		}
+		
+		return true;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	
+			if(resultCode == RESULT_OK){
+				switch (requestCode) {
+				case FLAG_ADD_TO_DEVICE:
+					if(dialog != null)
+						dialog.cancel();
+					
+					File f = (File) data.getExtras().get("file");
+					String name = data.getExtras().getString("name");
+					
+					if(f!=null && name!= null){
+						values.add(new LibraryItem(name, f));
+						((ArrayAdapter)library.getAdapter()).notifyDataSetChanged();
+					}
+					break;
+
+				default:
+					break;
+				}				
+			}
+			
+		
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	@Override
 	public void onClick(View v) {
 		
 		switch (v.getId()) {
 		case R.id.ibtn_add_library:
-			// TODO: create popup window that lets you choose how to add new items to "Library" folder, choices "Device" & "Online Resource bank"
-			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			LayoutInflater inflater = getLayoutInflater();
 			View convertView = (View) inflater.inflate(R.layout.dialog_add_to_device, null);
@@ -125,79 +210,37 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						int pos, long id) {
-				
-					Toast.makeText(getBaseContext(), "Id : " + id + " pos " + pos, Toast.LENGTH_SHORT).show();
-					Intent intent = new Intent(getBaseContext(), AddToLibrary.class);
-					intent.putExtra("option", lv.getItemAtPosition(pos).toString());
-					startActivity(intent);
+					Intent intent = new Intent(getBaseContext(), AddToLibraryActivity.class);
+					String option = lv.getItemAtPosition(pos).toString();
+					option = option.toLowerCase().toString();
+					
+					if(option.contains("device"))
+						intent.putExtra("online", false);
+					else 
+						intent.putExtra("online", true);
+					
+					startActivityForResult(intent, FLAG_ADD_TO_DEVICE);
 				}
 			});
+			dialog = builder.create();
 			
-			
-			builder.show();
+			dialog.show();
 			break;
 
 		default:
 			break;
 		}
 	}
-	
+
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
+		
 		Intent intent = new Intent(this, PresentationModule.class);
 		File f = library_files.get(position);
 		intent.putExtra("file", f);
 		intent.putExtra("title", f.getName());
-		this.startActivity(intent);		
-	}
-	
-	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view,
-			int position, long id) {
-		// TODO: Add a context menu for the item clicked, that contains relevant options ("Delete" etc.);
-		Toast.makeText(this, "Long Clicked: " + position, Toast.LENGTH_SHORT).show();
-		return true;
-	}
+		this.startActivity(intent);
 
-	
-	private List<File> getListFiles(File parent){
-		List<File> dirFiles = new ArrayList<File>();
-		File[] files = parent.listFiles();
-		
-		for( File file : files){
-			if(file.isDirectory()){
-				dirFiles = getListFiles(file);
-			} else {
-				if(file.getName().endsWith(".html")){
-					dirFiles.add(file);
-				}
-			}
-		}
-		return dirFiles; 
-	}
-	
-	private void WriteToFile(InputStream is, String fileName, File directory){
-		
-		OutputStream os;
-		try {
-			os = new FileOutputStream(new File(directory +"/" + fileName));
-			
-			int read = 0;
-			byte[] bytes = new byte[1024];
-			while((read = is.read(bytes)) != -1)
-				os.write(bytes, 0 ,read);
-			
-			os.close();
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	
-
-	
+	}	
 }

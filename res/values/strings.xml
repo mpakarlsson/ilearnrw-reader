@@ -5,7 +5,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="logo_ilearnrw">iLearnRw</string>
-    <string name="dialog_title_add_to_device">Add to Device from</string>
+    <string name="no_data">No data</string>
+    <string name="item_exists_do_copy">Item already exists in your library. Overwrite the file?</string>
 
     <!-- Login activity -->
     <string name="username">Username :</string>
@@ -17,6 +18,13 @@
     <!-- Library activity -->
     <string name="title_activity_library">LibraryActivity</string>
     <string name="library_add">Add new item to library</string>
+    <string name="library_location">Library</string>
+    <string name="library_remove_item_confirmation">Are you sure you want to remove \u0020</string>
+    <string-array name="library_context_menu">
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
+    
     
     
     <string name="title_activity_reader">ReaderActivity</string>
@@ -44,9 +52,13 @@
 	<string name="mode_chunking">Chunking</string>
 	
 	
+	<string name="dialog_title_add_to_device">Add to Device from</string>
+	<!-- Add to device Explorer -->
+	<string name="add_to_device_explorer_copy_confirm_start">Copy\u0020</string>
+	<string name="add_to_device_explorer_copy_confirm_end">\u0020to your library?</string>
 	
 	<string-array name="add_to_device_array">
-	    <item>Device</item>
+	    <item>Device storage</item>
 	    <item>Online Resource Bank</item>
 	</string-array>
 

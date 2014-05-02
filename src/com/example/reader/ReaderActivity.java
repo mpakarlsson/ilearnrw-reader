@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import com.example.reader.callbacks.TTSReadingCallback;
 import com.example.reader.callbacks.TTSHighlightCallback;
+import com.example.reader.popups.ModeActivity;
+import com.example.reader.popups.SearchActivity;
 import com.example.reader.tts.TTS;
 
 import android.annotation.SuppressLint;
