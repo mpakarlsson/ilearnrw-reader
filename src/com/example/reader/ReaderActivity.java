@@ -41,9 +41,9 @@ import android.widget.Toast;
 
 public class ReaderActivity extends Activity implements OnClickListener, OnLongClickListener, OnTouchListener, TTSHighlightCallback, TTSReadingCallback {
 
-	public static TextView tv_title;
+	public static TextView tvTitle;
 	public static WebView reader;
-	public static ImageButton ibtn_lib, ibtn_search, ibtn_mode, ibtn_prev, ibtn_play, ibtn_next, ibtn_settings, ibtn_search_forward, ibtn_search_back;
+	public static ImageButton ibtnLib, ibtnSearch, ibtnMode, ibtnPrev, ibtnPlay, ibtnNext, ibtnSettings, ibtnSearchForward, ibtnSearchBack;
 	public static RelativeLayout top, bottom, searchbar;
 	public static ReaderMode reader_mode;
 	public static ReaderStatus reader_status;
@@ -94,24 +94,24 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		File file = (File) libBundle.get("file");
 		String title = libBundle.getString("title");
 		
-		tv_title = (TextView) findViewById(R.id.tv_book_title_reader);
-		tv_title.setText(title);
+		tvTitle = (TextView) findViewById(R.id.tv_book_title_reader);
+		tvTitle.setText(title);
 		
-		ibtn_lib = (ImageButton) findViewById(R.id.ibtn_lib_reader);
-		ibtn_search = (ImageButton) findViewById(R.id.ibtn_search_reader);
-		ibtn_mode = (ImageButton) findViewById(R.id.ibtn_mode_reader);
-		ibtn_prev = (ImageButton) findViewById(R.id.ibtn_prev_reader);
-		ibtn_play = (ImageButton) findViewById(R.id.ibtn_play_reader);
-		ibtn_next = (ImageButton) findViewById(R.id.ibtn_next_reader);
-		ibtn_settings = (ImageButton) findViewById(R.id.ibtn_settings_reader);
+		ibtnLib = (ImageButton) findViewById(R.id.ibtn_lib_reader);
+		ibtnSearch = (ImageButton) findViewById(R.id.ibtn_search_reader);
+		ibtnMode = (ImageButton) findViewById(R.id.ibtn_mode_reader);
+		ibtnPrev = (ImageButton) findViewById(R.id.ibtn_prev_reader);
+		ibtnPlay = (ImageButton) findViewById(R.id.ibtn_play_reader);
+		ibtnNext = (ImageButton) findViewById(R.id.ibtn_next_reader);
+		ibtnSettings = (ImageButton) findViewById(R.id.ibtn_settings_reader);
 		
-		ibtn_lib.setOnClickListener(this);
-		ibtn_search.setOnClickListener(this);
-		ibtn_mode.setOnClickListener(this);
-		ibtn_prev.setOnClickListener(this);
-		ibtn_play.setOnClickListener(this);
-		ibtn_next.setOnClickListener(this);
-		ibtn_settings.setOnClickListener(this);
+		ibtnLib.setOnClickListener(this);
+		ibtnSearch.setOnClickListener(this);
+		ibtnMode.setOnClickListener(this);
+		ibtnPrev.setOnClickListener(this);
+		ibtnPlay.setOnClickListener(this);
+		ibtnNext.setOnClickListener(this);
+		ibtnSettings.setOnClickListener(this);
 		
 		top = (RelativeLayout) findViewById(R.id.reader_top);
 		bottom = (RelativeLayout) findViewById(R.id.reader_bottom);
@@ -140,14 +140,14 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		reader.loadDataWithBaseURL(null, html, "text/html", "UTF-8", "about:blank");
 		
 		reader_status = ReaderStatus.Disabled;
-		ibtn_play.setImageResource(R.drawable.play);
+		ibtnPlay.setImageResource(R.drawable.play);
 		
 		
 		searchbar = (RelativeLayout) findViewById(R.id.search_buttons_layout);
-		ibtn_search_forward = (ImageButton) findViewById(R.id.ibtn_search_forward);
-		ibtn_search_back = (ImageButton) findViewById(R.id.ibtn_search_back);
-		ibtn_search_forward.setOnClickListener(this);
-		ibtn_search_back.setOnClickListener(this);
+		ibtnSearchForward = (ImageButton) findViewById(R.id.ibtn_search_forward);
+		ibtnSearchBack = (ImageButton) findViewById(R.id.ibtn_search_back);
+		ibtnSearchForward.setOnClickListener(this);
+		ibtnSearchBack.setOnClickListener(this);
 		
 		
 		
@@ -275,17 +275,17 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			
 		case R.id.ibtn_search_reader:
 			Intent search_intent = new Intent(this, SearchActivity.class);
-			search_intent.putExtra("posX", ibtn_search.getX());
-			search_intent.putExtra("posY", (ibtn_search.getY()+ibtn_search.getHeight()));
-			search_intent.putExtra("imageHeight", ibtn_search.getHeight());
+			search_intent.putExtra("posX", ibtnSearch.getX());
+			search_intent.putExtra("posY", (ibtnSearch.getY()+ibtnSearch.getHeight()));
+			search_intent.putExtra("imageHeight", ibtnSearch.getHeight());
 			startActivityForResult(search_intent, FLAG_SEARCH);
 			break;
 			
 		case R.id.ibtn_mode_reader:
 			Intent mode_intent = new Intent(this, ModeActivity.class);
-			mode_intent.putExtra("posX", ibtn_mode.getX());
-			mode_intent.putExtra("posY", (bottom.getY()-ibtn_mode.getHeight()));
-			mode_intent.putExtra("imageHeight", ibtn_mode.getHeight());
+			mode_intent.putExtra("posX", ibtnMode.getX());
+			mode_intent.putExtra("posY", (bottom.getY()-ibtnMode.getHeight()));
+			mode_intent.putExtra("imageHeight", ibtnMode.getHeight());
 			mode_intent.putExtra("readerMode", reader_mode);
 			startActivityForResult(mode_intent, FLAG_MODE);
 			break;
@@ -352,9 +352,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	
 	private void setPlayStatus(ReaderStatus status){	
 		if(status == ReaderStatus.Enabled)	
-			ibtn_play.setImageResource(R.drawable.pause);
+			ibtnPlay.setImageResource(R.drawable.pause);
 		else
-			ibtn_play.setImageResource(R.drawable.play);
+			ibtnPlay.setImageResource(R.drawable.play);
 		reader_status = status;
 	}
 	

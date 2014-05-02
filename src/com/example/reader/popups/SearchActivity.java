@@ -2,8 +2,6 @@ package com.example.reader.popups;
 
 import com.example.reader.R;
 import com.example.reader.ReaderActivity;
-import com.example.reader.R.id;
-import com.example.reader.R.layout;
 import com.example.reader.types.ExtendedEditText;
 
 import android.app.Activity;
@@ -19,7 +17,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
 
 public class SearchActivity extends Activity implements OnClickListener, OnEditorActionListener{
@@ -27,7 +24,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnEdito
 	public static float posX, posY;
 	public static int imageHeight;
 	public static ExtendedEditText search;
-	public static ImageButton ibtn_search;
+	public static ImageButton ibtnSearch;
 	
 	
 	@Override
@@ -43,8 +40,8 @@ public class SearchActivity extends Activity implements OnClickListener, OnEdito
 		search.setOnEditorActionListener(this);
 		search.setActivity(this);
 	
-		ibtn_search = (ImageButton) findViewById(R.id.ibtn_search_activity);
-		ibtn_search.setOnClickListener(this);	
+		ibtnSearch = (ImageButton) findViewById(R.id.ibtn_search_activity);
+		ibtnSearch.setOnClickListener(this);	
 	}
 
 	@Override
@@ -88,7 +85,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnEdito
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		if(actionId==EditorInfo.IME_ACTION_DONE){
-			ibtn_search.callOnClick();
+			ibtnSearch.callOnClick();
 			hideKeyboard();
 			return true;
 		}
@@ -98,7 +95,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnEdito
 
 	private void hideKeyboard(){
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(ibtn_search.getWindowToken(), 0);
+		imm.hideSoftInputFromWindow(ibtnSearch.getWindowToken(), 0);
 	}
 	
 

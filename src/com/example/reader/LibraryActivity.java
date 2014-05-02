@@ -1,17 +1,12 @@
 package com.example.reader;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import com.example.reader.popups.RenameActivity;
 import com.example.reader.utils.FileHelper;
@@ -34,15 +29,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Toast;
 
 public class LibraryActivity extends Activity implements OnClickListener , OnItemClickListener{
 
-	public static ImageButton btn_add;
+	public static ImageButton btnAdd;
 	public static ListView library;
-	public static ArrayList<File> library_files;
-	public ArrayList<LibraryItem> values;
+	public static ArrayList<File> libraryFiles;
+	public ArrayList<LibraryItem> files;
 	
 	public AlertDialog dialog;
 	
@@ -56,15 +50,15 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		setContentView(R.layout.activity_library);
 		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-		btn_add = (ImageButton) findViewById(R.id.ibtn_add_library);
-		btn_add.setOnClickListener(this);
+		btnAdd = (ImageButton) findViewById(R.id.ibtn_add_library);
+		btnAdd.setOnClickListener(this);
 		
 		File dir = getDir(getString(R.string.library_location), MODE_PRIVATE);
 		
-		library_files = (ArrayList<File>) FileHelper.getFileList(dir);
+		libraryFiles = (ArrayList<File>) FileHelper.getFileList(dir);
 		
 		// Copies the files from 'res/raw' into the 'Library' folder, used for testing
-		if(library_files.isEmpty()){
+		if(libraryFiles.isEmpty()){
 			Field[] fields=R.raw.class.getFields();
 		    for(int count=0; count < fields.length; count++){
 		        Log.i("Raw Asset: ", fields[count].getName());
@@ -80,16 +74,16 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				}
 		    }
 		    
-		    library_files = (ArrayList<File>) FileHelper.getFileList(dir);
+		    libraryFiles = (ArrayList<File>) FileHelper.getFileList(dir);
 		}
 		
-		values = new ArrayList<LibraryItem>();
-		for(File f : library_files){
-			values.add(new LibraryItem(f.getName(), f));
+		files = new ArrayList<LibraryItem>();
+		for(File f : libraryFiles){
+			files.add(new LibraryItem(f.getName(), f));
 		}
 		sortValues();
 		
-		LibraryAdapter adapter = new LibraryAdapter(this, R.layout.library_row, values);
+		LibraryAdapter adapter = new LibraryAdapter(this, R.layout.library_row, files);
 
 		library = (ListView) findViewById(R.id.library_list);
 		library.setAdapter(adapter);
@@ -113,7 +107,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		switch (v.getId()) {
 		case R.id.library_list:
 			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-			menu.setHeaderTitle(values.get(info.position).getName());
+			menu.setHeaderTitle(files.get(info.position).getName());
 			String[] menuItems = getResources().getStringArray(R.array.library_context_menu);
 			
 			for(int i=0; i<menuItems.length; i++){
@@ -145,13 +139,13 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		int menuItemIndex = item.getItemId();
 		String[] menuItems = getResources().getStringArray(R.array.library_context_menu);
 		String menuItemName = menuItems[menuItemIndex];
-		String listItemName = values.get(info.position).getName();
+		String listItemName = files.get(info.position).getName();
 		
 		if(menuItemName.equals("Edit")){
 			Toast.makeText(this, "EDIT", Toast.LENGTH_SHORT).show();
 			
 			Intent i = new Intent(this, RenameActivity.class);
-			i.putExtra("file", values.get(info.position).getFile());
+			i.putExtra("file", files.get(info.position).getFile());
 			i.putExtra("name", listItemName);
 			i.putExtra("pos", info.position);
 			startActivityForResult(i, FLAG_UPDATE_FILE_NAME);
@@ -164,7 +158,8 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						values.remove(pos);
+						files.get(pos).getFile().delete();
+						files.remove(pos);
 						((ArrayAdapter<LibraryItem>)library.getAdapter()).notifyDataSetChanged();
 					}
 				})
@@ -190,9 +185,9 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 					String name = data.getExtras().getString("name");
 					
 					if(f!=null && name!= null){
-						values.add(new LibraryItem(name, f));
+						files.add(new LibraryItem(name, f));
 						sortValues();
-						((ArrayAdapter)library.getAdapter()).notifyDataSetChanged();
+						((ArrayAdapter<LibraryItem>)library.getAdapter()).notifyDataSetChanged();
 					}
 					break;
 					
@@ -211,13 +206,13 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						e1.printStackTrace();
 					}
 					
-					values.remove(pos);
-					values.add(new LibraryItem(updatedName, updatedFile));
+					files.remove(pos);
+					files.add(new LibraryItem(updatedName, updatedFile));
 					
 					sortValues();
 					
 					origFile.delete();
-					((ArrayAdapter)library.getAdapter()).notifyDataSetChanged();
+					((ArrayAdapter<LibraryItem>)library.getAdapter()).notifyDataSetChanged();
 					
 					break;
 
@@ -276,7 +271,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			long id) {
 		
 		Intent intent = new Intent(this, PresentationModule.class);
-		File f = values.get(position).getFile();
+		File f = files.get(position).getFile();
 		intent.putExtra("file", f);
 		intent.putExtra("title", f.getName());
 		this.startActivity(intent);
@@ -284,7 +279,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	}
 	
 	private void sortValues(){
-		Collections.sort(values, new Comparator<LibraryItem>() {
+		Collections.sort(files, new Comparator<LibraryItem>() {
 			@Override
 			public int compare(LibraryItem lhs, LibraryItem rhs) {
 				return lhs.getName().compareToIgnoreCase(rhs.getName());

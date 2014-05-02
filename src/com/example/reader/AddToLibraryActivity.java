@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,13 +16,10 @@ import com.example.reader.utils.FileHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -61,8 +57,6 @@ public class AddToLibraryActivity extends Activity implements OnItemClickListene
 		lvList = (ListView) findViewById(R.id.lv_atl_list);
 		lvList.setOnItemClickListener(this);
 		getDirectory(root);
-		
-		
 		
 	}
 
@@ -117,9 +111,6 @@ public class AddToLibraryActivity extends Activity implements OnItemClickListene
 		
 	}
 
-	
-	
-	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
 		
@@ -160,13 +151,12 @@ public class AddToLibraryActivity extends Activity implements OnItemClickListene
 	}
 	
 	private boolean hasValidFileEnding(String name){
-		
 		int index = name.lastIndexOf(".");
 		
 		if(index!=-1){
 			String ending = name.substring(index+1);
 
-			ending = ending.toLowerCase(Locale.UK).trim();
+			ending = ending.toLowerCase().trim();
 			
 			if(ending.isEmpty())
 				return false;

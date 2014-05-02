@@ -4,7 +4,6 @@ import java.io.File;
 
 import com.example.reader.LibraryActivity;
 import com.example.reader.R;
-import com.example.reader.ReaderActivity;
 import com.example.reader.types.ExtendedEditText;
 
 import android.app.Activity;
@@ -23,8 +22,8 @@ import android.widget.TextView.OnEditorActionListener;
 
 public class RenameActivity extends Activity implements OnClickListener, OnEditorActionListener {
 
-	public Button btn_ok, btn_cancel;
-	public ExtendedEditText et_name;
+	public Button btnOk, btnCancel;
+	public ExtendedEditText etName;
 	private String ending, orgName;
 	private int posInList;
 	private File file;
@@ -39,18 +38,20 @@ public class RenameActivity extends Activity implements OnClickListener, OnEdito
 		orgName = b.getString("name");
 		file = (File) b.get("file");
 		posInList = b.getInt("pos");
-		btn_ok = (Button) findViewById(R.id.btn_rename_ok);
-		btn_cancel = (Button) findViewById(R.id.btn_rename_cancel);
-		et_name = (ExtendedEditText) findViewById(R.id.et_rename);
-		et_name.setOnEditorActionListener(this);
-		et_name.setActivity(this);
+		btnOk = (Button) findViewById(R.id.btn_rename_ok);
+		btnCancel = (Button) findViewById(R.id.btn_rename_cancel);
+		etName = (ExtendedEditText) findViewById(R.id.et_rename);
+		etName.setOnEditorActionListener(this);
+		etName.setActivity(this);
 		
-		et_name.setText(orgName);
-		et_name.setSelection(orgName.length());
+		etName.setText(orgName);
+		
+		int selectionPos = orgName.indexOf(".") == -1 ? orgName.length() : orgName.indexOf(".");
+		etName.setSelection(selectionPos);
 		ending = orgName.substring(orgName.lastIndexOf("."));
 		
-		btn_ok.setOnClickListener(this);
-		btn_cancel.setOnClickListener(this);
+		btnOk.setOnClickListener(this);
+		btnCancel.setOnClickListener(this);
 	}
 	
 	@Override
@@ -63,7 +64,7 @@ public class RenameActivity extends Activity implements OnClickListener, OnEdito
 
 	@Override
 	public void onClick(View v) {
-		String name = et_name.getText().toString();
+		String name = etName.getText().toString();
 		
 		if(name.isEmpty()){
 			Toast.makeText(this, "You must supply a name", Toast.LENGTH_SHORT).show();
@@ -106,7 +107,7 @@ public class RenameActivity extends Activity implements OnClickListener, OnEdito
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		if(actionId==EditorInfo.IME_ACTION_DONE){
-			btn_ok.callOnClick();
+			btnOk.callOnClick();
 			hideKeyboard();
 			return true;
 		}
@@ -115,6 +116,6 @@ public class RenameActivity extends Activity implements OnClickListener, OnEdito
 
 	private void hideKeyboard(){
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(btn_ok.getWindowToken(), 0);
+		imm.hideSoftInputFromWindow(btnOk.getWindowToken(), 0);
 	}
 }

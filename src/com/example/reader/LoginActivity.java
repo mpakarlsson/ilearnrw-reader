@@ -12,19 +12,19 @@ import android.widget.EditText;
 
 public class LoginActivity extends Activity implements OnClickListener {
 
-	public static Button btn_login;
-	public static EditText et_username, et_password;
+	public static Button btnLogin;
+	public static EditText etUsername, etPassword;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        btn_login = (Button) findViewById(R.id.login_button);
-        et_username = (EditText) findViewById(R.id.login_username);
-        et_password = (EditText) findViewById(R.id.login_password);
+        btnLogin = (Button) findViewById(R.id.login_button);
+        etUsername = (EditText) findViewById(R.id.login_username);
+        etPassword = (EditText) findViewById(R.id.login_password);
         
-        btn_login.setOnClickListener(this);
+        btnLogin.setOnClickListener(this);
     }
 
 
