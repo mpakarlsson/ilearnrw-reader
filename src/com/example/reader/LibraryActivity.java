@@ -276,7 +276,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			long id) {
 		
 		Intent intent = new Intent(this, PresentationModule.class);
-		File f = library_files.get(position);
+		File f = values.get(position).getFile();
 		intent.putExtra("file", f);
 		intent.putExtra("title", f.getName());
 		this.startActivity(intent);
