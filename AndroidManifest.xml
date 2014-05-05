@@ -38,7 +38,7 @@
             android:name="com.example.reader.PresentationModule"
             android:label="@string/title_Presentation_Module" >
         </activity>
-        <activity android:name="com.example.reader.AddToLibraryActivity"
+        <activity android:name="com.example.reader.AddToLibraryExplorerActivity"
             android:label="@string/title_activity_add_to_device" >
         </activity>
         

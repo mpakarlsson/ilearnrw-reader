@@ -10,7 +10,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 import com.example.reader.utils.FileHelper;
 
@@ -22,43 +21,69 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
-public class AddToLibraryActivity extends Activity implements OnItemClickListener{
-
+public class AddToLibraryExplorerActivity extends Activity {
+	
 	private List<ExplorerItem> items = null;
 	private String root = Environment.getExternalStorageDirectory().getPath();
 	private TextView tvPath;
 	private ListView lvList;
 	private String[] FILE_ENDINGS = { "html", "txt" };
 	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		Boolean online = getIntent().getExtras().getBoolean("online");
-		if(online){
-			Toast.makeText(this, "Getting files from Online Resource Bank is not yet supported", Toast.LENGTH_SHORT).show();
-			//setContentView(R.layout.activity_add_to_library_orb);
-		}
-		else {
-			setContentView(R.layout.activity_add_to_library_storage);
-		}	
-		
-		
-		// Should this be fragments instead?
+		setContentView(R.layout.activity_add_to_library_explorer);
 		
 		tvPath = (TextView) findViewById(R.id.tv_atl_path);
 		lvList = (ListView) findViewById(R.id.lv_atl_list);
-		lvList.setOnItemClickListener(this);
 		getDirectory(root);
 		
-	}
+		lvList.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, final View view, int pos,
+					long id) {
+				final File file = new File(items.get(pos).getPath());
+				
+				if(file.isDirectory()){
+					if(file.canRead()){
+						getDirectory(items.get(pos).getPath());
+					} else {
+						new AlertDialog.Builder(view.getContext())
+							.setTitle("[" + file.getName() + "] folder can't be read!")
+							.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+								}
+							}).show();
+					}
+				} else {
+					new AlertDialog.Builder(view.getContext())
+						.setTitle(getString(R.string.add_to_device_explorer_copy_confirm_start) + file.getName() + getString(R.string.add_to_device_explorer_copy_confirm_end))
+						.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								copyFileToLibrary(file);
+							}
+						})
+						.setNegativeButton(getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								Toast.makeText(view.getContext(), "File was not copied", Toast.LENGTH_SHORT).show();
+							}
+						}).show();
+				}
+			}
+			
+		});
+	}	
 
 	private void getDirectory(String dir){
 		tvPath.setText(dir);
@@ -111,44 +136,6 @@ public class AddToLibraryActivity extends Activity implements OnItemClickListene
 		
 	}
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-		
-		final File file = new File(items.get(pos).getPath());
-		
-		if(file.isDirectory()){
-			if(file.canRead()){
-				getDirectory(items.get(pos).getPath());
-			} else {
-				new AlertDialog.Builder(this)
-					.setTitle("[" + file.getName() + "] folder can't be read!")
-					.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-						}
-					}).show();
-			}
-		} else {
-			new AlertDialog.Builder(this)
-				.setTitle(getString(R.string.add_to_device_explorer_copy_confirm_start) + file.getName() + getString(R.string.add_to_device_explorer_copy_confirm_end))
-				.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						copyFileToLibrary(file);
-					}
-				})
-				.setNegativeButton(getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						Toast.makeText(getBaseContext(), "File was not copied", Toast.LENGTH_SHORT).show();
-					}
-				}).show();
-		}
-		
-		
-	}
 	
 	private boolean hasValidFileEnding(String name){
 		int index = name.lastIndexOf(".");
@@ -194,7 +181,7 @@ public class AddToLibraryActivity extends Activity implements OnItemClickListene
 						Intent intent=new Intent();
 					    intent.putExtra("file", f);
 						intent.putExtra("name", builder.toString());
-					    setResult(RESULT_OK, intent);
+						setResult(Activity.RESULT_OK, intent);
 						finish();
 						return;
 					}
@@ -215,4 +202,6 @@ public class AddToLibraryActivity extends Activity implements OnItemClickListene
 			}
 		}
 	}	
+
+	
 }

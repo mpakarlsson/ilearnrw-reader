@@ -3,3 +3,4 @@ gen/
 .settings/
 proguard-project.txt
 project.properties
+/reader

@@ -244,14 +244,16 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						int pos, long id) {
-					Intent intent = new Intent(getBaseContext(), AddToLibraryActivity.class);
+					
 					String option = lv.getItemAtPosition(pos).toString();
 					option = option.toLowerCase().toString();
 					
+					Intent intent;
+					
 					if(option.contains("device"))
-						intent.putExtra("online", false);
+						intent = new Intent(getBaseContext(), AddToLibraryExplorerActivity.class);
 					else 
-						intent.putExtra("online", true);
+						intent = new Intent(getBaseContext(), AddToLibraryORBActivity.class);
 					
 					startActivityForResult(intent, FLAG_ADD_TO_DEVICE);
 				}

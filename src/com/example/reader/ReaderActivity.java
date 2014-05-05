@@ -163,7 +163,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	protected void onResume() {
 		super.onResume();
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		int mode = prefs.getInt("readerMode", -1);
 		if(mode==-1){
 			prefs.edit().putInt("readerMode", ReaderMode.Listen.getValue()).commit();

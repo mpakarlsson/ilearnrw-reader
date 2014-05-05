@@ -7,6 +7,7 @@
     <string name="logo_ilearnrw">iLearnRw</string>
     <string name="no_data">No data</string>
     <string name="item_exists_do_copy">Item already exists in your library. Overwrite the file?</string>
+    <string name="remember_me">Remember me</string>
 
     <!-- Login activity -->
     <string name="username">Username :</string>
