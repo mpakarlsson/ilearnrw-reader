@@ -1,9 +1,6 @@
 package com.example.reader;
 
-import java.util.prefs.Preferences;
-
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +18,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 public class LoginActivity extends Activity implements OnClickListener {
@@ -58,7 +55,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         
         btnLogin.setOnClickListener(this);
         btnLoginSkip.setOnClickListener(this);
-    
+        
         chkRM.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -92,9 +89,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.login_button:
-			// TODO: Send information to API and process response
-			
-			
 			String username = etUsername.getText().toString();
 			String password = etPassword.getText().toString();
 			
@@ -127,17 +121,22 @@ public class LoginActivity extends Activity implements OnClickListener {
 		            		editor.putString("refreshToken", lr.refreshToken);
 		            		editor.commit();
 		            		
+		            		Intent i2 = new Intent(getBaseContext(), LibraryActivity.class);
+		        			startActivity(i2);
+		            		
 		            		break;
 		            	}
 		            	case HttpConnection.CONNECTION_ERROR: { 
 		            		Exception e = (Exception) message.obj;
 		            		e.printStackTrace();
 		            		Log.e("connectionError", "Connection failed.");
+		            		Toast.makeText(getBaseContext(), "Connection failed due to error.", Toast.LENGTH_SHORT).show();
 		            		break;
 		            	}
 		            	case HttpConnection.CONNECTION_RESPONSE_ERROR: {
 		            		String s = (String) message.obj;
 		            		Log.e("connectionResponseError", s);
+		            		Toast.makeText(getBaseContext(), "Connection failed due to wrong status code.", Toast.LENGTH_SHORT).show();
 		            		break;
 		            	}
 	            	}
@@ -145,7 +144,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 			};
 				        
 	        new HttpConnection(handler).get("http://api.ilearnrw.eu/ilearnrw/user/auth?username="+username+"&pass="+password);
-
 			
 			break;
 

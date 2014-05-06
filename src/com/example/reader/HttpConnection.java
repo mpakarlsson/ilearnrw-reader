@@ -2,11 +2,14 @@ package com.example.reader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import javax.net.ssl.SSLContext;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -39,8 +42,11 @@ public class HttpConnection implements Runnable {
 	private Handler handler;
 	private String data;
 	private String authString;
+	InputStream is;
 	
-	private HttpClient httpClient;
+	public SSLContext context = null;
+	
+	private DefaultHttpClient httpClient;
 	
 	public HttpConnection(){
 		this(new Handler());
@@ -50,6 +56,7 @@ public class HttpConnection implements Runnable {
 		this.handler = handler;
 	}
 	
+
 	public void create(int method, String url, String data){
 		this.method 	= method;
 		this.url 		= url;
@@ -82,6 +89,10 @@ public class HttpConnection implements Runnable {
 	public void run() {
 		handler.sendMessage(Message.obtain(handler, HttpConnection.CONNECTION_START));
 		httpClient = new DefaultHttpClient();
+		
+		// TODO: HTTPS, this is not available yet on the server, must wait until it is
+		// http://developer.android.com/training/articles/security-ssl.html
+		
 		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 25000);
 		
 		try {
@@ -165,7 +176,5 @@ public class HttpConnection implements Runnable {
 		BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
 		Bitmap bm = BitmapFactory.decodeStream(bufHttpEntity.getContent());
 		handler.sendMessage(Message.obtain(handler, CONNECTION_SUCCEED, bm));
-		
-	}
-
+	}	
 }
