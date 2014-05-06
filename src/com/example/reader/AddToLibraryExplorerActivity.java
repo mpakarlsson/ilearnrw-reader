@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,14 +15,23 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.example.reader.serveritems.TextAnnotationResult;
+import com.example.reader.serveritems.UserDetailResult;
 import com.example.reader.utils.FileHelper;
+import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.preference.PreferenceManager;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -34,6 +47,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 	private TextView tvPath;
 	private ListView lvList;
 	private String[] FILE_ENDINGS = { "html", "txt" };
+	private Handler handler;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +57,9 @@ public class AddToLibraryExplorerActivity extends Activity {
 		tvPath = (TextView) findViewById(R.id.tv_atl_path);
 		lvList = (ListView) findViewById(R.id.lv_atl_list);
 		getDirectory(root);
+		
+		
+		setupHandlers();
 		
 		lvList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -83,6 +100,8 @@ public class AddToLibraryExplorerActivity extends Activity {
 			}
 			
 		});
+		
+		
 	}	
 
 	private void getDirectory(String dir){
@@ -173,7 +192,21 @@ public class AddToLibraryExplorerActivity extends Activity {
 						StringBuilder builder = new StringBuilder(name);
 						
 						builder.insert(name.lastIndexOf("."), df.format(c.getTime()));
-						Toast.makeText(this, "File already exists,  changed name to " + name, Toast.LENGTH_SHORT).show();
+						
+						
+						SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+						final String lang 	= preferences.getString("language", "");
+						final int id 			= preferences.getInt("id", -1);
+						final String token 	= preferences.getString("authToken", "");
+						
+						String data = "This is a test string. Testing out text annotation.";
+						String url = "http://api.ilearnrw.eu/ilearnrw/text/annotate?userId=" + id + "&lc=" + lang + "&token=" + token;
+						//String url = "http://httpbin.org/post";
+						
+						new HttpConnection(handler).post(url, data);
+						//Accept=application/json
+						
+						/*Toast.makeText(this, "File already exists,  changed name to " + name, Toast.LENGTH_SHORT).show();
 						
 						FileHelper.WriteToFile(fis, builder.toString(), localDir);
 						fis.close();
@@ -183,7 +216,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 						intent.putExtra("name", builder.toString());
 						setResult(Activity.RESULT_OK, intent);
 						finish();
-						return;
+						return;*/
 					}
 				}
 				
@@ -203,5 +236,37 @@ public class AddToLibraryExplorerActivity extends Activity {
 		}
 	}	
 
+	
+	private void setupHandlers(){
+		handler = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				
+				switch(msg.what){
+				case HttpConnection.CONNECTION_START:
+					Log.d("TextAnnotation", "Start");
+					break;
+				
+				case HttpConnection.CONNECTION_SUCCEED:
+					Log.d("TextAnnotation", "Succeeded");
+					String response = (String) msg.obj;
+					TextAnnotationResult text = new Gson().fromJson(response, TextAnnotationResult.class);
+					
+					int a =0;
+					break;
+					
+				case HttpConnection.CONNECTION_RESPONSE_ERROR:
+					Log.e("TextAnnotation", "Failed due to response error");
+					break;
+					
+				case HttpConnection.CONNECTION_ERROR:
+					Log.e("TextAnnotation", "Failed due to error");
+					break;
+					
+				}
+			}
+		};		
+		
+	}
 	
 }
