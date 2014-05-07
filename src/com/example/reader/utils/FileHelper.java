@@ -11,12 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileHelper {
-
-	
-	public static boolean WriteToFile(InputStream is, String fileName, File directory){
+	public static boolean WriteFileToDirectory(InputStream is, String fileName, File directory){
 		OutputStream os;
 		try {
-			os = new FileOutputStream(new File(directory +"/" + fileName));
+			os = new FileOutputStream(new File(directory + File.separator + fileName));
 			
 			int read = 0;
 			byte[] bytes = new byte[1024];
@@ -32,7 +30,6 @@ public class FileHelper {
 			e.printStackTrace();
 			return false;
 		}
-		
 		return true;
 	}
 	

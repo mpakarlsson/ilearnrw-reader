@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 
 import com.example.reader.popups.RenameActivity;
 import com.example.reader.utils.FileHelper;
@@ -44,6 +45,8 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	public static final int FLAG_UPDATE_FILE_NAME = 10001;
 	
 	
+	private LibraryAdapter adapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,7 +69,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		        try {
 					int resourceID=fields[count].getInt(fields[count]);
 					InputStream is = getResources().openRawResource(resourceID);
-					FileHelper.WriteToFile(is, fields[count].getName() + ".html", dir);		        
+					FileHelper.WriteFileToDirectory(is, fields[count].getName() + ".html", dir);		        
 		        } catch (IllegalAccessException e) {
 					e.printStackTrace();
 				} catch (IllegalArgumentException e) {
@@ -83,7 +86,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		}
 		sortValues();
 		
-		LibraryAdapter adapter = new LibraryAdapter(this, R.layout.library_row, files);
+		adapter = new LibraryAdapter(this, R.layout.library_row, files);
 
 		library = (ListView) findViewById(R.id.library_list);
 		library.setAdapter(adapter);
@@ -160,7 +163,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 					public void onClick(DialogInterface dialog, int which) {
 						files.get(pos).getFile().delete();
 						files.remove(pos);
-						((ArrayAdapter<LibraryItem>)library.getAdapter()).notifyDataSetChanged();
+						adapter.notifyDataSetChanged();
 					}
 				})
 				.setNegativeButton(getString(android.R.string.no), new DialogInterface.OnClickListener() {
@@ -187,7 +190,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 					if(f!=null && name!= null){
 						files.add(new LibraryItem(name, f));
 						sortValues();
-						((ArrayAdapter<LibraryItem>)library.getAdapter()).notifyDataSetChanged();
+						adapter.notifyDataSetChanged();
 					}
 					break;
 					
@@ -212,7 +215,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 					sortValues();
 					
 					origFile.delete();
-					((ArrayAdapter<LibraryItem>)library.getAdapter()).notifyDataSetChanged();
+					adapter.notifyDataSetChanged();
 					
 					break;
 
@@ -246,7 +249,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						int pos, long id) {
 					
 					String option = lv.getItemAtPosition(pos).toString();
-					option = option.toLowerCase().toString();
+					option = option.toLowerCase(Locale.getDefault()).toString();
 					
 					Intent intent;
 					

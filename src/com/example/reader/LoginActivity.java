@@ -1,17 +1,13 @@
 package com.example.reader;
 
-import com.example.reader.serveritems.LoginResult;
-import com.example.reader.serveritems.UserDetailResult;
-import com.google.gson.Gson;
+import com.example.reader.types.handlers.ExtendedLoginHandler;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +16,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Toast;
 
 
 public class LoginActivity extends Activity implements OnClickListener {
@@ -29,7 +24,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	public EditText etUsername, etPassword;
 	public CheckBox chkRM;
 	private SharedPreferences preferences;
-	private Handler handlerLogin, handlerUserInfo;
+	private Handler handlerLogin;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,79 +101,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}
 			editor.commit();
 			
-			
-			handlerLogin = new Handler() {
-	            public void handleMessage(Message message) {
-	            	switch (message.what) {
-		            	case HttpConnection.CONNECTION_START: {
-		            		Log.d("Login", "Starting connection...");
-		            		break;
-		            	}
-		            	case HttpConnection.CONNECTION_SUCCEED: {
-		            		String response = (String) message.obj;
-		            		Log.d("Login", response);
-		            		
-		            		LoginResult lr = new Gson().fromJson(response, LoginResult.class);
-		            		editor.putString("authToken", lr.authToken);
-		            		editor.putString("refreshToken", lr.refreshToken);
-		            		editor.commit();
-		            		
-		            		new HttpConnection(handlerUserInfo).get("http://api.ilearnrw.eu/ilearnrw/user/details/"+ username +"?token=" + lr.authToken);
-		            		
-		            		break;
-		            	}
-		            	case HttpConnection.CONNECTION_ERROR: { 
-		            		Exception e = (Exception) message.obj;
-		            		e.printStackTrace();
-		            		Log.e("Login", "Connection failed.");
-		            		Toast.makeText(getBaseContext(), "Connection failed due to error.", Toast.LENGTH_SHORT).show();
-		            		break;
-		            	}
-		            	case HttpConnection.CONNECTION_RESPONSE_ERROR: {
-		            		String s = (String) message.obj;
-		            		Log.e("Login", s);
-		            		Toast.makeText(getBaseContext(), "Connection failed due to wrong status code.", Toast.LENGTH_SHORT).show();
-		            		break;
-		            	}
-	            	}
-	            }
-			};
-			
-			handlerUserInfo = new Handler(){
-
-				@Override
-				public void handleMessage(Message msg) {
-					switch(msg.what){
-					case HttpConnection.CONNECTION_START:
-						Log.d("UserDetails", "Fetching user info");
-						break;
-						
-					case HttpConnection.CONNECTION_SUCCEED:
-						Log.d("UserDetails", "Fetching user info succeeded");
-						
-						String response = (String) msg.obj;
-						UserDetailResult userDetails = new Gson().fromJson(response, UserDetailResult.class);
-						
-						editor.putInt("id", userDetails.id);
-						editor.putString("language", userDetails.language);
-						editor.commit();
-						
-	            		Intent i2 = new Intent(getBaseContext(), LibraryActivity.class);
-	            		startActivity(i2);
-	            		
-						break;
-						
-					case HttpConnection.CONNECTION_ERROR:
-						Log.e("UserDetails", "Getting user info failed");
-						break;
-						
-					case HttpConnection.CONNECTION_RESPONSE_ERROR:
-						Log.e("UserDetails", "Getting user info status fail");
-						break;
-					
-					}
-				}
-			};
+			handlerLogin = new ExtendedLoginHandler(this, getBaseContext(), username);
 			
 	        new HttpConnection(handlerLogin).get("http://api.ilearnrw.eu/ilearnrw/user/auth?username="+username+"&pass="+password);
 			

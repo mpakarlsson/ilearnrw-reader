@@ -4,21 +4,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
-import com.example.reader.serveritems.TextAnnotationResult;
-import com.example.reader.serveritems.UserDetailResult;
+import com.example.reader.types.handlers.ExtendedAddToLibraryHandler;
 import com.example.reader.utils.FileHelper;
-import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,10 +23,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -58,8 +50,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 		lvList = (ListView) findViewById(R.id.lv_atl_list);
 		getDirectory(root);
 		
-		
-		setupHandlers();
+		handler = new ExtendedAddToLibraryHandler(this);
 		
 		lvList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -162,7 +153,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 		if(index!=-1){
 			String ending = name.substring(index+1);
 
-			ending = ending.toLowerCase().trim();
+			ending = ending.toLowerCase(Locale.getDefault()).trim();
 			
 			if(ending.isEmpty())
 				return false;
@@ -188,7 +179,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 					if(f.getName().equals(file.getName())){
 						String name = file.getName();
 						Calendar c = Calendar.getInstance();
-						SimpleDateFormat df = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss");
+						SimpleDateFormat df = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss", Locale.getDefault());
 						StringBuilder builder = new StringBuilder(name);
 						
 						builder.insert(name.lastIndexOf("."), df.format(c.getTime()));
@@ -199,7 +190,13 @@ public class AddToLibraryExplorerActivity extends Activity {
 						final int id 			= preferences.getInt("id", -1);
 						final String token 	= preferences.getString("authToken", "");
 						
-						String data = "This is a test string. Testing out text annotation.";
+						FileInputStream is = new FileInputStream(f);
+				        int size = is.available();
+				        byte[] buffer = new byte[size];
+				        is.read(buffer);
+				        is.close();
+						
+						String data = new String(buffer);
 						String url = "http://api.ilearnrw.eu/ilearnrw/text/annotate?userId=" + id + "&lc=" + lang + "&token=" + token;
 						//String url = "http://httpbin.org/post";
 						
@@ -220,7 +217,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 					}
 				}
 				
-				FileHelper.WriteToFile(fis, file.getName(), localDir);
+				FileHelper.WriteFileToDirectory(fis, file.getName(), localDir);
 				fis.close();
 				
 				Intent intent=new Intent();
@@ -235,38 +232,4 @@ public class AddToLibraryExplorerActivity extends Activity {
 			}
 		}
 	}	
-
-	
-	private void setupHandlers(){
-		handler = new Handler(){
-			@Override
-			public void handleMessage(Message msg) {
-				
-				switch(msg.what){
-				case HttpConnection.CONNECTION_START:
-					Log.d("TextAnnotation", "Start");
-					break;
-				
-				case HttpConnection.CONNECTION_SUCCEED:
-					Log.d("TextAnnotation", "Succeeded");
-					String response = (String) msg.obj;
-					TextAnnotationResult text = new Gson().fromJson(response, TextAnnotationResult.class);
-					
-					int a =0;
-					break;
-					
-				case HttpConnection.CONNECTION_RESPONSE_ERROR:
-					Log.e("TextAnnotation", "Failed due to response error");
-					break;
-					
-				case HttpConnection.CONNECTION_ERROR:
-					Log.e("TextAnnotation", "Failed due to error");
-					break;
-					
-				}
-			}
-		};		
-		
-	}
-	
 }
