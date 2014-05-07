@@ -26,11 +26,9 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -39,7 +37,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ReaderActivity extends Activity implements OnClickListener, OnLongClickListener, OnTouchListener, TTSHighlightCallback, TTSReadingCallback {
+public class ReaderActivity extends Activity implements OnClickListener, OnLongClickListener, TTSHighlightCallback, TTSReadingCallback {
 
 	public static TextView tvTitle;
 	public static WebView reader;
@@ -51,7 +49,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private TTSHighlightCallback cbHighlight;
 	private TTSReadingCallback cbSpoken;
 	private String sentenceColor;
-	private static float touchPosX, touchPosY;
 	private static String html;
 	
 	private final static int FLAG_SEARCH = 10000;
@@ -115,8 +112,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		
 		top = (RelativeLayout) findViewById(R.id.reader_top);
 		bottom = (RelativeLayout) findViewById(R.id.reader_bottom);
-		touchPosX = 0.0f;
-		touchPosY = 0.0f;
 	
 		Intent checkTTSIntent = new Intent(); 
 		checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
@@ -126,7 +121,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		cbSpoken = this;
 		
 		reader = (WebView) findViewById(R.id.webview_reader);
-		reader.setOnTouchListener(this);
 		reader.setOnLongClickListener(this);
 		reader.setLongClickable(false);
 		reader.getSettings().setJavaScriptEnabled(true);
@@ -331,24 +325,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	public boolean onLongClick(View v) {
 		return false;
 	};
-
-
-
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		switch (v.getId()) {
-		case R.id.webview_reader:
-			touchPosX = event.getAxisValue(MotionEvent.AXIS_X);
-			touchPosY = event.getAxisValue(MotionEvent.AXIS_Y);
-
-			
-            break;
-
-		default:
-			break;
-		}
-		return false;
-	}
 	
 	private void setPlayStatus(ReaderStatus status){	
 		if(status == ReaderStatus.Enabled)	

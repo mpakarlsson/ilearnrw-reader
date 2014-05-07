@@ -3,7 +3,6 @@ package com.example.reader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,11 +17,9 @@ import com.example.reader.utils.FileHelper;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
@@ -39,7 +36,6 @@ public class AddToLibraryExplorerActivity extends Activity {
 	private TextView tvPath;
 	private ListView lvList;
 	private String[] FILE_ENDINGS = { "html", "txt" };
-	private Handler handler;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +45,6 @@ public class AddToLibraryExplorerActivity extends Activity {
 		tvPath = (TextView) findViewById(R.id.tv_atl_path);
 		lvList = (ListView) findViewById(R.id.lv_atl_list);
 		getDirectory(root);
-		
-		handler = new ExtendedAddToLibraryHandler(this);
 		
 		lvList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -163,17 +157,22 @@ public class AddToLibraryExplorerActivity extends Activity {
 					return true;
 			}
 		}
-		
 		return false;
 	}
 	
 	public void copyFileToLibrary(final File file){
-		
 		if(file!=null){
 			try {
 				final FileInputStream fis = new FileInputStream(file);
 				final File localDir = getDir(getString(R.string.library_location), MODE_PRIVATE);
 				ArrayList<File> files = (ArrayList<File>) FileHelper.getFileList(localDir);
+				
+				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+				final String lang 	= preferences.getString("language", "");
+				final int id 		= preferences.getInt("id", -1);
+				final String token 	= preferences.getString("authToken", "");
+				final String url = "http://api.ilearnrw.eu/ilearnrw/text/annotate?userId=" + id + "&lc=" + lang + "&token=" + token;
+				Toast.makeText(this, "Sending file to server for annotation...", Toast.LENGTH_SHORT).show();
 				
 				for(File f : files){
 					if(f.getName().equals(file.getName())){
@@ -183,51 +182,17 @@ public class AddToLibraryExplorerActivity extends Activity {
 						StringBuilder builder = new StringBuilder(name);
 						
 						builder.insert(name.lastIndexOf("."), df.format(c.getTime()));
-						
-						
-						SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-						final String lang 	= preferences.getString("language", "");
-						final int id 			= preferences.getInt("id", -1);
-						final String token 	= preferences.getString("authToken", "");
-						
-						FileInputStream is = new FileInputStream(f);
-				        int size = is.available();
-				        byte[] buffer = new byte[size];
-				        is.read(buffer);
-				        is.close();
-						
-						String data = new String(buffer);
-						String url = "http://api.ilearnrw.eu/ilearnrw/text/annotate?userId=" + id + "&lc=" + lang + "&token=" + token;
-						//String url = "http://httpbin.org/post";
-						
-						new HttpConnection(handler).post(url, data);
-						//Accept=application/json
-						
-						/*Toast.makeText(this, "File already exists,  changed name to " + name, Toast.LENGTH_SHORT).show();
-						
-						FileHelper.WriteToFile(fis, builder.toString(), localDir);
-						fis.close();
-						
-						Intent intent=new Intent();
-					    intent.putExtra("file", f);
-						intent.putExtra("name", builder.toString());
-						setResult(Activity.RESULT_OK, intent);
-						finish();
-						return;*/
+						String data = FileHelper.InputStreamToString(new FileInputStream(f));						
+						new HttpConnection(new ExtendedAddToLibraryHandler(this, getBaseContext(), f, builder.toString())).post(url, data);
+
+						return;
 					}
 				}
 				
-				FileHelper.WriteFileToDirectory(fis, file.getName(), localDir);
-				fis.close();
+				String data = FileHelper.InputStreamToString(fis);
+				new HttpConnection(new ExtendedAddToLibraryHandler(this, getBaseContext(), file, file.getName())).post(url, data);
 				
-				Intent intent=new Intent();
-			    intent.putExtra("file", file);
-				intent.putExtra("name", file.getName());
-				setResult(RESULT_OK, intent);
-				finish();
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
