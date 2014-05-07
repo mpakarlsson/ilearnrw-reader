@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import com.example.reader.callbacks.TTSReadingCallback;
-import com.example.reader.callbacks.TTSHighlightCallback;
+import com.example.reader.interfaces.TTSHighlightCallback;
+import com.example.reader.interfaces.TTSReadingCallback;
 import com.example.reader.popups.ModeActivity;
 import com.example.reader.popups.SearchActivity;
 import com.example.reader.tts.TTS;

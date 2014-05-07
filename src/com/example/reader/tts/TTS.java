@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
 
-import com.example.reader.callbacks.TTSReadingCallback;
-import com.example.reader.callbacks.TTSHighlightCallback;
+import com.example.reader.interfaces.TTSHighlightCallback;
+import com.example.reader.interfaces.TTSReadingCallback;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,15 +28,15 @@ public class TTS implements OnInitListener{
 	private ArrayList<String> ttsVoices;
 	private String chosenVoice;
 	private Context context;
-	private TTSHighlightCallback cbHighlight;
-	private TTSReadingCallback cbReading;
+	private final TTSHighlightCallback cbHighlight;
+	private final TTSReadingCallback cbReading;
 	private LinkedList<Integer> positionList;
 	
-	public TTS(Context context, final TTSHighlightCallback cbHighlight, final TTSReadingCallback cbReading, int requestCode, int resultCode, Intent data){
+	public TTS(Context context, TTSHighlightCallback highlight, TTSReadingCallback reading, int requestCode, int resultCode, Intent data){
 		
 		this.context = context;
-		this.cbHighlight = cbHighlight;
-		this.cbReading = cbReading;
+		this.cbHighlight = highlight;
+		this.cbReading = reading;
 		positionList = new LinkedList<Integer>();
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -56,7 +56,6 @@ public class TTS implements OnInitListener{
 		Bundle bundle = data.getExtras();
 		ArrayList<String> availableVoices = bundle.getStringArrayList("availableVoices");
 	
-		// TODO: Should this be an array on the tts or should this information be within SharedPreferences?
 		for(String voice : availableVoices){
 			ttsVoices.add(voice);
 		}

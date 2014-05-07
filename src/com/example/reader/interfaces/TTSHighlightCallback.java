@@ -1,4 +1,4 @@
-package com.example.reader.callbacks;
+package com.example.reader.interfaces;
 
 public interface TTSHighlightCallback {
 	public void OnHighlight(String id);
