@@ -61,8 +61,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 					etPassword.setText("");
 				}	
 			}
-		});
-    
+		});    
     }
 
 
@@ -114,6 +113,5 @@ public class LoginActivity extends Activity implements OnClickListener {
 		default:
 			break;
 		}
-	}
-	
+	}	
 }

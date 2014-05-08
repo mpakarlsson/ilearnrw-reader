@@ -1,5 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:title="@string/pref_text_category_title"
+        android:key="pref_text_settings">
     
+        <!-- 
+        Font size
+        Font face
+        Line spacing
+        Margins
+        Contrast
+        Background colour
+        Text colour
+         -->
+         
+		<EditTextPreference 
+			android:key="pref_font_size"
+			android:title="Font size"
+			android:dialogTitle="Font size"
+            android:summary="Set text font size"
+			android:inputType="number"
+			android:maxLength="2"/>
+         
+		<!-- Font face 
+         <ListPreference 
+             android:key="pref_font_face"
+             android:title="FontSize"
+             android:dialogTitle="Font size"
+             android:summary="Set text font size"/>
+        -->
+        
+        <EditTextPreference 
+            android:key="pref_line_spacing"
+            android:title="Line spacing"
+            android:dialogTitle="Line spacing"
+            android:summary="Set text line spacing"
+            android:inputType="number"
+			android:maxLength="2"/>
+        
+        <EditTextPreference 
+            android:key="pref_margins"
+            android:title="Margins"
+            android:dialogTitle="Margins"
+            android:summary="Set text margin"
+            android:inputType="number"
+			android:maxLength="2"/>
+        
+        <!-- 
+       	<ListPreference
+             android:key="pref_contrast"
+             android:title="Contrast"
+             android:dialogTitle="Contrast"
+             android:summary="Set a contrast"/>
+         -->
+         
+         <com.example.reader.types.PreferenceColorPicker 
+             android:key="pref_background_color"
+             android:title="Background color"
+             android:summary="Pick a background color"/>
+         
+         <com.example.reader.types.PreferenceColorPicker 
+             android:key="pref_text_color"
+             android:title="Text color"
+             android:summary="Pick a text color"/>
+         
+    </PreferenceCategory>
+
+    <PreferenceCategory 
+        android:title="@string/pref_tts_category_title"
+        android:key="pref_tts_settings">
+         
+		<com.example.reader.types.PreferenceSeekBar 
+		    android:key="pref_speech_rate"
+		    android:title="Speech rate"
+		    android:summary=""
+		    android:dialogMessage="Speech speed"
+		    android:defaultValue="9"
+		    android:text=""
+		    android:max="19"
+		    android:persistent="true"/>
+			
+		<com.example.reader.types.PreferenceSeekBar 
+		    android:key="pref_pitch_rate"
+		    android:title="Pitch"
+		    android:summary=""
+		    android:dialogMessage="Speech pitch"
+		    android:defaultValue="9"
+		    android:text=""
+		    android:max="19"
+		    android:persistent="true"/> 
+		    
+		<ListPreference 
+		    android:key="pref_tts_language"
+		    android:title="Language"
+		    android:dialogTitle="Language"
+		    android:entries="@array/pref_languages"
+		    android:entryValues="@array/pref_languages_values"
+		    android:defaultValue="@string/pref_language_default">
+		    
+		</ListPreference>
+        
+    </PreferenceCategory>
+    
+
 
 </PreferenceScreen>

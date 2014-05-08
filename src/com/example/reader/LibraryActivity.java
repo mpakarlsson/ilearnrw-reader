@@ -144,9 +144,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		String menuItemName = menuItems[menuItemIndex];
 		String listItemName = files.get(info.position).getName();
 		
-		if(menuItemName.equals("Edit")){
-			Toast.makeText(this, "EDIT", Toast.LENGTH_SHORT).show();
-			
+		if(menuItemName.equals("Edit")){			
 			Intent i = new Intent(this, RenameActivity.class);
 			i.putExtra("file", files.get(info.position).getFile());
 			i.putExtra("name", listItemName);
@@ -209,12 +207,11 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						e1.printStackTrace();
 					}
 					
+					files.get(pos).getFile().delete();
 					files.remove(pos);
 					files.add(new LibraryItem(updatedName, updatedFile));
 					
 					sortValues();
-					
-					origFile.delete();
 					adapter.notifyDataSetChanged();
 					
 					break;

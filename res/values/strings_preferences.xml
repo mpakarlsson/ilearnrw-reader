@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="pref_tts_category_title">Text-To-Speech</string>
+    <string name="pref_text_category_title">Text</string>
+    
+    <string name="pref_language_default">0</string>
+    
+    <string name="pref_background_color">pref_background_color</string>
+    <string name="pref_background_color_posX">pref_background_click_posX</string>
+    <string name="pref_background_color_posY">pref_background_click_posY</string>
+    
+    <string name="pref_text_color">pref_text_color</string>
+    <string name="pref_text_color_posX">pref_text_click_posX</string>
+    <string name="pref_text_color_posY">pref_text_click_posY</string>
+    
+    <string-array name="pref_languages">
+        <item>English(en_GB)</item>
+        <item>Greek(el_GR)</item>
+    </string-array>
+    
+    <string-array name="pref_languages_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    
+</resources>

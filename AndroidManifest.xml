@@ -36,12 +36,16 @@
         </activity>
         <activity
             android:name="com.example.reader.PresentationModule"
-            android:label="@string/title_Presentation_Module" >
+            android:label="@string/title_presentation_module" >
         </activity>
         <activity android:name="com.example.reader.AddToLibraryExplorerActivity"
             android:label="@string/title_activity_add_to_device" >
         </activity>
-        
+        <activity
+            android:name="com.example.reader.ReaderSettingsActivity"
+            android:label="@string/title_reader_settings" 
+           >
+        </activity>
         
         <activity
             android:name="com.example.reader.popups.SearchActivity"
@@ -59,6 +63,8 @@
             android:label="@string/title_activity_rename" 
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
         </activity>
+        
+        
         
     </application>
 

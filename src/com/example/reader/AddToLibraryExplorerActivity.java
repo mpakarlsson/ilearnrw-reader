@@ -3,6 +3,7 @@ package com.example.reader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -182,17 +183,21 @@ public class AddToLibraryExplorerActivity extends Activity {
 						StringBuilder builder = new StringBuilder(name);
 						
 						builder.insert(name.lastIndexOf("."), df.format(c.getTime()));
-						String data = FileHelper.InputStreamToString(new FileInputStream(f));						
-						new HttpConnection(new ExtendedAddToLibraryHandler(this, getBaseContext(), f, builder.toString())).post(url, data);
-
+						String data = FileHelper.InputStreamToString(fis);						
+						new HttpConnection(new ExtendedAddToLibraryHandler(this, getBaseContext(), file, builder.toString())).post(url, data);
+						fis.close();
+						
 						return;
 					}
 				}
 				
 				String data = FileHelper.InputStreamToString(fis);
 				new HttpConnection(new ExtendedAddToLibraryHandler(this, getBaseContext(), file, file.getName())).post(url, data);
+				fis.close();
 				
 			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

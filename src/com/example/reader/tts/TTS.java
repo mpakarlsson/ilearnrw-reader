@@ -54,11 +54,16 @@ public class TTS implements OnInitListener{
 		}
 		
 		Bundle bundle = data.getExtras();
-		ArrayList<String> availableVoices = bundle.getStringArrayList("availableVoices");
+		
+		// These are available 'languages' not 'voices' and any third party app can do changes to these. 
+		
+		ArrayList<String> availableVoices = bundle.getStringArrayList(TextToSpeech.Engine.EXTRA_AVAILABLE_VOICES);
 	
 		for(String voice : availableVoices){
 			ttsVoices.add(voice);
 		}
+		
+		
 		
 		if(Build.VERSION.SDK_INT >= 15){
 			tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
@@ -134,7 +139,6 @@ public class TTS implements OnInitListener{
 			Toast.makeText(context, "TTS:onInit: Initialization failed", Toast.LENGTH_SHORT).show();
 			Log.e("TTS", "Initialization failed");
 		}
-		
 	}
 	
 	public void speak(ArrayList<String> texts, int id, String clickType){
@@ -213,6 +217,10 @@ public class TTS implements OnInitListener{
 			tts.stop();
 			tts.shutdown();
 		}
+	}
+	
+	public ArrayList<String> getTTSVoices(){
+		return ttsVoices;
 	}
 	
 	

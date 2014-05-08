@@ -143,8 +143,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		ibtnSearchForward.setOnClickListener(this);
 		ibtnSearchBack.setOnClickListener(this);
 		
-		
-		
 		searchbar.setVisibility(RelativeLayout.GONE);
 		
 		// TODO: Create settings menu, 
@@ -285,6 +283,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_settings_reader:
+			startActivity(new Intent(this, ReaderSettingsActivity.class));
 			break;
 			
 		case R.id.ibtn_prev_reader:

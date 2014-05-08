@@ -29,11 +29,12 @@
     
     
     <string name="title_activity_reader">ReaderActivity</string>
-    <string name="title_Presentation_Module">PresentationModule</string>
+    <string name="title_presentation_module">PresentationModule</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_mode">ModeActivity</string>
     <string name="title_activity_rename">RenameActivity</string>
     <string name="title_activity_add_to_device">AddToDevice</string>
+    <string name="title_reader_settings">ReaderSettings</string>
     
     
     <!-- Search fragment -->
@@ -58,6 +59,9 @@
 	<!-- Add to device Explorer -->
 	<string name="add_to_device_explorer_copy_confirm_start">Copy\u0020</string>
 	<string name="add_to_device_explorer_copy_confirm_end">\u0020to your library?</string>
+	
+	
+	<string name="color_picker">Choose a color</string>
 	
 	<string-array name="add_to_device_array">
 	    <item>Device storage</item>
