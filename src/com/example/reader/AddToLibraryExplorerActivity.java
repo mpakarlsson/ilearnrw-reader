@@ -168,7 +168,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 				final File localDir = getDir(getString(R.string.library_location), MODE_PRIVATE);
 				ArrayList<File> files = (ArrayList<File>) FileHelper.getFileList(localDir);
 				
-				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 				final String lang 	= preferences.getString("language", "");
 				final int id 		= preferences.getInt("id", -1);
 				final String token 	= preferences.getString("authToken", "");

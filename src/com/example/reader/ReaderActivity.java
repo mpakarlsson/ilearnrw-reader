@@ -19,6 +19,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
@@ -49,10 +51,11 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private TTSHighlightCallback cbHighlight;
 	private TTSReadingCallback cbSpoken;
 	private String sentenceColor;
-	private static String html;
+	private static String html, fileHtml;
 	
 	private final static int FLAG_SEARCH = 10000;
 	private final static int FLAG_MODE = 10001;
+	private final static int FLAG_UPDATE_WEBVIEW = 10002;
 	
 	public static enum ReaderMode {
 		Listen("Listen", 0),
@@ -128,11 +131,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		reader.getSettings().setDefaultFontSize(22);
 		
 		reader.setWebViewClient(new MyWebViewClient());
-		html = getHtml(file);
-		html = updateHtml();
+		fileHtml = getHtml(file);
 		
-		reader.loadDataWithBaseURL(null, html, "text/html", "UTF-8", "about:blank");
-		
+
 		reader_status = ReaderStatus.Disabled;
 		ibtnPlay.setImageResource(R.drawable.play);
 		
@@ -155,7 +156,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	protected void onResume() {
 		super.onResume();
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		int mode = prefs.getInt("readerMode", -1);
 		if(mode==-1){
 			prefs.edit().putInt("readerMode", ReaderMode.Listen.getValue()).commit();
@@ -176,6 +177,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			reader_mode = ReaderMode.Listen;
 			break;
 		}
+		
+		html = updateHtml(fileHtml);
+		reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
 	}
 
 	@Override
@@ -224,6 +228,13 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			}
 		}
 			break;
+			
+		case FLAG_UPDATE_WEBVIEW:
+			if(resultCode == RESULT_OK){
+				boolean changed = data.getExtras().getBoolean("changed");
+				
+				
+			}
 		default:
 			break;
 		}
@@ -250,6 +261,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+			startActivityForResult(new Intent(this, ReaderSettingsActivity.class), FLAG_UPDATE_WEBVIEW);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -283,7 +295,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_settings_reader:
-			startActivity(new Intent(this, ReaderSettingsActivity.class));
+			startActivityForResult(new Intent(this, ReaderSettingsActivity.class), FLAG_UPDATE_WEBVIEW);
 			break;
 			
 		case R.id.ibtn_prev_reader:
@@ -362,7 +374,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		return sBuilder.toString();
 	}
 
-	private String updateHtml(){
+	private String updateHtml(String html){
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		boolean hasHead = true;
 		int splitPos = html.indexOf("<head");
 		
@@ -424,6 +438,37 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 					"}" +
 				"}";
 		
+		String setCSSLink = "<link rel='stylesheet' href='css/default.css' type='text/css'>";
+		
+		String backgroundColor =  Integer.toHexString(preferences.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255)));
+		String textColor = Integer.toHexString(preferences.getInt(getString(R.string.pref_text_color_title), Color.argb(255,0,0,0)));
+		
+		backgroundColor = "#" + backgroundColor.substring(2);
+		textColor = "#" + textColor.substring(2);
+		
+		String lineHeight = preferences.getString(getString(R.string.pref_line_height_title), "0");
+		String fontSize = preferences.getString(getString(R.string.pref_font_size_title), "20");
+		String letterSpacing = preferences.getString(getString(R.string.pref_letter_spacing_title), "0");
+		String margin = preferences.getString(getString(R.string.pref_margin_title), "0");
+		String fontFamily = preferences.getString(getString(R.string.pref_font_face_title), "default");
+		
+		lineHeight = lineHeight.equals("0") ? "line-height: normal;" : "line-height: " + lineHeight + "px;";
+		fontSize = fontSize.equals("0") ? "font-size: 20px;" : "font-size: " + fontSize + "px;";
+		
+		String cssBody = "" +
+				"<style type='text/css'>" +
+				"body " +
+				"{ " +
+					"font-family:" + fontFamily +"; "+
+					fontSize +
+					"background-color:" + backgroundColor + "!important; " +
+					"color:" + textColor +"; " +
+					lineHeight +
+					"letter-spacing: " + letterSpacing + "px;" +
+					"margin: " + margin + "px; " +
+				"}" +
+				"</style>" +
+				"";
 		
 		return firstPart +
 				startScripts + 
@@ -432,6 +477,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				retrieveBodyContent +
 				setSentenceOnClick +
 				stopScripts +
+				setCSSLink +
+				cssBody +
 				secondPart;
 	}
 	
@@ -567,7 +614,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			public void run() {
 				String[] colors = new String[3];
 				if(sentenceColor.isEmpty()){
-					reader.loadUrl("javascript:highlight('sent"+id+"', '#FFFFFF');");
+					String backgroundColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
+					reader.loadUrl("javascript:highlight('sent"+id+"', '" + backgroundColor + "');");
 					return;
 				}
 				else

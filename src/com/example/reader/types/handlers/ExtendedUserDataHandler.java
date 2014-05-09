@@ -45,7 +45,7 @@ public class ExtendedUserDataHandler extends Handler {
 				String response = (String) msg.obj;
 				UserDetailResult userDetails = new Gson().fromJson(response, UserDetailResult.class);
 				
-				SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext()).edit();
+				SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 				editor.putInt("id", userDetails.id);
 				editor.putString("language", userDetails.language);
 				editor.commit();

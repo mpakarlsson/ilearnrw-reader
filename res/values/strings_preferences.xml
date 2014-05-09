@@ -4,24 +4,40 @@
     <string name="pref_tts_category_title">Text-To-Speech</string>
     <string name="pref_text_category_title">Text</string>
     
-    <string name="pref_language_default">0</string>
     
-    <string name="pref_background_color">pref_background_color</string>
-    <string name="pref_background_color_posX">pref_background_click_posX</string>
-    <string name="pref_background_color_posY">pref_background_click_posY</string>
+    <string name="pref_background_color_title">pref_background_color</string>
+    <string name="pref_background_color_posX_title">pref_background_click_posX</string>
+    <string name="pref_background_color_posY_title">pref_background_click_posY</string>
     
-    <string name="pref_text_color">pref_text_color</string>
-    <string name="pref_text_color_posX">pref_text_click_posX</string>
-    <string name="pref_text_color_posY">pref_text_click_posY</string>
+    
+    <string name="pref_text_color_title">pref_text_color</string>
+    <string name="pref_text_color_posX_title">pref_text_click_posX</string>
+    <string name="pref_text_color_posY_title">pref_text_click_posY</string>
+    
+    
+    <string name="pref_font_size_title">pref_font_size</string>
+    <string name="pref_font_face_title">pref_font_face</string>
+    <string name="pref_line_height_title">pref_line_height</string>
+    <string name="pref_letter_spacing_title">pref_letter_spacing</string>
+    <string name="pref_margin_title">pref_margin</string>
+    
+    
+    <string name="pref_speech_rate_title">pref_speech_rate</string>
+    <string name="pref_pitch_rate_title">pref_pitch_rate</string>
+    <string name="pref_tts_language_title">pref_tts_language</string>
+    
+    
+
+	<string name="pref_language_default">en_GB</string>
     
     <string-array name="pref_languages">
-        <item>English(en_GB)</item>
-        <item>Greek(el_GR)</item>
+        <item>English</item>
+        <item>Greek</item>
     </string-array>
     
     <string-array name="pref_languages_values">
-        <item>0</item>
-        <item>1</item>
+        <item>en_GB</item>
+        <item>el_GR</item>
     </string-array>
     
 </resources>

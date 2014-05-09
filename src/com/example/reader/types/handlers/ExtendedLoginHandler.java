@@ -42,7 +42,7 @@ public class ExtendedLoginHandler extends Handler {
         		
         		LoginResult lr = new Gson().fromJson(response, LoginResult.class);
         		
-        		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext()).edit();
+        		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         		editor.putString("authToken", lr.authToken);
         		editor.putString("refreshToken", lr.refreshToken);
         		editor.commit();

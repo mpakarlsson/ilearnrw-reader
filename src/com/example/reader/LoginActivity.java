@@ -38,7 +38,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         
         chkRM = (CheckBox) findViewById(R.id.chk_remember_me);
         
-        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         final boolean isRemember = preferences.getBoolean("rememberMe", false);
         String username = preferences.getString("username", "");
         String password = preferences.getString("password", "");

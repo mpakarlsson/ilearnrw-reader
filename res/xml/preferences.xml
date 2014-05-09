@@ -4,16 +4,6 @@
     <PreferenceCategory
         android:title="@string/pref_text_category_title"
         android:key="pref_text_settings">
-    
-        <!-- 
-        Font size
-        Font face
-        Line spacing
-        Margins
-        Contrast
-        Background colour
-        Text colour
-         -->
          
 		<EditTextPreference 
 			android:key="pref_font_size"
@@ -21,31 +11,41 @@
 			android:dialogTitle="Font size"
             android:summary="Set text font size"
 			android:inputType="number"
-			android:maxLength="2"/>
+			android:maxLength="2"
+			android:defaultValue="20"/>
          
-		<!-- Font face 
          <ListPreference 
-             android:key="pref_font_face"
-             android:title="FontSize"
-             android:dialogTitle="Font size"
-             android:summary="Set text font size"/>
-        -->
+            android:key="pref_font_face"
+            android:title="Font face"
+            android:dialogTitle="Font face"
+            android:summary="Set text font face"/>
         
         <EditTextPreference 
-            android:key="pref_line_spacing"
-            android:title="Line spacing"
-            android:dialogTitle="Line spacing"
-            android:summary="Set text line spacing"
+            android:key="pref_line_height"
+            android:title="Line height"
+            android:dialogTitle="Line height"
+            android:summary="Set text line height"
             android:inputType="number"
-			android:maxLength="2"/>
+			android:maxLength="2"
+			android:defaultValue="0"/>
+
+        <EditTextPreference 
+            android:key="pref_letter_spacing"
+            android:title="Letter spacing"
+            android:dialogTitle="Letter spacing"
+            android:summary="Set text letter spacing"
+            android:inputType="number"
+			android:maxLength="2"
+			android:defaultValue="0"/>
         
         <EditTextPreference 
-            android:key="pref_margins"
+            android:key="pref_margin"
             android:title="Margins"
             android:dialogTitle="Margins"
             android:summary="Set text margin"
             android:inputType="number"
-			android:maxLength="2"/>
+			android:maxLength="2"
+			android:defaultValue="0"/>
         
         <!-- 
        	<ListPreference
