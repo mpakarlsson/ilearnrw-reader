@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
@@ -132,8 +131,10 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		
 		reader.setWebViewClient(new MyWebViewClient());
 		fileHtml = getHtml(file);
+		html = updateHtml(fileHtml);
+		reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
 		
-
+		
 		reader_status = ReaderStatus.Disabled;
 		ibtnPlay.setImageResource(R.drawable.play);
 		
@@ -177,9 +178,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			reader_mode = ReaderMode.Listen;
 			break;
 		}
-		
-		html = updateHtml(fileHtml);
-		reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
 	}
 
 	@Override
@@ -187,7 +185,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		tts.destroy();
 		super.onDestroy();
 	}
-
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -230,11 +227,11 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case FLAG_UPDATE_WEBVIEW:
-			if(resultCode == RESULT_OK){
-				boolean changed = data.getExtras().getBoolean("changed");
-				
-				
-			}
+		{
+			html = updateHtml(fileHtml);
+			reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
+		
+		}
 		default:
 			break;
 		}
@@ -454,6 +451,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		
 		lineHeight = lineHeight.equals("0") ? "line-height: normal;" : "line-height: " + lineHeight + "px;";
 		fontSize = fontSize.equals("0") ? "font-size: 20px;" : "font-size: " + fontSize + "px;";
+		fontFamily = fontFamily.indexOf(".") == -1 ? fontFamily : fontFamily.substring(0, fontFamily.lastIndexOf("."));
 		
 		String cssBody = "" +
 				"<style type='text/css'>" +

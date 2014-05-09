@@ -96,8 +96,7 @@
 		    android:title="Language"
 		    android:dialogTitle="Language"
 		    android:entries="@array/pref_languages"
-		    android:entryValues="@array/pref_languages_values"
-		    android:defaultValue="@string/pref_language_default">
+		    android:entryValues="@array/pref_languages_values">
 		    
 		</ListPreference>
         

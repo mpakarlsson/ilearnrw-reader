@@ -27,9 +27,6 @@
     <string name="pref_tts_language_title">pref_tts_language</string>
     
     
-
-	<string name="pref_language_default">en_GB</string>
-    
     <string-array name="pref_languages">
         <item>English</item>
         <item>Greek</item>

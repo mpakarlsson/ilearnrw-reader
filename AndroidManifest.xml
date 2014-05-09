@@ -32,7 +32,8 @@
         </activity>
         <activity
             android:name="com.example.reader.ReaderActivity"
-            android:label="@string/title_activity_reader" >
+            android:label="@string/title_activity_reader" 
+            android:configChanges="orientation|screenSize">
         </activity>
         <activity
             android:name="com.example.reader.PresentationModule"

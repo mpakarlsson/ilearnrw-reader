@@ -1,22 +1,22 @@
 @font-face{	
-	font-family:'calligraphy';
+	font-family:'unic_calligraphy';
 	font-weight:normal;
 	font-style:normal;
-	src:url('file:///android_asset/fonts/unic_calligraphy.ttf') format('truetype');
+	src:url('file:///android_asset/custom-fonts/unic_calligraphy.ttf') format('truetype');
 }
 
 @font-face{	
 	font-family:'kempoka';
 	font-weight:normal;
 	font-style:normal;
-	src:url('file:///android_asset/fonts/kempoka.otf') format('opentype');
+	src:url('file:///android_asset/custom-fonts/kempoka.otf') format('opentype');
 }
 
 @font-face{	
 	font-family:'hokitika';
 	font-weight:normal;
 	font-style:normal;
-	src:url('file:///android_asset/fonts/hokitika.otf') format('opentype');
+	src:url('file:///android_asset/custom-fonts/hokitika.otf') format('opentype');
 }
 
 @font-face{
