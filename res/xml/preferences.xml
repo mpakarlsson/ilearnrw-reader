@@ -82,7 +82,7 @@
 		    android:persistent="true"/>
 			
 		<com.example.reader.types.PreferenceSeekBar 
-		    android:key="pref_pitch_rate"
+		    android:key="pref_pitch"
 		    android:title="Pitch"
 		    android:summary=""
 		    android:dialogMessage="Speech pitch"

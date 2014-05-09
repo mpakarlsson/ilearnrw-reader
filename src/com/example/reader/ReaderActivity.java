@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.example.reader.interfaces.TTSHighlightCallback;
 import com.example.reader.interfaces.TTSReadingCallback;
@@ -54,7 +55,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	
 	private final static int FLAG_SEARCH = 10000;
 	private final static int FLAG_MODE = 10001;
-	private final static int FLAG_UPDATE_WEBVIEW = 10002;
+	private final static int FLAG_REFRESH_WEBVIEW = 10002;
 	
 	public static enum ReaderMode {
 		Listen("Listen", 0),
@@ -188,8 +189,10 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(tts==null)
+		if(tts==null){
 			tts = new TTS(ReaderActivity.this, cbHighlight, cbSpoken, requestCode, resultCode, data);
+			setTTS();
+		}
 		
 		switch (requestCode) {
 		case FLAG_SEARCH:
@@ -226,11 +229,11 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		}
 			break;
 			
-		case FLAG_UPDATE_WEBVIEW:
+		case FLAG_REFRESH_WEBVIEW:
 		{
 			html = updateHtml(fileHtml);
 			reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
-		
+			setTTS();
 		}
 		default:
 			break;
@@ -258,7 +261,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			startActivityForResult(new Intent(this, ReaderSettingsActivity.class), FLAG_UPDATE_WEBVIEW);
+			tts.stop();
+			startActivityForResult(new Intent(this, ReaderSettingsActivity.class), FLAG_REFRESH_WEBVIEW);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -292,7 +296,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_settings_reader:
-			startActivityForResult(new Intent(this, ReaderSettingsActivity.class), FLAG_UPDATE_WEBVIEW);
+			tts.stop();
+			startActivityForResult(new Intent(this, ReaderSettingsActivity.class), FLAG_REFRESH_WEBVIEW);
 			break;
 			
 		case R.id.ibtn_prev_reader:
@@ -369,6 +374,22 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			e.printStackTrace();
 		}
 		return sBuilder.toString();
+	}
+	
+	private void setTTS(){
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		int pitchRate = preferences.getInt(getString(R.string.pref_pitch_title), 9);
+		int speechRate = preferences.getInt(getString(R.string.pref_speech_rate_title), 9);
+		String language = preferences.getString(getString(R.string.pref_tts_language_title), "en_GB");
+		
+		double pitch = ((pitchRate + 1.0) / 10.0);
+		tts.setPitch((float)pitch);
+		double speech = ((speechRate + 1.0) / 10.0);
+		tts.setSpeechRate((float)speech);
+		
+		Locale loc = new Locale(language.substring(0, language.indexOf("_")), language.substring(language.indexOf("_")+1));
+		tts.setLanguage(loc);
 	}
 
 	private String updateHtml(String html){
@@ -654,6 +675,5 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				setPlayStatus(ReaderStatus.Enabled);
 			}
 		});
-		
 	}
 }

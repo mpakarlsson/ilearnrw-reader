@@ -62,7 +62,7 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		PreferenceColorPicker textPicker = (PreferenceColorPicker)findPreference(a.getString(R.string.pref_text_color_title));
 		
 		PreferenceSeekBar speechSlider = (PreferenceSeekBar)findPreference(a.getString(R.string.pref_speech_rate_title));
-		PreferenceSeekBar pitchSlider = (PreferenceSeekBar)findPreference(a.getString(R.string.pref_pitch_rate_title));
+		PreferenceSeekBar pitchSlider = (PreferenceSeekBar)findPreference(a.getString(R.string.pref_pitch_title));
 		
 		ListPreference languages = (ListPreference)findPreference(a.getString(R.string.pref_tts_language_title));
 		if(languages.getValue() == null)

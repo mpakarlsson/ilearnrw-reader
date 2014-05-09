@@ -23,7 +23,7 @@
     
     
     <string name="pref_speech_rate_title">pref_speech_rate</string>
-    <string name="pref_pitch_rate_title">pref_pitch_rate</string>
+    <string name="pref_pitch_title">pref_pitch</string>
     <string name="pref_tts_language_title">pref_tts_language</string>
     
     
