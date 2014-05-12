@@ -65,6 +65,11 @@
              android:title="Text color"
              android:summary="Pick a text color"/>
          
+         <com.example.reader.types.PreferenceColorPicker
+             android:key="pref_highlight_color"
+             android:title="Highlight color"
+             android:summary="Pick a color to highlight with"/>
+         
     </PreferenceCategory>
 
     <PreferenceCategory 

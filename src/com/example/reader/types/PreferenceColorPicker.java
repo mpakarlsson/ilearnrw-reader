@@ -17,6 +17,7 @@ public class PreferenceColorPicker extends Preference implements OnColorChangedL
 	
 	private String prefBackgroundColor, prefBackgroundColorPosX, prefBackgroundColorPosY;
 	private String prefTextColor, prefTextColorPosX, prefTextColorPosY;
+	private String prefHighlightColor, prefHighlightColorPosX, prefHighlightColorPosY;
 	
 	public PreferenceColorPicker(Context context) {
 		super(context);
@@ -39,15 +40,21 @@ public class PreferenceColorPicker extends Preference implements OnColorChangedL
 		int clickY = 0;
 		
 		if(key.equals(prefBackgroundColor)){
-			currentColor = preferences.getInt(prefBackgroundColor, Color.rgb(255, 255, 255));
 			defaultColor = Color.rgb(255, 255, 255);
+			currentColor = preferences.getInt(prefBackgroundColor, defaultColor);
 			clickX =  preferences.getInt(prefBackgroundColorPosX, 10);
 			clickY =  preferences.getInt(prefBackgroundColorPosY, 50);
 		} else if(key.equals(prefTextColor)){
-			currentColor = preferences.getInt(prefTextColor, Color.rgb(0, 0, 0));
 			defaultColor = Color.rgb(0, 0, 0);
+			currentColor = preferences.getInt(prefTextColor, defaultColor);
 			clickX =  preferences.getInt(prefTextColorPosX, 10);
 			clickY =  preferences.getInt(prefTextColorPosY, 305);
+		} else if(key.equals(prefHighlightColor)){
+			defaultColor = Color.rgb(255, 255, 0);
+			currentColor = preferences.getInt(prefTextColor, defaultColor);
+			clickX =  preferences.getInt(prefTextColorPosX, 265);
+			clickY =  preferences.getInt(prefTextColorPosY, 50);
+			
 		}
 		
 		
@@ -74,6 +81,10 @@ public class PreferenceColorPicker extends Preference implements OnColorChangedL
 			editor.putInt(prefTextColor, color);
 			editor.putInt(prefTextColorPosX, xPos);
 			editor.putInt(prefTextColorPosY, yPos);
+		} else if(key.equals(prefHighlightColor)){
+			editor.putInt(prefHighlightColor, color);
+			editor.putInt(prefHighlightColorPosX, xPos);
+			editor.putInt(prefHighlightColorPosY, yPos);
 		}
 		editor.commit();
 	}
@@ -85,5 +96,8 @@ public class PreferenceColorPicker extends Preference implements OnColorChangedL
 		prefTextColor = context.getString(R.string.pref_text_color_title);
 		prefTextColorPosX = context.getString(R.string.pref_text_color_posX_title);
 		prefTextColorPosY = context.getString(R.string.pref_text_color_posY_title);
+		prefHighlightColor = context.getString(R.string.pref_highlight_color_title);
+		prefHighlightColorPosX = context.getString(R.string.pref_highlight_color_posX_title);
+		prefHighlightColorPosY = context.getString(R.string.pref_highlight_color_posY_title);
 	}
 }

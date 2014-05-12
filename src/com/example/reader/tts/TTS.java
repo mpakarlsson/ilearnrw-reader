@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
 
+import com.example.reader.ReaderActivity;
 import com.example.reader.interfaces.TTSHighlightCallback;
 import com.example.reader.interfaces.TTSReadingCallback;
 
@@ -32,7 +33,7 @@ public class TTS implements OnInitListener{
 	private final TTSReadingCallback cbReading;
 	private LinkedList<Integer> positionList;
 	
-	public TTS(Context context, TTSHighlightCallback highlight, TTSReadingCallback reading, int requestCode, int resultCode, Intent data){
+	public TTS(final Context context, TTSHighlightCallback highlight, TTSReadingCallback reading, int requestCode, int resultCode, Intent data){
 		
 		this.context = context;
 		this.cbHighlight = highlight;
@@ -89,17 +90,27 @@ public class TTS implements OnInitListener{
 				
 				@Override
 				public void onDone(String utteranceId) {
-					
 					int id = positionList.pollFirst();
-					
+					String currId = Integer.toString(id);
 					if(utteranceId.equals("speak")){
 						Log.d("Speak: Started", "Start");
-						cbHighlight.OnRemoveHighlight(Integer.toString(id));
-						//currentId++;
+						cbHighlight.OnRemoveHighlight(currId);
+						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(ReaderActivity.CURR_SENT, currId).commit();
 					}else if(utteranceId.equals("lastSpeak")){
-						cbHighlight.OnRemoveHighlight(Integer.toString(id));
+						cbHighlight.OnRemoveHighlight(currId);
 						cbReading.OnFinishedReading();
+						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(ReaderActivity.CURR_SENT, null).commit();
 					}
+					
+					
+					if(!tts.isSpeaking()){
+						if(utteranceId.equals("lastSpeak"))
+							return;
+						
+						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(ReaderActivity.CURR_SENT, currId).commit();
+						cbHighlight.OnHighlight(currId);
+					}
+					
 				}
 			});
 		} else {
@@ -141,22 +152,18 @@ public class TTS implements OnInitListener{
 		}
 	}
 	
-	public void speak(ArrayList<String> texts, int id, String clickType){
+	public void speak(ArrayList<String> texts, int id){
 		if(texts == null || texts.isEmpty()){
 			Toast.makeText(context, "TTS:Speak: No data to speak", Toast.LENGTH_LONG).show();
 		} else {
 			
 			if(!positionList.isEmpty()){
-				if(clickType.equals("button")){
-						positionList.clear();
-				} else if(clickType.equals("click")){
-					if(tts.isSpeaking()){
-						int currId = positionList.pollFirst();
-						positionList.clear();
-						positionList.add(currId);
-					} else 
-						positionList.clear();
-				}
+				if(tts.isSpeaking()){
+					int currId = positionList.pollFirst();
+					positionList.clear();
+					positionList.add(currId);
+				} else 
+					positionList.clear();
 			}
 			
 			

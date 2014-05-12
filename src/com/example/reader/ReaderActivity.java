@@ -6,13 +6,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 import com.example.reader.interfaces.TTSHighlightCallback;
 import com.example.reader.interfaces.TTSReadingCallback;
 import com.example.reader.popups.ModeActivity;
 import com.example.reader.popups.SearchActivity;
 import com.example.reader.tts.TTS;
+import com.example.reader.utils.Helper;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -50,8 +53,11 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private TTS tts;
 	private TTSHighlightCallback cbHighlight;
 	private TTSReadingCallback cbSpoken;
-	private String sentenceColor;
 	private static String html, fileHtml;
+	private String current;
+	public static final String CURR_SENT = "current";
+	private ArrayList<String> texts;
+	
 	
 	private final static int FLAG_SEARCH = 10000;
 	private final static int FLAG_MODE = 10001;
@@ -133,8 +139,28 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		reader.setWebViewClient(new MyWebViewClient());
 		fileHtml = getHtml(file);
 		html = updateHtml(fileHtml);
-		reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
+		texts = new ArrayList<String>();
 		
+		int index =  html.indexOf("<body");
+		String sentence = null;
+		if(index != -1){
+			String body = html.substring(index);
+			sentence = Html.fromHtml(body).toString();		
+		}
+		
+		sentence.split("\\.");
+		
+		StringTokenizer tokens = new StringTokenizer(sentence, ".");
+		while(tokens.hasMoreTokens()){
+			String value = tokens.nextToken();
+			value = value.trim();
+			
+			if(!value.isEmpty() && value != null)
+				texts.add(value + ".");
+		}
+
+		texts.removeAll(Collections.singleton(null));
+		reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
 		
 		reader_status = ReaderStatus.Disabled;
 		ibtnPlay.setImageResource(R.drawable.play);
@@ -148,10 +174,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		
 		searchbar.setVisibility(RelativeLayout.GONE);
 		
-		// TODO: Create settings menu, 
-		// * tts options, "Pitch", "SpeechRate", "Language"(dropdown with available languages)
-		// * reader options, "FontSize", "Font" 
 		
+		current = PreferenceManager.getDefaultSharedPreferences(this).getString(CURR_SENT, null);
 	}
 	
 	@Override
@@ -301,15 +325,33 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_prev_reader:
+			current = PreferenceManager.getDefaultSharedPreferences(this).getString(CURR_SENT, null);
+			if(current == null)
+				current = "0";
+			
+			String previous = Helper.previousInt(current);
+			PreferenceManager.getDefaultSharedPreferences(this).edit().putString(CURR_SENT, previous).commit();
+			removeHighLight(current);
+			highLight(previous);
+			if(reader_status == ReaderStatus.Enabled){
+				speakFromSentence(Integer.parseInt(previous));
+			} 
+			
 			break;
 			
-		case R.id.ibtn_play_reader:			
+		case R.id.ibtn_play_reader:
+			current = PreferenceManager.getDefaultSharedPreferences(this).getString(CURR_SENT, null);
+			if(current == null)
+				current = "0";
+			
 			if(reader_status == ReaderStatus.Disabled){
 				setPlayStatus(ReaderStatus.Enabled);
 				if(reader_mode == ReaderMode.Listen) {
-					reader.loadUrl("javascript:getBodyContent('');");
+					int c = Integer.parseInt(current);
+					speakFromSentence(c);
 				}
 			} else {
+				PreferenceManager.getDefaultSharedPreferences(this).edit().putString(CURR_SENT, current).commit();
 				setPlayStatus(ReaderStatus.Disabled);
 				if(reader_mode == ReaderMode.Listen){
 					tts.stop();
@@ -319,6 +361,27 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_next_reader:
+			current = PreferenceManager.getDefaultSharedPreferences(this).getString(CURR_SENT, null);
+			if(current == null)
+				current = "0";
+			
+			int c = Integer.parseInt(current);
+			String next;
+			if(c+1>=texts.size())
+				next = current;
+			else 
+				next = Helper.nextInt(current);
+			
+			
+			
+			PreferenceManager.getDefaultSharedPreferences(this).edit().putString(CURR_SENT, next).commit();
+			removeHighLight(current);
+			highLight(next);
+			
+			if(reader_status == ReaderStatus.Enabled){
+				speakFromSentence(Integer.parseInt(next));
+			} 
+			
 			break;
 			
 		case R.id.ibtn_search_forward:
@@ -338,6 +401,24 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	public boolean onLongClick(View v) {
 		return false;
 	};
+	
+	public void highLight(String id){
+		String highlightColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
+		reader.loadUrl("javascript:highlight('sent"+id+"', '" + highlightColor + "');");
+
+		/*String[] sents = html.split("[\\n\\r]");
+		sentences.clear();
+		for (int i = 0; i < sents.length; i++)
+			if(!sents[i].trim().isEmpty())
+				sentences.add(sents[i].trim());
+		*/
+	}
+	
+	public void removeHighLight(String id){
+		String backgroundColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
+		reader.loadUrl("javascript:highlight('sent"+id+"', '" + backgroundColor + "');");
+	}
+	
 	
 	private void setPlayStatus(ReaderStatus status){	
 		if(status == ReaderStatus.Enabled)	
@@ -391,6 +472,14 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		Locale loc = new Locale(language.substring(0, language.indexOf("_")), language.substring(language.indexOf("_")+1));
 		tts.setLanguage(loc);
 	}
+	
+	private void speakFromSentence(int id){
+		ArrayList<String> sentences = new ArrayList<String>();
+		for(int i=id; i<texts.size(); i++)
+			sentences.add(texts.get(i));
+		
+		tts.speak(sentences, id);
+	}
 
 	private String updateHtml(String html){
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -430,12 +519,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 					"document.getElementById(id).style.backgroundColor=color;" +
 				"return true;" + 
 				"}";
-		
-		String getSentenceStyle = 
-				"function getSentenceStyle(id){" +
-				"var s = document.getElementById(id).style.backgroundColor;" +
-				"ReaderInterface.getSentenceStyle(s);" +
-				"}";
 
 		String setSentenceOnClick =
 				"function setOnClickEvents(){" +
@@ -451,7 +534,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 							"part = part.substring(lastIndex);" +
 							"body = body.substring(body.indexOf(this.id));" +
 							"body = part + body;" +
-							"ReaderInterface.splitSentencesSpeak(body, this.id, 'click');" +
+							"ReaderInterface.clickSentence(body, this.id);" +
 						"};" +					
 					"}" +
 				"}";
@@ -492,7 +575,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		return firstPart +
 				startScripts + 
 				highlightSentence +
-				getSentenceStyle +
 				retrieveBodyContent +
 				setSentenceOnClick +
 				stopScripts +
@@ -514,16 +596,10 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			reader.loadUrl("javascript:setOnClickEvents();");
+			String curr = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString(CURR_SENT, null);
+			if(curr != null)
+				highLight(curr);
 			
-			/*reader.loadUrl("javascript:highlight('s0', 'LightGreen');");
-			reader.loadUrl("javascript:highlight('s1', '#00FF66');");
-			reader.loadUrl("javascript:highlight('sent0', '#FF3300');");
-			reader.loadUrl("javascript:highlight('sent1', '#0066FF');");
-			reader.loadUrl("javascript:highlight('sent2', '#996600');");
-			reader.loadUrl("javascript:highlight('sent5', '#FF6633');");
-			reader.loadUrl("javascript:highlight('sent6', '#9933FF');");
-			reader.loadUrl("javascript:highlight('sent6', '#9933FF');");
-			reader.loadUrl("javascript:ReaderInterface.showToast('onPageFinished');");*/
 		}	
 	};
 	
@@ -557,17 +633,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		}
 		
 		@JavascriptInterface
-		public void splitSentencesSpeak(String html, String id, String clickType){						
-			runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					setPlayStatus(ReaderStatus.Enabled);
-				}
-			});
-			
-			String tempString = Html.fromHtml(html).toString();
-
+		public void clickSentence(String html, String id){			
 			int pos = -1;
 			for(int i=id.length() - 1; i>=0; i--){
 				Character c = id.charAt(i);
@@ -584,33 +650,34 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				return;
 			}
 			
-			int sentId = Integer.parseInt(id.substring(pos));
+			final int sentId = Integer.parseInt(id.substring(pos));
 			
-			tempString = tempString.replaceAll("[:](?=[A-Z])", ":\n");
-			tempString = tempString.replaceAll("[.](?= )", ".\n");
-			String[] sentences = tempString.split("[\\n\\r]");
-			
-			ArrayList<String> sentencesRemoved = new ArrayList<String>();
-			
-			for (int i = 0; i < sentences.length; i++) {
-				if(!sentences[i].trim().isEmpty()){
-					sentencesRemoved.add(sentences[i].trim());
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+					String curr = prefs.getString(CURR_SENT, null);
+					int c = -1;
+					
+					
+					if(curr!=null){
+						c = Integer.parseInt(curr);
+						removeHighLight(Integer.toString(c));
+					}
+					
+					if(c!=sentId){
+						String sId = Integer.toString(sentId);
+						
+						highLight(sId);
+						prefs.edit().putString(CURR_SENT, sId).commit();
+						
+						if(reader_status == ReaderStatus.Enabled)
+							speakFromSentence(sentId);
+					} else 
+						prefs.edit().putString(CURR_SENT, null).commit();
 				}
-			}
-			
-			tts.speak(sentencesRemoved, sentId, clickType);
-		}		
-		
-		@JavascriptInterface
-		public void getSentenceStyle(String style){
-			if(style.isEmpty()){
-				sentenceColor = ""; 
-				return;
-			}
-			sentenceColor = style.substring(style.indexOf("(")+1);
-			sentenceColor = sentenceColor.substring(0, sentenceColor.indexOf(")"));
+			});
 		}
-		
 	}
 
 
@@ -620,8 +687,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		this.runOnUiThread(new Runnable(){
 			@Override
 			public void run() {
-				reader.loadUrl("javascript:getSentenceStyle('sent"+id+"');");
-				reader.loadUrl("javascript:highlight('sent"+id+"', '#FFFF00');");
+				String highlightColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
+				reader.loadUrl("javascript:highlight('sent"+id+"', '" + highlightColor + "');");
 			}
 		});
 	}
@@ -631,26 +698,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		this.runOnUiThread(new Runnable(){
 			@Override
 			public void run() {
-				String[] colors = new String[3];
-				if(sentenceColor.isEmpty()){
-					String backgroundColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
-					reader.loadUrl("javascript:highlight('sent"+id+"', '" + backgroundColor + "');");
-					return;
-				}
-				else
-					colors = sentenceColor.split(",");
-				
-				String hex = "#";
-				for(int i = 0; i < colors.length; i++){
-					String color = colors[i].trim();
-					
-					if(color.equals("0"))
-						hex += "00";
-					else
-						hex += Integer.toHexString(Integer.parseInt(colors[i].trim()));
-				}
-				
-				reader.loadUrl("javascript:highlight('sent"+id+"', '"+hex+"');");
+				String backgroundColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
+				reader.loadUrl("javascript:highlight('sent"+id+"', '" + backgroundColor + "');");
 			}
 		});
 	}
