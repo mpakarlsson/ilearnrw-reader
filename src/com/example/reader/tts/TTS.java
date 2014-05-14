@@ -32,10 +32,12 @@ public class TTS implements OnInitListener{
 	private final TTSHighlightCallback cbHighlight;
 	private final TTSReadingCallback cbReading;
 	private LinkedList<Integer> positionList;
+	private String currSentenceTag;
 	
-	public TTS(final Context context, TTSHighlightCallback highlight, TTSReadingCallback reading, int requestCode, int resultCode, Intent data){
+	public TTS(final Context context, String currSentTag, TTSHighlightCallback highlight, TTSReadingCallback reading, int requestCode, int resultCode, Intent data){
 		
 		this.context = context;
+		currSentenceTag = currSentTag;
 		this.cbHighlight = highlight;
 		this.cbReading = reading;
 		positionList = new LinkedList<Integer>();
@@ -74,12 +76,14 @@ public class TTS implements OnInitListener{
 					
 					int id = positionList.getFirst();
 					cbReading.OnStartedReading();
-					
+					String currId = Integer.toString(id);
 					if(utteranceId.equals("speak")){
 						Log.d("Speak: Done", "Done");
 						cbHighlight.OnHighlight(Integer.toString(id));
+						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(currSentenceTag, currId).commit();
 					} else if(utteranceId.equals("lastSpeak")){
 						cbHighlight.OnHighlight(Integer.toString(id));
+						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(currSentenceTag, null).commit();
 					}
 				}
 				
@@ -95,11 +99,9 @@ public class TTS implements OnInitListener{
 					if(utteranceId.equals("speak")){
 						Log.d("Speak: Started", "Start");
 						cbHighlight.OnRemoveHighlight(currId);
-						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(ReaderActivity.CURR_SENT, currId).commit();
 					}else if(utteranceId.equals("lastSpeak")){
 						cbHighlight.OnRemoveHighlight(currId);
 						cbReading.OnFinishedReading();
-						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(ReaderActivity.CURR_SENT, null).commit();
 					}
 					
 					
@@ -107,7 +109,7 @@ public class TTS implements OnInitListener{
 						if(utteranceId.equals("lastSpeak"))
 							return;
 						
-						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(ReaderActivity.CURR_SENT, currId).commit();
+						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(currSentenceTag, currId).commit();
 						cbHighlight.OnHighlight(currId);
 					}
 					

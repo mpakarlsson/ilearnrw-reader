@@ -51,7 +51,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private TTSReadingCallback cbSpoken;
 	private static String html, fileHtml;
 	private String current;
-	public static String CURR_SENT = "current";
+	public String CURR_SENT = "current";
 	public static final String SENTENCE_TAG = "s";
 	private ArrayList<String> texts;
 	
@@ -101,7 +101,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		int endingIndex =  title.lastIndexOf(".");
 		String ending = title.substring(endingIndex+1);
 		title = title.substring(0, endingIndex);
-		CURR_SENT += "_" + title + "_" + ending;
+		CURR_SENT = CURR_SENT + "_" + title + "_" + ending;
 		
 		tvTitle = (TextView) findViewById(R.id.tv_book_title_reader);
 		tvTitle.setText(title);
@@ -176,6 +176,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		
 		
 		current = PreferenceManager.getDefaultSharedPreferences(this).getString(CURR_SENT, null);
+		int b=0;
 	}
 	
 	@Override
@@ -214,7 +215,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(tts==null){
-			tts = new TTS(ReaderActivity.this, cbHighlight, cbSpoken, requestCode, resultCode, data);
+			tts = new TTS(ReaderActivity.this, CURR_SENT, cbHighlight, cbSpoken, requestCode, resultCode, data);
 			setTTS();
 		}
 		
