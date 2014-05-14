@@ -3,19 +3,19 @@ package com.example.reader.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Environment;
 
 public class FileHelper {
-	public static boolean WriteFileToDirectory(InputStream is, String fileName, File directory){
+	/*public static boolean WriteFileToDirectory(InputStream is, String fileName, File directory){
 		OutputStream os;
 		try {
 			os = new FileOutputStream(new File(directory, fileName));
@@ -35,6 +35,52 @@ public class FileHelper {
 			return false;
 		}
 		return true;
+	}*/
+	
+	public static void saveFile(String data, File file){
+		try {
+			OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file));
+			osw.write(data);
+			osw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void saveFile(InputStream is, File file){
+		try {
+			OutputStream os = new FileOutputStream(file);
+			byte[] buffer = new byte[1024];
+			int read;
+			
+			while((read = is.read(buffer)) != -1)
+				os.write(buffer, 0, read);
+			
+			os.flush();
+			os.close();
+			
+		} catch (IOException e) {
+		}
+		
+	}
+	
+	public static String readFromFile(File file){
+		try {
+			InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "UTF-8");
+			BufferedReader br = new BufferedReader(isr);
+			String line = "";
+			StringBuilder sb = new StringBuilder();
+			
+			while((line = br.readLine()) != null){
+				sb.append(line);
+			}
+			br.close();
+			isr.close();
+			return sb.toString();
+			
+		} catch (IOException e) {}
+		
+		return null;
 	}
 	
 	public static List<File> getFileList(File parent){
@@ -67,14 +113,17 @@ public class FileHelper {
 	    out.close();
 	}
 	
-	public static String InputStreamToString(InputStream is){
+	public static String inputStreamToString(InputStream is){
 		try {
-			int size = is.available();
-			byte[] buffer = new byte[size];
-			is.read(buffer);
-			is.close();
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			StringBuilder sb = new StringBuilder(is.available());
+			String line;
 			
-			return new String(buffer);
+			while((line=br.readLine()) != null){
+				sb.append(line);
+			}
+			
+			return sb.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

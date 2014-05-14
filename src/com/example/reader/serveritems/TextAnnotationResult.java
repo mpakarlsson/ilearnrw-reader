@@ -1,5 +1,7 @@
 package com.example.reader.serveritems;
 
+import ilearnrw.annotation.UserBasedAnnotatedWordsSet;
+
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
@@ -11,7 +13,7 @@ public class TextAnnotationResult {
 	
 	
 	@SerializedName("wordSet")
-	public List<TextAnnotationWordSet> wordSet;
+	public UserBasedAnnotatedWordsSet wordSet;
 	
 	
 	@SerializedName("trickyWordsList")

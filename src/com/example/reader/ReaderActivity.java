@@ -1,10 +1,6 @@
 package com.example.reader;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -14,6 +10,7 @@ import com.example.reader.interfaces.TTSReadingCallback;
 import com.example.reader.popups.ModeActivity;
 import com.example.reader.popups.SearchActivity;
 import com.example.reader.tts.TTS;
+import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.Helper;
 
 import android.annotation.SuppressLint;
@@ -143,7 +140,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		reader.getSettings().setDefaultFontSize(22);
 		
 		reader.setWebViewClient(new MyWebViewClient());
-		fileHtml = getHtml(file);
+		fileHtml = FileHelper.readFromFile(file);
 		html = updateHtml(fileHtml);
 		texts = new ArrayList<String>();
 		
@@ -429,35 +426,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		else
 			ibtnPlay.setImageResource(R.drawable.play);
 		reader_status = status;
-	}
-	
-	private String getHtml(File f){
-		StringBuilder sBuilder = null;
-		FileInputStream fStream = null;
-		BufferedReader buffReader = null;
-		
-		try {
-			fStream = new FileInputStream(f);
-			buffReader = new BufferedReader(new InputStreamReader(fStream, "UTF-8"));
-			sBuilder = new StringBuilder();
-			
-			String line = buffReader.readLine();
-			
-			while(line != null){
-				sBuilder.append(line);
-				line = buffReader.readLine();
-				
-				if(line != null)
-					sBuilder.append("\n");
-			}
-			
-			buffReader.close();
-			fStream.close();
-		
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return sBuilder.toString();
 	}
 	
 	private void setTTS(){

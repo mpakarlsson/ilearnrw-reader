@@ -179,19 +179,21 @@ public class AddToLibraryExplorerActivity extends Activity {
 					if(f.getName().equals(file.getName())){
 						String name = file.getName();
 						Calendar c = Calendar.getInstance();
-						SimpleDateFormat df = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss", Locale.getDefault());
+						SimpleDateFormat df = new SimpleDateFormat("_yyyy_MM_dd-HH_mm_ss", Locale.getDefault());
 						StringBuilder builder = new StringBuilder(name);
 						
 						builder.insert(name.lastIndexOf("."), df.format(c.getTime()));
-						String data = FileHelper.InputStreamToString(fis);						
-						new HttpConnection(new ExtendedAddToLibraryHandler(this, getBaseContext(), file, builder.toString())).post(url, data);
+						File newFile = new File(localDir, builder.toString());						
+						String data = FileHelper.inputStreamToString(fis);
 						fis.close();
+						new HttpConnection(new ExtendedAddToLibraryHandler(this, getBaseContext(), newFile, builder.toString())).post(url, data);
+						
 						
 						return;
 					}
 				}
 				
-				String data = FileHelper.InputStreamToString(fis);
+				String data = FileHelper.inputStreamToString(fis);
 				new HttpConnection(new ExtendedAddToLibraryHandler(this, getBaseContext(), file, file.getName())).post(url, data);
 				fis.close();
 				

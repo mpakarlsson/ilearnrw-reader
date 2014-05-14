@@ -69,10 +69,14 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		        try {
 					int resourceID=fields[count].getInt(fields[count]);
 					InputStream is = getResources().openRawResource(resourceID);
-					FileHelper.WriteFileToDirectory(is, fields[count].getName() + ".html", dir);		        
+					//FileHelper.WriteFileToDirectory(is, fields[count].getName() + ".html", dir);
+					is.close();
 		        } catch (IllegalAccessException e) {
 					e.printStackTrace();
 				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		    }
@@ -198,6 +202,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						dialog.cancel();
 					
 					File f = (File) data.getExtras().get("file");
+					File json = (File) data.getExtras().get("json");
 					String name = data.getExtras().getString("name");
 					
 					if(f!=null && name!= null){
