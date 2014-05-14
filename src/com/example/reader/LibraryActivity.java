@@ -29,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class LibraryActivity extends Activity implements OnClickListener , OnItemClickListener{
@@ -167,6 +168,21 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 					@Override
 					public void onClick(DialogInterface dialog, int which) {}
 				}).show();			
+		} else if(menuItemName.equals("Copy")){
+			final int pos = info.position;
+			
+			new AlertDialog.Builder(this)
+			.setTitle("Copy this file to external device")
+			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					boolean result = FileHelper.copyFileToExternalStorage(files.get(pos).getFile(), files.get(pos).getName(), "Debug_IlearnRW");
+					Toast.makeText(getBaseContext(), "Copying file to external storage was " + result, Toast.LENGTH_SHORT).show();
+				}
+			}).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {}
+			}).show();
 		}
 		
 		return true;

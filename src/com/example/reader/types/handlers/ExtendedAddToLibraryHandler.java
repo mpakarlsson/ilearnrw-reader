@@ -1,11 +1,17 @@
 package com.example.reader.types.handlers;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.example.reader.AddToLibraryExplorerActivity;
 import com.example.reader.HttpConnection;
@@ -13,7 +19,9 @@ import com.example.reader.R;
 import com.example.reader.serveritems.TextAnnotationResult;
 import com.example.reader.utils.FileHelper;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +44,7 @@ public class ExtendedAddToLibraryHandler extends Handler {
 		this.filename 	= filename;
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public void handleMessage(Message msg) {
 		AddToLibraryExplorerActivity a = activity.get();
@@ -48,16 +57,24 @@ public class ExtendedAddToLibraryHandler extends Handler {
 			
 			case HttpConnection.CONNECTION_SUCCEED:
 				Log.d("TextAnnotation", "Succeeded");
-				String response = (String) msg.obj;
+				String response = (String) msg.obj;			
+				
 				TextAnnotationResult text = new Gson().fromJson(response, TextAnnotationResult.class);
+				int aa = 0;
 				// Save file
 				
-				try {
+				/*try {
 					Toast.makeText(context, "Annotation successful", Toast.LENGTH_SHORT).show();
 					
 					InputStream is = new ByteArrayInputStream(text.html.getBytes("UTF-8"));
 					File dir = a.getDir(context.getString(R.string.library_location), Context.MODE_PRIVATE);
 					FileHelper.WriteFileToDirectory(is, filename, dir);
+					
+					File externalDir =  FileHelper.getOrCreateExternalDirectory("Debug_IlearnRW");
+					FileHelper.WriteFileToDirectory(is, "result_"+filename, externalDir);
+					
+					JsonObject data = new JsonObject(response);
+					
 					is.close();
 					
 					Intent intent=new Intent();
@@ -72,6 +89,7 @@ public class ExtendedAddToLibraryHandler extends Handler {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				*/
 				
 				break;
 				

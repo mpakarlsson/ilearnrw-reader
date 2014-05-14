@@ -24,6 +24,7 @@
     <string-array name="library_context_menu">
         <item>Edit</item>
         <item>Delete</item>
+        <item>Copy</item>
     </string-array>
     
     
@@ -62,7 +63,7 @@
 	
 	<string-array name="add_to_device_array">
 	    <item>Device storage</item>
-	    <item>Online Resource Bank</item>
-	</string-array>
+	    <item>Online Resource Bank</item>	
+    </string-array>
 
 </resources>

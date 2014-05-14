@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
@@ -55,7 +54,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private TTSReadingCallback cbSpoken;
 	private static String html, fileHtml;
 	private String current;
-	public static final String CURR_SENT = "current";
+	public static String CURR_SENT = "current";
+	public static final String SENTENCE_TAG = "s";
 	private ArrayList<String> texts;
 	
 	
@@ -99,6 +99,12 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		Bundle libBundle = getIntent().getBundleExtra("LibraryBundle");
 		File file = (File) libBundle.get("file");
 		String title = libBundle.getString("title");
+		
+		
+		int endingIndex =  title.lastIndexOf(".");
+		String ending = title.substring(endingIndex+1);
+		title = title.substring(0, endingIndex);
+		CURR_SENT += "_" + title + "_" + ending;
 		
 		tvTitle = (TextView) findViewById(R.id.tv_book_title_reader);
 		tvTitle.setText(title);
@@ -148,8 +154,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			sentence = Html.fromHtml(body).toString();		
 		}
 		
-		sentence.split("\\.");
-		
 		StringTokenizer tokens = new StringTokenizer(sentence, ".");
 		while(tokens.hasMoreTokens()){
 			String value = tokens.nextToken();
@@ -159,7 +163,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				texts.add(value + ".");
 		}
 
-		texts.removeAll(Collections.singleton(null));
 		reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
 		
 		reader_status = ReaderStatus.Disabled;
@@ -404,7 +407,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	
 	public void highLight(String id){
 		String highlightColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
-		reader.loadUrl("javascript:highlight('sent"+id+"', '" + highlightColor + "');");
+		reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + highlightColor + "');");
 
 		/*String[] sents = html.split("[\\n\\r]");
 		sentences.clear();
@@ -416,7 +419,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	
 	public void removeHighLight(String id){
 		String backgroundColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
-		reader.loadUrl("javascript:highlight('sent"+id+"', '" + backgroundColor + "');");
+		reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + backgroundColor + "');");
 	}
 	
 	
@@ -522,7 +525,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 
 		String setSentenceOnClick =
 				"function setOnClickEvents(){" +
-					"var sents = document.getElementsByTagName('sent');" +
+					"var sents = document.getElementsByTagName('" + SENTENCE_TAG + "');" +
 					"var timer;" +
 					"var longPressTime = 2000;" +
 					"for(var i = 0; i < sents.length; i++) {" +
@@ -688,7 +691,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			@Override
 			public void run() {
 				String highlightColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
-				reader.loadUrl("javascript:highlight('sent"+id+"', '" + highlightColor + "');");
+				reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + highlightColor + "');");
 			}
 		});
 	}
@@ -699,7 +702,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			@Override
 			public void run() {
 				String backgroundColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
-				reader.loadUrl("javascript:highlight('sent"+id+"', '" + backgroundColor + "');");
+				reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + backgroundColor + "');");
 			}
 		});
 	}
