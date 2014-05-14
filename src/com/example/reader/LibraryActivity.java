@@ -176,7 +176,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			final int pos = info.position;
 			
 			new AlertDialog.Builder(this)
-			.setTitle("Copy this file to external device")
+			.setTitle("Copy this file to external storage?")
 			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {

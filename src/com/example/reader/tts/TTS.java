@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
 
-import com.example.reader.ReaderActivity;
 import com.example.reader.interfaces.TTSHighlightCallback;
 import com.example.reader.interfaces.TTSReadingCallback;
 
@@ -66,8 +65,6 @@ public class TTS implements OnInitListener{
 			ttsVoices.add(voice);
 		}
 		
-		
-		
 		if(Build.VERSION.SDK_INT >= 15){
 			tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
 				
@@ -95,7 +92,7 @@ public class TTS implements OnInitListener{
 				@Override
 				public void onDone(String utteranceId) {
 					int id = positionList.pollFirst();
-					String currId = Integer.toString(id);
+					final String currId = Integer.toString(id);
 					if(utteranceId.equals("speak")){
 						Log.d("Speak: Started", "Start");
 						cbHighlight.OnRemoveHighlight(currId);
@@ -103,16 +100,6 @@ public class TTS implements OnInitListener{
 						cbHighlight.OnRemoveHighlight(currId);
 						cbReading.OnFinishedReading();
 					}
-					
-					
-					if(!tts.isSpeaking()){
-						if(utteranceId.equals("lastSpeak"))
-							return;
-						
-						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(currSentenceTag, currId).commit();
-						cbHighlight.OnHighlight(currId);
-					}
-					
 				}
 			});
 		} else {

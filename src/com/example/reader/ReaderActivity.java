@@ -3,7 +3,6 @@ package com.example.reader;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.StringTokenizer;
 
 import com.example.reader.interfaces.TTSHighlightCallback;
 import com.example.reader.interfaces.TTSReadingCallback;
@@ -145,26 +144,23 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		texts = new ArrayList<String>();
 		
 		int index =  html.indexOf("<body");
-		String sentence = null;
 		if(index != -1){
 			String body = html.substring(index);
-			sentence = Html.fromHtml(body).toString();		
-		}
-		
-		StringTokenizer tokens = new StringTokenizer(sentence, ".");
-		while(tokens.hasMoreTokens()){
-			String value = tokens.nextToken();
-			value = value.trim();
-			
-			if(!value.isEmpty() && value != null)
-				texts.add(value + ".");
+			String[] sentences = body.split("</s>");
+			for(int i=0; i<sentences.length; i++){
+				String s = sentences[i] + "</s>";
+				int ind = s.indexOf("<s");
+				s = ind == -1 ? "" :s.substring(ind);
+				s = Html.fromHtml(s).toString();
+				if(!s.trim().isEmpty())
+					texts.add(s);
+			}		
 		}
 
 		reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
 		
 		reader_status = ReaderStatus.Disabled;
 		ibtnPlay.setImageResource(R.drawable.play);
-		
 		
 		searchbar = (RelativeLayout) findViewById(R.id.search_buttons_layout);
 		ibtnSearchForward = (ImageButton) findViewById(R.id.ibtn_search_forward);
@@ -174,9 +170,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		
 		searchbar.setVisibility(RelativeLayout.GONE);
 		
-		
 		current = PreferenceManager.getDefaultSharedPreferences(this).getString(CURR_SENT, null);
-		int b=0;
 	}
 	
 	@Override
@@ -671,7 +665,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			@Override
 			public void run() {
 				String backgroundColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
-				reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + backgroundColor + "');");
+				reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + backgroundColor + "');");	
 			}
 		});
 	}

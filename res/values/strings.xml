@@ -34,7 +34,8 @@
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_mode">ModeActivity</string>
     <string name="title_activity_rename">RenameActivity</string>
-    <string name="title_activity_add_to_device">AddToDevice</string>
+    <string name="title_activity_add_to_device_explorer">AddToDevice - Explorer</string>
+    <string name="title_activity_add_to_device_orb">AddToDevice - Online Resource Bank</string>
     <string name="title_reader_settings">ReaderSettings</string>
     
     

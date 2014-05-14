@@ -43,7 +43,10 @@
             android:label="@string/title_presentation_module" >
         </activity>
         <activity android:name="com.example.reader.AddToLibraryExplorerActivity"
-            android:label="@string/title_activity_add_to_device" >
+            android:label="@string/title_activity_add_to_device_explorer" >
+        </activity>
+        <activity android:name="com.example.reader.AddToLibraryORBActivity"
+            android:label="@string/title_activity_add_to_device_orb" >
         </activity>
         <activity
             android:name="com.example.reader.ReaderSettingsActivity"
