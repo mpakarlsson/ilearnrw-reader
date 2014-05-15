@@ -43,7 +43,7 @@ public class PreferenceFragmentLibrary extends PreferenceFragment {
 					public void onClick(DialogInterface dialog, int which) {	
 						Intent i = new Intent();
 						i.putExtra("format", true);
-						a.setResult(Activity.RESULT_OK);
+						a.setResult(Activity.RESULT_OK, i);
 						a.finish();
 						return;
 					}

@@ -59,9 +59,9 @@ public class ExtendedLoginHandler extends Handler {
         		break;
         	}
         	case HttpConnection.CONNECTION_RESPONSE_ERROR: {
-        		Exception e = (Exception) msg.obj;
-        		Log.e("Login" , e.getMessage());
-        		Toast.makeText(context, "Login failed. " + e.getMessage()  , Toast.LENGTH_SHORT).show();
+        		String s = (String) msg.obj;
+        		Log.e("Login" , s);
+        		Toast.makeText(context, "Login failed. " + s  , Toast.LENGTH_SHORT).show();
         		break;
         	}
     	}

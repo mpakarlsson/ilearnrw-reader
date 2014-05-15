@@ -9,13 +9,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.example.reader.popups.RenameActivity;
+import com.example.reader.types.SideSelector;
 import com.example.reader.utils.FileHelper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -42,12 +38,13 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class LibraryActivity extends Activity implements OnClickListener , OnItemClickListener{
 
-	public static ImageButton btnAdd;
-	public static ListView library;
-	public static ArrayList<File> libraryFiles;
-	public ArrayList<LibraryItem> files;
+	private static ImageButton btnAdd;
+	private static ListView library;
+	private SideSelector sideSelector;
+	private static ArrayList<File> libraryFiles;
+	private ArrayList<LibraryItem> files;
 	
-	public AlertDialog dialog;
+	private AlertDialog dialog;
 	
 	public static final int FLAG_ADD_TO_DEVICE = 10000;
 	public static final int FLAG_UPDATE_FILE_NAME = 10001;
@@ -60,7 +57,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_library);
-		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		btnAdd = (ImageButton) findViewById(R.id.ibtn_add_library);
 		btnAdd.setOnClickListener(this);
@@ -80,7 +76,8 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		        try {
 					int resourceID=fields[count].getInt(fields[count]);
 					InputStream is = getResources().openRawResource(resourceID);
-					//FileHelper.WriteFileToDirectory(is, fields[count].getName() + ".html", dir);
+					File f = new File(dir, fields[count].getName()+".txt");
+					FileHelper.saveFile(is, f);
 					is.close();
 		        } catch (IllegalAccessException e) {
 					e.printStackTrace();
@@ -101,16 +98,18 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		sortValues();
 		
 		adapter = new LibraryAdapter(this, R.layout.library_row, files);
-
+		
 		library = (ListView) findViewById(R.id.library_list);
 		library.setAdapter(adapter);
 		library.setOnItemClickListener(this);
 		registerForContextMenu(library);
+		
+		sideSelector = (SideSelector) findViewById(R.id.library_side_selector);
+		sideSelector.setListView(library);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.library, menu);
 		return true;
@@ -192,7 +191,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						
 						files.get(pos).getFile().delete();
 						files.remove(pos);
-						adapter.notifyDataSetChanged();
+						updateListView();
 					}
 				})
 				.setNegativeButton(getString(android.R.string.no), new DialogInterface.OnClickListener() {
@@ -232,11 +231,20 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				File f = (File) data.getExtras().get("file");
 				File json = (File) data.getExtras().get("json");
 				String name = data.getExtras().getString("name");
+				boolean exists = false;
 				
 				if(f!=null && name!= null){
 					files.add(new LibraryItem(name, f));
+					exists = true;
+				}
+				if(json!=null){
+					files.add(new LibraryItem(json.getName(), json));
+					exists = true;
+				}
+				
+				if(exists){
+					updateListView();
 					sortValues();
-					adapter.notifyDataSetChanged();
 				}
 				break;
 				
@@ -257,8 +265,8 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				files.remove(pos);
 				files.add(new LibraryItem(updatedName, updatedFile));
 				
+				updateListView();
 				sortValues();
-				adapter.notifyDataSetChanged();
 				
 				break;
 
@@ -287,7 +295,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 					files.clear();
 					FileHelper.removeFiles(dir);
 					
-					adapter.notifyDataSetChanged();
+					updateListView();
 				}
 				break;
 			default:
@@ -377,6 +385,11 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			
 		}
 
+	}
+	
+	private void updateListView(){
+		adapter.notifyDataSetChanged();
+		sideSelector.setListView(library);
 	}
 	
 	private void sortValues(){

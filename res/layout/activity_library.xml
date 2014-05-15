@@ -28,13 +28,28 @@
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingLeft="5dp"
         android:layout_below="@id/lib_bar">
-        
+    
 		<ListView 
 		    android:id="@+id/library_list"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"/>
+      
+        
+		<com.example.reader.types.SideSelector 
+		    android:id="@+id/library_side_selector"
+		    android:layout_width="40dp"
+		    android:layout_height="match_parent"
+		    android:layout_alignParentRight="true"/>
+		
+		
     </RelativeLayout>
+    
+    
+		
+		
+		
     
     
     
