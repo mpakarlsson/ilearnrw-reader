@@ -16,6 +16,7 @@
     <string name="login_username_hint">Enter your username</string>
     <string name="login_password_hint">Enter your password</string>
     <string name="login">Login</string>
+    <string name="logout">Logout</string>
 
     <!-- Library activity -->
     <string name="title_activity_library">LibraryActivity</string>

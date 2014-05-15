@@ -38,6 +38,7 @@ public class PreferenceFragmentLibrary extends PreferenceFragment {
 				final Activity a = getActivity();
 				AlertDialog.Builder builder = new AlertDialog.Builder(a);
 				builder.setTitle(a.getString(R.string.format_library));
+				builder.setNegativeButton(a.getString(android.R.string.no), null);
 				builder.setPositiveButton(a.getString(android.R.string.yes), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {	
@@ -48,10 +49,7 @@ public class PreferenceFragmentLibrary extends PreferenceFragment {
 						return;
 					}
 				});
-				builder.setNegativeButton(a.getString(android.R.string.no), new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {}
-				});
+				
 				
 				builder.show();
 				

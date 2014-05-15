@@ -65,7 +65,27 @@ public class LoginActivity extends Activity implements OnClickListener {
     }
 
 
+    
+    
     @Override
+	protected void onResume() {
+    	super.onResume();
+		
+    	boolean isRemember = preferences.getBoolean("rememberMe", false);
+        String username = preferences.getString("username", "");
+        String password = preferences.getString("password", "");
+        
+        chkRM.setChecked(isRemember);
+        etUsername.setText(username);
+        etPassword.setText(password);
+        etUsername.requestFocus();
+    	
+	}
+
+
+
+
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.login, menu);
         return true;
@@ -103,7 +123,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 			handlerLogin = new ExtendedLoginHandler(this, getBaseContext(), username);
 			
 	        new HttpConnection(handlerLogin).get("http://api.ilearnrw.eu/ilearnrw/user/auth?username="+username+"&pass="+password);
-			
 			break;
 
 		case R.id.login_button_skip:

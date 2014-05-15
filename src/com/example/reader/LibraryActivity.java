@@ -177,6 +177,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			
 			new AlertDialog.Builder(this)
 				.setTitle(getString(R.string.library_remove_item_confirmation) + listItemName)
+				.setNegativeButton(getString(android.R.string.no), null)
 				.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -193,25 +194,19 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						files.remove(pos);
 						updateListView();
 					}
-				})
-				.setNegativeButton(getString(android.R.string.no), new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {}
 				}).show();			
 		} else if(menuItemName.equals("Copy")){
 			final int pos = info.position;
 			
 			new AlertDialog.Builder(this)
 			.setTitle("Copy this file to external storage?")
+			.setNegativeButton(getString(android.R.string.no), null)
 			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					boolean result = FileHelper.copyFileToExternalStorage(files.get(pos).getFile(), files.get(pos).getName(), "Debug_IlearnRW");
 					Toast.makeText(getBaseContext(), "Copying file to external storage was " + result, Toast.LENGTH_SHORT).show();
 				}
-			}).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {}
 			}).show();
 		}
 		
@@ -306,6 +301,32 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	}
 	
 	@Override
+	public void onBackPressed() {
+
+		new AlertDialog.Builder(this)
+			.setTitle("Logout")
+			.setMessage("Do you wish to log out?")
+			.setNegativeButton(android.R.string.no, null)
+			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					SharedPreferences.Editor editor= PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
+					editor.remove("username");
+					editor.remove("password");
+					editor.remove("rememberMe");
+					editor.remove("authToken");
+					editor.remove("refreshToken");
+					editor.commit();
+					
+					LibraryActivity.super.onBackPressed();
+				}
+			}).show();
+		
+	}
+
+	
+	
+	@Override
 	public void onClick(View v) {
 		
 		switch (v.getId()) {
@@ -365,22 +386,14 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			new AlertDialog.Builder(this)
 			.setTitle("JSON file")
 			.setMessage("This file contains information about a .txt or .html with the same name.")
-			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-				}
-			}).show();
+			.setPositiveButton(android.R.string.ok, null).show();
 		}
 		else {
 			
 			new AlertDialog.Builder(this)
 			.setTitle("Invalid file type")
 			.setMessage("Can not open file, " + f.getName() + ", please select another one")
-			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-				}
-			}).show();
+			.setPositiveButton(android.R.string.ok, null).show();
 			
 			
 		}

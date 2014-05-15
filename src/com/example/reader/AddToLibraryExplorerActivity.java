@@ -59,27 +59,17 @@ public class AddToLibraryExplorerActivity extends Activity {
 					} else {
 						new AlertDialog.Builder(view.getContext())
 							.setTitle("[" + file.getName() + "] folder can't be read!")
-							.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-								}
-							}).show();
+							.setPositiveButton(getString(android.R.string.ok), null).show();
 					}
 				} else {
 					new AlertDialog.Builder(view.getContext())
 						.setTitle(getString(R.string.add_to_device_explorer_copy_confirm_start) + file.getName() + getString(R.string.add_to_device_explorer_copy_confirm_end))
+						.setNegativeButton(getString(android.R.string.no), null)
 						.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
 							
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								copyFileToLibrary(file);
-							}
-						})
-						.setNegativeButton(getString(android.R.string.no), new DialogInterface.OnClickListener() {
-							
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								Toast.makeText(view.getContext(), "File was not copied", Toast.LENGTH_SHORT).show();
 							}
 						}).show();
 				}
