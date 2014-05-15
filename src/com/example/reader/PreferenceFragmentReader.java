@@ -15,14 +15,10 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 
-public class PreferenceFragmentReader extends PreferenceFragment implements OnPreferenceChangeListener {
-	private static boolean changed = false;
-	public final static String SHARED_PREFERENCES_FILE_NAME = "PREF_READER";
-	
+public class PreferenceFragmentReader extends PreferenceFragment implements OnPreferenceChangeListener {	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//getPreferenceManager().setSharedPreferencesName(SHARED_PREFERENCES_FILE_NAME);
 		addPreferencesFromResource(R.xml.preferences);
 		
 		String[] fonts = {};
@@ -89,7 +85,6 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
 		
 		if(!preference.getTitle().toString().equals(newValue)){
-			changed = true;
 			return true;
 		}
 		

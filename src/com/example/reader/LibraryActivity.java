@@ -9,14 +9,22 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.example.reader.popups.RenameActivity;
 import com.example.reader.utils.FileHelper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -43,6 +51,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	
 	public static final int FLAG_ADD_TO_DEVICE = 10000;
 	public static final int FLAG_UPDATE_FILE_NAME = 10001;
+	public static final int FLAG_SETTINGS = 10002;
 	
 	
 	private LibraryAdapter adapter;
@@ -58,7 +67,9 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		
 		File dir = getDir(getString(R.string.library_location), MODE_PRIVATE);
 		
-		libraryFiles = (ArrayList<File>) FileHelper.getFileList(dir);
+		boolean hiddenFiles = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("showAll", false);
+		
+		libraryFiles = (ArrayList<File>) FileHelper.getFileList(dir, hiddenFiles);
 		
 		// Copies the files from 'res/raw' into the 'Library' folder, used for testing
 		if(libraryFiles.isEmpty()){
@@ -76,12 +87,11 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		    }
 		    
-		    libraryFiles = (ArrayList<File>) FileHelper.getFileList(dir);
+		    libraryFiles = (ArrayList<File>) FileHelper.getFileList(dir, hiddenFiles);
 		}
 		
 		files = new ArrayList<LibraryItem>();
@@ -135,6 +145,9 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+			Intent i = new Intent(this, SettingsActivity.class);
+			i.putExtra("setting", "library");
+			startActivityForResult(i, FLAG_SETTINGS);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -147,6 +160,11 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		String[] menuItems = getResources().getStringArray(R.array.library_context_menu);
 		String menuItemName = menuItems[menuItemIndex];
 		String listItemName = files.get(info.position).getName();
+		
+		if(!(listItemName.endsWith(".txt") || listItemName.endsWith(".html")) && !menuItemName.equals("Copy")){
+			Toast.makeText(this, "Menu not available for this item", Toast.LENGTH_SHORT).show();
+			return true;
+		}
 		
 		if(menuItemName.equals("Edit")){			
 			Intent i = new Intent(this, RenameActivity.class);
@@ -163,6 +181,15 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						String name = files.get(pos).getName();
+						
+						int index = name.lastIndexOf(".");
+						String end = name.substring(index+1);
+						name = "current_" + name.substring(0, index) + "_" + end;
+						SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+						sp.edit().remove(name).commit();
+						
+						
 						files.get(pos).getFile().delete();
 						files.remove(pos);
 						adapter.notifyDataSetChanged();
@@ -194,54 +221,79 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	
-			if(resultCode == RESULT_OK){
-				switch (requestCode) {
-				case FLAG_ADD_TO_DEVICE:
-					if(dialog != null)
-						dialog.cancel();
-					
-					File f = (File) data.getExtras().get("file");
-					File json = (File) data.getExtras().get("json");
-					String name = data.getExtras().getString("name");
-					
-					if(f!=null && name!= null){
-						files.add(new LibraryItem(name, f));
-						sortValues();
-						adapter.notifyDataSetChanged();
-					}
-					break;
-					
-				case FLAG_UPDATE_FILE_NAME:
-					
-					Bundle b = data.getExtras();
-					
-					int pos = b.getInt("pos");
-					String updatedName = b.getString("name");
-					File origFile = (File) b.get("file");
-					File updatedFile =  new File(getDir(getString(R.string.library_location), MODE_PRIVATE), updatedName);
-					
-					try {
-						FileHelper.copy(origFile, updatedFile);
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-					
-					files.get(pos).getFile().delete();
-					files.remove(pos);
-					files.add(new LibraryItem(updatedName, updatedFile));
-					
+		
+		
+		if(resultCode == RESULT_OK){
+			switch (requestCode) {
+			case FLAG_ADD_TO_DEVICE:
+				if(dialog != null)
+					dialog.cancel();
+				
+				File f = (File) data.getExtras().get("file");
+				File json = (File) data.getExtras().get("json");
+				String name = data.getExtras().getString("name");
+				
+				if(f!=null && name!= null){
+					files.add(new LibraryItem(name, f));
 					sortValues();
 					adapter.notifyDataSetChanged();
-					
-					break;
+				}
+				break;
+				
+			case FLAG_UPDATE_FILE_NAME:
+				Bundle b = data.getExtras();
+				int pos = b.getInt("pos");
+				String updatedName = b.getString("name");
+				File origFile = (File) b.get("file");
+				File updatedFile =  new File(getDir(getString(R.string.library_location), MODE_PRIVATE), updatedName);
+				
+				try {
+					FileHelper.copy(origFile, updatedFile);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				
+				files.get(pos).getFile().delete();
+				files.remove(pos);
+				files.add(new LibraryItem(updatedName, updatedFile));
+				
+				sortValues();
+				adapter.notifyDataSetChanged();
+				
+				break;
 
-				default:
-					break;
-				}				
-			}
-			
-		
+			case FLAG_SETTINGS:
+				File dir = getDir(getString(R.string.library_location), Context.MODE_PRIVATE);
+				Bundle b2 = data.getExtras();
+				boolean showAll = b2.getBoolean("showAll");
+				PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("showAll", showAll).commit();
+				
+				libraryFiles = (ArrayList<File>) FileHelper.getFileList(dir, showAll);
+				files = new ArrayList<LibraryItem>();
+				for(File file : libraryFiles){
+					files.add(new LibraryItem(file.getName(), file));
+				}
+				sortValues();
+				adapter = new LibraryAdapter(this, R.layout.library_row, files);
+				library.setAdapter(adapter);
+
+				
+				if(b2.getBoolean("format")){
+					for(int i=0; i<files.size(); i++){
+						LibraryItem item = files.get(i);
+						item.getFile().delete();
+					}
+					
+					files.clear();
+					FileHelper.removeFiles(dir);
+					
+					adapter.notifyDataSetChanged();
+				}
+				break;
+			default:
+				break;
+			}				
+		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
@@ -292,11 +344,38 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		
-		Intent intent = new Intent(this, PresentationModule.class);
 		File f = files.get(position).getFile();
-		intent.putExtra("file", f);
-		intent.putExtra("title", f.getName());
-		this.startActivity(intent);
+		
+		String name = f.getName();
+		if(name.endsWith(".txt") || name.endsWith(".html")){
+		
+			Intent intent = new Intent(this, PresentationModule.class);
+			intent.putExtra("file", f);
+			intent.putExtra("title", f.getName());
+			this.startActivity(intent);
+		} else if(name.endsWith(".json")){
+			new AlertDialog.Builder(this)
+			.setTitle("JSON file")
+			.setMessage("This file contains information about a .txt or .html with the same name.")
+			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+				}
+			}).show();
+		}
+		else {
+			
+			new AlertDialog.Builder(this)
+			.setTitle("Invalid file type")
+			.setMessage("Can not open file, " + f.getName() + ", please select another one")
+			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+				}
+			}).show();
+			
+			
+		}
 
 	}
 	

@@ -83,20 +83,37 @@ public class FileHelper {
 		return null;
 	}
 	
-	public static List<File> getFileList(File parent){
+	public static List<File> getFileList(File parent, boolean hiddenFiles){
 		List<File> dirFiles = new ArrayList<File>();
 		File[] files = parent.listFiles();
 		
 		for( File file : files){
 			if(file.isDirectory()){
-				dirFiles = getFileList(file);
+				dirFiles = getFileList(file, hiddenFiles);
 			} else {
-				if(file.getName().endsWith(".html") || file.getName().endsWith(".txt")){
+				if(hiddenFiles)
 					dirFiles.add(file);
+				else{
+					if(file.getName().endsWith(".html") || file.getName().endsWith(".txt")){
+						dirFiles.add(file);
+					}
 				}
 			}
 		}
 		return dirFiles; 
+	}
+	
+	public static void removeFiles(File parent){
+		File[] files = parent.listFiles();
+		
+		for( File file : files){
+			if(file.isDirectory())
+				removeFiles(file);
+			else {
+				file.delete();
+			}
+		}
+		
 	}
 	
 	public static void copy(File src, File dst) throws IOException {

@@ -8,6 +8,7 @@
     <string name="no_data">No data</string>
     <string name="item_exists_do_copy">Item already exists in your library. Overwrite the file?</string>
     <string name="remember_me">Remember me</string>
+    <string name="format_library">Format library?</string>
 
     <!-- Login activity -->
     <string name="username">Username :</string>

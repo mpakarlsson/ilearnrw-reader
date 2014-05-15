@@ -68,14 +68,14 @@ public class AddToLibraryExplorerActivity extends Activity {
 				} else {
 					new AlertDialog.Builder(view.getContext())
 						.setTitle(getString(R.string.add_to_device_explorer_copy_confirm_start) + file.getName() + getString(R.string.add_to_device_explorer_copy_confirm_end))
-						.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+						.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
 							
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								copyFileToLibrary(file);
 							}
 						})
-						.setNegativeButton(getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+						.setNegativeButton(getString(android.R.string.no), new DialogInterface.OnClickListener() {
 							
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
@@ -86,9 +86,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 			}
 			
 		});
-		
-		
-	}	
+	}
 
 	private void getDirectory(String dir){
 		tvPath.setText(dir);
@@ -166,7 +164,8 @@ public class AddToLibraryExplorerActivity extends Activity {
 			try {
 				final FileInputStream fis = new FileInputStream(file);
 				final File localDir = getDir(getString(R.string.library_location), MODE_PRIVATE);
-				ArrayList<File> files = (ArrayList<File>) FileHelper.getFileList(localDir);
+				boolean hiddenFiles = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("showAll", false);
+				ArrayList<File> files = (ArrayList<File>) FileHelper.getFileList(localDir, hiddenFiles);
 				
 				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 				final String lang 	= preferences.getString("language", "");
@@ -182,11 +181,10 @@ public class AddToLibraryExplorerActivity extends Activity {
 						SimpleDateFormat df = new SimpleDateFormat("_yyyy_MM_dd-HH_mm_ss", Locale.getDefault());
 						StringBuilder builder = new StringBuilder(name);
 						
-						builder.insert(name.lastIndexOf("."), df.format(c.getTime()));
-						File newFile = new File(localDir, builder.toString());						
+						builder.insert(name.lastIndexOf("."), df.format(c.getTime()));			
 						String data = FileHelper.inputStreamToString(fis);
 						fis.close();
-						new HttpConnection(new ExtendedAddToLibraryHandler(this, getBaseContext(), newFile, builder.toString())).post(url, data);
+						new HttpConnection(new ExtendedAddToLibraryHandler(this, getBaseContext(), builder.toString())).post(url, data);
 						
 						
 						return;
@@ -194,8 +192,9 @@ public class AddToLibraryExplorerActivity extends Activity {
 				}
 				
 				String data = FileHelper.inputStreamToString(fis);
-				new HttpConnection(new ExtendedAddToLibraryHandler(this, getBaseContext(), file, file.getName())).post(url, data);
 				fis.close();
+				new HttpConnection(new ExtendedAddToLibraryHandler(this, getBaseContext(), file.getName())).post(url, data);
+				
 				
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

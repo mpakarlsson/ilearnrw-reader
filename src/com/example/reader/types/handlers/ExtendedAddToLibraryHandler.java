@@ -23,13 +23,11 @@ public class ExtendedAddToLibraryHandler extends Handler {
 
 	private final WeakReference<AddToLibraryExplorerActivity> activity;
 	private final Context context;
-	private final File file;
 	private String filename;
 	
-	public ExtendedAddToLibraryHandler(AddToLibraryExplorerActivity activity, Context context, File file, String filename){
+	public ExtendedAddToLibraryHandler(AddToLibraryExplorerActivity activity, Context context, String filename){
 		this.activity 	= new WeakReference<AddToLibraryExplorerActivity>(activity);
 		this.context 	= context;
-		this.file 		= file;
 		this.filename 	= filename;
 	}
 
@@ -63,7 +61,7 @@ public class ExtendedAddToLibraryHandler extends Handler {
 				FileHelper.saveFile(wordSet, jsonFile);
 
 				Intent intent=new Intent();
-			    intent.putExtra("file", file);
+			    intent.putExtra("file", newFile);
 			    intent.putExtra("json", jsonFile);
 				intent.putExtra("name", filename);
 				a.setResult(Activity.RESULT_OK, intent);

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Reader preferences -->
+    <string name="reader_prefs">Reader Settings</string>
+    
     <string name="pref_tts_category_title">Text-To-Speech</string>
     <string name="pref_text_category_title">Text</string>
     
@@ -39,5 +42,16 @@
         <item>en_GB</item>
         <item>el_GR</item>
     </string-array>
+    
+    <!-- Library Preferences -->
+    
+    <string name="library_prefs">Library Settings</string>
+    <string name="pref_library_show_all">Show files</string>
+    <string name="pref_library_show_all_summary">Show all files in folder?</string>
+    
+    <string name="pref_library_clean">Format Library</string>
+    <string name="pref_library_clean_summary">Remove all files from your library?</string>
+    
+    
     
 </resources>

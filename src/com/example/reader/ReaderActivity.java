@@ -281,7 +281,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			tts.stop();
-			startActivityForResult(new Intent(this, ReaderSettingsActivity.class), FLAG_REFRESH_WEBVIEW);
+			Intent i = new Intent(this, SettingsActivity.class);
+			i.putExtra("setting", "reader");
+			startActivityForResult(i, FLAG_REFRESH_WEBVIEW);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -316,7 +318,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			
 		case R.id.ibtn_settings_reader:
 			tts.stop();
-			startActivityForResult(new Intent(this, ReaderSettingsActivity.class), FLAG_REFRESH_WEBVIEW);
+			Intent i = new Intent(this, SettingsActivity.class);
+			i.putExtra("setting", "reader");
+			startActivityForResult(i, FLAG_REFRESH_WEBVIEW);
 			break;
 			
 		case R.id.ibtn_prev_reader:

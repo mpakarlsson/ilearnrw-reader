@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:key="reader_prefs"
+    android:title="@string/reader_prefs">
 
     <PreferenceCategory
         android:title="@string/pref_text_category_title"
