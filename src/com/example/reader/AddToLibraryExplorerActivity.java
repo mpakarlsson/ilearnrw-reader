@@ -12,13 +12,21 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-import com.example.reader.types.handlers.ExtendedAddToLibraryHandler;
+import org.apache.http.HttpResponse;
+
+import com.example.reader.results.TextAnnotationResult;
 import com.example.reader.utils.FileHelper;
+import com.example.reader.utils.HttpHelper;
+import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -161,8 +169,6 @@ public class AddToLibraryExplorerActivity extends Activity {
 				final String lang 	= preferences.getString("language", "");
 				final int id 		= preferences.getInt("id", -1);
 				final String token 	= preferences.getString("authToken", "");
-				final String url = "http://api.ilearnrw.eu/ilearnrw/text/annotate?userId=" + id + "&lc=" + lang + "&token=" + token;
-				Toast.makeText(this, "Sending file to server for annotation...", Toast.LENGTH_SHORT).show();
 				
 				for(File f : files){
 					if(f.getName().equals(file.getName())){
@@ -174,7 +180,8 @@ public class AddToLibraryExplorerActivity extends Activity {
 						builder.insert(name.lastIndexOf("."), df.format(c.getTime()));			
 						String data = FileHelper.inputStreamToString(fis);
 						fis.close();
-						new HttpConnection(new ExtendedAddToLibraryHandler(this, getBaseContext(), builder.toString())).post(url, data);
+						
+						new AddToLibraryTask().execute(data, Integer.toString(id), lang, token, builder.toString());
 						
 						
 						return;
@@ -183,7 +190,8 @@ public class AddToLibraryExplorerActivity extends Activity {
 				
 				String data = FileHelper.inputStreamToString(fis);
 				fis.close();
-				new HttpConnection(new ExtendedAddToLibraryHandler(this, getBaseContext(), file.getName())).post(url, data);
+				
+				new AddToLibraryTask().execute(data, Integer.toString(id), lang, token, file.getName());
 				
 				
 			} catch (FileNotFoundException e) {
@@ -192,5 +200,83 @@ public class AddToLibraryExplorerActivity extends Activity {
 				e.printStackTrace();
 			}
 		}
-	}	
+	}
+	
+	private class AddToLibraryTask extends AsyncTask<String, Void, TextAnnotationResult>{
+		private ProgressDialog dialog;
+		private String filename;
+		
+		@Override
+		protected void onPreExecute() {
+			dialog = new ProgressDialog(AddToLibraryExplorerActivity.this);
+			dialog.setTitle("Add to library");
+			dialog.setMessage("Sending text to server for annotation...");
+			dialog.setCancelable(true);
+			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					Toast.makeText(getBaseContext(), "Copy aborted", Toast.LENGTH_SHORT).show();
+					dialog.dismiss();
+					cancel(true);
+				}
+			});
+			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					Toast.makeText(getBaseContext(), "Copy aborted", Toast.LENGTH_SHORT).show();
+					dialog.dismiss();
+					cancel(true);
+				}
+			});
+			dialog.show();
+			super.onPreExecute();
+		}
+
+		@Override
+		protected TextAnnotationResult doInBackground(String... params) {
+			filename = params[4];
+			HttpResponse response = HttpHelper.post("http://api.ilearnrw.eu/ilearnrw/text/annotate?userId=" + params[1] + "&lc=" + params[2]+ "&token=" + params[3], params[0]);
+			ArrayList<String> data = HttpHelper.handleResponse(response);
+			
+			if(data.size()==1){
+				return null;
+			} else {
+				TextAnnotationResult result = new Gson().fromJson(data.get(1), TextAnnotationResult.class);
+				return result;
+			}
+		}
+		
+		
+		@Override
+		protected void onPostExecute(TextAnnotationResult result) {
+			if(dialog.isShowing())
+				dialog.dismiss();
+			
+			if(result != null){
+				Toast.makeText(AddToLibraryExplorerActivity.this, "Copy succeeded", Toast.LENGTH_SHORT).show();
+				
+				Gson gson =  new Gson();
+				int index = filename.lastIndexOf(".");
+				String name = filename.substring(0, index);
+				File dir = getDir(getString(R.string.library_location), Context.MODE_PRIVATE);
+				
+				File newFile = new File(dir, filename);
+				FileHelper.saveFile(result.html, newFile);
+				String wordSet = gson.toJson(result.wordSet);
+				File jsonFile = new File(dir, name+".json");
+				FileHelper.saveFile(wordSet, jsonFile);
+
+				Intent intent=new Intent();
+			    intent.putExtra("file", newFile);
+			    intent.putExtra("json", jsonFile);
+				intent.putExtra("name", filename);
+				setResult(Activity.RESULT_OK, intent);
+				finish();
+			} else 
+				Toast.makeText(AddToLibraryExplorerActivity.this, "Failed to copy and annotate file", Toast.LENGTH_SHORT).show();
+			
+		}
+		
+	};
+	
 }

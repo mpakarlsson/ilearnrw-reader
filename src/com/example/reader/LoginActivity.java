@@ -1,12 +1,22 @@
 package com.example.reader;
 
-import com.example.reader.types.handlers.ExtendedLoginHandler;
+import java.util.ArrayList;
+import java.util.Locale;
+
+import org.apache.http.HttpResponse;
+
+import com.example.reader.results.LoginResult;
+import com.example.reader.results.UserDetailResult;
+import com.example.reader.utils.HttpHelper;
+import com.google.gson.Gson;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +26,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 public class LoginActivity extends Activity implements OnClickListener {
@@ -24,7 +35,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 	public EditText etUsername, etPassword;
 	public CheckBox chkRM;
 	private SharedPreferences preferences;
-	private Handler handlerLogin;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,9 +130,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}
 			editor.commit();
 			
-			handlerLogin = new ExtendedLoginHandler(this, getBaseContext(), username);
+			new LoginTask().execute(username, password);
 			
-	        new HttpConnection(handlerLogin).get("http://api.ilearnrw.eu/ilearnrw/user/auth?username="+username+"&pass="+password);
 			break;
 
 		case R.id.login_button_skip:
@@ -132,5 +141,133 @@ public class LoginActivity extends Activity implements OnClickListener {
 		default:
 			break;
 		}
-	}	
+	}
+	
+	private class LoginTask extends AsyncTask<String, Void, LoginResult>{
+		private ProgressDialog dialog;
+		private String username;
+		@Override
+		protected void onPreExecute() {
+			dialog = new ProgressDialog(LoginActivity.this);
+			dialog.setTitle("Login");
+			dialog.setMessage("Logging in...");
+			dialog.setCancelable(true);
+			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+					cancel(true);
+				}
+			});
+			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					dialog.dismiss();
+					cancel(true);
+				}
+			});
+			dialog.show();
+			super.onPreExecute();
+		}
+
+		@Override
+		protected LoginResult doInBackground(String... params) {
+			username = params[0];
+			HttpResponse response = HttpHelper.get("http://api.ilearnrw.eu/ilearnrw/user/auth?username="+username+"&pass="+params[1]);
+			
+			ArrayList<String> data = HttpHelper.handleResponse(response);
+			
+			if(data.size()==1){
+				return null;
+			} else {
+				LoginResult lr = new Gson().fromJson(data.get(1), LoginResult.class);
+	    		return lr;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(LoginResult result) {
+			if(dialog.isShowing()) {
+				dialog.dismiss();
+			}
+			
+			if(result != null){
+				SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit();
+	    		editor.putString("authToken", result.authToken);
+	    		editor.putString("refreshToken", result.refreshToken);
+	    		editor.commit();
+				
+	    		new UserDetailsTask().execute(username, result.authToken);
+			} else
+				Toast.makeText(LoginActivity.this, "Failed to login", Toast.LENGTH_SHORT).show();
+		}
+	};
+	
+	private class UserDetailsTask extends AsyncTask<String, Void, UserDetailResult>{
+		private ProgressDialog dialog;
+		@Override
+		protected void onPreExecute() {
+			dialog = new ProgressDialog(LoginActivity.this);
+			dialog.setTitle("User details");
+			dialog.setMessage("Fetching user details...");
+			dialog.setCancelable(true);
+			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+					cancel(true);
+				}
+			});
+			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					dialog.dismiss();
+					cancel(true);
+				}
+			});
+			dialog.show();
+			super.onPreExecute();
+		}
+		
+		@Override
+		protected UserDetailResult doInBackground(String... params) {
+			HttpResponse response = HttpHelper.get("http://api.ilearnrw.eu/ilearnrw/user/details/"+ params[0] +"?token=" + params[1]);
+		
+			ArrayList<String> data = HttpHelper.handleResponse(response);
+			
+			if(data.size()==1){
+				return null;
+			} else {
+				UserDetailResult userDetails = new Gson().fromJson(data.get(1), UserDetailResult.class);
+				return userDetails;
+			}
+		}
+		
+		@Override
+		protected void onPostExecute(UserDetailResult result) {
+			if(dialog.isShowing()) {
+				dialog.dismiss();
+			}
+			
+			if(result != null){
+				Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+				
+				SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit();
+				editor.putInt("id", result.id);
+				editor.putString("language", result.language);
+				editor.commit();
+				
+				if(result.language.equals("EN"))
+					Locale.setDefault(new Locale("en"));	
+				else if(result.language.equals("GR"))
+					Locale.setDefault(new Locale("el"));
+				else
+					Locale.setDefault(new Locale("en"));
+					
+        		Intent i2 = new Intent(LoginActivity.this, LibraryActivity.class);
+        		startActivity(i2);
+			} else 
+				Toast.makeText(LoginActivity.this, "Login failed, failed to fetch user data", Toast.LENGTH_SHORT).show();
+		}
+	};
 }
