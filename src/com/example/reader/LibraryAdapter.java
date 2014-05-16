@@ -97,6 +97,8 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 	public int getPositionForSection(int sectionIndex) {
 		if(sectionIndex>=sections.length)
 			sectionIndex =  sections.length-1;
+		else if(sectionIndex<0)
+			sectionIndex=0;
 		
 		String section = sections[sectionIndex];
 		Integer index = alphaIndexer.get(section);

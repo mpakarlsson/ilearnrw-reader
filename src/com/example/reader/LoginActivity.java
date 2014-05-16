@@ -150,7 +150,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		protected void onPreExecute() {
 			dialog = new ProgressDialog(LoginActivity.this);
 			dialog.setTitle("Login");
-			dialog.setMessage("Logging in...");
+			dialog.setMessage("Logging in. Please wait...");
 			dialog.setCancelable(true);
 			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
 				@Override
@@ -209,7 +209,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		protected void onPreExecute() {
 			dialog = new ProgressDialog(LoginActivity.this);
 			dialog.setTitle("User details");
-			dialog.setMessage("Fetching user details...");
+			dialog.setMessage("Fetching user details. Please wait...");
 			dialog.setCancelable(true);
 			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
 				@Override

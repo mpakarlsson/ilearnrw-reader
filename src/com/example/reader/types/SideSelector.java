@@ -3,6 +3,7 @@ package com.example.reader.types;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.PaintDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -18,6 +19,7 @@ public class SideSelector extends View {
 	private Paint paint;
 	private PaintDrawable drawable;
 	private String[] sections;
+	private Rect fontRectangle;
 	
 	public SideSelector(Context context){
 		super(context);
@@ -41,6 +43,8 @@ public class SideSelector extends View {
 		paint.setTextAlign(Paint.Align.CENTER);
 		drawable.setCornerRadius(15);
 		setBackground(drawable);
+		
+		fontRectangle = new Rect();
 	}
 	
 	public void setListView(ListView list){
@@ -78,13 +82,14 @@ public class SideSelector extends View {
 	protected void onDraw(Canvas canvas){
 		int viewHeight = getPaddedHeight();
 		float charHeight = ((float) viewHeight / (float) sections.length);
-		
 		float widthCenter = getMeasuredWidth() * 0.5f;
-		
-		
+
 		paint.setColor(0xFF959899);
 		for(int i=0; i<sections.length; i++){
-			canvas.drawText(String.valueOf(sections[i]), widthCenter, charHeight + (i*charHeight), paint);
+			paint.getTextBounds(sections[i], 0, sections[i].length(), fontRectangle);
+			float height = charHeight + (i*charHeight) - charHeight + fontRectangle.height();
+			canvas.drawText(String.valueOf(sections[i]), widthCenter, height, paint);
+		//	canvas.drawText(String.valueOf(sections[i]), widthCenter, charHeight + (i*charHeight), paint);
 		}
 		paint.setColor(0xAAFFFFFF);
 		

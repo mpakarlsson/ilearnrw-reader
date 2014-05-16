@@ -209,8 +209,8 @@ public class AddToLibraryExplorerActivity extends Activity {
 		@Override
 		protected void onPreExecute() {
 			dialog = new ProgressDialog(AddToLibraryExplorerActivity.this);
-			dialog.setTitle("Add to library");
-			dialog.setMessage("Sending text to server for annotation...");
+			dialog.setTitle("Text processing");
+			dialog.setMessage("Processing text. Please wait...");
 			dialog.setCancelable(true);
 			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
 				@Override
@@ -253,7 +253,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 				dialog.dismiss();
 			
 			if(result != null){
-				Toast.makeText(AddToLibraryExplorerActivity.this, "Copy succeeded", Toast.LENGTH_SHORT).show();
+				Toast.makeText(AddToLibraryExplorerActivity.this, "Text processing succeeded", Toast.LENGTH_SHORT).show();
 				
 				Gson gson =  new Gson();
 				int index = filename.lastIndexOf(".");
