@@ -69,6 +69,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 				if(isRemember == true && !isChecked){
 					etUsername.setText("");
 					etPassword.setText("");
+					SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
+					editor.remove("username");
+					editor.remove("password");
+					editor.remove("rememberMe");
+					editor.remove("authToken");
+					editor.remove("refreshToken");
+					editor.commit();
 				}	
 			}
 		});    

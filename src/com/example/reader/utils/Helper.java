@@ -1,5 +1,7 @@
 package com.example.reader.utils;
 
+import com.example.reader.types.Pair;
+
 import android.text.Html;
 
 public class Helper {
@@ -27,6 +29,19 @@ public class Helper {
 			return current;
 		
 		return Integer.toString(--num);
+	}
+	
+	public static Pair<String> splitFileName(String name){
+		String fileName = name;
+		int index = fileName.lastIndexOf(".");
+		
+		if(index==-1)
+			return null;
+		
+		String ext = fileName.substring(index);
+		fileName = fileName.substring(0, index);
+		
+		return new Pair<String>(fileName, ext);
 	}
 	
 }

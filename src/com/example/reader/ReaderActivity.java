@@ -51,7 +51,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private static String html, fileHtml;
 	private String current;
 	public String CURR_SENT = "current";
-	public static final String SENTENCE_TAG = "s";
+	public static final String SENTENCE_TAG = "sent";
 	private ArrayList<String> texts;
 	
 	
@@ -146,10 +146,10 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		int index =  html.indexOf("<body");
 		if(index != -1){
 			String body = html.substring(index);
-			String[] sentences = body.split("</s>");
+			String[] sentences = body.split("</" + SENTENCE_TAG +">");
 			for(int i=0; i<sentences.length; i++){
-				String s = sentences[i] + "</s>";
-				int ind = s.indexOf("<s");
+				String s = sentences[i] + "</" + SENTENCE_TAG + ">";
+				int ind = s.indexOf("<" + SENTENCE_TAG);
 				s = ind == -1 ? "" :s.substring(ind);
 				s = Html.fromHtml(s).toString();
 				if(!s.trim().isEmpty())

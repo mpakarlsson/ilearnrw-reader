@@ -10,8 +10,10 @@ import java.util.Comparator;
 import java.util.Locale;
 
 import com.example.reader.popups.RenameActivity;
+import com.example.reader.types.Pair;
 import com.example.reader.types.SideSelector;
 import com.example.reader.utils.FileHelper;
+import com.example.reader.utils.Helper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -160,11 +162,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		String menuItemName = menuItems[menuItemIndex];
 		String listItemName = files.get(info.position).getName();
 		
-		if(!(listItemName.endsWith(".txt") || listItemName.endsWith(".html")) && !menuItemName.equals("Copy")){
-			Toast.makeText(this, "Menu not available for this item", Toast.LENGTH_SHORT).show();
-			return true;
-		}
-		
 		if(menuItemName.equals("Edit")){			
 			Intent i = new Intent(this, RenameActivity.class);
 			i.putExtra("file", files.get(info.position).getFile());
@@ -181,17 +178,39 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						String name = files.get(pos).getName();
-						
-						int index = name.lastIndexOf(".");
-						String end = name.substring(index+1);
-						name = "current_" + name.substring(0, index) + "_" + end;
+						LibraryItem item = files.get(pos);						
+						Pair<String> fileName = Helper.splitFileName(item.getName());
+					
+						String name = "current_" + fileName.first()+ "_" + fileName.second().substring(1);
 						SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 						sp.edit().remove(name).commit();
 						
+						if(sp.getBoolean("showAll", false)){
+							for(int i=files.size()-1; i>0; i--){
+								LibraryItem libItem = files.get(i);
+								Pair<String> fName = Helper.splitFileName(libItem.getName());
+
+								if(fileName.first().equals(fName.first())){
+									libItem.getFile().delete();
+									files.remove(i);
+								}
+							}
+						} else {
+							File dir = getDir(getString(R.string.library_location), MODE_PRIVATE);
+							ArrayList<File> fileList = (ArrayList<File>)FileHelper.getFileList(dir, true);
+							
+							item.getFile().delete();
+							files.remove(pos);
+							
+							for(File file : fileList){
+								Pair<String> fName = Helper.splitFileName(file.getName());
+								if(fName.first().equals(fileName.first()) && fName.second().equals(".json")){
+									file.delete();
+									break;
+								}
+							}	
+						}						
 						
-						files.get(pos).getFile().delete();
-						files.remove(pos);
 						updateListView();
 					}
 				}).show();			
@@ -215,8 +234,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
-		
 		if(resultCode == RESULT_OK){
 			switch (requestCode) {
 			case FLAG_ADD_TO_DEVICE:
@@ -232,7 +249,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 					files.add(new LibraryItem(name, f));
 					exists = true;
 				}
-				if(json!=null){
+				if(json!=null && PreferenceManager.getDefaultSharedPreferences(this).getBoolean("showAll", false)){
 					files.add(new LibraryItem(json.getName(), json));
 					exists = true;
 				}
@@ -375,11 +392,26 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		
 		File f = files.get(position).getFile();
 		
+		File dir = getDir(getString(R.string.library_location), MODE_PRIVATE);
+		ArrayList<File> fileList = (ArrayList<File>)FileHelper.getFileList(dir, true);
+		
+		String fileName = f.getName();
+		fileName = fileName.substring(0, fileName.lastIndexOf("."));
+		
+		File json = null;
+		for(File file : fileList){
+			Pair<String> name = Helper.splitFileName(file.getName());
+			if(name.first().equals(fileName) && name.second().equals(".json")){
+				json = file;
+				break;
+			}
+		}
+		
 		String name = f.getName();
 		if(name.endsWith(".txt") || name.endsWith(".html")){
-		
 			Intent intent = new Intent(this, PresentationModule.class);
 			intent.putExtra("file", f);
+			intent.putExtra("json", json);
 			intent.putExtra("title", f.getName());
 			this.startActivity(intent);
 		} else if(name.endsWith(".json")){
@@ -403,6 +435,11 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	private void updateListView(){
 		adapter.notifyDataSetChanged();
 		sideSelector.setListView(library);
+
+		if(sideSelector.getNumSections() == 0)
+			sideSelector.setVisibility(View.GONE);
+		else
+			sideSelector.setVisibility(View.VISIBLE);
 	}
 	
 	private void sortValues(){

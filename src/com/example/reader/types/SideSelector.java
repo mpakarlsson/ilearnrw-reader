@@ -14,7 +14,7 @@ import android.widget.SectionIndexer;
 public class SideSelector extends View {
 	public static final int BOTTOM_PADDING = 10;
 	
-	private SectionIndexer selectionIndexer = null;
+	private SectionIndexer sectionIndexer = null;
 	private ListView list;
 	private Paint paint;
 	private PaintDrawable drawable;
@@ -49,9 +49,9 @@ public class SideSelector extends View {
 	
 	public void setListView(ListView list){
 		this.list = list;
-		selectionIndexer = (SectionIndexer) list.getAdapter();
+		sectionIndexer = (SectionIndexer) list.getAdapter();
 
-		Object[] sectionsArr = selectionIndexer.getSections();
+		Object[] sectionsArr = sectionIndexer.getSections();
 		sections = new String[sectionsArr.length];
 		for(int i=0; i<sectionsArr.length; i++){
 			sections[i] = sectionsArr[i].toString();
@@ -64,13 +64,13 @@ public class SideSelector extends View {
 	public boolean onTouchEvent(MotionEvent event){
 		super.onTouchEvent(event);
 		int y = (int) event.getY();
-		float selectedIndex = ((float) y / (float) getPaddedHeight()) * selectionIndexer.getSections().length;
+		float selectedIndex = ((float) y / (float) getPaddedHeight()) * sectionIndexer.getSections().length;
 		
 		if(event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() ==  MotionEvent.ACTION_MOVE){
-			if(selectionIndexer == null)
-				selectionIndexer = (SectionIndexer) list.getAdapter(); 
+			if(sectionIndexer == null)
+				sectionIndexer = (SectionIndexer) list.getAdapter(); 
 		
-			int position = selectionIndexer.getPositionForSection((int) selectedIndex);
+			int position = sectionIndexer.getPositionForSection((int) selectedIndex);
 			if(position == -1)
 				return true;
 			
@@ -89,7 +89,6 @@ public class SideSelector extends View {
 			paint.getTextBounds(sections[i], 0, sections[i].length(), fontRectangle);
 			float height = charHeight + (i*charHeight) - charHeight + fontRectangle.height();
 			canvas.drawText(String.valueOf(sections[i]), widthCenter, height, paint);
-		//	canvas.drawText(String.valueOf(sections[i]), widthCenter, charHeight + (i*charHeight), paint);
 		}
 		paint.setColor(0xAAFFFFFF);
 		
@@ -98,5 +97,9 @@ public class SideSelector extends View {
 	
 	private int getPaddedHeight(){
 		return getHeight() - BOTTOM_PADDING;
+	}
+	
+	public int getNumSections(){
+		return sections.length;
 	}
 }
