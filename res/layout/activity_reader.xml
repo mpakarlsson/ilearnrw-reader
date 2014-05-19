@@ -72,18 +72,28 @@
         
 	</RelativeLayout>
     
-	
-	<LinearLayout 
+    <LinearLayout 
         android:id="@+id/reader_body"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="horizontal">
         <WebView 
 	        android:id="@+id/webview_reader"
-	        android:layout_width="match_parent"
+	        android:layout_width="wrap_content"	
 	        android:layout_height="match_parent"/>
+        
+        <com.example.reader.types.VerticalSeekBar 
+            android:id="@+id/seekBarHighLightSpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:max="10"
+            android:progress="5"/>
 	</LinearLayout>
+	
+	
+
+	
 	 
 	<RelativeLayout 
         android:id="@+id/reader_bottom"
