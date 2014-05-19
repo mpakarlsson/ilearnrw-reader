@@ -33,18 +33,28 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		EditTextPreference fontSize = (EditTextPreference) findPreference(a.getString(R.string.pref_font_size_title));
 		ListPreference fontFace = (ListPreference) findPreference(a.getString(R.string.pref_font_face_title));
 		
-		CharSequence[] entries = new CharSequence[fonts.length+1];
-		CharSequence[] values = new CharSequence[fonts.length+1];
+		int numBasicFonts = 3;
+		CharSequence[] entries = new CharSequence[fonts.length+numBasicFonts];
+		CharSequence[] values = new CharSequence[fonts.length+numBasicFonts];
 		
-		entries[0] = (CharSequence) "Default";
-		values[0] = (CharSequence) "default";
+		entries[0] = (CharSequence) "Sans-Serif";
+		values[0] = (CharSequence) "sans-serif";
+		
+		entries[1] = (CharSequence) "Serif";
+		values[1] = (CharSequence) "serif";
+		
+		entries[2] = (CharSequence) "Monospace";
+		values[2] = (CharSequence) "monospace";
+		
 		for(int i=0; i<fonts.length; i++){
 			String name = fonts[i].substring(0, fonts[i].lastIndexOf(".")).toLowerCase(Locale.getDefault());
 			name = name.replace("_", " ");
 			name = Character.toUpperCase(name.charAt(0)) + name.substring(1);
-			entries[i+1] = (CharSequence) name;
-			values[i+1] = (CharSequence) fonts[i];
+			entries[i+numBasicFonts] = (CharSequence) name;
+			values[i+numBasicFonts] = (CharSequence) fonts[i];
 		}
+		
+		
 		
 		fontFace.setEntries(entries);
 		fontFace.setEntryValues(values);

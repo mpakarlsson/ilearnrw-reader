@@ -404,13 +404,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	public void highLight(String id){
 		String highlightColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
 		reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + highlightColor + "');");
-
-		/*String[] sents = html.split("[\\n\\r]");
-		sentences.clear();
-		for (int i = 0; i < sents.length; i++)
-			if(!sents[i].trim().isEmpty())
-				sentences.add(sents[i].trim());
-		*/
 	}
 	
 	public void removeHighLight(String id){
@@ -531,7 +524,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				"<style type='text/css'>" +
 				"body " +
 				"{ " +
-					"font-family:" + fontFamily +"; "+
+					"font-family:" + fontFamily +", sans-serif; "+
 					fontSize +
 					"background-color:" + backgroundColor + "!important; " +
 					"color:" + textColor +"; " +

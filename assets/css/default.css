@@ -1,27 +1,32 @@
 @font-face{	
-	font-family:'unic_calligraphy';
+	font-family:'Open_Dyslexic_Bold';
 	font-weight:normal;
 	font-style:normal;
-	src:url('file:///android_asset/custom-fonts/unic_calligraphy.ttf') format('truetype');
+	src:url('file:///android_asset/custom-fonts/Open_Dyslexic_Bold.otf') format('opentype');
 }
 
 @font-face{	
-	font-family:'kempoka';
+	font-family:'Open_Dyslexic_Regular';
 	font-weight:normal;
 	font-style:normal;
-	src:url('file:///android_asset/custom-fonts/kempoka.otf') format('opentype');
-}
-
-@font-face{	
-	font-family:'hokitika';
-	font-weight:normal;
-	font-style:normal;
-	src:url('file:///android_asset/custom-fonts/hokitika.otf') format('opentype');
+	src:url('file:///android_asset/custom-fonts/Open_Dyslexic_Regular.otf') format('opentype');
 }
 
 @font-face{
-	font-family:'default';
+	font-family:sans-serif;
 	font-weight:normal;
 	font-style:normal;
-	src:url('') format('');
 }
+
+@font-face{
+	font-family:serif;
+	font-weight:normal;
+	font-style:normal;
+}
+
+@font-face{
+	font-family:monospace;
+	font-weight:normal;
+	font-style:normal;
+}
+
