@@ -7,6 +7,7 @@
     <string name="pref_tts_category_title">Text-To-Speech</string>
     <string name="pref_text_category_title">Text</string>
     
+    <string name="pref_highlighter_speed">pref_highlighter_speed</string>
     
     <string name="pref_background_color_title">pref_background_color</string>
     <string name="pref_background_color_posX_title">pref_background_click_posX</string>

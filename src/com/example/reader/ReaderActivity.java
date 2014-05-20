@@ -9,6 +9,7 @@ import com.example.reader.interfaces.TTSReadingCallback;
 import com.example.reader.popups.ModeActivity;
 import com.example.reader.popups.SearchActivity;
 import com.example.reader.tts.TTS;
+import com.example.reader.types.Pair;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.Helper;
 
@@ -20,6 +21,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.text.Html;
@@ -54,7 +56,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private TTSHighlightCallback cbHighlight;
 	private TTSReadingCallback cbSpoken;
 
-	private double highLightSpeed;
+	private double highlightSpeed;
+	private HighlightRunnable highlightRunnable;
+	private Handler highlightHandler;
 	
 	private static String html, fileHtml;
 	
@@ -64,6 +68,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	
 	private ArrayList<String> texts;
 
+	private SharedPreferences sp;
+	private SharedPreferences.Editor spEditor;
 	
 	private final static int FLAG_SEARCH = 10000;
 	private final static int FLAG_MODE = 10001;
@@ -106,11 +112,10 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		File file 			= (File) libBundle.get("file");
 		String title		= libBundle.getString("title");
 		
-		
-		int endingIndex =  title.lastIndexOf(".");
-		String ending 	= title.substring(endingIndex+1);
-		title 			= title.substring(0, endingIndex);
-		CURR_SENT 		= CURR_SENT + "_" + title + "_" + ending;
+		sp 			= PreferenceManager.getDefaultSharedPreferences(this);
+		spEditor 	= sp.edit();
+		Pair<String> bookTitle = Helper.splitFileName(title);
+		CURR_SENT 		= CURR_SENT + "_" + bookTitle.first() + "_" + bookTitle.second().substring(1);
 		
 		tvTitle = (TextView) findViewById(R.id.tv_book_title_reader);
 		tvTitle.setText(title);
@@ -120,7 +125,11 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		sbHighLightSpeed = (SeekBar) findViewById(R.id.seekbar_highLight_speed);
 		sbHighLightSpeed.setOnSeekBarChangeListener(this);
 
-		tvHighLightSpeed.setText(String.format("%.1f", ((sbHighLightSpeed.getProgress() * 0.1) + 0.5)) + "\n/\n" + String.format("%.1f", ((sbHighLightSpeed.getMax()*0.1) + 0.5)));
+		highlightSpeed = Double.longBitsToDouble(sp.getLong(getString(R.string.pref_highlighter_speed), Double.doubleToLongBits(5.5)));
+		int hlSpeed = (int) (highlightSpeed * 10);
+		sbHighLightSpeed.setProgress(hlSpeed);
+		
+		tvHighLightSpeed.setText(String.format("%.1f", highlightSpeed) + "\n/\n" + String.format("%.1f", ((sbHighLightSpeed.getMax()*0.1) + 0.5)));
 		
 		ibtnLib 		= (ImageButton) findViewById(R.id.ibtn_lib_reader);
 		ibtnSearch 		= (ImageButton) findViewById(R.id.ibtn_search_reader);
@@ -141,6 +150,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		top 				= (RelativeLayout) findViewById(R.id.reader_top);
 		bottom 				= (RelativeLayout) findViewById(R.id.reader_bottom);
 		rlHighlightSpeed 	= (RelativeLayout) findViewById(R.id.reader_body_highlight_speed);
+		
+		highlightRunnable = new HighlightRunnable();
+		highlightHandler = new Handler();
 		
 		
 		Intent checkTTSIntent = new Intent(); 
@@ -189,17 +201,16 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		
 		searchbar.setVisibility(RelativeLayout.GONE);
 		
-		current = PreferenceManager.getDefaultSharedPreferences(this).getString(CURR_SENT, null);
+		current = sp.getString(CURR_SENT, null);
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		int mode = prefs.getInt("readerMode", -1);
+		int mode = sp.getInt("readerMode", -1);
 		if(mode==-1){
-			prefs.edit().putInt("readerMode", ReaderMode.Listen.getValue()).commit();
+			spEditor.putInt("readerMode", ReaderMode.Listen.getValue()).commit();
 			Toast.makeText(this, "No reader mode set. Listen mode is selected", Toast.LENGTH_LONG).show();
 		}
 		
@@ -351,22 +362,26 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_prev_reader:
-			current = PreferenceManager.getDefaultSharedPreferences(this).getString(CURR_SENT, null);
+			current = sp.getString(CURR_SENT, null);
 			if(current == null)
 				current = "0";
 			
 			String previous = Helper.previousInt(current);
-			PreferenceManager.getDefaultSharedPreferences(this).edit().putString(CURR_SENT, previous).commit();
+			spEditor.putString(CURR_SENT, previous).commit();
 			removeHighLight(current);
 			highLight(previous);
 			if(reader_status == ReaderStatus.Enabled){
-				speakFromSentence(Integer.parseInt(previous));
+				if(reader_mode == ReaderMode.Listen)
+					speakFromSentence(Integer.parseInt(previous));
+				else if(reader_mode == ReaderMode.Guidance){
+					resetGuidance();
+				}
 			} 
 			
 			break;
 			
 		case R.id.ibtn_play_reader:
-			current = PreferenceManager.getDefaultSharedPreferences(this).getString(CURR_SENT, null);
+			current = sp.getString(CURR_SENT, null);
 			if(current == null)
 				current = "0";
 			
@@ -375,19 +390,23 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				if(reader_mode == ReaderMode.Listen) {
 					int c = Integer.parseInt(current);
 					speakFromSentence(c);
+				} else if(reader_mode == ReaderMode.Guidance){
+					resetGuidance();
 				}
 			} else {
-				PreferenceManager.getDefaultSharedPreferences(this).edit().putString(CURR_SENT, current).commit();
+				spEditor.putString(CURR_SENT, current).commit();
 				setPlayStatus(ReaderStatus.Disabled);
 				if(reader_mode == ReaderMode.Listen){
 					tts.stop();
+				} else if(reader_mode == ReaderMode.Guidance){
+					highlightHandler.removeCallbacks(highlightRunnable);
 				}
 			}
 			
 			break;
 			
 		case R.id.ibtn_next_reader:
-			current = PreferenceManager.getDefaultSharedPreferences(this).getString(CURR_SENT, null);
+			current = sp.getString(CURR_SENT, null);
 			if(current == null)
 				current = "0";
 			
@@ -400,12 +419,16 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			
 			
 			
-			PreferenceManager.getDefaultSharedPreferences(this).edit().putString(CURR_SENT, next).commit();
+			spEditor.putString(CURR_SENT, next).commit();
 			removeHighLight(current);
 			highLight(next);
 			
 			if(reader_status == ReaderStatus.Enabled){
-				speakFromSentence(Integer.parseInt(next));
+				if(reader_mode == ReaderMode.Listen)
+					speakFromSentence(Integer.parseInt(next));
+				else if(reader_mode == ReaderMode.Guidance){
+					resetGuidance();
+				}
 			} 
 			
 			break;
@@ -433,9 +456,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			boolean fromUser) {
 		switch(seekBar.getId()){
 		case R.id.seekbar_highLight_speed:
-			highLightSpeed = (seekBar.getProgress() * 0.1) + 0.5; // Slider values goes from 0.5 to 10.5
+			highlightSpeed = (seekBar.getProgress() * 0.1) + 0.5; // Slider values goes from 0.5 to 10.5
 			double max = ((seekBar.getMax()*0.1) + 0.5);
-			tvHighLightSpeed.setText(String.format("%.1f", highLightSpeed) + "\n/\n" + String.format("%.1f", max));
+			tvHighLightSpeed.setText(String.format("%.1f", highlightSpeed) + "\n/\n" + String.format("%.1f", max));
 			break;
 		default:
 			break;
@@ -444,20 +467,54 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	}
 
 	@Override
-	public void onStartTrackingTouch(SeekBar seekBar) {}
+	public void onStartTrackingTouch(SeekBar seekBar) {
+		switch (seekBar.getId()) {
+		case R.id.seekbar_highLight_speed:
+			highlightHandler.removeCallbacks(highlightRunnable);
+			break;
+
+		default:
+			break;
+		}
+	}
 
 	@Override
-	public void onStopTrackingTouch(SeekBar seekBar) {}
+	public void onStopTrackingTouch(SeekBar seekBar) {
+		
+		switch (seekBar.getId()) {
+		case R.id.seekbar_highLight_speed:
+			
+			highlightSpeed =  (seekBar.getProgress() * 0.1);
+			spEditor.putLong(getString(R.string.pref_highlighter_speed), Double.doubleToRawLongBits(highlightSpeed)).commit();
+			
+			highlightSpeed += 0.5;
+			
+			long millis = (long) (highlightSpeed * 1000);
+			highlightHandler.postDelayed(highlightRunnable, millis);
+			break;
+
+		default:
+			break;
+		}
+		
+	}
 	
 	
 	public void highLight(String id){
-		String highlightColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
+		String highlightColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
 		reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + highlightColor + "');");
 	}
 	
 	public void removeHighLight(String id){
-		String backgroundColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
+		String backgroundColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
 		reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + backgroundColor + "');");
+	}
+	
+	
+	private void resetGuidance(){
+		highlightHandler.removeCallbacks(highlightRunnable);
+		long millis = (long) (highlightSpeed * 1000);
+		highlightHandler.postDelayed(highlightRunnable, millis);
 	}
 	
 	
@@ -469,12 +526,10 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		reader_status = status;
 	}
 	
-	private void setTTS(){
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		int pitchRate = preferences.getInt(getString(R.string.pref_pitch_title), 9);
-		int speechRate = preferences.getInt(getString(R.string.pref_speech_rate_title), 9);
-		String language = preferences.getString(getString(R.string.pref_tts_language_title), "en_GB");
+	private void setTTS(){		
+		int pitchRate 	= sp.getInt(getString(R.string.pref_pitch_title), 9);
+		int speechRate 	= sp.getInt(getString(R.string.pref_speech_rate_title), 9);
+		String language = sp.getString(getString(R.string.pref_tts_language_title), "en_GB");
 		
 		double pitch = ((pitchRate + 1.0) / 10.0);
 		tts.setPitch((float)pitch);
@@ -494,8 +549,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	}
 
 	private String updateHtml(String html){
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		
 		boolean hasHead = true;
 		int splitPos = html.indexOf("<head");
 		
@@ -553,21 +606,21 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		
 		String setCSSLink = "<link rel='stylesheet' href='css/default.css' type='text/css'>";
 		
-		String backgroundColor =  Integer.toHexString(preferences.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255)));
-		String textColor = Integer.toHexString(preferences.getInt(getString(R.string.pref_text_color_title), Color.argb(255,0,0,0)));
+		String backgroundColor 	= Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255)));
+		String textColor 		= Integer.toHexString(sp.getInt(getString(R.string.pref_text_color_title), Color.argb(255,0,0,0)));
 		
-		backgroundColor = "#" + backgroundColor.substring(2);
-		textColor = "#" + textColor.substring(2);
+		backgroundColor 		= "#" + backgroundColor.substring(2);
+		textColor 				= "#" + textColor.substring(2);
 		
-		String lineHeight = preferences.getString(getString(R.string.pref_line_height_title), "0");
-		String fontSize = preferences.getString(getString(R.string.pref_font_size_title), "20");
-		String letterSpacing = preferences.getString(getString(R.string.pref_letter_spacing_title), "0");
-		String margin = preferences.getString(getString(R.string.pref_margin_title), "0");
-		String fontFamily = preferences.getString(getString(R.string.pref_font_face_title), "default");
+		String lineHeight 		= sp.getString(getString(R.string.pref_line_height_title), "0");
+		String fontSize 		= sp.getString(getString(R.string.pref_font_size_title), "20");
+		String letterSpacing 	= sp.getString(getString(R.string.pref_letter_spacing_title), "0");
+		String margin 			= sp.getString(getString(R.string.pref_margin_title), "0");
+		String fontFamily 		= sp.getString(getString(R.string.pref_font_face_title), "default");
 		
-		lineHeight = lineHeight.equals("0") ? "line-height: normal;" : "line-height: " + lineHeight + "px;";
-		fontSize = fontSize.equals("0") ? "font-size: 20px;" : "font-size: " + fontSize + "px;";
-		fontFamily = fontFamily.indexOf(".") == -1 ? fontFamily : fontFamily.substring(0, fontFamily.lastIndexOf("."));
+		lineHeight 				= lineHeight.equals("0") ? "line-height: normal;" : "line-height: " + lineHeight + "px;";
+		fontSize 				= fontSize.equals("0") ? "font-size: 20px;" : "font-size: " + fontSize + "px;";
+		fontFamily 				= fontFamily.indexOf(".") == -1 ? fontFamily : fontFamily.substring(0, fontFamily.lastIndexOf("."));
 		
 		String cssBody = "" +
 				"<style type='text/css'>" +
@@ -608,7 +661,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			reader.loadUrl("javascript:setOnClickEvents();");
-			String curr = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString(CURR_SENT, null);
+			String curr = sp.getString(CURR_SENT, null);
 			if(curr != null)
 				highLight(curr);
 			
@@ -667,8 +720,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-					String curr = prefs.getString(CURR_SENT, null);
+					String curr = sp.getString(CURR_SENT, null);
 					int c = -1;
 					
 					
@@ -681,12 +733,20 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 						String sId = Integer.toString(sentId);
 						
 						highLight(sId);
-						prefs.edit().putString(CURR_SENT, sId).commit();
+						spEditor.putString(CURR_SENT, sId).commit();
 						
-						if(reader_status == ReaderStatus.Enabled)
-							speakFromSentence(sentId);
+						if(reader_status == ReaderStatus.Enabled){
+							if(reader_mode == ReaderMode.Listen)
+								speakFromSentence(sentId);
+							else if(reader_mode == ReaderMode.Guidance){
+								highlightHandler.removeCallbacks(highlightRunnable);
+								long millis = (long) (highlightSpeed * 1000);
+								highlightHandler.postDelayed(highlightRunnable, millis);							
+							}
+						}
+						
 					} else 
-						prefs.edit().putString(CURR_SENT, null).commit();
+						spEditor.putString(CURR_SENT, null).commit();
 				}
 			});
 		}
@@ -699,7 +759,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		this.runOnUiThread(new Runnable(){
 			@Override
 			public void run() {
-				String highlightColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
+				String highlightColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
 				reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + highlightColor + "');");
 			}
 		});
@@ -710,7 +770,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		this.runOnUiThread(new Runnable(){
 			@Override
 			public void run() {
-				String backgroundColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
+				String backgroundColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
 				reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + backgroundColor + "');");	
 			}
 		});
@@ -724,8 +784,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				setPlayStatus(ReaderStatus.Disabled);
 			}
 		});
-		
-		
 	}
 
 	@Override
@@ -736,5 +794,27 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				setPlayStatus(ReaderStatus.Enabled);
 			}
 		});
+	}
+	
+	private class HighlightRunnable implements Runnable{
+
+		@Override
+		public void run() {
+			String curr = sp.getString(CURR_SENT, null);
+			if(Integer.parseInt(curr)>=texts.size()-1){
+				ibtnPlay.callOnClick();
+				return;
+			}
+			
+			removeHighLight(curr);
+			curr = Helper.nextInt(curr);
+			highLight(curr);
+			
+			spEditor.putString(CURR_SENT, curr).commit();
+			
+			long millis = (long) (highlightSpeed * 1000);
+			highlightHandler.postDelayed(this, millis);
+		}
+		
 	}
 }
