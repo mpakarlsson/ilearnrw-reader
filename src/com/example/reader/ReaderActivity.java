@@ -201,7 +201,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		
 		searchbar.setVisibility(RelativeLayout.GONE);
 		
-		current = sp.getString(CURR_SENT, null);
+		current = sp.getString(CURR_SENT, "0");
 	}
 	
 	@Override
@@ -362,9 +362,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_prev_reader:
-			current = sp.getString(CURR_SENT, null);
-			if(current == null)
-				current = "0";
+			current = sp.getString(CURR_SENT, "0");
 			
 			String previous = Helper.previousInt(current);
 			spEditor.putString(CURR_SENT, previous).commit();
@@ -381,9 +379,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_play_reader:
-			current = sp.getString(CURR_SENT, null);
-			if(current == null)
-				current = "0";
+			current = sp.getString(CURR_SENT, "0");
 			
 			if(reader_status == ReaderStatus.Disabled){
 				setPlayStatus(ReaderStatus.Enabled);
@@ -406,9 +402,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_next_reader:
-			current = sp.getString(CURR_SENT, null);
-			if(current == null)
-				current = "0";
+			current = sp.getString(CURR_SENT, "0");
 			
 			int c = Integer.parseInt(current);
 			String next;
@@ -577,7 +571,20 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				"	ReaderInterface.splitSentencesSpeak(bodyHTML, 0, 'button');" +
 				"}";
 		
-		
+
+		String scrollToElement =
+				"function scrollToElement(id){" +
+					"var elem = document.getElementById(id);" +
+					"var x = 0;" +
+					"var y = 0;" +
+					"" +
+					"while(elem != null) {" +
+						"x += elem.offsetLeft;" +
+						"y += elem.offsetTop;" +
+						"elem = elem.offsetParent" +
+					"}" +
+					"window.scrollTo(x,y);" +
+				"}";
 		
 		String highlightSentence = 
 				"function highlight(id, color){" +
@@ -641,6 +648,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				startScripts + 
 				highlightSentence +
 				retrieveBodyContent +
+				scrollToElement +
 				setSentenceOnClick +
 				stopScripts +
 				setCSSLink +
@@ -661,9 +669,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			reader.loadUrl("javascript:setOnClickEvents();");
-			String curr = sp.getString(CURR_SENT, null);
-			if(curr != null)
-				highLight(curr);
+			String curr = sp.getString(CURR_SENT, "0");
+			highLight(curr);
 			
 		}	
 	};
@@ -720,14 +727,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					String curr = sp.getString(CURR_SENT, null);
-					int c = -1;
-					
-					
-					if(curr!=null){
-						c = Integer.parseInt(curr);
-						removeHighLight(Integer.toString(c));
-					}
+					String curr = sp.getString(CURR_SENT, "0");
+					int c = Integer.parseInt(curr);
+					removeHighLight(Integer.toString(c));
 					
 					if(c!=sentId){
 						String sId = Integer.toString(sentId);
@@ -746,7 +748,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 						}
 						
 					} else 
-						spEditor.putString(CURR_SENT, null).commit();
+						spEditor.putString(CURR_SENT, "0").commit();
 				}
 			});
 		}
@@ -800,7 +802,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 
 		@Override
 		public void run() {
-			String curr = sp.getString(CURR_SENT, null);
+			String curr = sp.getString(CURR_SENT, "0");
+			
 			if(Integer.parseInt(curr)>=texts.size()-1){
 				ibtnPlay.callOnClick();
 				return;
@@ -809,6 +812,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			removeHighLight(curr);
 			curr = Helper.nextInt(curr);
 			highLight(curr);
+			
+			reader.loadUrl("javascript:scrollToElement('" + SENTENCE_TAG + Integer.parseInt(curr) + "');");
 			
 			spEditor.putString(CURR_SENT, curr).commit();
 			
