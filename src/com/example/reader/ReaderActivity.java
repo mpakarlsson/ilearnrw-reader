@@ -189,7 +189,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		}
 
 		reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
-		
+
 		reader_status = ReaderStatus.Disabled;
 		ibtnPlay.setImageResource(R.drawable.play);
 		
@@ -202,6 +202,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		searchbar.setVisibility(RelativeLayout.GONE);
 		
 		current = sp.getString(CURR_SENT, "0");
+
 	}
 	
 	@Override
@@ -232,6 +233,14 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			rlHighlightSpeed.setVisibility(View.GONE);
 			break;
 		}
+	}
+	
+	
+
+	@Override
+	protected void onPause() {
+		highlightHandler.removeCallbacks(highlightRunnable);
+		super.onPause();
 	}
 
 	@Override
@@ -282,6 +291,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 					rlHighlightSpeed.setVisibility(View.GONE);
 					break;
 				}
+				
+				spEditor.putInt("readerMode", mode).commit();
 			}
 		}
 			break;

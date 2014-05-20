@@ -33,13 +33,13 @@
 	        android:layout_toRightOf="@id/ibtn_lib_reader"/>
         
         <RelativeLayout
-        android:id="@+id/search_buttons_layout"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:background="@color/LightGrey"
-        android:gravity="center_vertical"
-        android:layout_toRightOf="@id/ibtn_search_reader"
-        android:layout_marginTop="10dp">
+	        android:id="@+id/search_buttons_layout"
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:background="@color/LightGrey"
+	        android:gravity="center_vertical"
+	        android:layout_toRightOf="@id/ibtn_search_reader"
+	        android:layout_marginTop="10dp">
         
 	        <ImageButton
 	            android:id="@+id/ibtn_search_back"
@@ -80,7 +80,8 @@
         android:layout_below="@id/reader_top"
         android:layout_above="@+id/reader_bottom"
         android:layout_toLeftOf="@+id/reader_body_highlight_speed">
-        <WebView 
+        
+        <WebView
 	        android:id="@+id/webview_reader"
 	        android:layout_width="match_parent"	
 	        android:layout_height="match_parent"/>        
