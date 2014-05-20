@@ -34,26 +34,36 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
-public class ReaderActivity extends Activity implements OnClickListener, OnLongClickListener, TTSHighlightCallback, TTSReadingCallback {
+public class ReaderActivity extends Activity implements OnClickListener, OnLongClickListener, OnSeekBarChangeListener, TTSHighlightCallback, TTSReadingCallback {
 
-	public static TextView tvTitle;
-	public static WebView reader;
-	public static ImageButton ibtnLib, ibtnSearch, ibtnMode, ibtnPrev, ibtnPlay, ibtnNext, ibtnSettings, ibtnSearchForward, ibtnSearchBack;
-	public static RelativeLayout top, bottom, searchbar;
-	public static ReaderMode reader_mode;
-	public static ReaderStatus reader_status;
+	private TextView tvTitle, tvHighLightSpeed;
+	private WebView reader;
+	private ImageButton ibtnLib, ibtnSearch, ibtnMode, ibtnPrev, ibtnPlay, ibtnNext, ibtnSettings, ibtnSearchForward, ibtnSearchBack;
+	private RelativeLayout top, bottom, searchbar, rlHighlightSpeed;
+	private SeekBar sbHighLightSpeed;
+	
+	private ReaderMode reader_mode;
+	private ReaderStatus reader_status;
+	
 	private TTS tts;
 	private TTSHighlightCallback cbHighlight;
 	private TTSReadingCallback cbSpoken;
+
+	private double highLightSpeed;
+	
 	private static String html, fileHtml;
+	
 	private String current;
 	public String CURR_SENT = "current";
 	public static final String SENTENCE_TAG = "sent";
-	private ArrayList<String> texts;
 	
+	private ArrayList<String> texts;
+
 	
 	private final static int FLAG_SEARCH = 10000;
 	private final static int FLAG_MODE = 10001;
@@ -92,26 +102,33 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reader);
 		
-		Bundle libBundle = getIntent().getBundleExtra("LibraryBundle");
-		File file = (File) libBundle.get("file");
-		String title = libBundle.getString("title");
+		Bundle libBundle 	= getIntent().getBundleExtra("LibraryBundle");
+		File file 			= (File) libBundle.get("file");
+		String title		= libBundle.getString("title");
 		
 		
 		int endingIndex =  title.lastIndexOf(".");
-		String ending = title.substring(endingIndex+1);
-		title = title.substring(0, endingIndex);
-		CURR_SENT = CURR_SENT + "_" + title + "_" + ending;
+		String ending 	= title.substring(endingIndex+1);
+		title 			= title.substring(0, endingIndex);
+		CURR_SENT 		= CURR_SENT + "_" + title + "_" + ending;
 		
 		tvTitle = (TextView) findViewById(R.id.tv_book_title_reader);
 		tvTitle.setText(title);
 		
-		ibtnLib = (ImageButton) findViewById(R.id.ibtn_lib_reader);
-		ibtnSearch = (ImageButton) findViewById(R.id.ibtn_search_reader);
-		ibtnMode = (ImageButton) findViewById(R.id.ibtn_mode_reader);
-		ibtnPrev = (ImageButton) findViewById(R.id.ibtn_prev_reader);
-		ibtnPlay = (ImageButton) findViewById(R.id.ibtn_play_reader);
-		ibtnNext = (ImageButton) findViewById(R.id.ibtn_next_reader);
-		ibtnSettings = (ImageButton) findViewById(R.id.ibtn_settings_reader);
+		tvHighLightSpeed = (TextView) findViewById(R.id.tv_highlight_speed_value);
+		
+		sbHighLightSpeed = (SeekBar) findViewById(R.id.seekbar_highLight_speed);
+		sbHighLightSpeed.setOnSeekBarChangeListener(this);
+
+		tvHighLightSpeed.setText(String.format("%.1f", ((sbHighLightSpeed.getProgress() * 0.1) + 0.5)) + "\n/\n" + String.format("%.1f", ((sbHighLightSpeed.getMax()*0.1) + 0.5)));
+		
+		ibtnLib 		= (ImageButton) findViewById(R.id.ibtn_lib_reader);
+		ibtnSearch 		= (ImageButton) findViewById(R.id.ibtn_search_reader);
+		ibtnMode 		= (ImageButton) findViewById(R.id.ibtn_mode_reader);
+		ibtnPrev 		= (ImageButton) findViewById(R.id.ibtn_prev_reader);
+		ibtnPlay 		= (ImageButton) findViewById(R.id.ibtn_play_reader);
+		ibtnNext 		= (ImageButton) findViewById(R.id.ibtn_next_reader);
+		ibtnSettings 	= (ImageButton) findViewById(R.id.ibtn_settings_reader);
 		
 		ibtnLib.setOnClickListener(this);
 		ibtnSearch.setOnClickListener(this);
@@ -121,15 +138,17 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		ibtnNext.setOnClickListener(this);
 		ibtnSettings.setOnClickListener(this);
 		
-		top = (RelativeLayout) findViewById(R.id.reader_top);
-		bottom = (RelativeLayout) findViewById(R.id.reader_bottom);
-	
+		top 				= (RelativeLayout) findViewById(R.id.reader_top);
+		bottom 				= (RelativeLayout) findViewById(R.id.reader_bottom);
+		rlHighlightSpeed 	= (RelativeLayout) findViewById(R.id.reader_body_highlight_speed);
+		
+		
 		Intent checkTTSIntent = new Intent(); 
 		checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
 		startActivityForResult(checkTTSIntent, 0);
 		
-		cbHighlight = this;
-		cbSpoken = this;
+		cbHighlight 	= this;
+		cbSpoken 		= this;
 		
 		reader = (WebView) findViewById(R.id.webview_reader);
 		reader.setOnLongClickListener(this);
@@ -139,11 +158,11 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		reader.getSettings().setDefaultFontSize(22);
 		
 		reader.setWebViewClient(new MyWebViewClient());
-		fileHtml = FileHelper.readFromFile(file);
-		html = updateHtml(fileHtml);
-		texts = new ArrayList<String>();
+		fileHtml 	= FileHelper.readFromFile(file);
+		html 		= updateHtml(fileHtml);
+		texts 		= new ArrayList<String>();
 		
-		int index =  html.indexOf("<body");
+		int index = html.indexOf("<body");
 		if(index != -1){
 			String body = html.substring(index);
 			String[] sentences = body.split("</" + SENTENCE_TAG +">");
@@ -162,9 +181,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		reader_status = ReaderStatus.Disabled;
 		ibtnPlay.setImageResource(R.drawable.play);
 		
-		searchbar = (RelativeLayout) findViewById(R.id.search_buttons_layout);
-		ibtnSearchForward = (ImageButton) findViewById(R.id.ibtn_search_forward);
-		ibtnSearchBack = (ImageButton) findViewById(R.id.ibtn_search_back);
+		searchbar 			= (RelativeLayout) findViewById(R.id.search_buttons_layout);
+		ibtnSearchForward 	= (ImageButton) findViewById(R.id.ibtn_search_forward);
+		ibtnSearchBack 		= (ImageButton) findViewById(R.id.ibtn_search_back);
 		ibtnSearchForward.setOnClickListener(this);
 		ibtnSearchBack.setOnClickListener(this);
 		
@@ -187,15 +206,19 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		switch(mode){
 		case 0:
 			reader_mode = ReaderMode.Listen;
+			rlHighlightSpeed.setVisibility(View.GONE);
 			break;
 		case 1:
 			reader_mode = ReaderMode.Guidance;
+			rlHighlightSpeed.setVisibility(View.VISIBLE);
 			break;
 		case 2: 
 			reader_mode = ReaderMode.Chunking;
+			rlHighlightSpeed.setVisibility(View.GONE);
 			break;
 		default:
 			reader_mode = ReaderMode.Listen;
+			rlHighlightSpeed.setVisibility(View.GONE);
 			break;
 		}
 	}
@@ -233,15 +256,19 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				switch(mode){
 				case 0:
 					reader_mode = ReaderMode.Listen;
+					rlHighlightSpeed.setVisibility(View.GONE);
 					break;
 				case 1:
 					reader_mode = ReaderMode.Guidance;
+					rlHighlightSpeed.setVisibility(View.VISIBLE);
 					break;
 				case 2: 
 					reader_mode = ReaderMode.Chunking;
+					rlHighlightSpeed.setVisibility(View.GONE);
 					break;
 				default:
 					reader_mode = ReaderMode.Listen;
+					rlHighlightSpeed.setVisibility(View.GONE);
 					break;
 				}
 			}
@@ -400,6 +427,28 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	public boolean onLongClick(View v) {
 		return false;
 	};
+	
+	@Override
+	public void onProgressChanged(SeekBar seekBar, int progress,
+			boolean fromUser) {
+		switch(seekBar.getId()){
+		case R.id.seekbar_highLight_speed:
+			highLightSpeed = (seekBar.getProgress() * 0.1) + 0.5; // Slider values goes from 0.5 to 10.5
+			double max = ((seekBar.getMax()*0.1) + 0.5);
+			tvHighLightSpeed.setText(String.format("%.1f", highLightSpeed) + "\n/\n" + String.format("%.1f", max));
+			break;
+		default:
+			break;
+		
+		}
+	}
+
+	@Override
+	public void onStartTrackingTouch(SeekBar seekBar) {}
+
+	@Override
+	public void onStopTrackingTouch(SeekBar seekBar) {}
+	
 	
 	public void highLight(String id){
 		String highlightColor = "#" + Integer.toHexString(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
