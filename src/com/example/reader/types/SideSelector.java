@@ -89,6 +89,7 @@ public class SideSelector extends View {
 			paint.getTextBounds(sections[i], 0, sections[i].length(), fontRectangle);
 			float height = charHeight + (i*charHeight) - charHeight + fontRectangle.height();
 			canvas.drawText(String.valueOf(sections[i]), widthCenter, height, paint);
+			//canvas.drawText(String.valueOf(sections[i]), widthCenter, charHeight + ((i*charHeight) * 0.5f), paint);
 		}
 		paint.setColor(0xAAFFFFFF);
 		

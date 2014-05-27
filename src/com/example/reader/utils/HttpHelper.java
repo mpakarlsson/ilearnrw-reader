@@ -26,7 +26,7 @@ public class HttpHelper {
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpResponse response = null;
 		
-		HttpConnectionParams.setSoTimeout(client.getParams(), 25000);
+		//HttpConnectionParams.setSoTimeout(client.getParams(), 25000);
 		
 		HttpPost post = new HttpPost(url);
 		post.setHeader("Accept", "application/json");

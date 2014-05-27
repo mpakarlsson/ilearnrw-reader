@@ -377,8 +377,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			
 			String previous = Helper.previousInt(current);
 			spEditor.putString(CURR_SENT, previous).commit();
-			removeHighLight(current);
-			highLight(previous);
+			removeHighlight(current);
+			highlight(previous);
 			if(reader_status == ReaderStatus.Enabled){
 				if(reader_mode == ReaderMode.Listen)
 					speakFromSentence(Integer.parseInt(previous));
@@ -425,8 +425,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			
 			
 			spEditor.putString(CURR_SENT, next).commit();
-			removeHighLight(current);
-			highLight(next);
+			removeHighlight(current);
+			highlight(next);
 			
 			if(reader_status == ReaderStatus.Enabled){
 				if(reader_mode == ReaderMode.Listen)
@@ -505,12 +505,15 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	}
 	
 	
-	public void highLight(String id){
+	public void highlight(String id){
+		String curr = sp.getString(CURR_SENT, "0");
+		reader.loadUrl("javascript:scrollToElement('" + SENTENCE_TAG + Integer.parseInt(curr) + "');");
+		
 		String highlightColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
 		reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + highlightColor + "');");
 	}
 	
-	public void removeHighLight(String id){
+	public void removeHighlight(String id){
 		String backgroundColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
 		reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + backgroundColor + "');");
 	}
@@ -681,7 +684,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		public void onPageFinished(WebView view, String url) {
 			reader.loadUrl("javascript:setOnClickEvents();");
 			String curr = sp.getString(CURR_SENT, "0");
-			highLight(curr);
+			highlight(curr);
 			
 		}	
 	};
@@ -740,12 +743,12 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				public void run() {
 					String curr = sp.getString(CURR_SENT, "0");
 					int c = Integer.parseInt(curr);
-					removeHighLight(Integer.toString(c));
+					removeHighlight(Integer.toString(c));
 					
 					if(c!=sentId){
 						String sId = Integer.toString(sentId);
 						
-						highLight(sId);
+						highlight(sId);
 						spEditor.putString(CURR_SENT, sId).commit();
 						
 						if(reader_status == ReaderStatus.Enabled){
@@ -772,8 +775,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		this.runOnUiThread(new Runnable(){
 			@Override
 			public void run() {
-				String highlightColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
-				reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + highlightColor + "');");
+				highlight(id);
 			}
 		});
 	}
@@ -783,8 +785,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		this.runOnUiThread(new Runnable(){
 			@Override
 			public void run() {
-				String backgroundColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
-				reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + backgroundColor + "');");	
+				removeHighlight(id);
 			}
 		});
 	}
@@ -820,11 +821,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				return;
 			}
 			
-			removeHighLight(curr);
+			removeHighlight(curr);
 			curr = Helper.nextInt(curr);
-			highLight(curr);
-			
-			reader.loadUrl("javascript:scrollToElement('" + SENTENCE_TAG + Integer.parseInt(curr) + "');");
+			highlight(curr);
 			
 			spEditor.putString(CURR_SENT, curr).commit();
 			
