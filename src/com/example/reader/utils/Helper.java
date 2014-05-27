@@ -2,19 +2,7 @@ package com.example.reader.utils;
 
 import com.example.reader.types.Pair;
 
-import android.text.Html;
-
 public class Helper {
-
-	public static String getHtmlString(String text, String startId){
-		int index = text.indexOf(startId);
-		
-		String part = text.substring(0, index);
-		part = part.substring(part.lastIndexOf("<"));
-		String temp = part + text.substring(index);		
-		
-		return Html.fromHtml(temp).toString();
-	}
 	
 	
 	public static String nextInt(String current){

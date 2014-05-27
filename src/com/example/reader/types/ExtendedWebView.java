@@ -2,7 +2,6 @@ package com.example.reader.types;
 
 import com.example.reader.R;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ActionMode;

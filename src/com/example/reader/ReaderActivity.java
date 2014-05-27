@@ -64,7 +64,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	
 	private String current;
 	public String CURR_SENT = "current";
-	public static final String SENTENCE_TAG = "sent";
+	public static final String SENTENCE_TAG = "sen";
 	
 	private ArrayList<String> texts;
 
