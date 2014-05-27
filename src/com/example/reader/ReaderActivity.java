@@ -494,8 +494,10 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			
 			highlightSpeed += 0.5;
 			
-			long millis = (long) (highlightSpeed * 1000);
-			highlightHandler.postDelayed(highlightRunnable, millis);
+			if(reader_status == ReaderStatus.Enabled) {
+				long millis = (long) (highlightSpeed * 1000);
+				highlightHandler.postDelayed(highlightRunnable, millis);
+			}
 			break;
 
 		default:
@@ -506,8 +508,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	
 	
 	public void highlight(String id){
-		String curr = sp.getString(CURR_SENT, "0");
-		reader.loadUrl("javascript:scrollToElement('" + SENTENCE_TAG + Integer.parseInt(curr) + "');");
+		reader.loadUrl("javascript:scrollToElement('" + SENTENCE_TAG + Integer.parseInt(id) + "');");
 		
 		String highlightColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
 		reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + highlightColor + "');");
