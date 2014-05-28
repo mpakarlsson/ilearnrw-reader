@@ -9,6 +9,7 @@
     <string name="item_exists_do_copy">Item already exists in your library. Overwrite the file?</string>
     <string name="remember_me">Remember me</string>
     <string name="format_library">Format library?</string>
+    <string name="more_info">More Information</string>
 
     <!-- Activity titles -->
     <string name="title_activity_reader">ReaderActivity</string>

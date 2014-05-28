@@ -421,13 +421,10 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			.setPositiveButton(android.R.string.ok, null).show();
 		}
 		else {
-			
 			new AlertDialog.Builder(this)
 			.setTitle("Invalid file type")
 			.setMessage("Can not open file, " + f.getName() + ", please select another one")
 			.setPositiveButton(android.R.string.ok, null).show();
-			
-			
 		}
 
 	}

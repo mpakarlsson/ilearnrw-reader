@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item 
-        android:id="@+id/cab_copy"
+        android:id="@+id/cab_reader_more_info"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:title="Copy"/>
+        android:title="@string/more_info"/>
 
 </menu>

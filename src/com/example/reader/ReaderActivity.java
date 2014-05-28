@@ -580,6 +580,11 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		String startScripts = "<script type=\"text/javascript\">";
 		String stopScripts = "</script>";
 		
+		String showToast = 
+				"function showToast(toast){" +
+					"ReaderInterface.showToast(toast);" +
+				"}";
+		
 		String retrieveBodyContent =
 				"function getBodyContent(str) {" +
 				"	var bodyHTML = document.body.innerHTML;" +
@@ -626,6 +631,11 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 					"}" +
 				"}";
 		
+		String showMoreInformation = 
+				"function showMoreInformation() {" +
+						"ReaderInterface.showMoreInformation(document.getSelection().toString());" +
+				"}";
+		
 		String setCSSLink = "<link rel='stylesheet' href='css/default.css' type='text/css'>";
 		
 		String backgroundColor 	= Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255)));
@@ -665,6 +675,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				retrieveBodyContent +
 				scrollToElement +
 				setSentenceOnClick +
+				showToast + 
+				showMoreInformation + 
 				stopScripts +
 				setCSSLink +
 				cssBody +
@@ -717,6 +729,15 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		@JavascriptInterface
 		public void logMessage(String tag, String text){
 			Log.d(tag, text);
+		}
+		
+		@JavascriptInterface
+		public void showMoreInformation(String word){
+			
+			new AlertDialog.Builder(context)
+			.setTitle(word)
+			.setMessage("Word: " + word)
+			.setPositiveButton(android.R.string.ok, null).show();
 		}
 		
 		@JavascriptInterface
