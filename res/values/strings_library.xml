@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_library">LibraryActivity</string>
+    <string name="title_activity_add_to_device_explorer">AddToDevice - Explorer</string>
+    <string name="title_activity_add_to_device_orb">AddToDevice - Online Resource Bank</string>
+    
+    <string name="library_add">Add new item to library</string>
+    <string name="library_location">Library</string>
+    
+    <string name="annotation_succeeded">Text processing succeeded</string>
+    <string name="annotation_failed">Text processing failed</string>
+    <string name="annotation_aborted">Text processing aborted</string>
+    <string name="annotation_started">Text processing started</string>
+    
+    <string name="dialog_remove_item_confirmation">Are you sure you want to remove\u0020</string>
+    <string name="dialog_copy_item_confirmation">Copy this file to external storage?</string>
+    <string name="dialog_title_add_to_device">Add to Device from</string>
+    <string name="dialog_annotation_title">Text processing</string>
+    <string name="dialog_annotation_message">Processing text. Please wait&#8230;</string>
+    <string name="dialog_json_title">JavaScript Object Notation file - JSON</string>
+    <string name="dialog_json_message">This file contains information about a .txt or .html with the same name</string>
+    <string name="dialog_logout_title">Logout</string>
+    <string name="dialog_logout_message">Do you wish to log out?</string>
+    
+    <string name="copy_file_external_succeeded">Copy successful</string>
+    <string name="copy_file_external_failed">Copy failed</string>
+    
+    <string name="copy_confirm_start">Copy\u0020</string>
+	<string name="copy_confirm_end">\u0020to your library?</string>
+	
+    <string name="format_library">Format library?</string>
+    
+    <string name="external_storage_folder_name">Debug_IlearnRW</string>
+    
+    
+    <string-array name="library_context_menu">
+        <item>Edit</item>
+        <item>Delete</item>
+        <item>Copy</item>
+    </string-array>
+    
+    <string-array name="add_to_device_array">
+	    <item>Device storage</item>
+	    <item>Online Resource Bank</item>	
+    </string-array>
+    
+</resources>

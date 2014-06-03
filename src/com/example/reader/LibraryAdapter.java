@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
 
+import com.example.reader.types.LibraryItem;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +50,6 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-	
 		View v = convertView;
 		if(v == null){
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

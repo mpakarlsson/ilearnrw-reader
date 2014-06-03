@@ -45,14 +45,10 @@
     </string-array>
     
     <!-- Library Preferences -->
-    
     <string name="library_prefs">Library Settings</string>
     <string name="pref_library_show_all">Show files</string>
     <string name="pref_library_show_all_summary">Show all files in folder?</string>
     
     <string name="pref_library_clean">Format Library</string>
-    <string name="pref_library_clean_summary">Remove all files from your library?</string>
-    
-    
-    
+    <string name="pref_library_clean_summary">Remove all files from your library?</string>    
 </resources>

@@ -8,7 +8,6 @@ import com.example.reader.interfaces.TTSHighlightCallback;
 import com.example.reader.interfaces.TTSReadingCallback;
 import com.example.reader.popups.ModeActivity;
 import com.example.reader.popups.SearchActivity;
-import com.example.reader.tts.TTS;
 import com.example.reader.types.Pair;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.Helper;
@@ -201,7 +200,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		
 		searchbar.setVisibility(RelativeLayout.GONE);
 		
-		current = sp.getString(CURR_SENT, "0");
+		current = sp.getString(CURR_SENT, "s0");
 
 	}
 	
@@ -234,8 +233,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 		}
 	}
-	
-	
 
 	@Override
 	protected void onPause() {
@@ -339,7 +336,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	}
 
 	@Override
-	public void onClick(View v) {
+	public void onClick(View v) {		
 		switch (v.getId()) {
 		case R.id.ibtn_lib_reader:
 			Intent lib_intent = new Intent(this, LibraryActivity.class);
@@ -373,15 +370,21 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_prev_reader:
-			current = sp.getString(CURR_SENT, "0");
+			current = sp.getString(CURR_SENT, "s0");
 			
-			String previous = Helper.previousInt(current);
+			String identifier = Helper.findIdentifier(current);
+			int prev =  Helper.findPosition(current);
+			prev = prev > 0 ? --prev : 0;
+			
+			String previous = identifier + Integer.toString(prev);
 			spEditor.putString(CURR_SENT, previous).commit();
+			
 			removeHighlight(current);
 			highlight(previous);
+			
 			if(reader_status == ReaderStatus.Enabled){
 				if(reader_mode == ReaderMode.Listen)
-					speakFromSentence(Integer.parseInt(previous));
+					speakFromSentence(previous);
 				else if(reader_mode == ReaderMode.Guidance){
 					resetGuidance();
 				}
@@ -390,13 +393,12 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_play_reader:
-			current = sp.getString(CURR_SENT, "0");
+			current = sp.getString(CURR_SENT, "s0");
 			
 			if(reader_status == ReaderStatus.Disabled){
 				setPlayStatus(ReaderStatus.Enabled);
 				if(reader_mode == ReaderMode.Listen) {
-					int c = Integer.parseInt(current);
-					speakFromSentence(c);
+					speakFromSentence(current);
 				} else if(reader_mode == ReaderMode.Guidance){
 					resetGuidance();
 				}
@@ -413,16 +415,13 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_next_reader:
-			current = sp.getString(CURR_SENT, "0");
-			
-			int c = Integer.parseInt(current);
+			current = sp.getString(CURR_SENT, "s0");
+
+			String identifier2 = Helper.findIdentifier(current);
+			int n = Helper.findPosition(current);
 			String next;
-			if(c+1>=texts.size())
-				next = current;
-			else 
-				next = Helper.nextInt(current);
 			
-			
+			next = n+1 >= texts.size() ? current : identifier2 + Integer.toString(++n);			
 			
 			spEditor.putString(CURR_SENT, next).commit();
 			removeHighlight(current);
@@ -430,7 +429,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			
 			if(reader_status == ReaderStatus.Enabled){
 				if(reader_mode == ReaderMode.Listen)
-					speakFromSentence(Integer.parseInt(next));
+					speakFromSentence(next);
 				else if(reader_mode == ReaderMode.Guidance){
 					resetGuidance();
 				}
@@ -508,15 +507,15 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	
 	
 	public void highlight(String id){
-		reader.loadUrl("javascript:scrollToElement('" + SENTENCE_TAG + Integer.parseInt(id) + "');");
+		reader.loadUrl("javascript:scrollToElement('" + id + "');");
 		
 		String highlightColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
-		reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + highlightColor + "');");
+		reader.loadUrl("javascript:highlight('" + id + "', '" + highlightColor + "');");
 	}
 	
 	public void removeHighlight(String id){
 		String backgroundColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
-		reader.loadUrl("javascript:highlight('" + SENTENCE_TAG + id + "', '" + backgroundColor + "');");
+		reader.loadUrl("javascript:highlight('" + id + "', '" + backgroundColor + "');");
 	}
 	
 	
@@ -549,12 +548,14 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		tts.setLanguage(loc);
 	}
 	
-	private void speakFromSentence(int id){
+	private void speakFromSentence(String id){
 		ArrayList<String> sentences = new ArrayList<String>();
-		for(int i=id; i<texts.size(); i++)
+		int pos = Helper.findPosition(id);
+		
+		for(int i=pos; i<texts.size(); i++)
 			sentences.add(texts.get(i));
 		
-		tts.speak(sentences, id);
+		tts.speak(sentences, pos, id);
 	}
 
 	private String updateHtml(String html){
@@ -572,6 +573,10 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		firstPart = html.substring(0, splitPos);
 		secondPart = html.substring(splitPos);
 		
+		if(hasHead){
+			int hEnd = secondPart.indexOf("</head>");
+			secondPart = secondPart.substring(hEnd);
+		}
 		if(!hasHead){
 			firstPart += "<head>";
 			secondPart = "</head>" + secondPart;
@@ -696,7 +701,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			reader.loadUrl("javascript:setOnClickEvents();");
-			String curr = sp.getString(CURR_SENT, "0");
+			String curr = sp.getString(CURR_SENT, "s0");
 			highlight(curr);
 			
 		}	
@@ -741,41 +746,21 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		}
 		
 		@JavascriptInterface
-		public void clickSentence(String html, String id){			
-			int pos = -1;
-			for(int i=id.length() - 1; i>=0; i--){
-				Character c = id.charAt(i);
-
-				if(Character.isDigit(c)){
-					pos = i;
-				} else if(Character.isLetter(c)){
-					break;
-				}
-			}
-			
-			if(pos==-1){
-				showToast("Id does not contain a number");
-				return;
-			}
-			
-			final int sentId = Integer.parseInt(id.substring(pos));
+		public void clickSentence(String html, final String id){
 			
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					String curr = sp.getString(CURR_SENT, "0");
-					int c = Integer.parseInt(curr);
-					removeHighlight(Integer.toString(c));
+					String curr = sp.getString(CURR_SENT, "s0");
+					removeHighlight(curr);
 					
-					if(c!=sentId){
-						String sId = Integer.toString(sentId);
-						
-						highlight(sId);
-						spEditor.putString(CURR_SENT, sId).commit();
+					if(!curr.equals(id)){						
+						highlight(id);
+						spEditor.putString(CURR_SENT, id).commit();
 						
 						if(reader_status == ReaderStatus.Enabled){
 							if(reader_mode == ReaderMode.Listen)
-								speakFromSentence(sentId);
+								speakFromSentence(id);
 							else if(reader_mode == ReaderMode.Guidance){
 								highlightHandler.removeCallbacks(highlightRunnable);
 								long millis = (long) (highlightSpeed * 1000);
@@ -784,7 +769,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 						}
 						
 					} else 
-						spEditor.putString(CURR_SENT, "0").commit();
+						spEditor.putString(CURR_SENT, "s0").commit();
 				}
 			});
 		}
@@ -836,15 +821,17 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 
 		@Override
 		public void run() {
-			String curr = sp.getString(CURR_SENT, "0");
+			String curr = sp.getString(CURR_SENT, "s0");
+			String identifier = Helper.findIdentifier(curr);
+			int pos = Helper.findPosition(curr);
 			
-			if(Integer.parseInt(curr)>=texts.size()-1){
+			if(pos>=texts.size()-1){
 				ibtnPlay.callOnClick();
 				return;
 			}
 			
 			removeHighlight(curr);
-			curr = Helper.nextInt(curr);
+			curr = identifier + ++pos;
 			highlight(curr);
 			
 			spEditor.putString(CURR_SENT, curr).commit();

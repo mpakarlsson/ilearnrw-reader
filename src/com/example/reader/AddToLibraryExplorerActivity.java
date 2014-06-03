@@ -15,6 +15,7 @@ import java.util.Locale;
 import org.apache.http.HttpResponse;
 
 import com.example.reader.results.TextAnnotationResult;
+import com.example.reader.types.ExplorerItem;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.HttpHelper;
 import com.google.gson.Gson;
@@ -66,12 +67,12 @@ public class AddToLibraryExplorerActivity extends Activity {
 						getDirectory(items.get(pos).getPath());
 					} else {
 						new AlertDialog.Builder(view.getContext())
-							.setTitle("[" + file.getName() + "] folder can't be read!")
+							.setTitle("[" + file.getName() + "] " + getString(R.string.folder_unreadable))
 							.setPositiveButton(getString(android.R.string.ok), null).show();
 					}
 				} else {
 					new AlertDialog.Builder(view.getContext())
-						.setTitle(getString(R.string.add_to_device_explorer_copy_confirm_start) + file.getName() + getString(R.string.add_to_device_explorer_copy_confirm_end))
+						.setTitle(getString(R.string.copy_confirm_start) + file.getName() + getString(R.string.copy_confirm_end))
 						.setNegativeButton(getString(android.R.string.no), null)
 						.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
 							
@@ -182,8 +183,6 @@ public class AddToLibraryExplorerActivity extends Activity {
 						fis.close();
 						
 						new AddToLibraryTask().execute(data, Integer.toString(id), lang, token, builder.toString());
-						
-						
 						return;
 					}
 				}
@@ -192,7 +191,6 @@ public class AddToLibraryExplorerActivity extends Activity {
 				fis.close();
 				
 				new AddToLibraryTask().execute(data, Integer.toString(id), lang, token, file.getName());
-				
 				
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -209,13 +207,13 @@ public class AddToLibraryExplorerActivity extends Activity {
 		@Override
 		protected void onPreExecute() {
 			dialog = new ProgressDialog(AddToLibraryExplorerActivity.this);
-			dialog.setTitle("Text processing");
-			dialog.setMessage("Processing text. Please wait...");
+			dialog.setTitle(getString(R.string.dialog_annotation_title));
+			dialog.setMessage(getString(R.string.dialog_annotation_message));
 			dialog.setCancelable(true);
 			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					Toast.makeText(getBaseContext(), "Copy aborted", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getBaseContext(), getString(R.string.annotation_aborted), Toast.LENGTH_SHORT).show();
 					dialog.dismiss();
 					cancel(true);
 				}
@@ -223,7 +221,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 				@Override
 				public void onCancel(DialogInterface dialog) {
-					Toast.makeText(getBaseContext(), "Copy aborted", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getBaseContext(), getString(R.string.annotation_aborted), Toast.LENGTH_SHORT).show();
 					dialog.dismiss();
 					cancel(true);
 				}
@@ -241,6 +239,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 			if(data.size()==1){
 				return null;
 			} else {
+				System.out.println(data.get(1));				
 				TextAnnotationResult result = new Gson().fromJson(data.get(1), TextAnnotationResult.class);
 				return result;
 			}
@@ -253,7 +252,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 				dialog.dismiss();
 			
 			if(result != null){
-				Toast.makeText(AddToLibraryExplorerActivity.this, "Text processing succeeded", Toast.LENGTH_SHORT).show();
+				Toast.makeText(AddToLibraryExplorerActivity.this, getString(R.string.annotation_succeeded), Toast.LENGTH_SHORT).show();
 				
 				Gson gson =  new Gson();
 				int index = filename.lastIndexOf(".");
@@ -273,7 +272,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 				setResult(Activity.RESULT_OK, intent);
 				finish();
 			} else 
-				Toast.makeText(AddToLibraryExplorerActivity.this, "Failed to copy and annotate file", Toast.LENGTH_SHORT).show();
+				Toast.makeText(AddToLibraryExplorerActivity.this, getString(R.string.annotation_failed), Toast.LENGTH_SHORT).show();
 			
 		}
 		

@@ -78,11 +78,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 					editor.commit();
 				}	
 			}
-		});    
+		});
     }
-
-
-    
     
     @Override
 	protected void onResume() {
@@ -98,10 +95,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         etUsername.requestFocus();
     	
 	}
-
-
-
-
+    
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.login, menu);
@@ -116,7 +110,6 @@ public class LoginActivity extends Activity implements OnClickListener {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 	@Override
 	public void onClick(View v) {
@@ -138,13 +131,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 			editor.commit();
 			
 			new LoginTask().execute(username, password);
-			
 			break;
 
 		case R.id.login_button_skip:
 			Intent i2 = new Intent(this, LibraryActivity.class);
 			startActivity(i2);
 			break;
+			
 		default:
 			break;
 		}
@@ -156,8 +149,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		@Override
 		protected void onPreExecute() {
 			dialog = new ProgressDialog(LoginActivity.this);
-			dialog.setTitle("Login");
-			dialog.setMessage("Logging in. Please wait...");
+			dialog.setTitle(getString(R.string.dialog_login_title));
+			dialog.setMessage(getString(R.string.dialog_login_message));
 			dialog.setCancelable(true);
 			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
 				@Override
@@ -206,7 +199,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				
 	    		new UserDetailsTask().execute(username, result.authToken);
 			} else
-				Toast.makeText(LoginActivity.this, "Failed to login", Toast.LENGTH_SHORT).show();
+				Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
 		}
 	};
 	
@@ -215,8 +208,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		@Override
 		protected void onPreExecute() {
 			dialog = new ProgressDialog(LoginActivity.this);
-			dialog.setTitle("User details");
-			dialog.setMessage("Fetching user details. Please wait...");
+			dialog.setTitle(getString(R.string.dialog_fetch_user_title));
+			dialog.setMessage(getString(R.string.dialog_fetch_user_message));
 			dialog.setCancelable(true);
 			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
 				@Override
@@ -257,7 +250,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}
 			
 			if(result != null){
-				Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+				Toast.makeText(LoginActivity.this, getString(R.string.login_succeeded), Toast.LENGTH_SHORT).show();
 				
 				SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit();
 				editor.putInt("id", result.id);
@@ -274,7 +267,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         		Intent i2 = new Intent(LoginActivity.this, LibraryActivity.class);
         		startActivity(i2);
 			} else 
-				Toast.makeText(LoginActivity.this, "Login failed, failed to fetch user data", Toast.LENGTH_SHORT).show();
+				Toast.makeText(LoginActivity.this, getString(R.string.login_failed_fetching), Toast.LENGTH_SHORT).show();
 		}
 	};
 }

@@ -54,8 +54,6 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 			values[i+numBasicFonts] = (CharSequence) fonts[i];
 		}
 		
-		
-		
 		fontFace.setEntries(entries);
 		fontFace.setEntryValues(values);
 		if(fontFace.getValue() == null)
@@ -93,7 +91,6 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 	
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
-		
 		if(!preference.getTitle().toString().equals(newValue)){
 			return true;
 		}

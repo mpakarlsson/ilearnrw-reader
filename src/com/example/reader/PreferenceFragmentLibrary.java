@@ -50,14 +50,9 @@ public class PreferenceFragmentLibrary extends PreferenceFragment {
 					}
 				});
 				
-				
 				builder.show();
-				
 				return true;
 			}
 		});
-		
 	}
-
-	
 }

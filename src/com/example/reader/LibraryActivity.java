@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.Locale;
 
 import com.example.reader.popups.RenameActivity;
+import com.example.reader.types.LibraryItem;
 import com.example.reader.types.Pair;
 import com.example.reader.types.SideSelector;
 import com.example.reader.utils.FileHelper;
@@ -52,7 +53,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	public static final int FLAG_UPDATE_FILE_NAME = 10001;
 	public static final int FLAG_SETTINGS = 10002;
 	
-	
 	private LibraryAdapter adapter;
 	
 	@Override
@@ -69,7 +69,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		
 		libraryFiles = (ArrayList<File>) FileHelper.getFileList(dir, hiddenFiles);
 		
-		// Copies the files from 'res/raw' into the 'Library' folder, used for testing
+		// Copies the files from 'res/raw' into the 'Library' folder, used for testing, remove when we got valid text files
 		if(libraryFiles.isEmpty()){
 			Field[] fields=R.raw.class.getFields();
 		    for(int count=0; count < fields.length; count++){
@@ -173,7 +173,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			final int pos = info.position;
 			
 			new AlertDialog.Builder(this)
-				.setTitle(getString(R.string.library_remove_item_confirmation) + listItemName)
+				.setTitle(getString(R.string.dialog_remove_item_confirmation) + listItemName)
 				.setNegativeButton(getString(android.R.string.no), null)
 				.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
 					@Override
@@ -218,13 +218,17 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			final int pos = info.position;
 			
 			new AlertDialog.Builder(this)
-			.setTitle("Copy this file to external storage?")
+			.setTitle(getString(R.string.dialog_copy_item_confirmation))
 			.setNegativeButton(getString(android.R.string.no), null)
 			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					boolean result = FileHelper.copyFileToExternalStorage(files.get(pos).getFile(), files.get(pos).getName(), "Debug_IlearnRW");
-					Toast.makeText(getBaseContext(), "Copying file to external storage was " + result, Toast.LENGTH_SHORT).show();
+					boolean result = FileHelper.copyFileToExternalStorage(files.get(pos).getFile(), files.get(pos).getName(), getString(R.string.external_storage_folder_name));
+					
+					if(result)
+						Toast.makeText(getBaseContext(), getString(R.string.copy_file_external_succeeded), Toast.LENGTH_SHORT).show();
+					else
+						Toast.makeText(getBaseContext(), getString(R.string.copy_file_external_failed), Toast.LENGTH_SHORT).show();
 				}
 			}).show();
 		}
@@ -321,8 +325,8 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	public void onBackPressed() {
 
 		new AlertDialog.Builder(this)
-			.setTitle("Logout")
-			.setMessage("Do you wish to log out?")
+			.setTitle(getString(R.string.dialog_logout_title))
+			.setMessage(getString(R.string.dialog_logout_message))
 			.setNegativeButton(android.R.string.no, null)
 			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
@@ -338,14 +342,10 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 					LibraryActivity.super.onBackPressed();
 				}
 			}).show();
-		
 	}
-
-	
 	
 	@Override
 	public void onClick(View v) {
-		
 		switch (v.getId()) {
 		case R.id.ibtn_add_library:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -356,18 +356,14 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			final ListView lv = (ListView) convertView.findViewById(R.id.lv_add_to_device);
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.add_to_device_array));
 			lv.setAdapter(adapter);
-			
-			lv.setOnItemClickListener(new OnItemClickListener() {
 
+			lv.setOnItemClickListener(new OnItemClickListener() {
 				@Override
-				public void onItemClick(AdapterView<?> parent, View view,
-						int pos, long id) {
-					
+				public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
 					String option = lv.getItemAtPosition(pos).toString();
 					option = option.toLowerCase(Locale.getDefault()).toString();
 					
 					Intent intent;
-					
 					if(option.contains("device"))
 						intent = new Intent(getBaseContext(), AddToLibraryExplorerActivity.class);
 					else 
@@ -377,7 +373,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				}
 			});
 			dialog = builder.create();
-			
 			dialog.show();
 			break;
 
@@ -416,17 +411,16 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			this.startActivity(intent);
 		} else if(name.endsWith(".json")){
 			new AlertDialog.Builder(this)
-			.setTitle("JSON file")
-			.setMessage("This file contains information about a .txt or .html with the same name.")
+			.setTitle(getString(R.string.dialog_json_title))
+			.setMessage(getString(R.string.dialog_json_message))
 			.setPositiveButton(android.R.string.ok, null).show();
 		}
 		else {
 			new AlertDialog.Builder(this)
-			.setTitle("Invalid file type")
-			.setMessage("Can not open file, " + f.getName() + ", please select another one")
+			.setTitle(getString(R.string.folder_invalid))
+			.setMessage(getString(R.string.folder_open_failed) + f.getName())
 			.setPositiveButton(android.R.string.ok, null).show();
 		}
-
 	}
 	
 	private void updateListView(){

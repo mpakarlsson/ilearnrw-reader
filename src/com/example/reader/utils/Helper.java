@@ -32,4 +32,22 @@ public class Helper {
 		return new Pair<String>(fileName, ext);
 	}
 	
+	public static String findIdentifier(String word){
+		for(int j=0; j<word.length();j++){
+			if(Character.isDigit(word.charAt(j)))
+				return word.substring(0, j);
+		}
+		
+		return "";
+	}
+	
+	public static int findPosition(String word){
+		for(int j=0; j<word.length();j++){
+			if(Character.isDigit(word.charAt(j)))
+				return Integer.parseInt(word.substring(j));
+		}
+		
+		return -1;
+	}
+	
 }
