@@ -201,14 +201,15 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 							}
 						} else {
 							File dir = getDir(getString(R.string.library_location), MODE_PRIVATE);
-							ArrayList<File> fileList = (ArrayList<File>)FileHelper.getFileList(dir, true);
 							
 							item.getFile().delete();
 							files.remove(pos);
 							
+							ArrayList<File> fileList = (ArrayList<File>)FileHelper.getFileList(dir, true);
+
 							for(File file : fileList){
 								Pair<String> fName = Helper.splitFileName(file.getName());
-								if(fName.first().equals(fileName.first()) && fName.second().equals(".json")){
+								if(fName.first().equals(fileName.first())){
 									file.delete();
 									break;
 								}
