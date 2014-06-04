@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 
@@ -22,8 +23,11 @@ public class PreferenceFragmentLibrary extends PreferenceFragment {
 			
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
+				boolean isChecked = showAll.isChecked();
+				PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext()).edit().putBoolean("showAll", isChecked).commit();
+				
 				Intent i = new Intent();
-				i.putExtra("showAll", showAll.isChecked());
+				i.putExtra("showAll", isChecked);
 				getActivity().setResult(Activity.RESULT_OK, i);
 				getActivity().finish();
 				return true;

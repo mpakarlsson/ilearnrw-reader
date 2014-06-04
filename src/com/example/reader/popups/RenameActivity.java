@@ -1,6 +1,6 @@
 package com.example.reader.popups;
 
-import java.io.File;
+import java.util.Locale;
 
 import com.example.reader.LibraryActivity;
 import com.example.reader.R;
@@ -25,8 +25,6 @@ public class RenameActivity extends Activity implements OnClickListener, OnEdito
 	public Button btnOk, btnCancel;
 	public ExtendedEditText etName;
 	private String ending, orgName;
-	private int posInList;
-	private File file;
 	private String[] VALID_ENDINGS = { ".txt", ".html" };
 	
 	@Override
@@ -36,8 +34,6 @@ public class RenameActivity extends Activity implements OnClickListener, OnEdito
 	
 		Bundle b = getIntent().getExtras();
 		orgName = b.getString("name");
-		file = (File) b.get("file");
-		posInList = b.getInt("pos");
 		btnOk = (Button) findViewById(R.id.btn_rename_ok);
 		btnCancel = (Button) findViewById(R.id.btn_rename_cancel);
 		etName = (ExtendedEditText) findViewById(R.id.et_rename);
@@ -64,44 +60,52 @@ public class RenameActivity extends Activity implements OnClickListener, OnEdito
 
 	@Override
 	public void onClick(View v) {
-		String name = etName.getText().toString();
 		
-		if(name.isEmpty()){
-			Toast.makeText(this, "You must supply a name", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		
-		boolean isValid = false;
-		
-		int pos = name.lastIndexOf(".");
-		if(pos == -1){
-			name = name + ending;
-		} else {
-			String end = name.substring(pos);
-			end = end.toLowerCase();
-			for(String s : VALID_ENDINGS){
-				if(end.equals(s))
-					isValid = true;
+		switch(v.getId()){
+		case R.id.btn_rename_ok:
+			String name = etName.getText().toString();
+			
+			if(name.isEmpty()){
+				Toast.makeText(this, "You must supply a name", Toast.LENGTH_SHORT).show();
+				return;
 			}
-		
-			if(!isValid)
+			
+			boolean isValid = false;
+			
+			int pos = name.lastIndexOf(".");
+			if(pos == -1){
 				name = name + ending;
-		}
-		
-		if(orgName.equals(name)){
+			} else {
+				String end = name.substring(pos);
+				end = end.toLowerCase(Locale.getDefault());
+				for(String s : VALID_ENDINGS){
+					if(end.equals(s))
+						isValid = true;
+				}
+			
+				if(!isValid)
+					name = name + ending;
+			}
+			
+			if(orgName.equals(name)){
+				setResult(RESULT_CANCELED);
+				finish();
+				return;
+			}
+			
+			Intent i = new Intent();
+			i.putExtra("name", name);
+			i.putExtra("orgName", orgName);
+			setResult(RESULT_OK, i);
+			finish();
+			
+			break;
+			
+		case R.id.btn_rename_cancel:
 			setResult(RESULT_CANCELED);
 			finish();
-			return;
+			break;
 		}
-		
-		
-		Intent i = new Intent();
-		i.putExtra("file", file);
-		i.putExtra("name", name);
-		i.putExtra("pos", posInList);
-		setResult(RESULT_OK, i);
-		finish();
-		
 	}
 
 	@Override

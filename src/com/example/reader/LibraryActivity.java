@@ -162,11 +162,15 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		String menuItemName = menuItems[menuItemIndex];
 		String listItemName = files.get(info.position).getName();
 		
-		if(menuItemName.equals("Edit")){			
+		if(menuItemName.equals("Edit")){	
+			
+			if(listItemName.endsWith(".json")){
+				Toast.makeText(this, "You can't change name of a JSON file", Toast.LENGTH_SHORT).show();
+				return true;
+			}
+			
 			Intent i = new Intent(this, RenameActivity.class);
-			i.putExtra("file", files.get(info.position).getFile());
 			i.putExtra("name", listItemName);
-			i.putExtra("pos", info.position);
 			startActivityForResult(i, FLAG_UPDATE_FILE_NAME);
 			
 		} else if(menuItemName.equals("Delete")){
@@ -186,7 +190,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						sp.edit().remove(name).commit();
 						
 						if(sp.getBoolean("showAll", false)){
-							for(int i=files.size()-1; i>0; i--){
+							for(int i=files.size()-1; i>=0; i--){
 								LibraryItem libItem = files.get(i);
 								Pair<String> fName = Helper.splitFileName(libItem.getName());
 
@@ -253,7 +257,8 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 					files.add(new LibraryItem(name, f));
 					exists = true;
 				}
-				if(json!=null && PreferenceManager.getDefaultSharedPreferences(this).getBoolean("showAll", false)){
+				boolean a = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("showAll", false);
+				if(json!=null && a){
 					files.add(new LibraryItem(json.getName(), json));
 					exists = true;
 				}
@@ -266,20 +271,48 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				
 			case FLAG_UPDATE_FILE_NAME:
 				Bundle b = data.getExtras();
-				int pos = b.getInt("pos");
-				String updatedName = b.getString("name");
-				File origFile = (File) b.get("file");
-				File updatedFile =  new File(getDir(getString(R.string.library_location), MODE_PRIVATE), updatedName);
+				Pair<String> updatedName = Helper.splitFileName(b.getString("name"));
+				Pair<String> orgFilename = Helper.splitFileName(b.getString("orgName"));
 				
-				try {
-					FileHelper.copy(origFile, updatedFile);
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				File libDir = getDir(getString(R.string.library_location), Context.MODE_PRIVATE);
+				ArrayList<File> libFiles = (ArrayList<File>) FileHelper.getFileList(libDir, true);
+				
+				boolean fileExists = false;
+				ArrayList<File> updateFiles = new ArrayList<File>();
+				for(int i=0; i<libFiles.size(); i++){
+					File file = libFiles.get(i);
+					Pair<String> fileInfo = Helper.splitFileName(file.getName());
+
+					if(fileInfo.first().equals(updatedName.first())){
+						fileExists = true;
+						break;
+					} else if(fileInfo.first().equals(orgFilename.first())){
+						updateFiles.add(file);
+					}
 				}
 				
-				files.get(pos).getFile().delete();
-				files.remove(pos);
-				files.add(new LibraryItem(updatedName, updatedFile));
+				if(fileExists){
+					Toast.makeText(this, "File already exists with this name", Toast.LENGTH_SHORT).show();
+					break;
+				}
+				
+				for(int i=0; i<updateFiles.size(); i++){					
+					File file = updateFiles.get(i);
+					Pair<String> fileInfo = Helper.splitFileName(file.getName());
+					
+					File updatedFile = new File(libDir, updatedName.first() + fileInfo.second());
+					try {
+						FileHelper.copy(file, updatedFile);
+						file.delete();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				libraryFiles = (ArrayList<File>) FileHelper.getFileList(libDir, PreferenceManager.getDefaultSharedPreferences(this).getBoolean("showAll", false));
+				files.clear();
+				for(File file : libraryFiles){
+					files.add(new LibraryItem(file.getName(), file));
+				}
 				
 				updateListView();
 				sortValues();
@@ -290,7 +323,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				File dir = getDir(getString(R.string.library_location), Context.MODE_PRIVATE);
 				Bundle b2 = data.getExtras();
 				boolean showAll = b2.getBoolean("showAll");
-				PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("showAll", showAll).commit();
 				
 				libraryFiles = (ArrayList<File>) FileHelper.getFileList(dir, showAll);
 				files = new ArrayList<LibraryItem>();

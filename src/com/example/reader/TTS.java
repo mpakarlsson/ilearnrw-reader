@@ -19,7 +19,6 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
-import android.webkit.WebView.FindListener;
 import android.widget.Toast;
 
 public class TTS implements OnInitListener{
@@ -34,6 +33,7 @@ public class TTS implements OnInitListener{
 	private final TTSReadingCallback cbReading;
 	private LinkedList<String> positionList;
 	private String currSentenceTag;
+	
 	
 	public TTS(final Context context, String currSentTag, TTSHighlightCallback highlight, TTSReadingCallback reading, int requestCode, int resultCode, Intent data){
 		
@@ -76,12 +76,11 @@ public class TTS implements OnInitListener{
 					String id = positionList.getFirst();
 					cbReading.OnStartedReading();
 					if(utteranceId.equals("speak")){
-						Log.d("Speak: Done", "Done");
 						cbHighlight.OnHighlight(id);
 						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(currSentenceTag, id).commit();
 					} else if(utteranceId.equals("lastSpeak")){
 						cbHighlight.OnHighlight(id);
-						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(currSentenceTag, null).commit();
+						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(currSentenceTag, "").commit();
 					}
 				}
 				
@@ -94,10 +93,12 @@ public class TTS implements OnInitListener{
 				public void onDone(String utteranceId) {
 					String id = positionList.pollFirst();
 					if(utteranceId.equals("speak")){
-						Log.d("Speak: Started", "Start");
 						cbHighlight.OnRemoveHighlight(id);
 					}else if(utteranceId.equals("lastSpeak")){
 						cbHighlight.OnRemoveHighlight(id);
+						cbReading.OnFinishedReading();
+					} else if(utteranceId.equals("rehighlight")){
+						cbHighlight.OnHighlight(PreferenceManager.getDefaultSharedPreferences(context).getString(currSentenceTag, ""));
 						cbReading.OnFinishedReading();
 					}
 				}
@@ -176,6 +177,12 @@ public class TTS implements OnInitListener{
 					tts.speak(texts.get(i), TextToSpeech.QUEUE_ADD, lastParams);
 			}
 		}
+	}
+	
+	public void rehighlight(){
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "rehighlight");
+		tts.speak("", TextToSpeech.QUEUE_FLUSH, params);
 	}
 	
 	public void stop(){

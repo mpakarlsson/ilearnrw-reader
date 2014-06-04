@@ -45,7 +45,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private TextView tvTitle, tvHighLightSpeed;
 	private WebView reader;
 	private ImageButton ibtnLib, ibtnSearch, ibtnMode, ibtnPrev, ibtnPlay, ibtnNext, ibtnSettings, ibtnSearchForward, ibtnSearchBack;
-	private RelativeLayout top, bottom, searchbar, rlHighlightSpeed;
+	private RelativeLayout bottom, searchbar, rlHighlightSpeed;
 	private SeekBar sbHighLightSpeed;
 	
 	private ReaderMode reader_mode;
@@ -55,20 +55,23 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private TTSHighlightCallback cbHighlight;
 	private TTSReadingCallback cbSpoken;
 
-	private double highlightSpeed;
 	private HighlightRunnable highlightRunnable;
 	private Handler highlightHandler;
-	
-	private static String html, fileHtml;
-	
-	private String current;
-	public String CURR_SENT = "current";
-	public static final String SENTENCE_TAG = "sen";
 	
 	private ArrayList<String> texts;
 
 	private SharedPreferences sp;
 	private SharedPreferences.Editor spEditor;
+		
+	public String CURR_SENT = "current";
+	public static final String SENTENCE_TAG = "sen";
+	
+	private String current;
+	private static String html, fileHtml;
+	
+	private double highlightSpeed;
+
+	private boolean isHighlighting;
 	
 	private final static int FLAG_SEARCH = 10000;
 	private final static int FLAG_MODE = 10001;
@@ -146,12 +149,11 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		ibtnNext.setOnClickListener(this);
 		ibtnSettings.setOnClickListener(this);
 		
-		top 				= (RelativeLayout) findViewById(R.id.reader_top);
 		bottom 				= (RelativeLayout) findViewById(R.id.reader_bottom);
 		rlHighlightSpeed 	= (RelativeLayout) findViewById(R.id.reader_body_highlight_speed);
 		
-		highlightRunnable = new HighlightRunnable();
-		highlightHandler = new Handler();
+		highlightRunnable 	= new HighlightRunnable();
+		highlightHandler 	= new Handler();
 		
 		
 		Intent checkTTSIntent = new Intent(); 
@@ -201,6 +203,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		searchbar.setVisibility(RelativeLayout.GONE);
 		
 		current = sp.getString(CURR_SENT, "s0");
+		isHighlighting =  sp.getBoolean("highlighting", true);
 
 	}
 	
@@ -407,6 +410,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				setPlayStatus(ReaderStatus.Disabled);
 				if(reader_mode == ReaderMode.Listen){
 					tts.stop();
+					tts.rehighlight();
 				} else if(reader_mode == ReaderMode.Guidance){
 					highlightHandler.removeCallbacks(highlightRunnable);
 				}
@@ -507,6 +511,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	
 	
 	public void highlight(String id){
+		if(id.isEmpty())
+			return;
+		
 		reader.loadUrl("javascript:scrollToElement('" + id + "');");
 		
 		String highlightColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
@@ -514,6 +521,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	}
 	
 	public void removeHighlight(String id){
+		if(id.isEmpty())
+			return;
+		
 		String backgroundColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
 		reader.loadUrl("javascript:highlight('" + id + "', '" + backgroundColor + "');");
 	}
@@ -702,7 +712,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		public void onPageFinished(WebView view, String url) {
 			reader.loadUrl("javascript:setOnClickEvents();");
 			String curr = sp.getString(CURR_SENT, "s0");
-			highlight(curr);
+			if(isHighlighting)
+				highlight(curr);
 			
 		}	
 	};
@@ -754,9 +765,10 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 					String curr = sp.getString(CURR_SENT, "s0");
 					removeHighlight(curr);
 					
-					if(!curr.equals(id)){						
+					if(!isHighlighting || !curr.equals(id)){						
 						highlight(id);
 						spEditor.putString(CURR_SENT, id).commit();
+						isHighlighting = true;
 						
 						if(reader_status == ReaderStatus.Enabled){
 							if(reader_mode == ReaderMode.Listen)
@@ -768,8 +780,14 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 							}
 						}
 						
-					} else 
+					} else {
 						spEditor.putString(CURR_SENT, "s0").commit();
+						isHighlighting = false;
+					}
+					
+					
+					spEditor.putBoolean("highlighting", isHighlighting).commit();
+					
 				}
 			});
 		}
