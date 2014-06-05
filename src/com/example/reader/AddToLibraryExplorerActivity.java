@@ -234,6 +234,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 		protected TextAnnotationResult doInBackground(String... params) {
 			filename = params[4];
 			HttpResponse response = HttpHelper.post("http://api.ilearnrw.eu/ilearnrw/text/annotate?userId=" + params[1] + "&lc=" + params[2]+ "&token=" + params[3], params[0]);
+
 			ArrayList<String> data = HttpHelper.handleResponse(response);
 			
 			if(data.size()==1){

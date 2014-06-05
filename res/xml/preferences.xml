@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" 
+<PreferenceScreen 
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    xmlns:ns="http://schemas.android.com/apk/res/com.example.reader"
     android:key="reader_prefs"
     android:title="@string/reader_prefs">
 
@@ -7,14 +9,16 @@
         android:title="@string/pref_text_category_title"
         android:key="pref_text_settings">
          
-		<EditTextPreference 
-			android:key="pref_font_size"
-			android:title="Font size"
-			android:dialogTitle="Font size"
-            android:summary="Set text font size"
-			android:inputType="number"
-			android:maxLength="2"
-			android:defaultValue="20"/>
+        <com.example.reader.types.SeekBarPreference 
+		    android:key="pref_font_size"
+		    android:title="Font size"
+		    android:summary="Adjust font size"
+		    android:defaultValue="20"
+		    android:max="70"
+			ns:min="15"
+			ns:unitsLeft=""
+			ns:unitsRight="px"
+			ns:statusNumber="true"/>
          
          <ListPreference 
             android:key="pref_font_face"
@@ -78,26 +82,28 @@
         android:title="@string/pref_tts_category_title"
         android:key="pref_tts_settings">
          
-		<com.example.reader.types.PreferenceSeekBar 
+        <com.example.reader.types.SeekBarPreference 
 		    android:key="pref_speech_rate"
 		    android:title="Speech rate"
-		    android:summary=""
-		    android:dialogMessage="Speech speed"
+		    android:summary="Adjust speech rate"
 		    android:defaultValue="9"
-		    android:text=""
 		    android:max="19"
-		    android:persistent="true"/>
-			
-		<com.example.reader.types.PreferenceSeekBar 
+			ns:min="4"
+			ns:unitsLeft=""
+			ns:unitsRight=""
+			ns:statusNumber="false"/>
+        
+        <com.example.reader.types.SeekBarPreference 
 		    android:key="pref_pitch"
 		    android:title="Pitch"
-		    android:summary=""
-		    android:dialogMessage="Speech pitch"
+		    android:summary="Adjust pitch"
 		    android:defaultValue="9"
-		    android:text=""
 		    android:max="19"
-		    android:persistent="true"/> 
-		    
+			ns:min="4"
+			ns:unitsLeft=""
+			ns:unitsRight=""
+			ns:statusNumber="false"/>
+        
 		<ListPreference 
 		    android:key="pref_tts_language"
 		    android:title="Language"
@@ -106,6 +112,17 @@
 		    android:entryValues="@array/pref_languages_values">
 		    
 		</ListPreference>
+        
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:title="@string/pref_reset_category_title"
+        android:key="pref_reset_settings">
+        
+        <Preference
+	        android:key="pref_reader_reset"
+	        android:title="@string/pref_reader_reset"
+	        android:summary="@string/pref_reader_reset_summary"/>
         
     </PreferenceCategory>
     

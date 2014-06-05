@@ -65,6 +65,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		
 	public String CURR_SENT = "current";
 	public static final String SENTENCE_TAG = "sen";
+	private static final String DEFAULT_SENTENCE = "s0";
 	
 	private String current;
 	private static String html, fileHtml;
@@ -202,7 +203,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		
 		searchbar.setVisibility(RelativeLayout.GONE);
 		
-		current = sp.getString(CURR_SENT, "s0");
+		current = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
 		isHighlighting =  sp.getBoolean("highlighting", true);
 
 	}
@@ -373,7 +374,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_prev_reader:
-			current = sp.getString(CURR_SENT, "s0");
+			current = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
 			
 			String identifier = Helper.findIdentifier(current);
 			int prev =  Helper.findPosition(current);
@@ -396,7 +397,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_play_reader:
-			current = sp.getString(CURR_SENT, "s0");
+			current = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
 			
 			if(reader_status == ReaderStatus.Disabled){
 				setPlayStatus(ReaderStatus.Enabled);
@@ -419,7 +420,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_next_reader:
-			current = sp.getString(CURR_SENT, "s0");
+			current = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
 
 			String identifier2 = Helper.findIdentifier(current);
 			int n = Helper.findPosition(current);
@@ -559,6 +560,9 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	}
 	
 	private void speakFromSentence(String id){
+		if(id == null || id.isEmpty())
+			id = DEFAULT_SENTENCE;
+		
 		ArrayList<String> sentences = new ArrayList<String>();
 		int pos = Helper.findPosition(id);
 		
@@ -660,13 +664,14 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		textColor 				= "#" + textColor.substring(2);
 		
 		String lineHeight 		= sp.getString(getString(R.string.pref_line_height_title), "0");
-		String fontSize 		= sp.getString(getString(R.string.pref_font_size_title), "20");
+		int fSize				= sp.getInt(getString(R.string.pref_font_size_title), 20);
+		String fontSize;
 		String letterSpacing 	= sp.getString(getString(R.string.pref_letter_spacing_title), "0");
 		String margin 			= sp.getString(getString(R.string.pref_margin_title), "0");
 		String fontFamily 		= sp.getString(getString(R.string.pref_font_face_title), "default");
 		
 		lineHeight 				= lineHeight.equals("0") ? "line-height: normal;" : "line-height: " + lineHeight + "px;";
-		fontSize 				= fontSize.equals("0") ? "font-size: 20px;" : "font-size: " + fontSize + "px;";
+		fontSize 				= fSize==0 ? "font-size: 20px;" : "font-size: " + fSize + "px;";
 		fontFamily 				= fontFamily.indexOf(".") == -1 ? fontFamily : fontFamily.substring(0, fontFamily.lastIndexOf("."));
 		
 		String cssBody = "" +
@@ -711,7 +716,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			reader.loadUrl("javascript:setOnClickEvents();");
-			String curr = sp.getString(CURR_SENT, "s0");
+			String curr = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
 			if(isHighlighting)
 				highlight(curr);
 			
@@ -762,7 +767,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					String curr = sp.getString(CURR_SENT, "s0");
+					String curr = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
 					removeHighlight(curr);
 					
 					if(!isHighlighting || !curr.equals(id)){						
@@ -781,7 +786,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 						}
 						
 					} else {
-						spEditor.putString(CURR_SENT, "s0").commit();
+						spEditor.putString(CURR_SENT, DEFAULT_SENTENCE).commit();
 						isHighlighting = false;
 					}
 					
@@ -839,7 +844,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 
 		@Override
 		public void run() {
-			String curr = sp.getString(CURR_SENT, "s0");
+			String curr = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
 			String identifier = Helper.findIdentifier(curr);
 			int pos = Helper.findPosition(curr);
 			

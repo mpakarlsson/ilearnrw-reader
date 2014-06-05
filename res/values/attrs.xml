@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="PreferenceSeekBar">
+	    <attr name="min" 			format="integer"/>
+	    <attr name="unitsLeft"		format="string"/>
+	    <attr name="unitsRight"		format="string"/>
+	    <attr name="statusNumber"	format="boolean"/>
+	</declare-styleable>
+</resources>

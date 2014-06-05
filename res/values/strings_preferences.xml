@@ -34,6 +34,11 @@
     <string name="pref_tts_language_title">pref_tts_language</string>
     
     
+    <string name="pref_reset_category_title">Resets</string>
+    <string name="pref_reader_reset">Reset</string>
+    <string name="pref_reader_reset_summary">Reset reader options</string>  
+    
+    
     <string-array name="pref_languages">
         <item>English</item>
         <item>Greek</item>

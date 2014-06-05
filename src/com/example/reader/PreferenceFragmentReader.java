@@ -4,15 +4,20 @@ import java.io.IOException;
 import java.util.Locale;
 
 import com.example.reader.types.PreferenceColorPicker;
-import com.example.reader.types.PreferenceSeekBar;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.content.DialogInterface;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 
 public class PreferenceFragmentReader extends PreferenceFragment implements OnPreferenceChangeListener {	
@@ -30,7 +35,7 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		
 		
 		Activity a = getActivity();
-		EditTextPreference fontSize = (EditTextPreference) findPreference(a.getString(R.string.pref_font_size_title));
+		
 		ListPreference fontFace = (ListPreference) findPreference(a.getString(R.string.pref_font_face_title));
 		
 		int numBasicFonts = 3;
@@ -61,12 +66,9 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		
 		EditTextPreference lineHeight = (EditTextPreference) findPreference(a.getString(R.string.pref_line_height_title));
 		EditTextPreference margin = (EditTextPreference) findPreference(a.getString(R.string.pref_margin_title));
-		
+
 		PreferenceColorPicker backgroundPicker = (PreferenceColorPicker)findPreference(a.getString(R.string.pref_background_color_title));
 		PreferenceColorPicker textPicker = (PreferenceColorPicker)findPreference(a.getString(R.string.pref_text_color_title));
-		
-		PreferenceSeekBar speechSlider = (PreferenceSeekBar)findPreference(a.getString(R.string.pref_speech_rate_title));
-		PreferenceSeekBar pitchSlider = (PreferenceSeekBar)findPreference(a.getString(R.string.pref_pitch_title));
 		
 		ListPreference languages = (ListPreference)findPreference(a.getString(R.string.pref_tts_language_title));
 		if(languages.getValue() == null)
@@ -77,20 +79,58 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 			getActivity().setResult(Activity.RESULT_OK, i);
 			getActivity().finish();
 		}*/
-		fontSize.setOnPreferenceChangeListener(this);
 		fontFace.setOnPreferenceChangeListener(this);
 		lineHeight.setOnPreferenceChangeListener(this);
 		margin.setOnPreferenceChangeListener(this);
 		backgroundPicker.setOnPreferenceChangeListener(this);
 		textPicker.setOnPreferenceChangeListener(this);
-		speechSlider.setOnPreferenceChangeListener(this);
-		pitchSlider.setOnPreferenceChangeListener(this);
 		languages.setOnPreferenceChangeListener(this);
+		
+		Preference format = (Preference) findPreference("pref_reader_reset");
+		format.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				
+				final Activity a = getActivity();
+				AlertDialog.Builder builder = new AlertDialog.Builder(a);
+				builder.setTitle(a.getString(R.string.pref_reader_reset));
+				builder.setNegativeButton(a.getString(android.R.string.no), null);
+				builder.setPositiveButton(a.getString(android.R.string.yes), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {	
+						Editor edit = PreferenceManager.getDefaultSharedPreferences(a.getBaseContext()).edit();
+						edit.remove(getString(R.string.pref_background_color_title));
+						edit.remove(getString(R.string.pref_background_color_posX_title));
+						edit.remove(getString(R.string.pref_background_color_posY_title));
+						edit.remove(getString(R.string.pref_text_color_title));
+						edit.remove(getString(R.string.pref_text_color_posX_title));
+						edit.remove(getString(R.string.pref_text_color_posY_title));
+						edit.remove(getString(R.string.pref_highlight_color_title));
+						edit.remove(getString(R.string.pref_highlight_color_posX_title));
+						edit.remove(getString(R.string.pref_font_size_title));
+						edit.remove(getString(R.string.pref_font_face_title));
+						edit.remove(getString(R.string.pref_line_height_title));
+						edit.remove(getString(R.string.pref_letter_spacing_title));
+						edit.remove(getString(R.string.pref_margin_title));
+						edit.remove(getString(R.string.pref_speech_rate_title));
+						edit.remove(getString(R.string.pref_pitch_title));
+						edit.remove(getString(R.string.pref_tts_language_title));
+						edit.commit();						
+						a.finish();
+						return;
+					}
+				});
+				
+				builder.show();
+				return true;
+			}
+		});
+		
 	}	
 	
 	
 	@Override
-	public boolean onPreferenceChange(Preference preference, Object newValue) {
+	public boolean onPreferenceChange(Preference preference, Object newValue) {			
 		if(!preference.getTitle().toString().equals(newValue)){
 			return true;
 		}
