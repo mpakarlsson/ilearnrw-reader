@@ -634,8 +634,19 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		
 		String highlightSentence = 
 				"function highlight(id, color){" +
-					"document.getElementById(id).style.backgroundColor=color;" +
-				"return true;" + 
+					"var element = document.getElementById(id);" +
+					"element.style.backgroundColor=color;" +
+					"var supportsDOMRanges = document.implementation.hasFeature(\"Range\", \"2.0\");" +
+					"showToast(supportsDOMRanges);" +
+////
+					"var range = document.createRange();" +
+					"range.selectNodeContents(element);" +
+					//"range.setStart(element.anchorNode, element.anchorOffset);" +
+					//"range.setEnd(element.focusNode, element.focusOffset);" +
+					"showToast('asd');"+
+					"range.execCommand(\"BackColor\", false, color);" +
+					"range.style.backgroundColor=color;" +
+					"return true;" + 
 				"}";
 
 		String setSentenceOnClick =
