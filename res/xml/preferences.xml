@@ -17,7 +17,7 @@
 		    android:max="70"
 			ns:min="15"
 			ns:unitsLeft=""
-			ns:unitsRight="px"
+			ns:unitsRight="pt"
 			ns:statusNumber="true"/>
          
          <ListPreference 
@@ -26,40 +26,31 @@
             android:dialogTitle="Font face"
             android:summary="Set text font face"/>
         
-        <EditTextPreference 
+         <ListPreference 
             android:key="pref_line_height"
             android:title="Line height"
             android:dialogTitle="Line height"
-            android:summary="Set text line height"
-            android:inputType="number"
-			android:maxLength="2"
-			android:defaultValue="0"/>
+            android:summary=""
+            android:defaultValue="100"
+            android:entries="@array/pref_line_height"
+	    	android:entryValues="@array/pref_line_height_values"/>
 
-        <EditTextPreference 
+         <ListPreference 
             android:key="pref_letter_spacing"
             android:title="Letter spacing"
             android:dialogTitle="Letter spacing"
-            android:summary="Set text letter spacing"
-            android:inputType="number"
-			android:maxLength="2"
-			android:defaultValue="0"/>
+            android:defaultValue="0"
+            android:entries="@array/pref_letter_spacing"
+	    	android:entryValues="@array/pref_letter_spacing_values"/>
         
-        <EditTextPreference 
-            android:key="pref_margin"
-            android:title="Margins"
-            android:dialogTitle="Margins"
-            android:summary="Set text margin"
-            android:inputType="number"
-			android:maxLength="2"
-			android:defaultValue="0"/>
-        
-        <!-- 
-       	<ListPreference
-             android:key="pref_contrast"
-             android:title="Contrast"
-             android:dialogTitle="Contrast"
-             android:summary="Set a contrast"/>
-         -->
+         <ListPreference 
+             android:key="pref_margin"
+             android:title="Margins"
+             android:dialogTitle="Margins"
+             android:summary="Adjust text margins"
+             android:defaultValue="0"
+             android:entries="@array/pref_margin"
+             android:entryValues="@array/pref_margin_values"/>
          
          <com.example.reader.types.PreferenceColorPicker 
              android:key="pref_background_color"

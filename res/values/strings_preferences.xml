@@ -49,6 +49,52 @@
         <item>el_GR</item>
     </string-array>
     
+    <string-array name="pref_line_height">
+        <item>Default</item>
+        <item>125%</item>
+        <item>150%</item>
+        <item>200%</item>
+        <item>300%</item>
+    </string-array>
+    
+    <string-array name="pref_line_height_values">
+        <item>100</item>
+        <item>125</item>
+        <item>150</item>
+        <item>200</item>
+        <item>300</item>
+    </string-array>
+    
+    <string-array name="pref_letter_spacing">
+        <item>Default</item>
+        <item>1 pt</item>
+        <item>2 pt</item>
+        <item>4 pt</item>
+        <item>8 pt</item>
+    </string-array>
+    
+    <string-array name="pref_letter_spacing_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>4</item>
+        <item>8</item>
+    </string-array>
+    
+    <string-array name="pref_margin">
+        <item>Default</item>
+        <item>5%</item>
+        <item>10%</item>
+        <item>20%</item>
+    </string-array>
+
+    <string-array name="pref_margin_values">
+        <item>0</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+    </string-array>
+    
     <!-- Library Preferences -->
     <string name="library_prefs">Library Settings</string>
     <string name="pref_library_show_all">Show files</string>

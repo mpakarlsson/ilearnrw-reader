@@ -663,15 +663,15 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		backgroundColor 		= "#" + backgroundColor.substring(2);
 		textColor 				= "#" + textColor.substring(2);
 		
-		String lineHeight 		= sp.getString(getString(R.string.pref_line_height_title), "0");
+		String lineHeight 		= sp.getString(getString(R.string.pref_line_height_title), "100");
 		int fSize				= sp.getInt(getString(R.string.pref_font_size_title), 20);
 		String fontSize;
 		String letterSpacing 	= sp.getString(getString(R.string.pref_letter_spacing_title), "0");
 		String margin 			= sp.getString(getString(R.string.pref_margin_title), "0");
 		String fontFamily 		= sp.getString(getString(R.string.pref_font_face_title), "default");
 		
-		lineHeight 				= lineHeight.equals("0") ? "line-height: normal;" : "line-height: " + lineHeight + "px;";
-		fontSize 				= fSize==0 ? "font-size: 20px;" : "font-size: " + fSize + "px;";
+		lineHeight 				= lineHeight.equals("0") ? "line-height: normal;" : "line-height: " + lineHeight + "%;";
+		fontSize 				= fSize==0 ? "font-size: 20pt;" : "font-size: " + fSize + "pt;";
 		fontFamily 				= fontFamily.indexOf(".") == -1 ? fontFamily : fontFamily.substring(0, fontFamily.lastIndexOf("."));
 		
 		String cssBody = "" +
@@ -683,8 +683,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 					"background-color:" + backgroundColor + "!important; " +
 					"color:" + textColor +"; " +
 					lineHeight +
-					"letter-spacing: " + letterSpacing + "px;" +
-					"margin: " + margin + "px; " +
+					"letter-spacing: " + letterSpacing + "pt;" +
+					"margin: " + margin + "%; " +
 				"}" +
 				"</style>" +
 				"";

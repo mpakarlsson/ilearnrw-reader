@@ -7,12 +7,10 @@ import com.example.reader.types.PreferenceColorPicker;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 
-import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
@@ -64,9 +62,6 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		if(fontFace.getValue() == null)
 			fontFace.setValueIndex(0);
 		
-		EditTextPreference lineHeight = (EditTextPreference) findPreference(a.getString(R.string.pref_line_height_title));
-		EditTextPreference margin = (EditTextPreference) findPreference(a.getString(R.string.pref_margin_title));
-
 		PreferenceColorPicker backgroundPicker = (PreferenceColorPicker)findPreference(a.getString(R.string.pref_background_color_title));
 		PreferenceColorPicker textPicker = (PreferenceColorPicker)findPreference(a.getString(R.string.pref_text_color_title));
 		
@@ -80,8 +75,6 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 			getActivity().finish();
 		}*/
 		fontFace.setOnPreferenceChangeListener(this);
-		lineHeight.setOnPreferenceChangeListener(this);
-		margin.setOnPreferenceChangeListener(this);
 		backgroundPicker.setOnPreferenceChangeListener(this);
 		textPicker.setOnPreferenceChangeListener(this);
 		languages.setOnPreferenceChangeListener(this);
