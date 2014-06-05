@@ -240,8 +240,16 @@ public class AddToLibraryExplorerActivity extends Activity {
 			if(data.size()==1){
 				return null;
 			} else {
-				System.out.println(data.get(1));				
-				TextAnnotationResult result = new Gson().fromJson(data.get(1), TextAnnotationResult.class);
+				System.out.println(data.get(1));
+				TextAnnotationResult result = null;
+				try {
+					String json = data.get(1);
+					result = new Gson().fromJson(json, TextAnnotationResult.class);
+				} catch (Exception e) {
+					e.printStackTrace();
+					result = null;
+				}
+				
 				return result;
 			}
 		}

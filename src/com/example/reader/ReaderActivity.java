@@ -521,6 +521,13 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		reader.loadUrl("javascript:highlight('" + id + "', '" + highlightColor + "');");
 	}
 	
+	public void highlight(String id, String hexColor){
+		if(id.isEmpty())
+			return;
+		
+		reader.loadUrl("javascript:highlight('" + id + "', '" + hexColor + "');");
+	}
+	
 	public void removeHighlight(String id){
 		if(id.isEmpty())
 			return;
@@ -719,6 +726,10 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			String curr = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
 			if(isHighlighting)
 				highlight(curr);
+			
+			highlight("w0", "#FF0000");
+			highlight("w1", "#00FF00");
+			highlight("w2", "#00FFFF");
 			
 		}	
 	};
