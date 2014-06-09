@@ -2,6 +2,7 @@ package com.example.reader;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 import com.example.reader.interfaces.TTSHighlightCallback;
@@ -42,6 +43,8 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 
 public class ReaderActivity extends Activity implements OnClickListener, OnLongClickListener, OnSeekBarChangeListener, TTSHighlightCallback, TTSReadingCallback {
 
+	private final String TAG = getClass().getName();
+	
 	private TextView tvTitle, tvHighLightSpeed;
 	private WebView reader;
 	private ImageButton ibtnLib, ibtnSearch, ibtnMode, ibtnPrev, ibtnPlay, ibtnNext, ibtnSettings, ibtnSearchForward, ibtnSearchBack;
@@ -59,7 +62,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private Handler highlightHandler;
 	
 	private ArrayList<String> texts;
-
+	public HashMap<String, Pair<String>> highlightParts;
+	
 	private SharedPreferences sp;
 	private SharedPreferences.Editor spEditor;
 		
@@ -206,6 +210,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		current = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
 		isHighlighting =  sp.getBoolean("highlighting", true);
 
+		highlightParts = new HashMap<String, Pair<String>>();
 	}
 	
 	@Override
@@ -272,7 +277,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		{
 			if(resultCode == RESULT_OK){
 				int mode = data.getExtras().getInt("chosenMode");
-				Log.d("onActivityResult - FLAG_MODE", "Chosen mode: " + Integer.toString(mode));
+				Log.d(TAG + " onActivityResult - FLAG_MODE", "Chosen mode: " + Integer.toString(mode));
 				
 				switch(mode){
 				case 0:
@@ -528,12 +533,37 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		reader.loadUrl("javascript:highlight('" + id + "', '" + hexColor + "');");
 	}
 	
+	public void highlightPart(final String id, final int start, final int end, final String hexColor){
+		if(id.isEmpty())
+			return;
+		
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				reader.loadUrl("javascript:highlightPart('" + id + "', '" + start + "', '" + end + "', '" + hexColor + "');");
+			}
+		});
+		
+	}
+	
 	public void removeHighlight(String id){
 		if(id.isEmpty())
 			return;
 		
 		String backgroundColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
 		reader.loadUrl("javascript:highlight('" + id + "', '" + backgroundColor + "');");
+	}
+	
+	public void removeHighlightPart(final String id, final Pair<String> span){
+		if(id.isEmpty())
+			return;
+		
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				reader.loadUrl("javascript:unhighlight('" + id + "', '" + span.first() + "', '" + span.second() + "');");
+			}
+		});
 	}
 	
 	
@@ -636,17 +666,40 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				"function highlight(id, color){" +
 					"var element = document.getElementById(id);" +
 					"element.style.backgroundColor=color;" +
-					"var supportsDOMRanges = document.implementation.hasFeature(\"Range\", \"2.0\");" +
-					"showToast(supportsDOMRanges);" +
-////
-					"var range = document.createRange();" +
-					"range.selectNodeContents(element);" +
-					//"range.setStart(element.anchorNode, element.anchorOffset);" +
-					//"range.setEnd(element.focusNode, element.focusOffset);" +
-					"showToast('asd');"+
-					"range.execCommand(\"BackColor\", false, color);" +
-					"range.style.backgroundColor=color;" +
+					"" +
 					"return true;" + 
+				"}";
+		
+		String highlightPart =
+				"function highlightPart(id, start, end, color){" +
+					"var node =  document.getElementById(id);" +
+					"var range = document.createRange();" +
+					"range.setStart(node.firstChild, start);" +
+					"range.setEnd(node.firstChild, end);" +
+					"" +
+					"var span = document.createElement('span');" +
+					"span.className = id;" +
+					"span.style.backgroundColor = color;" +
+					"" +
+					"range.surroundContents(span);" +
+					"range.detach();" +
+					"ReaderInterface.saveHighlightInformation(id, start, end);" +
+					"" +
+					"return true;" +
+				"}";
+		
+		String unhighlightPart = 
+				"function unhighlight(id, start, end){" +
+					"var spans = document.getElementsByTagName(\"span\");" +
+					"for(var i=0; i<spans.length; i++){" +
+						"if(spans[i].className == id){" +
+							"var container = spans[i].parentNode;" +
+							"var node = spans[i].firstChild;" +
+							"container.insertBefore(node, spans[i]);" +
+							"container.removeChild(spans[i]);" +
+							"ReaderInterface.removeHighlightInformation(id);" +
+						"}" +
+					"}" + 
 				"}";
 
 		String setSentenceOnClick =
@@ -710,6 +763,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		return firstPart +
 				startScripts + 
 				highlightSentence +
+				highlightPart +
+				unhighlightPart +
 				retrieveBodyContent +
 				scrollToElement +
 				setSentenceOnClick +
@@ -727,7 +782,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			view.loadUrl(url);
-			Log.e("WebViewClient", "shouldOverrideUrlLoading");
+			Log.e(TAG + " WebViewClient", "shouldOverrideUrlLoading");
 			return true;
 		}
 
@@ -738,10 +793,11 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			if(isHighlighting)
 				highlight(curr);
 			
-			highlight("w0", "#FF0000");
+			highlight("w0", "#FFFFCC");
 			highlight("w1", "#00FF00");
 			highlight("w2", "#00FFFF");
 			
+			highlightPart("w2", 1, 3, "#FF0000");
 		}	
 	};
 	
@@ -784,8 +840,18 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		}
 		
 		@JavascriptInterface
+		public void saveHighlightInformation(String id, String startPos, String endPos){
+			Pair<String> span = new Pair<String>(startPos, endPos);
+			highlightParts.put(id, span);			
+		}
+		
+		@JavascriptInterface
+		public void removeHighlightInformation(String id){
+			highlightParts.remove(id);
+		}
+		
+		@JavascriptInterface
 		public void clickSentence(String html, final String id){
-			
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -806,15 +872,12 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 								highlightHandler.postDelayed(highlightRunnable, millis);							
 							}
 						}
-						
 					} else {
 						spEditor.putString(CURR_SENT, DEFAULT_SENTENCE).commit();
 						isHighlighting = false;
 					}
 					
-					
 					spEditor.putBoolean("highlighting", isHighlighting).commit();
-					
 				}
 			});
 		}
