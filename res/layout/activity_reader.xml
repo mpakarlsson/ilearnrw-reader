@@ -21,7 +21,8 @@
 	        style="?android:attr/buttonBarButtonStyle"
 	        android:src="@drawable/lib"
 	        android:contentDescription="@string/content_descr_btn_lib"
-	        android:layout_alignParentLeft="true"/>
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginTop="10dp"/>
         
         <ImageButton 
 	        android:id="@+id/ibtn_search_reader"
@@ -30,7 +31,8 @@
 	        style="?android:attr/buttonBarButtonStyle"
 	        android:src="@drawable/search"
 	        android:contentDescription="@string/content_descr_btn_search"
-	        android:layout_toRightOf="@id/ibtn_lib_reader"/>
+	        android:layout_toRightOf="@id/ibtn_lib_reader"
+	        android:layout_marginTop="10dp"/>
         
         <RelativeLayout
 	        android:id="@+id/search_buttons_layout"
@@ -39,14 +41,14 @@
 	        android:background="@color/LightGrey"
 	        android:gravity="center_vertical"
 	        android:layout_toRightOf="@id/ibtn_search_reader"
-	        android:layout_marginTop="10dp">
+	        android:layout_margin="10dp">
         
 	        <ImageButton
 	            android:id="@+id/ibtn_search_back"
 	            android:layout_height="wrap_content"
 	            android:layout_width="wrap_content"
 	            style="?android:attr/buttonBarStyle"
-	            android:src="@drawable/search_prev_image_selector"
+	            android:src="@drawable/previous"
 	            android:contentDescription="@string/content_descr_btn_settings"/>
 	        
 	        <ImageButton
@@ -54,7 +56,7 @@
 	            android:layout_height="wrap_content"
 	            android:layout_width="wrap_content"
 	            style="?android:attr/buttonBarStyle"
-	            android:src="@drawable/search_next_image_selector"
+	            android:src="@drawable/next"
 	            android:contentDescription="@string/content_descr_btn_settings"
 	            android:layout_marginLeft="5dp"
 	            android:layout_toRightOf="@id/ibtn_search_back"/>

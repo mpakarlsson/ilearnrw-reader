@@ -462,6 +462,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	
 	@Override
 	public boolean onLongClick(View v) {
+		removeSearches();
 		return false;
 	};
 	
@@ -513,6 +514,11 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 		}
 		
+	}
+	
+	public void removeSearches(){
+		reader.clearMatches();
+		searchbar.setVisibility(View.GONE);
 	}
 	
 	
@@ -855,6 +861,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
+					removeSearches();
+					
 					String curr = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
 					removeHighlight(curr);
 					
