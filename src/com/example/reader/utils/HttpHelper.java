@@ -71,6 +71,11 @@ public class HttpHelper {
 	public static ArrayList<String> handleResponse(HttpResponse response){
 		ArrayList<String> data = new ArrayList<String>();
 		
+		if(response == null){
+			data.add("No response");
+			return data;
+		}
+		
 		if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
 			HttpEntity entity = response.getEntity();
 			

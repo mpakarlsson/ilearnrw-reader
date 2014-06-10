@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,8 @@ import android.widget.Toast;
 
 
 public class LoginActivity extends Activity implements OnClickListener {
+
+	private final String TAG = getClass().getName();
 
 	public Button btnLogin, btnLoginSkip;
 	public EditText etUsername, etPassword;
@@ -145,25 +148,26 @@ public class LoginActivity extends Activity implements OnClickListener {
 	
 	private class LoginTask extends AsyncTask<String, Void, LoginResult>{
 		private ProgressDialog dialog;
-		private String username;
+		private String username, fault;
 		@Override
 		protected void onPreExecute() {
 			dialog = new ProgressDialog(LoginActivity.this);
 			dialog.setTitle(getString(R.string.dialog_login_title));
 			dialog.setMessage(getString(R.string.dialog_login_message));
 			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(false);
 			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
 					cancel(true);
+					dialog.dismiss();
 				}
 			});
 			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 				@Override
 				public void onCancel(DialogInterface dialog) {
-					dialog.dismiss();
 					cancel(true);
+					dialog.dismiss();
 				}
 			});
 			dialog.show();
@@ -178,6 +182,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			ArrayList<String> data = HttpHelper.handleResponse(response);
 			
 			if(data.size()==1){
+				fault = data.get(0);
 				return null;
 			} else {
 				LoginResult lr = new Gson().fromJson(data.get(1), LoginResult.class);
@@ -198,8 +203,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 	    		editor.commit();
 				
 	    		new UserDetailsTask().execute(username, result.authToken);
-			} else
-				Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
+			} else{
+				Log.e(TAG, getString(R.string.login_failed) + " : " + fault);
+				Toast.makeText(LoginActivity.this, getString(R.string.login_failed) + " : " + fault, Toast.LENGTH_SHORT).show();
+			}
 		}
 	};
 	
@@ -211,18 +218,19 @@ public class LoginActivity extends Activity implements OnClickListener {
 			dialog.setTitle(getString(R.string.dialog_fetch_user_title));
 			dialog.setMessage(getString(R.string.dialog_fetch_user_message));
 			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(false);
 			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
 					cancel(true);
+					dialog.dismiss();
 				}
 			});
 			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 				@Override
 				public void onCancel(DialogInterface dialog) {
-					dialog.dismiss();
 					cancel(true);
+					dialog.dismiss();
 				}
 			});
 			dialog.show();
