@@ -50,7 +50,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		mSeekBar.setMax(mMax - mMin);
 		mSeekBar.setOnSeekBarChangeListener(this);
 		
-		setWidgetLayoutResource(R.layout.seekbar_preference);
+		setWidgetLayoutResource(R.layout.widget_preference_seekbar);
 	}
 	
 	private void setValuesFromXml(AttributeSet attrs){

@@ -1,7 +1,6 @@
 package com.example.reader.utils;
 
 import android.content.Context;
-import android.content.res.Resources;
 
 import com.example.reader.types.Pair;
 

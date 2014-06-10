@@ -52,20 +52,26 @@
              android:entries="@array/pref_margin"
              android:entryValues="@array/pref_margin_values"/>
          
-         <com.example.reader.types.PreferenceColorPicker2 
+         <com.example.reader.types.ColorPickerPreference
              android:key="pref_background_color"
              android:title="Background color"
-             android:summary="Pick a background color"/>
+             android:summary="Pick a background color"
+             android:defaultValue="0xffffffff" 
+             ns:supportsAlpha="false"/>
          
-         <com.example.reader.types.PreferenceColorPicker2
+         <com.example.reader.types.ColorPickerPreference
              android:key="pref_text_color"
              android:title="Text color"
-             android:summary="Pick a text color"/>
+             android:summary="Pick a text color"
+             android:defaultValue="0xff000000" 
+             ns:supportsAlpha="false"/>
          
-         <com.example.reader.types.PreferenceColorPicker2
+         <com.example.reader.types.ColorPickerPreference
              android:key="pref_highlight_color"
              android:title="Highlight color"
-             android:summary="Pick a color to highlight with"/>
+             android:summary="Pick a color to highlight with"
+             android:defaultValue="0xffffffaa" 
+             ns:supportsAlpha="false"/>
          
     </PreferenceCategory>
 
