@@ -210,6 +210,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 			dialog.setTitle(getString(R.string.dialog_annotation_title));
 			dialog.setMessage(getString(R.string.dialog_annotation_message));
 			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(false);
 			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
