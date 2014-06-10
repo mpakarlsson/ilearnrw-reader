@@ -52,17 +52,17 @@
              android:entries="@array/pref_margin"
              android:entryValues="@array/pref_margin_values"/>
          
-         <com.example.reader.types.PreferenceColorPicker 
+         <com.example.reader.types.PreferenceColorPicker2 
              android:key="pref_background_color"
              android:title="Background color"
              android:summary="Pick a background color"/>
          
-         <com.example.reader.types.PreferenceColorPicker 
+         <com.example.reader.types.PreferenceColorPicker2
              android:key="pref_text_color"
              android:title="Text color"
              android:summary="Pick a text color"/>
          
-         <com.example.reader.types.PreferenceColorPicker
+         <com.example.reader.types.PreferenceColorPicker2
              android:key="pref_highlight_color"
              android:title="Highlight color"
              android:summary="Pick a color to highlight with"/>

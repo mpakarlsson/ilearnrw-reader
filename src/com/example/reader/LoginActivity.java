@@ -5,8 +5,10 @@ import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 
+import com.example.reader.interfaces.ColorPickerListener;
 import com.example.reader.results.LoginResult;
 import com.example.reader.results.UserDetailResult;
+import com.example.reader.types.ColorPickerDialog;
 import com.example.reader.utils.HttpHelper;
 import com.google.gson.Gson;
 
@@ -40,7 +42,22 @@ public class LoginActivity extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        
+ColorPickerDialog d =  new ColorPickerDialog(this, 0xff000000, true, new ColorPickerListener() {
+	
+	@Override
+	public void onOk(ColorPickerDialog dialog, int color) {
+		// TODO Auto-generated method stub
+		Toast.makeText(getBaseContext(), "OK", Toast.LENGTH_SHORT).show();
+	}
+	
+	@Override
+	public void onCancel(ColorPickerDialog dialog) {
+		// TODO Auto-generated method stub
+		Toast.makeText(getBaseContext(), "CANCEL", Toast.LENGTH_SHORT).show();
+	}
+});
+d.show();
         btnLogin = (Button) findViewById(R.id.login_button);
         btnLoginSkip = (Button) findViewById(R.id.login_button_skip);
         etUsername = (EditText) findViewById(R.id.login_username);

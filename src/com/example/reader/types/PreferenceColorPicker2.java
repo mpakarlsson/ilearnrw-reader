@@ -1,7 +1,7 @@
 package com.example.reader.types;
 
 import com.example.reader.R;
-import com.example.reader.types.ColorPickerDialog.OnColorChangedListener;
+import com.example.reader.types.ColorPickerDialog2.OnColorChangedListener;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,7 +10,7 @@ import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 
-public class PreferenceColorPicker extends Preference implements OnColorChangedListener{
+public class PreferenceColorPicker2 extends Preference implements OnColorChangedListener{
 	private Context context;
 	private SharedPreferences preferences;
 	private int defaultColor = Color.rgb(255, 255, 255), currentColor;
@@ -19,14 +19,14 @@ public class PreferenceColorPicker extends Preference implements OnColorChangedL
 	private String prefTextColor, prefTextColorPosX, prefTextColorPosY;
 	private String prefHighlightColor, prefHighlightColorPosX, prefHighlightColorPosY;
 	
-	public PreferenceColorPicker(Context context) {
+	public PreferenceColorPicker2(Context context) {
 		super(context);
 		this.context = context;
 		preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		setupPreferenceStrings();
 	}
 	
-	public PreferenceColorPicker(Context context, AttributeSet attrs) {
+	public PreferenceColorPicker2(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.context = context;
 		preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -58,7 +58,7 @@ public class PreferenceColorPicker extends Preference implements OnColorChangedL
 		}
 		
 		
-		new ColorPickerDialog(context, this, 
+		new ColorPickerDialog2(context, this, 
 				 key, 
 				 currentColor, 
 				 defaultColor,

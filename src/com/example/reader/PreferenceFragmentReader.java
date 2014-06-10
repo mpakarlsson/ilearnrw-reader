@@ -3,7 +3,7 @@ package com.example.reader;
 import java.io.IOException;
 import java.util.Locale;
 
-import com.example.reader.types.PreferenceColorPicker;
+import com.example.reader.types.PreferenceColorPicker2;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -62,8 +62,8 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		if(fontFace.getValue() == null)
 			fontFace.setValueIndex(0);
 		
-		PreferenceColorPicker backgroundPicker = (PreferenceColorPicker)findPreference(a.getString(R.string.pref_background_color_title));
-		PreferenceColorPicker textPicker = (PreferenceColorPicker)findPreference(a.getString(R.string.pref_text_color_title));
+		PreferenceColorPicker2 backgroundPicker = (PreferenceColorPicker2)findPreference(a.getString(R.string.pref_background_color_title));
+		PreferenceColorPicker2 textPicker = (PreferenceColorPicker2)findPreference(a.getString(R.string.pref_text_color_title));
 		
 		ListPreference languages = (ListPreference)findPreference(a.getString(R.string.pref_tts_language_title));
 		if(languages.getValue() == null)

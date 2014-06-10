@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/color_picker_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center">
+	<RelativeLayout 
+	    android:id="@+id/color_picker_container"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:clipToPadding="false"
+	    android:padding="@dimen/spacer"
+	    android:gravity="center" >
+	    
+	    <com.example.reader.types.ColorSquare
+	        android:id="@+id/color_picker_main"
+	        android:layout_width="@dimen/hsv_width" 
+	        android:layout_height="@dimen/hsv_height" 
+	        android:layerType="software"/>
+
+	    <ImageView
+	        android:id="@+id/color_picker_hue"
+	        android:layout_width="@dimen/hue_width"
+	        android:layout_height="@dimen/hsv_height"
+	        android:layout_marginLeft="@dimen/spacer"
+	        android:layout_toRightOf="@id/color_picker_main"
+	        android:scaleType="fitXY"
+	        android:src="@drawable/color_hue"/>
+	    
+	    <ImageView
+	        android:id="@+id/color_picker_alpha_checkered"
+	        android:layout_width="@dimen/hue_width"
+	        android:layout_height="@dimen/hsv_height"
+	        android:layout_marginLeft="@dimen/spacer"
+	        android:layout_toRightOf="@id/color_picker_hue"
+	        android:scaleType="fitXY"
+	        android:src="@drawable/alpha_checkered_tiled"/>
+	    
+	    <View 
+	        android:id="@+id/color_picker_overlay"
+	        android:layout_width="@dimen/hue_width"
+	        android:layout_height="@dimen/hsv_height"
+	        android:layout_marginLeft="@dimen/spacer"
+	        android:layout_toRightOf="@id/color_picker_hue"/>	    
+	    
+	    <ImageView 
+	        android:id="@+id/color_picker_cursor"
+	        android:layout_width="9dp"
+	        android:layout_height="9dp"
+	        android:scaleType="matrix"
+	        android:src="@drawable/color_cursor"/>
+	    
+	    <ImageView 
+	        android:id="@+id/color_picker_alpha_cursor"
+	        android:layout_width="9dp"
+	        android:layout_height="9dp"
+	        android:scaleType="matrix"
+	        android:src="@drawable/color_cursor"/>
+	    
+	    <ImageView
+	        android:id="@+id/color_picker_target"
+	        android:layout_width="15dp"
+	        android:layout_height="15dp"
+	        android:scaleType="matrix"
+	        android:src="@drawable/color_target"/>
+	    
+	    <LinearLayout 
+	        android:id="@+id/color_picker_state"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/color_picker_main"
+	        android:layout_centerHorizontal="true"
+	        android:layout_marginTop="@dimen/spacer"
+	        android:gravity="center"
+	        android:orientation="horizontal">
+	        
+	        <FrameLayout 
+	            android:layout_width="60dp"
+	            android:layout_height="30dp">
+	            
+	            <View 
+	                android:layout_width="match_parent"
+	                android:layout_height="match_parent"
+	                android:background="@drawable/alpha_checkered_tiled"/>
+	            
+	            <View
+	                android:id="@+id/color_picker_old_color"
+	                android:layout_width="match_parent"
+	                android:layout_height="match_parent"
+	                android:background="#faa"/>
+	        </FrameLayout>
+	        
+	        <ImageView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:paddingLeft="@dimen/spacer"
+	            android:paddingRight="@dimen/spacer"
+	            android:src="@drawable/color_cursor"/>
+	        
+	        <FrameLayout 
+	            android:layout_width="60dp"
+	            android:layout_height="30dp">
+	            
+	            <View 
+	                android:layout_width="match_parent"
+	                android:layout_height="match_parent"
+	                android:background="@drawable/alpha_checkered_tiled"/>
+	            
+	            <View
+	                android:id="@+id/color_picker_new_color"
+	                android:layout_width="match_parent"
+	                android:layout_height="match_parent"
+	                android:background="#aaf"/>
+	            
+	        </FrameLayout>
+	    </LinearLayout>
+	    	
+	</RelativeLayout>
+</FrameLayout>

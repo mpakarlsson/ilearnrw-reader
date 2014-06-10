@@ -1,5 +1,8 @@
 package com.example.reader.utils;
 
+import android.content.Context;
+import android.content.res.Resources;
+
 import com.example.reader.types.Pair;
 
 public class Helper {
@@ -50,4 +53,11 @@ public class Helper {
 		return -1;
 	}
 	
+	public static int convertDpToPx(float dp, Context c){
+		return (int) ((dp * c.getResources().getDisplayMetrics().density) + 0.5f);
+	}
+	
+	public static int convertPxToDp(float px, Context c){
+		return (int) ((px / c.getResources().getDisplayMetrics().density) + 0.5f);
+	}
 }
