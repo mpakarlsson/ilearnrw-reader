@@ -55,19 +55,17 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	
 	private LibraryAdapter adapter;
 	
+	private File libDir;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_library);
-
-		btnAdd = (ImageButton) findViewById(R.id.ibtn_add_library);
-		btnAdd.setOnClickListener(this);
 		
-		File dir = getDir(getString(R.string.library_location), MODE_PRIVATE);
+		libDir = getDir(getString(R.string.library_location), MODE_PRIVATE);
 		
 		boolean hiddenFiles = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("showAll", false);
-		
-		libraryFiles = (ArrayList<File>) FileHelper.getFileList(dir, hiddenFiles);
+		libraryFiles = (ArrayList<File>) FileHelper.getFileList(libDir, hiddenFiles);
 		
 		// Copies the files from 'res/raw' into the 'Library' folder, used for testing, remove when we got valid text files
 		if(libraryFiles.isEmpty()){
@@ -78,7 +76,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		        try {
 					int resourceID=fields[count].getInt(fields[count]);
 					InputStream is = getResources().openRawResource(resourceID);
-					File f = new File(dir, fields[count].getName()+".txt");
+					File f = new File(libDir, fields[count].getName()+".txt");
 					FileHelper.saveFile(is, f);
 					is.close();
 		        } catch (IllegalAccessException e) {
@@ -90,7 +88,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				}
 		    }
 		    
-		    libraryFiles = (ArrayList<File>) FileHelper.getFileList(dir, hiddenFiles);
+		    libraryFiles = (ArrayList<File>) FileHelper.getFileList(libDir, hiddenFiles);
 		}
 		
 		files = new ArrayList<LibraryItem>();
@@ -105,6 +103,9 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		library.setAdapter(adapter);
 		library.setOnItemClickListener(this);
 		registerForContextMenu(library);
+		
+		btnAdd = (ImageButton) findViewById(R.id.ibtn_add_library);
+		btnAdd.setOnClickListener(this);
 		
 		sideSelector = (SideSelector) findViewById(R.id.library_side_selector);
 		sideSelector.setListView(library);
@@ -199,13 +200,11 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 									files.remove(i);
 								}
 							}
-						} else {
-							File dir = getDir(getString(R.string.library_location), MODE_PRIVATE);
-							
+						} else {							
 							item.getFile().delete();
 							files.remove(pos);
 							
-							ArrayList<File> fileList = (ArrayList<File>)FileHelper.getFileList(dir, true);
+							ArrayList<File> fileList = (ArrayList<File>)FileHelper.getFileList(libDir, true);
 
 							for(File file : fileList){
 								Pair<String> fName = Helper.splitFileName(file.getName());
@@ -275,7 +274,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				Pair<String> updatedName = Helper.splitFileName(b.getString("name"));
 				Pair<String> orgFilename = Helper.splitFileName(b.getString("orgName"));
 				
-				File libDir = getDir(getString(R.string.library_location), Context.MODE_PRIVATE);
 				ArrayList<File> libFiles = (ArrayList<File>) FileHelper.getFileList(libDir, true);
 				
 				boolean fileExists = false;
@@ -321,11 +319,10 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				break;
 
 			case FLAG_SETTINGS:
-				File dir = getDir(getString(R.string.library_location), Context.MODE_PRIVATE);
 				Bundle b2 = data.getExtras();
 				boolean showAll = b2.getBoolean("showAll");
 				
-				libraryFiles = (ArrayList<File>) FileHelper.getFileList(dir, showAll);
+				libraryFiles = (ArrayList<File>) FileHelper.getFileList(libDir, showAll);
 				files = new ArrayList<LibraryItem>();
 				for(File file : libraryFiles){
 					files.add(new LibraryItem(file.getName(), file));
@@ -342,7 +339,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 					}
 					
 					files.clear();
-					FileHelper.removeFiles(dir);
+					FileHelper.removeFiles(libDir);
 					
 					updateListView();
 				}
@@ -417,32 +414,16 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
+		LibraryItem item = files.get(position);
+		Pair<File> libItems = FileHelper.getFilesFromLibrary(this, item.getName());
 		
-		File f = files.get(position).getFile();
-		
-		File dir = getDir(getString(R.string.library_location), MODE_PRIVATE);
-		ArrayList<File> fileList = (ArrayList<File>)FileHelper.getFileList(dir, true);
-		
-		String fileName = f.getName();
-		fileName = fileName.substring(0, fileName.lastIndexOf("."));
-		
-		File json = null;
-		for(File file : fileList){
-			Pair<String> name = Helper.splitFileName(file.getName());
-			if(name.first().equals(fileName) && name.second().equals(".json")){
-				json = file;
-				break;
-			}
-		}
-		
-		String name = f.getName();
-		if(name.endsWith(".txt") || name.endsWith(".html")){
+		if(item.getName().endsWith(".txt") || item.getName().endsWith(".html")){
 			Intent intent = new Intent(this, PresentationModule.class);
-			intent.putExtra("file", f);
-			intent.putExtra("json", json);
-			intent.putExtra("title", f.getName());
+			intent.putExtra("file", libItems.first());
+			intent.putExtra("json", libItems.second());
+			intent.putExtra("title", libItems.first().getName());
 			this.startActivity(intent);
-		} else if(name.endsWith(".json")){
+		} else if(item.getName().endsWith(".json")){
 			new AlertDialog.Builder(this)
 			.setTitle(getString(R.string.dialog_json_title))
 			.setMessage(getString(R.string.dialog_json_message))
@@ -451,10 +432,11 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		else {
 			new AlertDialog.Builder(this)
 			.setTitle(getString(R.string.folder_invalid))
-			.setMessage(getString(R.string.folder_open_failed) + f.getName())
+			.setMessage(getString(R.string.folder_open_failed) + item.getName())
 			.setPositiveButton(android.R.string.ok, null).show();
 		}
 	}
+
 	
 	private void updateListView(){
 		adapter.notifyDataSetChanged();

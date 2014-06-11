@@ -12,6 +12,10 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.reader.R;
+import com.example.reader.types.Pair;
+
+import android.content.Context;
 import android.os.Environment;
 
 public class FileHelper {
@@ -202,6 +206,30 @@ public class FileHelper {
 	        out.append(newLine);
 	    }
 	    return out.toString();
+	}
+	
+
+	public static Pair<File> getFilesFromLibrary(Context context, String filename){
+
+		File dir = context.getDir(context.getString(R.string.library_location), Context.MODE_PRIVATE);
+		ArrayList<File> fileList = (ArrayList<File>)FileHelper.getFileList(dir, true);
+		
+		Pair<String> origName = Helper.splitFileName(filename);
+		
+		File html = null, json = null;
+		for(File file : fileList){
+			Pair<String> name = Helper.splitFileName(file.getName());
+			if(name.first().equals(origName.first())){
+				
+				if(name.second().equals(".json"))
+					json = file;
+				else
+					html = file;
+				
+			}
+		}
+		
+		return new Pair<File>(html, json);
 	}
 	
 }
