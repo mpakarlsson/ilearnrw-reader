@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_category" />
+
+    <Spinner
+        android:id="@+id/categories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_problem" 
+        android:layout_marginTop="@dimen/spacer"/>
+
+    <Spinner
+        android:id="@+id/problems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_presentation_rule" 
+        android:layout_marginTop="@dimen/spacer"/>
+
+    <RadioGroup
+        android:id="@+id/pm_rules"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:id="@+id/pm_rule1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/problem_1" />
+
+        <RadioButton
+            android:id="@+id/pm_rule2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/problem_2" />
+
+        <RadioButton
+            android:id="@+id/pm_rule3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/problem_3" />
+        
+        <RadioButton
+            android:id="@+id/pm_rule4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/problem_4" />
+    </RadioGroup>
+
+    <LinearLayout 
+		android:id="@+id/pm_color_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_marginTop="@dimen/spacer">
+        
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/choose_color" />
+
+    	<ImageView
+	        android:id="@+id/pm_color"
+	        android:layout_width="48dp"
+	        android:layout_height="24dp" 
+	        android:contentDescription="@string/empty"
+	        android:layout_marginLeft="@dimen/spacer"/>
+    </LinearLayout>
+
+     <LinearLayout 
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_marginTop="@dimen/spacer"
+		android:gravity="center">
+	    
+	    <Button
+	        android:id="@+id/pm_btn_cancel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@android:string/cancel"
+	        android:layout_marginRight="@dimen/spacer"
+	        style="@android:attr/buttonBarButtonStyle" />	
+	
+	    <Button
+	        android:id="@+id/pm_btn_ok"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@android:string/ok"
+	        android:layout_marginLeft="@dimen/spacer" 
+	        style="@android:attr/buttonBarButtonStyle"/>
+    	
+	</LinearLayout>
+    
+
+
+</LinearLayout>

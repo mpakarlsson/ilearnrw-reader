@@ -11,6 +11,7 @@
     <string name="folder_unreadable">folder can\'t be read!</string>
     <string name="folder_invalid">Invalid file type</string>
     <string name="folder_open_failed">Can\'t open file, </string>
+    <string name="empty"></string>
 
     <!-- Activity titles -->
     <string name="title_presentation_module">PresentationModule</string>

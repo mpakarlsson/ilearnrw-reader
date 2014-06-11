@@ -18,7 +18,6 @@ import com.example.reader.utils.Helper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -158,13 +157,17 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+		final int pos = info.position;
+		
 		int menuItemIndex = item.getItemId();
 		String[] menuItems = getResources().getStringArray(R.array.library_context_menu);
 		String menuItemName = menuItems[menuItemIndex];
-		String listItemName = files.get(info.position).getName();
 		
-		if(menuItemName.equals("Edit")){	
-			
+		final LibraryItem clickItem = files.get(pos);
+		String listItemName = clickItem.getName();
+		
+		
+		if(menuItemName.equals("Edit")){
 			if(listItemName.endsWith(".json")){
 				Toast.makeText(this, "You can't change name of a JSON file", Toast.LENGTH_SHORT).show();
 				return true;
@@ -175,16 +178,13 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			startActivityForResult(i, FLAG_UPDATE_FILE_NAME);
 			
 		} else if(menuItemName.equals("Delete")){
-			final int pos = info.position;
-			
 			new AlertDialog.Builder(this)
 				.setTitle(getString(R.string.dialog_remove_item_confirmation) + listItemName)
 				.setNegativeButton(getString(android.R.string.no), null)
 				.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						LibraryItem item = files.get(pos);						
-						Pair<String> fileName = Helper.splitFileName(item.getName());
+					public void onClick(DialogInterface dialog, int which) {					
+						Pair<String> fileName = Helper.splitFileName(clickItem.getName());
 					
 						String name = "current_" + fileName.first()+ "_" + fileName.second().substring(1);
 						SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -201,7 +201,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 								}
 							}
 						} else {							
-							item.getFile().delete();
+							clickItem.getFile().delete();
 							files.remove(pos);
 							
 							ArrayList<File> fileList = (ArrayList<File>)FileHelper.getFileList(libDir, true);
@@ -218,16 +218,14 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						updateListView();
 					}
 				}).show();			
-		} else if(menuItemName.equals("Copy")){
-			final int pos = info.position;
-			
+		} else if(menuItemName.equals("Copy")){			
 			new AlertDialog.Builder(this)
 			.setTitle(getString(R.string.dialog_copy_item_confirmation))
 			.setNegativeButton(getString(android.R.string.no), null)
 			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					boolean result = FileHelper.copyFileToExternalStorage(files.get(pos).getFile(), files.get(pos).getName(), getString(R.string.external_storage_folder_name));
+					boolean result = FileHelper.copyFileToExternalStorage(clickItem.getFile(), clickItem.getName(), getString(R.string.external_storage_folder_name));
 					
 					if(result)
 						Toast.makeText(getBaseContext(), getString(R.string.copy_file_external_succeeded), Toast.LENGTH_SHORT).show();
@@ -235,6 +233,16 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						Toast.makeText(getBaseContext(), getString(R.string.copy_file_external_failed), Toast.LENGTH_SHORT).show();
 				}
 			}).show();
+		} else if(menuItemName.startsWith("Open file w/")){
+			Pair<File> libItems = FileHelper.getFilesFromLibrary(this, clickItem.getName());
+			
+			Intent intent = new Intent(this, PresentationModule.class);
+			intent.putExtra("file", libItems.first());
+			intent.putExtra("json", libItems.second());
+			intent.putExtra("title", libItems.first().getName());
+			intent.putExtra("showGUI", true);
+			this.startActivity(intent);
+			
 		}
 		
 		return true;
@@ -422,6 +430,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			intent.putExtra("file", libItems.first());
 			intent.putExtra("json", libItems.second());
 			intent.putExtra("title", libItems.first().getName());
+			intent.putExtra("showGUI", false);
 			this.startActivity(intent);
 		} else if(item.getName().endsWith(".json")){
 			new AlertDialog.Builder(this)

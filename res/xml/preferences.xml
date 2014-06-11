@@ -5,6 +5,18 @@
     android:key="reader_prefs"
     android:title="@string/reader_prefs">
 
+    <PreferenceCategory 
+        android:title="@string/pref_presentation_rules"
+        android:key="pref_presentation_rules_settings">
+        
+        <Preference
+            android:key="pref_presentation_rules"
+            android:title="@string/pref_presentation_rules_title"
+            android:summary="@string/pref_presentation_rules_summary"/>
+        
+    </PreferenceCategory>
+    
+    
     <PreferenceCategory
         android:title="@string/pref_text_category_title"
         android:key="pref_text_settings">

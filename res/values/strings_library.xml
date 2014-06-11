@@ -34,6 +34,7 @@
     
     
     <string-array name="library_context_menu">
+        <item>Open file w/ presentation GUI</item>
         <item>Edit</item>
         <item>Delete</item>
         <item>Copy</item>

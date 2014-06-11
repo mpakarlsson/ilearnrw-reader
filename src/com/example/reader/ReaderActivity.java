@@ -115,7 +115,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reader);
 		
-		Bundle libBundle 	= getIntent().getBundleExtra("LibraryBundle");
+		Bundle libBundle 	= getIntent().getExtras();
 		File file 			= (File) libBundle.get("file");
 		String title		= libBundle.getString("title");
 		
@@ -798,12 +798,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			String curr = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
 			if(isHighlighting)
 				highlight(curr);
-			
-			highlight("w0", "#FFFFCC");
-			highlight("w1", "#00FF00");
-			highlight("w2", "#00FFFF");
-			
-			highlightPart("w2", 1, 3, "#FF0000");
 		}	
 	};
 	

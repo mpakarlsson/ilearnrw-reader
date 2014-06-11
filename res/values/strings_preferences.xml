@@ -38,6 +38,9 @@
     <string name="pref_reader_reset">Reset</string>
     <string name="pref_reader_reset_summary">Reset reader options</string>  
     
+   	<string name="pref_presentation_rules">Presentation rules</string>
+	<string name="pref_presentation_rules_title">Change rules</string>
+	<string name="pref_presentation_rules_summary">Change presentation rules</string>
     
     <string-array name="pref_languages">
         <item>English</item>

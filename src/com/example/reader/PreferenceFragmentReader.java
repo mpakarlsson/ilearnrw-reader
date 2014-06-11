@@ -8,6 +8,7 @@ import com.example.reader.types.ColorPickerPreference;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 
@@ -118,6 +119,17 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 				return true;
 			}
 		});
+		
+		Preference presentationRules = (Preference) findPreference("pref_presentation_rules");
+		presentationRules.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Intent i = new Intent(preference.getContext(), PresentationModule.class);
+				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				startActivity(i);
+				return true;
+			}
+		}); 
 		
 	}	
 	

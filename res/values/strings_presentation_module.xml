@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="choose_category">Category:</string>
+    <string name="choose_problem">Problem:</string>
+    <string name="choose_presentation_rule">Pick a presentation rule:</string>
+    <string name="choose_color">Color: </string>
+    
+    <!-- Rules -->
+    <string name="problem_1">Paint the problematic part of word</string>
+    <string name="problem_2">Paint the whole word</string>
+    <string name="problem_3">Highlight the problematic part of word</string>
+    <string name="problem_4">Highlight the whole word</string>
+    
+</resources>
