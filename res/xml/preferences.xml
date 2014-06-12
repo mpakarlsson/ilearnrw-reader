@@ -6,7 +6,7 @@
     android:title="@string/reader_prefs">
 
     <PreferenceCategory 
-        android:title="@string/pref_presentation_rules"
+        android:title="@string/pref_presentation_rules_category_title"
         android:key="pref_presentation_rules_settings">
         
         <Preference
@@ -121,6 +121,33 @@
 		    android:entryValues="@array/pref_languages_values">
 		    
 		</ListPreference>
+        
+    </PreferenceCategory>
+    
+    <PreferenceCategory 
+        android:title="@string/pref_extras_category_title"
+        android:key="pref_extras_settings">
+        
+		<com.example.reader.types.ColorPickerPreference
+			android:key="@string/pref_layout_top"
+            android:title="@string/pref_layout_top_title"
+            android:summary="@string/pref_layout_top_summary"
+            android:defaultValue="@color/LightGrey" 
+            ns:supportsAlpha="false"/>
+        
+        <com.example.reader.types.ColorPickerPreference
+            android:key="@string/pref_layout_bottom"
+			android:title="@string/pref_layout_bottom_title"
+            android:summary="@string/pref_layout_bottom_summary"
+            android:defaultValue="@color/LightGrey" 
+            ns:supportsAlpha="false"/>
+        
+        <com.example.reader.types.ColorPickerPreference
+            android:key="@string/pref_layout_slider"
+            android:title="@string/pref_layout_slider_title"
+            android:summary="@string/pref_layout_slider_summary"
+            android:defaultValue="0xff555555" 
+            ns:supportsAlpha="false"/>
         
     </PreferenceCategory>
     

@@ -109,6 +109,9 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 						edit.remove(getString(R.string.pref_speech_rate_title));
 						edit.remove(getString(R.string.pref_pitch_title));
 						edit.remove(getString(R.string.pref_tts_language_title));
+						edit.remove(getString(R.string.pref_layout_top));
+						edit.remove(getString(R.string.pref_layout_bottom));
+						edit.remove(getString(R.string.pref_layout_slider));
 						edit.commit();						
 						a.finish();
 						return;

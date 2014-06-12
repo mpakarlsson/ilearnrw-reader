@@ -9,5 +9,7 @@
     <dimen name="hue_width">30dp</dimen>
     <dimen name="spacer">8dp</dimen>
     
+    <dimen name="slider_stroke">1dp</dimen>
+    
 
 </resources>

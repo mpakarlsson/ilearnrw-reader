@@ -21,6 +21,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -48,7 +50,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private TextView tvTitle, tvHighLightSpeed;
 	private WebView reader;
 	private ImageButton ibtnLib, ibtnSearch, ibtnMode, ibtnPrev, ibtnPlay, ibtnNext, ibtnSettings, ibtnSearchForward, ibtnSearchBack;
-	private RelativeLayout bottom, searchbar, rlHighlightSpeed;
+	private RelativeLayout top, bottom, searchbar, rlHighlightSpeed;
 	private SeekBar sbHighLightSpeed;
 	
 	private ReaderMode reader_mode;
@@ -154,6 +156,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		ibtnNext.setOnClickListener(this);
 		ibtnSettings.setOnClickListener(this);
 		
+		top					= (RelativeLayout) findViewById(R.id.reader_top);
 		bottom 				= (RelativeLayout) findViewById(R.id.reader_bottom);
 		rlHighlightSpeed 	= (RelativeLayout) findViewById(R.id.reader_body_highlight_speed);
 		
@@ -197,6 +200,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		isHighlighting =  sp.getBoolean("highlighting", true);
 
 		highlightParts = new HashMap<String, Pair<String>>();
+
+		updateGUI();
 	}
 	
 	@Override
@@ -291,6 +296,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			
 		case FLAG_REFRESH_WEBVIEW:
 		{
+			updateGUI();			
 			html = updateHtml(fileHtml);
 			reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
 			setTTS();
@@ -537,6 +543,32 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		searchbar.setVisibility(View.GONE);
 	}
 	
+	private void updateGUI(){
+		int topColor = sp.getInt(getString(R.string.pref_layout_top), 0xffd3d3d3);
+		top.setBackgroundColor(topColor);
+		int bottomColor = sp.getInt(getString(R.string.pref_layout_bottom), 0xffd3d3d3);
+		bottom.setBackgroundColor(bottomColor);
+		int sliderProgressColor = sp.getInt(getString(R.string.pref_layout_slider), 0xff555555);
+		
+		int backgroundColor = sp.getInt("pref_background_color", 0xffffffff);
+		
+		int colors[] = new int[3];
+		colors[0] = Helper.darkenColor(sliderProgressColor, 0.1f);
+		colors[1] = sliderProgressColor;
+		colors[2] = Helper.lightenColor(sliderProgressColor, 0.9f);
+		
+		GradientDrawable shape = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors);
+		shape.setCornerRadius(5.0f);
+		shape.setStroke((int)getResources().getDimension(R.dimen.slider_stroke), 0x50999999);
+		
+		Rect bounds = sbHighLightSpeed.getProgressDrawable().getBounds();
+		sbHighLightSpeed.setProgressDrawable(shape);
+		sbHighLightSpeed.getProgressDrawable().setBounds(bounds);
+		
+		int sliderColor = Helper.darkenColor(backgroundColor, 0.95f);
+		sbHighLightSpeed.setBackgroundColor(sliderColor);
+		rlHighlightSpeed.setBackgroundColor(sliderColor);
+	}
 	
 	public void highlight(String id){
 		id = checkId(id);

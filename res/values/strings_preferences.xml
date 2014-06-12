@@ -6,7 +6,11 @@
     
     <string name="pref_tts_category_title">Text-To-Speech</string>
     <string name="pref_text_category_title">Text</string>
-    
+    <string name="pref_extras_category_title">Extra</string>
+   	<string name="pref_presentation_rules_category_title">Presentation rules</string>
+   	<string name="pref_reset_category_title">Resets</string>
+   	
+   	
     <string name="pref_highlighter_speed">pref_highlighter_speed</string>
     
     <string name="pref_background_color_title">pref_background_color</string>
@@ -33,16 +37,26 @@
     <string name="pref_pitch_title">pref_pitch</string>
     <string name="pref_tts_language_title">pref_tts_language</string>
     
-    
-    <string name="pref_reset_category_title">Resets</string>
     <string name="pref_reader_reset">Reset</string>
     <string name="pref_reader_reset_summary">Reset reader options</string>  
-    
-   	<string name="pref_presentation_rules">Presentation rules</string>
+   
 	<string name="pref_presentation_rules_title">Change rules</string>
 	<string name="pref_presentation_rules_summary">Change presentation rules</string>
+	
+	<string name="pref_layout_top_title">Top color</string>
+	<string name="pref_layout_top_summary">Change top color</string>
+	<string name="pref_layout_top">pref_layout_top_color</string>
     
-    <string-array name="pref_languages">
+	<string name="pref_layout_bottom_title">Bottom color</string>
+	<string name="pref_layout_bottom_summary">Change Bottom color</string>
+	<string name="pref_layout_bottom">pref_layout_bottom_color</string>
+	
+	<string name="pref_layout_slider_title">Slider color</string>
+	<string name="pref_layout_slider_summary">Change slider color</string>
+	<string name="pref_layout_slider">pref_layout_slider_color</string>
+
+	
+	<string-array name="pref_languages">
         <item>English</item>
         <item>Greek</item>
     </string-array>

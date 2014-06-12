@@ -120,9 +120,7 @@
 			android:layout_height="match_parent"
 			android:max="100"
 			android:progress="50"
-			android:layout_below="@id/tv_highlight_speed_value"
-			android:progressDrawable="@drawable/progress_fill"
-			android:background="@drawable/background_fill"/>
+			android:layout_below="@id/tv_highlight_speed_value"/>
 	</RelativeLayout>
 
 	
