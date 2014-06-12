@@ -361,27 +361,9 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	
 	@Override
 	public void onBackPressed() {
-
-		new AlertDialog.Builder(this)
-			.setTitle(getString(R.string.dialog_logout_title))
-			.setMessage(getString(R.string.dialog_logout_message))
-			.setNegativeButton(android.R.string.no, null)
-			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					SharedPreferences.Editor editor= PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
-					editor.remove("username");
-					editor.remove("password");
-					editor.remove("rememberMe");
-					editor.remove("authToken");
-					editor.remove("refreshToken");
-					editor.commit();
-					
-					LibraryActivity.super.onBackPressed();
-				}
-			}).show();
+		super.onBackPressed();
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {

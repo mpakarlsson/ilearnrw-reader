@@ -11,6 +11,7 @@ import com.example.reader.utils.HttpHelper;
 import com.google.gson.Gson;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,28 +35,29 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	private final String TAG = getClass().getName();
 
-	public Button btnLogin, btnLoginSkip;
+	public Button btnLogin, btnLoginSkip, btnLogout;
 	public EditText etUsername, etPassword;
 	public CheckBox chkRM;
 	private SharedPreferences preferences;
+	private boolean isLoggedIn;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         
-        btnLogin = (Button) findViewById(R.id.login_button);
-        btnLoginSkip = (Button) findViewById(R.id.login_button_skip);
-        etUsername = (EditText) findViewById(R.id.login_username);
-        etPassword = (EditText) findViewById(R.id.login_password);
+        btnLogin 		= (Button) findViewById(R.id.login_button);
+        btnLoginSkip 	= (Button) findViewById(R.id.login_button_skip);
+        btnLogout 		= (Button) findViewById(R.id.login_logout);
+        etUsername 		= (EditText) findViewById(R.id.login_username);
+        etPassword 		= (EditText) findViewById(R.id.login_password);
         
         chkRM = (CheckBox) findViewById(R.id.chk_remember_me);
         
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         final boolean isRemember = preferences.getBoolean("rememberMe", false);
         String username = preferences.getString("username", "");
-        String password = preferences.getString("password", "");
-        
+        String password = preferences.getString("password", "");       
         
         chkRM.setChecked(isRemember);
         etUsername.setText(username);
@@ -65,6 +67,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         
         btnLogin.setOnClickListener(this);
         btnLoginSkip.setOnClickListener(this);
+        btnLogout.setOnClickListener(this);
         
         chkRM.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
@@ -91,6 +94,9 @@ public class LoginActivity extends Activity implements OnClickListener {
     	boolean isRemember = preferences.getBoolean("rememberMe", false);
         String username = preferences.getString("username", "");
         String password = preferences.getString("password", "");
+        isLoggedIn = preferences.getBoolean("isLoggedIn", false);
+        updateButtons();
+        
         
         chkRM.setChecked(isRemember);
         etUsername.setText(username);
@@ -131,7 +137,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 				editor.putString("username", "");
 				editor.putString("password", "");
 			}
+
+			updateButtons();
+			isLoggedIn = true;
+			editor.putBoolean("isLoggedIn", isLoggedIn);
+			
 			editor.commit();
+			
 			
 			new LoginTask().execute(username, password);
 			break;
@@ -139,11 +151,53 @@ public class LoginActivity extends Activity implements OnClickListener {
 		case R.id.login_button_skip:
 			Intent i2 = new Intent(this, LibraryActivity.class);
 			startActivity(i2);
+			updateButtons();
+			isLoggedIn = true;
+			preferences.edit().putBoolean("isLoggedIn", isLoggedIn).commit();
 			break;
+		
+		case R.id.login_logout:
+			new AlertDialog.Builder(this)
+			.setTitle(getString(R.string.dialog_logout_title))
+			.setMessage(getString(R.string.dialog_logout_message))
+			.setNegativeButton(android.R.string.no, null)
+			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					SharedPreferences.Editor edit= preferences.edit();
+					edit.remove("username");
+					edit.remove("password");
+					edit.remove("rememberMe");
+					edit.remove("authToken");
+					edit.remove("refreshToken");
+					
+					updateButtons();
+					isLoggedIn = false;
+					edit.putBoolean("isLoggedIn", isLoggedIn);
+					
+					edit.commit();
+					
+					etUsername.getText().clear();
+					etPassword.getText().clear();
+					chkRM.setChecked(false);
+				}
+			}).show();
 			
+			break;
 		default:
 			break;
 		}
+	}
+	
+	private void updateButtons(){
+		
+		if(isLoggedIn){
+        	btnLoginSkip.setVisibility(View.GONE);
+        	btnLogout.setVisibility(View.VISIBLE);
+        } else {
+        	btnLoginSkip.setVisibility(View.VISIBLE);
+        	btnLogout.setVisibility(View.GONE);
+        }
 	}
 	
 	private class LoginTask extends AsyncTask<String, Void, LoginResult>{
