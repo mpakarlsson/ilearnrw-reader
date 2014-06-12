@@ -2,12 +2,10 @@ package com.example.reader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Locale;
 
 import com.example.reader.interfaces.TTSHighlightCallback;
 import com.example.reader.interfaces.TTSReadingCallback;
-import com.example.reader.utils.Helper;
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,17 +29,18 @@ public class TTS implements OnInitListener{
 	private Context context;
 	private final TTSHighlightCallback cbHighlight;
 	private final TTSReadingCallback cbReading;
-	private LinkedList<String> positionList;
-	private String currSentenceTag;
+
+	private int position;
 	
+	private final String SENTENCE_TAG;
 	
-	public TTS(final Context context, String currSentTag, TTSHighlightCallback highlight, TTSReadingCallback reading, int requestCode, int resultCode, Intent data){
+	public TTS(final Context context, String sentTag, TTSHighlightCallback highlight, TTSReadingCallback reading, int requestCode, int resultCode, Intent data){
 		
 		this.context = context;
-		currSentenceTag = currSentTag;
 		this.cbHighlight = highlight;
 		this.cbReading = reading;
-		positionList = new LinkedList<String>();
+		
+		SENTENCE_TAG = sentTag;
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		chosenVoice = prefs.getString("ttsLanguage", Locale.US.toString());
@@ -72,15 +71,15 @@ public class TTS implements OnInitListener{
 				
 				@Override
 				public void onStart(String utteranceId) {
+					if(!utteranceId.equals("rehighlight"))
+						cbReading.OnStartedReading();
 					
-					String id = positionList.getFirst();
-					cbReading.OnStartedReading();
 					if(utteranceId.equals("speak")){
-						cbHighlight.OnHighlight(id);
-						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(currSentenceTag, id).commit();
+						cbHighlight.OnHighlight(position);
+						PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(SENTENCE_TAG, position).commit();
 					} else if(utteranceId.equals("lastSpeak")){
-						cbHighlight.OnHighlight(id);
-						PreferenceManager.getDefaultSharedPreferences(context).edit().putString(currSentenceTag, "").commit();
+						cbHighlight.OnHighlight(position);
+						PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(SENTENCE_TAG, 0).commit();
 					}
 				}
 				
@@ -91,14 +90,13 @@ public class TTS implements OnInitListener{
 				
 				@Override
 				public void onDone(String utteranceId) {
-					String id = positionList.pollFirst();
 					if(utteranceId.equals("speak")){
-						cbHighlight.OnRemoveHighlight(id);
+						cbHighlight.OnRemoveHighlight(position, true);
 					}else if(utteranceId.equals("lastSpeak")){
-						cbHighlight.OnRemoveHighlight(id);
+						cbHighlight.OnRemoveHighlight(position, false);
 						cbReading.OnFinishedReading();
 					} else if(utteranceId.equals("rehighlight")){
-						cbHighlight.OnHighlight(PreferenceManager.getDefaultSharedPreferences(context).getString(currSentenceTag, ""));
+						cbHighlight.OnHighlight(PreferenceManager.getDefaultSharedPreferences(context).getInt(SENTENCE_TAG, 0));
 						cbReading.OnFinishedReading();
 					}
 				}
@@ -142,41 +140,19 @@ public class TTS implements OnInitListener{
 		}
 	}
 	
-	public void speak(ArrayList<String> texts, int pos, String id){
-		if(texts == null || texts.isEmpty()){
-			Toast.makeText(context, "TTS:Speak: No data to speak", Toast.LENGTH_LONG).show();
-		} else {
-			
-			if(!positionList.isEmpty()){
-				if(tts.isSpeaking()){
-					String currId = positionList.pollFirst();
-					positionList.clear();
-					positionList.add(currId);
-				} else 
-					positionList.clear();
-			}
-			
-			positionList.addLast(id);
-			
-			HashMap<String, String> params = new HashMap<String, String>();
-			HashMap<String, String> lastParams = new HashMap<String, String>();
-			params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "speak");
-			lastParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "lastSpeak");
-			
-			String identifier = Helper.findIdentifier(id);
-			
-			for(int i=0; i<texts.size(); i++){ 
-				positionList.addLast(identifier + (pos + i + 1));
-				if(i==0 && texts.size()>1)
-					tts.speak(texts.get(i), TextToSpeech.QUEUE_FLUSH, params);
-				else if(i==0 && texts.size()==1)
-					tts.speak(texts.get(i), TextToSpeech.QUEUE_FLUSH, lastParams);
-				else if(i>0 && i<texts.size()-1)
-					tts.speak(texts.get(i), TextToSpeech.QUEUE_ADD, params);
-				else
-					tts.speak(texts.get(i), TextToSpeech.QUEUE_ADD, lastParams);
-			}
+	public void speak(String text, int position, boolean isFinal){
+		if(text==null || text.isEmpty()){
+			Toast.makeText(context, "TTS: Speak: No data to speak", Toast.LENGTH_LONG).show();
+			return;
 		}
+
+		this.position = position;
+		
+		HashMap<String, String> params = new HashMap<String, String>();
+		String value = !isFinal ? "speak" : "lastSpeak";
+		params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, value);
+		
+		tts.speak(text, TextToSpeech.QUEUE_FLUSH, params);
 	}
 	
 	public void rehighlight(){

@@ -2,6 +2,7 @@ package com.example.reader;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -24,7 +25,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,17 +61,17 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private HighlightRunnable highlightRunnable;
 	private Handler highlightHandler;
 	
-	private ArrayList<String> texts;
 	public HashMap<String, Pair<String>> highlightParts;
 	
 	private SharedPreferences sp;
 	private SharedPreferences.Editor spEditor;
-		
-	public String CURR_SENT = "current";
-	public static final String SENTENCE_TAG = "sen";
-	private static final String DEFAULT_SENTENCE = "s0";
 	
-	private String current;
+	public String CURR_SENT;
+	public final String SENTENCE_TAG = "sen";
+	private ArrayList<String> sentenceIds;
+	private String defaultSentence= "";
+	private int currentPosition;
+	
 	private static String html, fileHtml;
 	
 	private double highlightSpeed;
@@ -122,7 +122,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		sp 			= PreferenceManager.getDefaultSharedPreferences(this);
 		spEditor 	= sp.edit();
 		Pair<String> bookTitle = Helper.splitFileName(title);
-		CURR_SENT 		= CURR_SENT + "_" + bookTitle.first() + "_" + bookTitle.second().substring(1);
+		CURR_SENT 		= bookTitle.first() + "_" + bookTitle.second().substring(1);
 		
 		tvTitle = (TextView) findViewById(R.id.tv_book_title_reader);
 		tvTitle.setText(title);
@@ -178,24 +178,10 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		reader.setWebViewClient(new MyWebViewClient());
 		fileHtml 	= FileHelper.readFromFile(file);
 		html 		= updateHtml(fileHtml);
-		texts 		= new ArrayList<String>();
+		sentenceIds	= new ArrayList<String>();
 		
-		int index = html.indexOf("<body");
-		if(index != -1){
-			String body = html.substring(index);
-			String[] sentences = body.split("</" + SENTENCE_TAG +">");
-			for(int i=0; i<sentences.length; i++){
-				String s = sentences[i] + "</" + SENTENCE_TAG + ">";
-				int ind = s.indexOf("<" + SENTENCE_TAG);
-				s = ind == -1 ? "" :s.substring(ind);
-				s = Html.fromHtml(s).toString();
-				if(!s.trim().isEmpty())
-					texts.add(s);
-			}		
-		}
-
 		reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
-
+		
 		reader_status = ReaderStatus.Disabled;
 		ibtnPlay.setImageResource(R.drawable.play);
 		
@@ -207,7 +193,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		
 		searchbar.setVisibility(RelativeLayout.GONE);
 		
-		current = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
+		currentPosition = sp.getInt(CURR_SENT, 0);
 		isHighlighting =  sp.getBoolean("highlighting", true);
 
 		highlightParts = new HashMap<String, Pair<String>>();
@@ -379,41 +365,56 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_prev_reader:
-			current = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
+			boolean isSpeaking = tts.isSpeaking();
+			boolean doHighlightPrev=true;
+
+			if(isSpeaking){
+				setPlayStatus(ReaderStatus.Disabled, false);
+				tts.stop();
+			}
 			
-			String identifier = Helper.findIdentifier(current);
-			int prev =  Helper.findPosition(current);
-			prev = prev > 0 ? --prev : 0;
+			currentPosition--;
+			if(currentPosition<0){
+				currentPosition=0;
+				doHighlightPrev = false;
+			}
 			
-			String previous = identifier + Integer.toString(prev);
-			spEditor.putString(CURR_SENT, previous).commit();
+			String next = sentenceIds.get(currentPosition+1);
+			String current = sentenceIds.get(currentPosition);
 			
-			removeHighlight(current);
-			highlight(previous);
+			if(doHighlightPrev){
+				removeHighlight(next);
+				highlight(current);
+			}
+			
+			spEditor.putInt(CURR_SENT, currentPosition).commit();
+			
+			if(isSpeaking)
+				setPlayStatus(ReaderStatus.Enabled, false);
 			
 			if(reader_status == ReaderStatus.Enabled){
 				if(reader_mode == ReaderMode.Listen)
-					speakFromSentence(previous);
+					speakFromSentence(current);
 				else if(reader_mode == ReaderMode.Guidance){
 					resetGuidance();
 				}
-			} 
-			
+			}
 			break;
 			
 		case R.id.ibtn_play_reader:
-			current = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
+			currentPosition = sp.getInt(CURR_SENT, 0);
+			String c = sentenceIds.get(currentPosition);
 			
 			if(reader_status == ReaderStatus.Disabled){
-				setPlayStatus(ReaderStatus.Enabled);
+				setPlayStatus(ReaderStatus.Enabled, true);
 				if(reader_mode == ReaderMode.Listen) {
-					speakFromSentence(current);
+					speakFromSentence(c);
 				} else if(reader_mode == ReaderMode.Guidance){
 					resetGuidance();
 				}
 			} else {
-				spEditor.putString(CURR_SENT, current).commit();
-				setPlayStatus(ReaderStatus.Disabled);
+				spEditor.putInt(CURR_SENT, currentPosition).commit();
+				setPlayStatus(ReaderStatus.Disabled, true);
 				if(reader_mode == ReaderMode.Listen){
 					tts.stop();
 					tts.rehighlight();
@@ -425,21 +426,36 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			break;
 			
 		case R.id.ibtn_next_reader:
-			current = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
+			boolean isSpeak = tts.isSpeaking();
+			boolean doHighlightNext=true;
 
-			String identifier2 = Helper.findIdentifier(current);
-			int n = Helper.findPosition(current);
-			String next;
+			if(isSpeak){
+				setPlayStatus(ReaderStatus.Disabled, false);
+				tts.stop();
+			}
 			
-			next = n+1 >= texts.size() ? current : identifier2 + Integer.toString(++n);			
+			currentPosition++;
+			if(currentPosition>sentenceIds.size()-1){
+				currentPosition=sentenceIds.size()-1;
+				doHighlightNext = false;
+			}
 			
-			spEditor.putString(CURR_SENT, next).commit();
-			removeHighlight(current);
-			highlight(next);
+			String curr = sentenceIds.get(currentPosition);
+			String prev = sentenceIds.get(currentPosition-1);
+			
+
+			spEditor.putInt(CURR_SENT, currentPosition).commit();
+			if(doHighlightNext){
+				removeHighlight(prev);
+				highlight(curr);
+			}
+			
+			if(isSpeak)
+				setPlayStatus(ReaderStatus.Enabled, false);
 			
 			if(reader_status == ReaderStatus.Enabled){
 				if(reader_mode == ReaderMode.Listen)
-					speakFromSentence(next);
+					speakFromSentence(curr);
 				else if(reader_mode == ReaderMode.Guidance){
 					resetGuidance();
 				}
@@ -523,53 +539,65 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	
 	
 	public void highlight(String id){
-		if(id.isEmpty())
-			return;
-		
-		reader.loadUrl("javascript:scrollToElement('" + id + "');");
-		
-		String highlightColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
-		reader.loadUrl("javascript:highlight('" + id + "', '" + highlightColor + "');");
+		id = checkId(id);
+		if(id != null){
+			reader.loadUrl("javascript:scrollToElement('" + id + "');");
+			
+			String highlightColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
+			reader.loadUrl("javascript:highlight('" + id + "', '" + highlightColor + "');");
+		}
 	}
 	
 	public void highlight(String id, String hexColor){
-		if(id.isEmpty())
-			return;
-		
-		reader.loadUrl("javascript:highlight('" + id + "', '" + hexColor + "');");
+		id = checkId(id);
+		if(id != null)
+			reader.loadUrl("javascript:highlight('" + id + "', '" + hexColor + "');");
+
 	}
 	
-	public void highlightPart(final String id, final int start, final int end, final String hexColor){
-		if(id.isEmpty())
+	public void highlightPart(String id, final int start, final int end, final String hexColor){
+		final String fId = checkId(id);
+		if(fId == null)
 			return;
 		
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				reader.loadUrl("javascript:highlightPart('" + id + "', '" + start + "', '" + end + "', '" + hexColor + "');");
+				reader.loadUrl("javascript:highlightPart('" + fId + "', '" + start + "', '" + end + "', '" + hexColor + "');");
 			}
 		});
 		
 	}
 	
 	public void removeHighlight(String id){
-		if(id.isEmpty())
-			return;
-		
-		String backgroundColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
-		reader.loadUrl("javascript:highlight('" + id + "', '" + backgroundColor + "');");
+		id = checkId(id);
+		if(id != null){
+			String backgroundColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
+			reader.loadUrl("javascript:highlight('" + id + "', '" + backgroundColor + "');");
+		}
 	}
 	
-	public void removeHighlightPart(final String id, final Pair<String> span){
-		if(id.isEmpty())
+	public void removeHighlightPart(String id, final Pair<String> span){
+		final String fId = checkId(id);
+		if(fId == null)
 			return;
 		
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				reader.loadUrl("javascript:unhighlight('" + id + "', '" + span.first() + "', '" + span.second() + "');");
+				reader.loadUrl("javascript:unhighlight('" + fId + "', '" + span.first() + "', '" + span.second() + "');");
 			}
 		});
+	}
+	
+	private String checkId(String id){
+		if(id == null || id.isEmpty()){
+			if(!defaultSentence.isEmpty())
+				return defaultSentence;
+			else
+				return null;
+		}
+		return id;
 	}
 	
 	
@@ -580,11 +608,13 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	}
 	
 	
-	private void setPlayStatus(ReaderStatus status){	
-		if(status == ReaderStatus.Enabled)	
-			ibtnPlay.setImageResource(R.drawable.pause);
-		else
-			ibtnPlay.setImageResource(R.drawable.play);
+	private void setPlayStatus(ReaderStatus status, boolean changeImage){	
+		if(changeImage){
+			if(status == ReaderStatus.Enabled)	
+				ibtnPlay.setImageResource(R.drawable.pause);
+			else
+				ibtnPlay.setImageResource(R.drawable.play);
+		}
 		reader_status = status;
 	}
 	
@@ -603,16 +633,14 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	}
 	
 	private void speakFromSentence(String id){
-		if(id == null || id.isEmpty())
-			id = DEFAULT_SENTENCE;
+		id = checkId(id);
+		if(id==null)
+			return;
 		
-		ArrayList<String> sentences = new ArrayList<String>();
-		int pos = Helper.findPosition(id);
+		reader.loadUrl("javascript:speakSentence('" + id + "');");
+		// Todo: fetch sentence to speak through js
 		
-		for(int i=pos; i<texts.size(); i++)
-			sentences.add(texts.get(i));
-		
-		tts.speak(sentences, pos, id);
+		//tts.speak(sentences, pos, id);
 	}
 
 	private String updateHtml(String html){
@@ -707,13 +735,17 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 						"}" +
 					"}" + 
 				"}";
-
-		String setSentenceOnClick =
-				"function setOnClickEvents(){" +
+		
+		String getSentences = 
+				"function getSentences(){" +
 					"var sents = document.getElementsByTagName('" + SENTENCE_TAG + "');" +
-					"var timer;" +
-					"var longPressTime = 2000;" +
-					"for(var i = 0; i < sents.length; i++) {" +
+					"var result = '';" +
+					"for(var i=0; i<sents.length; i++){" +
+						"if(i+1==sents.length){" +
+							"result += sents[i].id;" +
+						"} else {" +
+							"result += sents[i].id + ',';" +
+						"}" +
 						"sents[i].onclick = function() {" +
 							"var body = document.body.innerHTML;" +
 							"var index = body.indexOf(this.id);" +
@@ -725,6 +757,13 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 							"ReaderInterface.clickSentence(body, this.id);" +
 						"};" +					
 					"}" +
+					"ReaderInterface.getSentences(result);" +
+				"}";
+		
+		String speakSentence = 
+				"function speakSentence(id){" +
+					"var element = document.getElementById(id);" +
+					"ReaderInterface.speakSentence(element.innerText);" +
 				"}";
 		
 		String showMoreInformation = 
@@ -773,7 +812,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 				unhighlightPart +
 				retrieveBodyContent +
 				scrollToElement +
-				setSentenceOnClick +
+				getSentences +
+				speakSentence +
 				showToast + 
 				showMoreInformation + 
 				stopScripts +
@@ -794,10 +834,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
-			reader.loadUrl("javascript:setOnClickEvents();");
-			String curr = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
-			if(isHighlighting)
-				highlight(curr);
+			reader.loadUrl("javascript:getSentences();");
 		}	
 	};
 	
@@ -851,18 +888,46 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		}
 		
 		@JavascriptInterface
+		public void getSentences(String sentences){
+			sentenceIds = new ArrayList<String>(Arrays.asList(sentences.split(",")));
+			defaultSentence = sentenceIds.get(0);
+			
+			if(currentPosition>=sentenceIds.size()-1)
+				currentPosition=sentenceIds.size()-1;
+			
+			String current = sentenceIds.get(currentPosition);
+			if(isHighlighting)
+				highlight(current);
+		}
+		
+		@JavascriptInterface
+		public void speakSentence(String text){
+			if(currentPosition==sentenceIds.size()-1)
+				tts.speak(text, currentPosition, true);
+			else
+				tts.speak(text, currentPosition, false);
+		}
+		
+		@JavascriptInterface
 		public void clickSentence(String html, final String id){
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					removeSearches();
 					
-					String curr = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
+					String curr = sentenceIds.get(currentPosition);
 					removeHighlight(curr);
+					
+					for(int i=0;i<sentenceIds.size(); i++){
+						if(sentenceIds.get(i).equals(id)){
+							currentPosition = i;
+							break;
+						}
+					}
 					
 					if(!isHighlighting || !curr.equals(id)){						
 						highlight(id);
-						spEditor.putString(CURR_SENT, id).commit();
+						spEditor.putInt(CURR_SENT, currentPosition).commit();
 						isHighlighting = true;
 						
 						if(reader_status == ReaderStatus.Enabled){
@@ -875,7 +940,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 							}
 						}
 					} else {
-						spEditor.putString(CURR_SENT, DEFAULT_SENTENCE).commit();
+						spEditor.putInt(CURR_SENT, currentPosition).commit();
 						isHighlighting = false;
 					}
 					
@@ -887,22 +952,35 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 
 
 	@Override
-	public void OnHighlight(final String id) {
+	public void OnHighlight(int id) {
+		
+		final String curr = sentenceIds.get(id);
 		
 		this.runOnUiThread(new Runnable(){
 			@Override
 			public void run() {
-				highlight(id);
+				highlight(curr);
 			}
 		});
 	}
 
 	@Override
-	public void OnRemoveHighlight(final String id) {
+	public void OnRemoveHighlight(int id, boolean read) {
+		final String curr = sentenceIds.get(id);
+		
+		if(read){
+			if(reader_status == ReaderStatus.Enabled){
+				int next = ++id;
+				spEditor.putInt(CURR_SENT, next).commit();
+				currentPosition = next;
+				speakFromSentence(sentenceIds.get(next));
+			}
+		}
+
 		this.runOnUiThread(new Runnable(){
 			@Override
 			public void run() {
-				removeHighlight(id);
+				removeHighlight(curr);
 			}
 		});
 	}
@@ -912,7 +990,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		this.runOnUiThread(new Runnable(){
 			@Override
 			public void run() {
-				setPlayStatus(ReaderStatus.Disabled);
+				if(reader_status != ReaderStatus.Disabled)
+					setPlayStatus(ReaderStatus.Disabled, true);
 			}
 		});
 	}
@@ -922,7 +1001,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		this.runOnUiThread(new Runnable(){
 			@Override
 			public void run() {
-				setPlayStatus(ReaderStatus.Enabled);
+				if(reader_status != ReaderStatus.Enabled)
+					setPlayStatus(ReaderStatus.Enabled, true);
 			}
 		});
 	}
@@ -931,8 +1011,11 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 
 		@Override
 		public void run() {
-			String curr = sp.getString(CURR_SENT, DEFAULT_SENTENCE);
-			String identifier = Helper.findIdentifier(curr);
+			
+			String curr = sentenceIds.get(currentPosition);
+			// Todo: fix
+			
+			/*String identifier = Helper.findIdentifier(curr);
 			int pos = Helper.findPosition(curr);
 			
 			if(pos>=texts.size()-1){
@@ -947,7 +1030,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			spEditor.putString(CURR_SENT, curr).commit();
 			
 			long millis = (long) (highlightSpeed * 1000);
-			highlightHandler.postDelayed(this, millis);
+			highlightHandler.postDelayed(this, millis);*/
 		}
 		
 	}
