@@ -230,7 +230,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	}
 
 	@Override
-	protected void onPause() {
+	protected void onPause() {  
 		highlightHandler.removeCallbacks(highlightRunnable);
 		super.onPause();
 	}
@@ -895,9 +895,15 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			if(currentPosition>=sentenceIds.size()-1)
 				currentPosition=sentenceIds.size()-1;
 			
-			String current = sentenceIds.get(currentPosition);
-			if(isHighlighting)
-				highlight(current);
+			final String current = sentenceIds.get(currentPosition);
+			
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					if(isHighlighting)
+						highlight(current);	
+				}
+			});
 		}
 		
 		@JavascriptInterface
@@ -1011,26 +1017,21 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 
 		@Override
 		public void run() {
-			
-			String curr = sentenceIds.get(currentPosition);
-			// Todo: fix
-			
-			/*String identifier = Helper.findIdentifier(curr);
-			int pos = Helper.findPosition(curr);
-			
-			if(pos>=texts.size()-1){
+			if(currentPosition==sentenceIds.size()-1){
 				ibtnPlay.callOnClick();
 				return;
 			}
 			
-			removeHighlight(curr);
-			curr = identifier + ++pos;
-			highlight(curr);
+			String prev 	= sentenceIds.get(currentPosition++);
+			String current	= sentenceIds.get(currentPosition);
 			
-			spEditor.putString(CURR_SENT, curr).commit();
+			removeHighlight(prev);
+			highlight(current);
+			
+			spEditor.putInt(CURR_SENT, currentPosition).commit();
 			
 			long millis = (long) (highlightSpeed * 1000);
-			highlightHandler.postDelayed(this, millis);*/
+			highlightHandler.postDelayed(this, millis);
 		}
 		
 	}
