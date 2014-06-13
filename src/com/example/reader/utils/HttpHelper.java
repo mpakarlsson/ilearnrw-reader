@@ -1,12 +1,9 @@
 package com.example.reader.utils;
 
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
@@ -16,6 +13,12 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 
+import com.example.reader.results.TokenResult;
+import com.google.gson.Gson;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Base64;
 
 
@@ -76,30 +79,61 @@ public class HttpHelper {
 			return data;
 		}
 		
-		if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
-			HttpEntity entity = response.getEntity();
-			
+		switch (response.getStatusLine().getStatusCode()) {
+		case HttpStatus.SC_OK:
 			try {
-				BufferedReader br = new BufferedReader(new InputStreamReader(entity.getContent()));
-				StringBuilder sb = new StringBuilder();
-				String line = null;
-			
-				while ((line = br.readLine()) != null) {
-				    sb.append(line + "\r\n");
-				}
+				String str = FileHelper.inputStreamToString(response.getEntity().getContent());
 				
 				data.add(response.getStatusLine().toString());
-				data.add(sb.toString());
+				data.add(str);
 				
 			} catch (IOException e) {
 				e.printStackTrace();
 			} 
-			
-		} else
+			break;
+
+		case HttpStatus.SC_UNAUTHORIZED:
+			try {
+				String str = FileHelper.inputStreamToString(response.getEntity().getContent());
+				
+				if(str.contains("Token expired"))
+					data.add("Token expired");
+				else
+					data.add(response.getStatusLine().toString());
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			break;
+		default:
 			data.add(response.getStatusLine().toString());
+			break;
+		}
 		
 		return data;
+	}
+	
+	public static boolean refreshTokens(Context context){
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		String refreshToken = preferences.getString("refreshToken", "");
+		HttpResponse refreshResponse = HttpHelper.get("http://api.ilearnrw.eu/ilearnrw/user/newtokens?refresh="+refreshToken);
+		ArrayList<String> refreshData = HttpHelper.handleResponse(refreshResponse);
 		
+		if(refreshData.size()>1){
+			try {
+				TokenResult lr = new Gson().fromJson(refreshData.get(1), TokenResult.class);
+				SharedPreferences.Editor editor = preferences.edit();
+	    		editor.putString("authToken", lr.authToken);
+	    		editor.putString("refreshToken", lr.refreshToken);
+	    		editor.commit();
+	    		return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		
+		return false;
 	}
 	
 }

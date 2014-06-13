@@ -12,25 +12,21 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.http.HttpResponse;
 
-import com.example.reader.results.TextAnnotationResult;
+import com.example.reader.interfaces.OnAsyncTask;
+import com.example.reader.tasks.AddToLibraryTask;
 import com.example.reader.types.ExplorerItem;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.HttpHelper;
-import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -39,18 +35,25 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AddToLibraryExplorerActivity extends Activity {
+public class AddToLibraryExplorerActivity 
+	extends 
+		Activity 
+	implements 
+		OnAsyncTask {
 	
 	private List<ExplorerItem> items = null;
 	private String root = Environment.getExternalStorageDirectory().getPath();
 	private TextView tvPath;
 	private ListView lvList;
 	private String[] FILE_ENDINGS = { "html", "txt" };
+	private String TAG;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_to_library_explorer);
+		
+		TAG = getClass().getName();
 		
 		tvPath = (TextView) findViewById(R.id.tv_atl_path);
 		lvList = (ListView) findViewById(R.id.lv_atl_list);
@@ -182,7 +185,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 						String data = FileHelper.inputStreamToString(fis);
 						fis.close();
 						
-						new AddToLibraryTask().execute(data, Integer.toString(id), lang, token, builder.toString());
+						new AddToLibraryTask(this, this, this).run(data, Integer.toString(id), lang, token, builder.toString());
 						return;
 					}
 				}
@@ -190,8 +193,7 @@ public class AddToLibraryExplorerActivity extends Activity {
 				String data = FileHelper.inputStreamToString(fis);
 				fis.close();
 				
-				new AddToLibraryTask().execute(data, Integer.toString(id), lang, token, file.getName());
-				
+				new AddToLibraryTask(this, this, this).run(data, Integer.toString(id), lang, token, file.getName());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -199,93 +201,21 @@ public class AddToLibraryExplorerActivity extends Activity {
 			}
 		}
 	}
-	
-	private class AddToLibraryTask extends AsyncTask<String, Void, TextAnnotationResult>{
-		private ProgressDialog dialog;
-		private String filename;
-		
-		@Override
-		protected void onPreExecute() {
-			dialog = new ProgressDialog(AddToLibraryExplorerActivity.this);
-			dialog.setTitle(getString(R.string.dialog_annotation_title));
-			dialog.setMessage(getString(R.string.dialog_annotation_message));
-			dialog.setCancelable(true);
-			dialog.setCanceledOnTouchOutside(false);
-			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+
+	@Override
+	public void onTokenExpired(final String... params) {
+		if(HttpHelper.refreshTokens(this)){
+			final String newToken = PreferenceManager.getDefaultSharedPreferences(this).getString("authToken", "");
+			runOnUiThread(new Runnable() {
 				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					Toast.makeText(getBaseContext(), getString(R.string.annotation_aborted), Toast.LENGTH_SHORT).show();
-					dialog.dismiss();
-					cancel(true);
+				public void run() {
+					new AddToLibraryTask(AddToLibraryExplorerActivity.this, AddToLibraryExplorerActivity.this, AddToLibraryExplorerActivity.this).run(params[0], params[1], params[2], newToken, params[4]);
+					Log.d(TAG, getString(R.string.token_error_retry));
+					Toast.makeText(AddToLibraryExplorerActivity.this, getString(R.string.token_error_retry), Toast.LENGTH_SHORT).show();
 				}
 			});
-			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					Toast.makeText(getBaseContext(), getString(R.string.annotation_aborted), Toast.LENGTH_SHORT).show();
-					dialog.dismiss();
-					cancel(true);
-				}
-			});
-			dialog.show();
-			super.onPreExecute();
-		}
-
-		@Override
-		protected TextAnnotationResult doInBackground(String... params) {
-			filename = params[4];
-			HttpResponse response = HttpHelper.post("http://api.ilearnrw.eu/ilearnrw/text/annotate?userId=" + params[1] + "&lc=" + params[2]+ "&token=" + params[3], params[0]);
-
-			ArrayList<String> data = HttpHelper.handleResponse(response);
-			
-			if(data.size()==1){
-				return null;
-			} else {
-				System.out.println(data.get(1));
-				TextAnnotationResult result = null;
-				try {
-					String json = data.get(1);
-					result = new Gson().fromJson(json, TextAnnotationResult.class);
-				} catch (Exception e) {
-					e.printStackTrace();
-					result = null;
-				}
-				
-				return result;
-			}
 		}
 		
 		
-		@Override
-		protected void onPostExecute(TextAnnotationResult result) {
-			if(dialog.isShowing())
-				dialog.dismiss();
-			
-			if(result != null){
-				Toast.makeText(AddToLibraryExplorerActivity.this, getString(R.string.annotation_succeeded), Toast.LENGTH_SHORT).show();
-				
-				Gson gson =  new Gson();
-				int index = filename.lastIndexOf(".");
-				String name = filename.substring(0, index);
-				File dir = getDir(getString(R.string.library_location), Context.MODE_PRIVATE);
-				
-				File newFile = new File(dir, filename);
-				FileHelper.saveFile(result.html, newFile);
-				String wordSet = gson.toJson(result.wordSet);
-				File jsonFile = new File(dir, name+".json");
-				FileHelper.saveFile(wordSet, jsonFile);
-
-				Intent intent=new Intent();
-			    intent.putExtra("file", newFile);
-			    intent.putExtra("json", jsonFile);
-				intent.putExtra("name", filename);
-				setResult(Activity.RESULT_OK, intent);
-				finish();
-			} else 
-				Toast.makeText(AddToLibraryExplorerActivity.this, getString(R.string.annotation_failed), Toast.LENGTH_SHORT).show();
-			
-		}
-		
-	};
-	
+	}
 }

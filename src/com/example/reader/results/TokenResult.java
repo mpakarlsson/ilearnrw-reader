@@ -2,7 +2,7 @@ package com.example.reader.results;
 
 import com.google.gson.annotations.SerializedName;
 
-public class LoginResult {
+public class TokenResult {
 
 	@SerializedName("auth")
 	public String authToken;

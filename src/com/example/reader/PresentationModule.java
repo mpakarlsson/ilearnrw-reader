@@ -1,17 +1,12 @@
 package com.example.reader;
 
-import ilearnrw.user.problems.ProblemDefinitionIndex;
-import ilearnrw.utils.LanguageCode;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 
 import com.example.reader.interfaces.ColorPickerListener;
 import com.example.reader.results.ProbDefsResult;
-import com.example.reader.results.UserDetailResult;
 import com.example.reader.types.ColorPickerDialog;
 import com.example.reader.utils.HttpHelper;
 import com.google.gson.Gson;
@@ -33,7 +28,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 public class PresentationModule extends Activity implements OnClickListener, OnCheckedChangeListener{
 

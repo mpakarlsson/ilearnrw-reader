@@ -12,7 +12,10 @@
     <string name="folder_invalid">Invalid file type</string>
     <string name="folder_open_failed">Can\'t open file, </string>
     <string name="empty"></string>
-
+	<string name="token_expired_refresh">Token expired. Fetching new one&#8230;</string>
+	<string name="token_error_retry">Retrying task&#8230;</string>
+    
+    
     <!-- Activity titles -->
     <string name="title_presentation_module">PresentationModule</string>
 </resources>
