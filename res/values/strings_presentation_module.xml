@@ -11,4 +11,6 @@
     <string name="problem_3">Highlight the problematic part of word</string>
     <string name="problem_4">Highlight the whole word</string>
     
+    <string name="dialog_fetch_user_problems_title">User problems</string>
+    <string name="dialog_fetch_user_problems_summary">Fetching user problems. Please wait&#8230;</string>
 </resources>

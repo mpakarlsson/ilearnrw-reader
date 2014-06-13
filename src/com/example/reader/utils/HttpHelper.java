@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Base64;
+import android.util.Log;
 
 
 public class HttpHelper {
@@ -105,6 +106,11 @@ public class HttpHelper {
 				e.printStackTrace();
 			}
 			break;
+			
+		case HttpStatus.SC_INTERNAL_SERVER_ERROR:
+			Log.e("Internal Server Error", "Internal Server Error");
+			data.add(response.getStatusLine().toString());
+			break;
 		default:
 			data.add(response.getStatusLine().toString());
 			break;
@@ -116,8 +122,15 @@ public class HttpHelper {
 	public static boolean refreshTokens(Context context){
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		String refreshToken = preferences.getString("refreshToken", "");
+		
+		if(refreshToken.isEmpty())
+			return false;
+		
 		HttpResponse refreshResponse = HttpHelper.get("http://api.ilearnrw.eu/ilearnrw/user/newtokens?refresh="+refreshToken);
 		ArrayList<String> refreshData = HttpHelper.handleResponse(refreshResponse);
+		
+		if(refreshData == null)
+			return false;
 		
 		if(refreshData.size()>1){
 			try {
@@ -131,6 +144,8 @@ public class HttpHelper {
 				e.printStackTrace();
 				return false;
 			}
+		} else {
+			Log.e("Error", refreshData.get(0));
 		}
 		
 		return false;

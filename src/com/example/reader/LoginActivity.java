@@ -159,8 +159,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 					edit.remove("authToken");
 					edit.remove("refreshToken");
 					
-					updateButtons();
 					isLoggedIn = false;
+					updateButtons();
 					edit.putBoolean("isLoggedIn", isLoggedIn);
 					
 					edit.commit();

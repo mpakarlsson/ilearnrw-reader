@@ -1,61 +1,95 @@
 package com.example.reader;
 
+import ilearnrw.user.problems.ProblemDefinition;
+import ilearnrw.user.problems.ProblemDefinitionIndex;
+import ilearnrw.user.problems.ProblemDescription;
+
 import java.io.File;
 import java.util.ArrayList;
 
-import org.apache.http.HttpResponse;
 
 import com.example.reader.interfaces.ColorPickerListener;
-import com.example.reader.results.ProbDefsResult;
+import com.example.reader.interfaces.OnAsyncTask;
+import com.example.reader.interfaces.OnProfileFetched;
+import com.example.reader.results.ProfileResult;
+import com.example.reader.tasks.ProfileTask;
 import com.example.reader.types.ColorPickerDialog;
 import com.example.reader.utils.HttpHelper;
-import com.google.gson.Gson;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 
-public class PresentationModule extends Activity implements OnClickListener, OnCheckedChangeListener{
+public class PresentationModule 
+	extends 
+		Activity 
+	implements 
+		OnClickListener, 
+		OnCheckedChangeListener,
+		OnAsyncTask,
+		OnProfileFetched,
+		OnItemSelectedListener {
 
-	LinearLayout colorLayout;
-	Button btnOk, btnCancel;
-	RadioGroup rulesGroup;
-	RadioButton rbtnRule1, rbtnRule2, rbtnRule3, rbtnRule4;
-	Spinner spCategories, spProblems;
-	ImageView colorBox;
-	File file = null;
-	File json = null;
-	String name = "";
-	Boolean showGUI = false;
+	private LinearLayout colorLayout;
+	private Button btnOk, btnCancel;
+	private RadioGroup rulesGroup;
+	private RadioButton rbtnRule1, rbtnRule2, rbtnRule3, rbtnRule4;
+	private Spinner spCategories, spProblems;
+	private ImageView colorBox;
+	private File file = null;
+	private File json = null;
+	private String name = "";
+	private Boolean showGUI = false;
+	
+	private SharedPreferences sp;
+	
+	private String TAG;
+	
+	private ProblemDefinition[] definitions;
+	private ProblemDescription[][] descriptions;
+	private ProblemDescription[] problemDescriptions;
+	
+	private ArrayList<String> categories;
+	private ArrayList<String> problems;
 	
 	private final int DEFAULT_COLOR = 0xffff0000;
+	private final int DEFAULT_RULE	= 3;
 	private int currentColor;
 	private int currentRule;
+	
+	private int currentCategoryPos;
+	private int currentProblemPos;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	
+		TAG = getClass().getName();
+		
 		Bundle bundle = getIntent().getExtras();
 		file = (File)bundle.get("file");
 		json = (File)bundle.get("json");
-		name = bundle.getString("title");
-		showGUI = bundle.getBoolean("showGUI");
+		name = bundle.getString("title", "");
+		showGUI = bundle.getBoolean("showGUI", false);
 
+		categories = new ArrayList<String>();
+		problems = new ArrayList<String>();
 	
 		if(!showGUI){
 			// Todo: Do rules as-is
@@ -63,20 +97,15 @@ public class PresentationModule extends Activity implements OnClickListener, OnC
 		}
 		
 		setContentView(R.layout.activity_presentation_module);
-	
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 		
+		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		int id = sp.getInt("id",-1);
 		String token = sp.getString("authToken", "");
 		if(id==-1 || token.isEmpty())
 			finished(); // If you don't have an id something is terribly wrong
 		
-		
-		// Todo: move
-		// Getting 'Access is denied' from the profile information getter, move this code to onPostExecute() when it's not denied
-		init();
-		
-		//new ProblemDefinitionTask().execute(Integer.toString(id), token);
+		if(showGUI)
+			init();
 		
 	}
 	
@@ -102,18 +131,18 @@ public class PresentationModule extends Activity implements OnClickListener, OnC
 		
 		rulesGroup.setOnCheckedChangeListener(this);
 		
-		updateColor(0, 0);
-		colorBox.setBackgroundColor(currentColor);
-
+		String userId = Integer.toString(sp.getInt("id", 0));
+		String token = sp.getString("authToken", "");
 		
-		
-		// Todo:
-		// Figure out if it's best to use SharedPreferences or to implement a database that contains all this information, every problem is going to need 2 fields
-		// 'color' and 'rule'
+		currentCategoryPos 	= 0;
+		currentProblemPos 	= 0;
+		updateColor(currentCategoryPos, currentProblemPos);
+		updateRule(currentCategoryPos, currentProblemPos);
 
-		// Could be something like this in SharedPreferences (key value)
-		// naming: category-problem-color e.g. 1-2-color
-		// rules: category-problem-rule e.g 0-3-rule
+		spCategories.setOnItemSelectedListener(this);
+		spProblems.setOnItemSelectedListener(this);
+		
+		new ProfileTask(this, this, this).run(userId, token);
 
 	}
 	
@@ -122,6 +151,7 @@ public class PresentationModule extends Activity implements OnClickListener, OnC
 		switch(v.getId()){
 		
 		case R.id.pm_btn_ok:
+			
 			finished();
 			break;
 			
@@ -130,13 +160,12 @@ public class PresentationModule extends Activity implements OnClickListener, OnC
 			break;
 			
 		case R.id.pm_color_layout:
-			int color = PreferenceManager.getDefaultSharedPreferences(this).getInt("problemColor#1", currentColor);
+			int color = sp.getInt("pm_color_" + currentCategoryPos + "_" + currentProblemPos, DEFAULT_COLOR);
 			ColorPickerDialog dialog = new ColorPickerDialog(this, color, new ColorPickerListener() {
 				@Override
 				public void onOk(ColorPickerDialog dialog, int color) {
-					// Save the picked color either into the SP or DB
-					currentColor = color;
-					colorBox.setBackgroundColor(color);
+					sp.edit().putInt("pm_color_" + currentCategoryPos + "_" + currentProblemPos, color).commit();
+					updateColor(currentCategoryPos, currentProblemPos);
 				}
 				
 				@Override
@@ -175,7 +204,34 @@ public class PresentationModule extends Activity implements OnClickListener, OnC
 		default:
 			break;
 		}
-	}	
+		
+		sp.edit().putInt("pm_rule_"+currentCategoryPos+"_"+currentProblemPos, currentRule).commit();
+		updateRule(currentCategoryPos, currentProblemPos);
+	}
+	
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
+		switch(parent.getId()){
+		case R.id.categories:
+			currentCategoryPos = pos;
+			updateProblems(currentCategoryPos);
+			updateRule(currentCategoryPos, currentProblemPos);
+			break;
+			
+		case R.id.problems:
+			currentProblemPos = pos;
+			updateColor(currentCategoryPos, currentProblemPos);
+			updateRule(currentCategoryPos, currentProblemPos);
+			break;
+		
+		default:
+			break;
+		}
+		
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {}
 	
 	@Override
 	public void onBackPressed() {
@@ -194,68 +250,87 @@ public class PresentationModule extends Activity implements OnClickListener, OnC
 	}
 
 	private void updateColor(int category, int problem){
-		// Todo: Get the color that has been set for the problem
-		// if no color has been set, set it to DEFAULT_COLOR
-		
-		currentColor =  DEFAULT_COLOR;
+		currentColor = sp.getInt("pm_color_"+category+"_"+problem, DEFAULT_COLOR);
+		colorBox.setBackgroundColor(currentColor);
 	}
 	
-	private class ProblemDefinitionTask extends AsyncTask<String, Void, ProbDefsResult>{
-		private ProgressDialog dialog;
-		@Override
-		protected void onPreExecute() {
-			dialog = new ProgressDialog(PresentationModule.this);
-			dialog.setTitle(getString(R.string.dialog_fetch_user_title));
-			dialog.setMessage(getString(R.string.dialog_fetch_user_message));
-			dialog.setCancelable(true);
-			dialog.setCanceledOnTouchOutside(false);
-			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					cancel(true);
-					dialog.dismiss();
-				}
-			});
-			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					cancel(true);
-					dialog.dismiss();
-				}
-			});
-			dialog.show();
-			super.onPreExecute();
+	private void updateRule(int category, int problem){		
+		currentRule = sp.getInt("pm_rule_"+category+"_"+problem, DEFAULT_RULE);
+		switch(currentRule){
+		case 1:
+			rbtnRule1.setChecked(true);
+			break;
+		case 2:
+			rbtnRule2.setChecked(true);
+			break;
+		case 3:
+			rbtnRule3.setChecked(true);
+			break;
+		case 4:
+			rbtnRule4.setChecked(true);
+			break;
 		}
+	}
+	
+	private void updateProblems(int index){
+		problemDescriptions = descriptions[index];
+		currentProblemPos	= 0;
 		
-		@Override
-		protected ProbDefsResult doInBackground(String... params) {
-			HttpResponse response = HttpHelper.get("http://api.ilearnrw.eu/ilearnrw/profile?userId=" + params[0] + "&token=" + params[1]);
-		
-			ArrayList<String> data = HttpHelper.handleResponse(response);
+		problems.clear();
+		for(int i=0; i<problemDescriptions.length; i++){
+			String[] descriptions = problemDescriptions[i].getDescriptions();
 			
-			if(data.size()==1){
-				return null;
-			} else {
-				ProbDefsResult res = null;
-				try {
-					res = new Gson().fromJson(data.get(1), ProbDefsResult.class);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return res;
-			}
-		}
-		
-		@Override
-		protected void onPostExecute(ProbDefsResult result) {
-			if(dialog.isShowing()) {
-				dialog.dismiss();
+			String str = "";
+			for(int j=0; j<descriptions.length; j++){
+				if(j+1<descriptions.length)
+					str += descriptions[j] + " | ";
+				else 
+					str += descriptions[j];
 			}
 			
-			if(result != null){
-				
-			}
+			problems.add((i+1) + ". " + str);
 		}
+		
+		ArrayAdapter<String> problemAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, problems);
+		problemAdapter.notifyDataSetChanged();
+		spProblems.setAdapter(problemAdapter);
+		
+	}
+	
+
+	@Override
+	public void onTokenExpired(final String... params) {
+		if(HttpHelper.refreshTokens(this)){
+			final String newToken = sp.getString("authToken", "");
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					new ProfileTask(PresentationModule.this, PresentationModule.this, PresentationModule.this).run(params[0], newToken);
+					Log.d(TAG, getString(R.string.token_error_retry));
+					Toast.makeText(PresentationModule.this, getString(R.string.token_error_retry), Toast.LENGTH_SHORT).show();
+				}
+			});
+		}
+	}
+
+	@Override
+	public void onProfileFetched(ProfileResult profile) {
+		
+		ProblemDefinitionIndex index 		= profile.userProblems.getProblems();
+		definitions 	= index.getProblemsIndex();
+		descriptions 	= index.getProblems();
+		
+		categories.clear();
+		for(int i=0; i<definitions.length;i++){
+				categories.add((i+1) + ". " + definitions[i].getType().getUrl());
+		}
+		
+		currentCategoryPos 	= 0;
+		updateProblems(currentCategoryPos);
+		
+		ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, categories);
+		spCategories.setAdapter(categoryAdapter);
+		
 	}
 	
 }
