@@ -112,6 +112,7 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 						edit.remove(getString(R.string.pref_layout_top));
 						edit.remove(getString(R.string.pref_layout_bottom));
 						edit.remove(getString(R.string.pref_layout_slider));
+						edit.remove(getString(R.string.pref_layout_text));
 						edit.commit();						
 						a.finish();
 						return;

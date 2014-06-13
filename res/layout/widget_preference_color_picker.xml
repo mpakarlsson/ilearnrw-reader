@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:src="@drawable/alpha_checkered_tiled"/>
+        android:src="@drawable/alpha_checkered_tiled"
+        android:contentDescription="@string/empty"/>
     
     <com.example.reader.types.ColorPickerPreferenceWidget
         android:layout_width="match_parent"

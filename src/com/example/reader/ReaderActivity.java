@@ -47,7 +47,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 
 	private final String TAG = getClass().getName();
 	
-	private TextView tvTitle, tvHighLightSpeed;
+	private TextView tvTitle, tvHighlightSpeed, tvHighlightSpeedTitle;
 	private WebView reader;
 	private ImageButton ibtnLib, ibtnSearch, ibtnMode, ibtnPrev, ibtnPlay, ibtnNext, ibtnSettings, ibtnSearchForward, ibtnSearchBack;
 	private RelativeLayout top, bottom, searchbar, rlHighlightSpeed;
@@ -129,7 +129,8 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		tvTitle = (TextView) findViewById(R.id.tv_book_title_reader);
 		tvTitle.setText(title);
 		
-		tvHighLightSpeed = (TextView) findViewById(R.id.tv_highlight_speed_value);
+		tvHighlightSpeed 		= (TextView) findViewById(R.id.tv_highlight_speed_value);
+		tvHighlightSpeedTitle	= (TextView) findViewById(R.id.tv_highlight_speed_title);
 		
 		sbHighLightSpeed = (SeekBar) findViewById(R.id.seekbar_highLight_speed);
 		sbHighLightSpeed.setOnSeekBarChangeListener(this);
@@ -138,7 +139,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		int hlSpeed = (int) (highlightSpeed * 10);
 		sbHighLightSpeed.setProgress(hlSpeed);
 		
-		tvHighLightSpeed.setText(String.format("%.1f", highlightSpeed) + "\n/\n" + String.format("%.1f", ((sbHighLightSpeed.getMax()*0.1) + 0.5)));
+		tvHighlightSpeed.setText(String.format("%.1f", highlightSpeed) + "\n/\n" + String.format("%.1f", ((sbHighLightSpeed.getMax()*0.1) + 0.5)));
 		
 		ibtnLib 		= (ImageButton) findViewById(R.id.ibtn_lib_reader);
 		ibtnSearch 		= (ImageButton) findViewById(R.id.ibtn_search_reader);
@@ -495,7 +496,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		case R.id.seekbar_highLight_speed:
 			highlightSpeed = (seekBar.getProgress() * 0.1) + 0.5; // Slider values goes from 0.5 to 10.5
 			double max = ((seekBar.getMax()*0.1) + 0.5);
-			tvHighLightSpeed.setText(String.format("%.1f", highlightSpeed) + "\n/\n" + String.format("%.1f", max));
+			tvHighlightSpeed.setText(String.format("%.1f", highlightSpeed) + "\n/\n" + String.format("%.1f", max));
 			break;
 		default:
 			break;
@@ -548,6 +549,11 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		top.setBackgroundColor(topColor);
 		int bottomColor = sp.getInt(getString(R.string.pref_layout_bottom), 0xffd3d3d3);
 		bottom.setBackgroundColor(bottomColor);
+		int textColor = sp.getInt(getString(R.string.pref_layout_text), 0xff000000);
+		tvHighlightSpeed.setTextColor(textColor);
+		tvHighlightSpeedTitle.setTextColor(textColor);
+		tvTitle.setTextColor(textColor);
+		
 		int sliderProgressColor = sp.getInt(getString(R.string.pref_layout_slider), 0xff555555);
 		
 		int backgroundColor = sp.getInt("pref_background_color", 0xffffffff);

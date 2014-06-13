@@ -6,7 +6,7 @@
     
     <string name="pref_tts_category_title">Text-To-Speech</string>
     <string name="pref_text_category_title">Text</string>
-    <string name="pref_extras_category_title">Extra</string>
+    <string name="pref_extras_category_title">Extras</string>
    	<string name="pref_presentation_rules_category_title">Presentation rules</string>
    	<string name="pref_reset_category_title">Resets</string>
    	
@@ -54,6 +54,10 @@
 	<string name="pref_layout_slider_title">Slider color</string>
 	<string name="pref_layout_slider_summary">Change slider color</string>
 	<string name="pref_layout_slider">pref_layout_slider_color</string>
+	
+	<string name="pref_layout_text_title">Text color</string>
+	<string name="pref_layout_text_summary">Change text color</string>
+	<string name="pref_layout_text">pref_layout_text</string>
 
 	
 	<string-array name="pref_languages">

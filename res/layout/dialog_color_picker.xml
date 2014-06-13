@@ -28,7 +28,8 @@
 	        android:layout_marginLeft="@dimen/spacer"
 	        android:layout_toRightOf="@id/color_picker_main"
 	        android:scaleType="fitXY"
-	        android:src="@drawable/color_hue"/>
+	        android:src="@drawable/color_hue"
+	        android:contentDescription="@string/empty"/>
 	    
 	    <ImageView
 	        android:id="@+id/color_picker_alpha_checkered"
@@ -37,7 +38,8 @@
 	        android:layout_marginLeft="@dimen/spacer"
 	        android:layout_toRightOf="@id/color_picker_hue"
 	        android:scaleType="fitXY"
-	        android:src="@drawable/alpha_checkered_tiled"/>
+	        android:src="@drawable/alpha_checkered_tiled"
+	        android:contentDescription="@string/empty"/>
 	    
 	    <View 
 	        android:id="@+id/color_picker_overlay"
@@ -51,21 +53,24 @@
 	        android:layout_width="9dp"
 	        android:layout_height="9dp"
 	        android:scaleType="matrix"
-	        android:src="@drawable/color_cursor"/>
+	        android:src="@drawable/color_cursor"
+	        android:contentDescription="@string/empty"/>
 	    
 	    <ImageView 
 	        android:id="@+id/color_picker_alpha_cursor"
 	        android:layout_width="9dp"
 	        android:layout_height="9dp"
 	        android:scaleType="matrix"
-	        android:src="@drawable/color_cursor"/>
+	        android:src="@drawable/color_cursor"
+	        android:contentDescription="@string/empty"/>
 	    
 	    <ImageView
 	        android:id="@+id/color_picker_target"
 	        android:layout_width="15dp"
 	        android:layout_height="15dp"
 	        android:scaleType="matrix"
-	        android:src="@drawable/color_target"/>
+	        android:src="@drawable/color_target"
+	        android:contentDescription="@string/empty"/>
 	    
 	    <LinearLayout 
 	        android:id="@+id/color_picker_state"
@@ -98,7 +103,8 @@
 	            android:layout_height="wrap_content"
 	            android:paddingLeft="@dimen/spacer"
 	            android:paddingRight="@dimen/spacer"
-	            android:src="@drawable/color_cursor"/>
+	            android:src="@drawable/color_cursor"
+	            android:contentDescription="@string/empty"/>
 	        
 	        <FrameLayout 
 	            android:layout_width="60dp"

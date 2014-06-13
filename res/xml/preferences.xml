@@ -149,6 +149,13 @@
             android:defaultValue="0xff555555" 
             ns:supportsAlpha="false"/>
         
+        <com.example.reader.types.ColorPickerPreference
+            android:key="@string/pref_layout_text"
+            android:title="@string/pref_layout_text_title"
+            android:summary="@string/pref_layout_text_summary"
+            android:defaultValue="0xff000000" 
+            ns:supportsAlpha="false"/>
+        
     </PreferenceCategory>
     
     <PreferenceCategory
