@@ -98,14 +98,7 @@ public class UserDetailsTask extends AsyncTask<String, Void, UserDetailResult>{
 			else if(result.language.equals("GR"))
 				Locale.setDefault(new Locale("el"));
 			else
-				Locale.setDefault(new Locale("en"));
-				
-			
-			// REMOVE
-			String expToken = "MTQwMjU1MzUyNjMzNjpmNDAyOTRiNzBkYjM5OWY0ZTRkOWU4M2IyNzA4ZDAzN2EyYWJjNzMxOGM1ZmVhMjg1YWVjYWM3ZGQ1ZGM3OGE4ZGQ5ZGJiOGY1NGI3ODBkNTI5ZTRkYTEyYTIyNDhlZjdjYTEwM2RjZDkwMTkwODhhMWY0ZmE1MTcyNWQwYjE5ZDhlZjM5ZDhkNTU5NjcyMWMxNzcyN2ViMjNjYWUyZWZhY2MyODQyM2I5NjBhMDI1Y2QxYmUyNjU4MjFmNzIxM2NjYmQ5MjFjN2M0MDkwNWU4NTUyOTViMDE3OTc4NTk0ZWNjNDAwZWE1OWIxZTMwNWUzYzZlZTFlYWE1NTljMzA2MmQ1NmIyOTY1OWJhZjQ2OWJjYjFjZWZmMDJjZjFmZjc0NTRhZTgxNGM2Mjc2ZTc5ODMzNTY3NmQxNGM3ZDUyNzI5Nzc5YzFmZmIyMmI1ODA5MGQxZmQ3OTcxZWJjYzQwOWE3YTU1MDBlZjFjZTE3ZmUwMWIxZTc5ZGE2NTU0ZjJjZmZiOGVjNzA3ODY4NzNmY2RhZTI4MjJkZjMwOTMyMzRjZDY0OGRiOTdlYzM4OTg4NzhjMmFjYTA5OGZiMDQ3MmE4OWNmNWU2MjhiYTM5NjNiNjRmYWMxOGEzNzc0Nzg0MWI3NzI0ZWQ4MGExNWUxOTJjYWYzNGJjZDJjODVmYjp7InVzZXJOYW1lIjoiam9lX3QiLCJ0ZWFjaGVyIjpudWxsfTo0ZjI4MDJlNTVkNTY3MzM4ZTA1N2NkYTdlMGNiNzkyNmQxYTFmZTE3MmM4ODc0NjQ3M2Q3MTE5M2YxODc2MWZkZWEzMjM3ZDQ3MjRhOGQzNTQ5MGI2NjM0Zjc0NWJjZGY3MjZmMWVmYzFiODk5Y2JkNjE3NjAzOGZhOGIxMjQ3ZA==";
-    		editor.putString("authToken", expToken);
-    		editor.commit();
-			
+				Locale.setDefault(new Locale("en"));			
 			
     		Intent i2 = new Intent(context, LibraryActivity.class);
     		context.startActivity(i2);
