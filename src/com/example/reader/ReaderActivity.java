@@ -310,25 +310,27 @@ public class ReaderActivity
 			
 		case FLAG_REFRESH_WEBVIEW:
 		{
-			Bundle b = data.getExtras();
-			if(b.containsKey("showGUI")){
-				boolean show = b.getBoolean("showGUI", false);
-				
-				if(show){
-					Intent i = new Intent(this, PresentationModule.class);
-					i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-					startActivity(i);
-					return;
-				} else {
-					Intent intent = new Intent(ReaderActivity.this, PresentationModule.class);
-					intent.putExtra("file", libraryFile);
-					intent.putExtra("json", libraryJson);
-					intent.putExtra("title", libraryTitle);
-					intent.putExtra("showGUI", true);
-					startActivity(intent);
-					return;
+			if(data!=null){
+				Bundle b = data.getExtras();
+				if(b.containsKey("showGUI")){
+					boolean show = b.getBoolean("showGUI", false);
+					
+					if(show){
+						Intent i = new Intent(this, PresentationModule.class);
+						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						startActivity(i);
+						return;
+					} else {
+						Intent intent = new Intent(ReaderActivity.this, PresentationModule.class);
+						intent.putExtra("file", libraryFile);
+						intent.putExtra("json", libraryJson);
+						intent.putExtra("title", libraryTitle);
+						intent.putExtra("showGUI", true);
+						startActivity(intent);
+						return;
+					}
+					
 				}
-				
 			}
 			
 			updateGUI();			
