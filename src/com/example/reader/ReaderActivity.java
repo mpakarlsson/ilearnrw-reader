@@ -43,7 +43,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
-public class ReaderActivity extends Activity implements OnClickListener, OnLongClickListener, OnSeekBarChangeListener, TTSHighlightCallback, TTSReadingCallback {
+public class ReaderActivity 
+	extends 
+		Activity 
+	implements 
+		OnClickListener, 
+		OnLongClickListener, 
+		OnSeekBarChangeListener, 
+		TTSHighlightCallback, 
+		TTSReadingCallback {
 
 	private final String TAG = getClass().getName();
 	
@@ -79,6 +87,10 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	private double highlightSpeed;
 
 	private boolean isHighlighting;
+	
+	private File libraryFile;
+	private File libraryJson;
+	private String libraryTitle;
 	
 	private final static int FLAG_SEARCH = 10000;
 	private final static int FLAG_MODE = 10001;
@@ -118,16 +130,17 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		setContentView(R.layout.activity_reader);
 		
 		Bundle libBundle 	= getIntent().getExtras();
-		File file 			= (File) libBundle.get("file");
-		String title		= libBundle.getString("title");
+		libraryFile			= (File) libBundle.get("file");
+		libraryJson			= (File) libBundle.get("json");
+		libraryTitle		= libBundle.getString("title");
 		
 		sp 			= PreferenceManager.getDefaultSharedPreferences(this);
 		spEditor 	= sp.edit();
-		Pair<String> bookTitle = Helper.splitFileName(title);
+		Pair<String> bookTitle = Helper.splitFileName(libraryTitle);
 		CURR_SENT 		= bookTitle.first() + "_" + bookTitle.second().substring(1);
 		
 		tvTitle = (TextView) findViewById(R.id.tv_book_title_reader);
-		tvTitle.setText(title);
+		tvTitle.setText(libraryTitle);
 		
 		tvHighlightSpeed 		= (TextView) findViewById(R.id.tv_highlight_speed_value);
 		tvHighlightSpeedTitle	= (TextView) findViewById(R.id.tv_highlight_speed_title);
@@ -180,7 +193,7 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 		reader.getSettings().setDefaultFontSize(22);
 		
 		reader.setWebViewClient(new MyWebViewClient());
-		fileHtml 	= FileHelper.readFromFile(file);
+		fileHtml 	= FileHelper.readFromFile(libraryFile);
 		html 		= updateHtml(fileHtml);
 		sentenceIds	= new ArrayList<String>();
 		
@@ -297,6 +310,27 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 			
 		case FLAG_REFRESH_WEBVIEW:
 		{
+			Bundle b = data.getExtras();
+			if(b.containsKey("showGUI")){
+				boolean show = b.getBoolean("showGUI", false);
+				
+				if(show){
+					Intent i = new Intent(this, PresentationModule.class);
+					i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					startActivity(i);
+					return;
+				} else {
+					Intent intent = new Intent(ReaderActivity.this, PresentationModule.class);
+					intent.putExtra("file", libraryFile);
+					intent.putExtra("json", libraryJson);
+					intent.putExtra("title", libraryTitle);
+					intent.putExtra("showGUI", true);
+					startActivity(intent);
+					return;
+				}
+				
+			}
+			
 			updateGUI();			
 			html = updateHtml(fileHtml);
 			reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
@@ -1052,7 +1086,6 @@ public class ReaderActivity extends Activity implements OnClickListener, OnLongC
 	}
 	
 	private class HighlightRunnable implements Runnable{
-
 		@Override
 		public void run() {
 			if(currentPosition==sentenceIds.size()-1){

@@ -99,6 +99,7 @@ public class PresentationModule
 		setContentView(R.layout.activity_presentation_module);
 		
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
+		sp.edit().putBoolean("showGUI", showGUI).commit();
 		int id = sp.getInt("id",-1);
 		String token = sp.getString("authToken", "");
 		if(id==-1 || token.isEmpty())
@@ -106,6 +107,9 @@ public class PresentationModule
 		
 		if(showGUI)
 			init();
+		
+		if(!showGUI)
+			finish();
 		
 	}
 	

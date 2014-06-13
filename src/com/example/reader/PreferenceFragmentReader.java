@@ -19,7 +19,8 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 
-public class PreferenceFragmentReader extends PreferenceFragment implements OnPreferenceChangeListener {	
+public class PreferenceFragmentReader extends PreferenceFragment implements OnPreferenceChangeListener {
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -128,16 +129,17 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		presentationRules.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				Intent i = new Intent(preference.getContext(), PresentationModule.class);
-				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-				startActivity(i);
+				Intent i = new Intent();
+				i.putExtra("showGUI", PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext()).getBoolean("showGUI", false));
+				getActivity().setResult(Activity.RESULT_OK, i);
+				getActivity().finish();
 				return true;
 			}
 		}); 
 		
 	}	
 	
-	
+
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {			
 		if(!preference.getTitle().toString().equals(newValue)){
