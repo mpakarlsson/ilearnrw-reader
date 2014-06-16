@@ -1,5 +1,7 @@
 package com.example.reader;
 
+import ilearnrw.annotation.UserBasedAnnotatedWord;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,8 +11,11 @@ import com.example.reader.interfaces.TTSHighlightCallback;
 import com.example.reader.interfaces.TTSReadingCallback;
 import com.example.reader.popups.ModeActivity;
 import com.example.reader.popups.SearchActivity;
+import com.example.reader.results.AnnotatedWordSetResult;
+import com.example.reader.results.TextAnnotationResult;
 import com.example.reader.types.Pair;
 import com.example.reader.utils.Helper;
+import com.google.gson.Gson;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -81,12 +86,13 @@ public class ReaderActivity
 	private int currentPosition;
 	
 	private static String html, bundleJSON, bundleHtml;
+	private String libraryTitle;
 	
 	private double highlightSpeed;
 
 	private boolean isHighlighting;
-	
-	private String libraryTitle;
+
+	private AnnotatedWordSetResult annotationData;
 	
 	private final static int FLAG_SEARCH = 10000;
 	private final static int FLAG_MODE = 10001;
@@ -130,6 +136,7 @@ public class ReaderActivity
 		bundleHtml			= libBundle.getString("html");
 		bundleJSON			= libBundle.getString("json");
 		libraryTitle		= libBundle.getString("title");
+		annotationData		= new Gson().fromJson(bundleJSON, AnnotatedWordSetResult.class);
 		
 		sp 			= PreferenceManager.getDefaultSharedPreferences(this);
 		spEditor 	= sp.edit();
@@ -839,7 +846,7 @@ public class ReaderActivity
 				"}";
 		
 		String showMoreInformation = 
-				"function showMoreInformation() {" +
+				"function showMoreInformation() {" + 
 						"ReaderInterface.showMoreInformation(document.getSelection().toString());" +
 				"}";
 		
@@ -940,11 +947,36 @@ public class ReaderActivity
 		}
 		
 		@JavascriptInterface
-		public void showMoreInformation(String word){
+		public void showMoreInformation(String jsWord){
+			
+			ArrayList<UserBasedAnnotatedWord> words = annotationData.words;
+			String _word = "", data = "";
+			
+			_word = jsWord.toLowerCase(Locale.getDefault());
+			
+			for(int i=0; i<words.size(); i++){
+				UserBasedAnnotatedWord word = words.get(i);
+				if(_word.equals(word.getWord())){
+					data = "Word: " + word.getWord();
+					data += "\nType: " + word.getType();
+					data += "\nStem: " + word.getStem();
+					data += "\nPhonetics: " + word.getPhonetics();
+					data += "\nNum syllables: " + word.getNumberOfSyllables();
+					data += "\nGraphemes/Phonemes: " + word.getGraphemesPhonemes();
+					data += "\nWord in syllables: " + word.getWordInToSyllables();
+					
+					break;
+				}
+			}
+			
+			if(data.isEmpty()){
+				data = "This word does not exist within the dictionary.";
+				data += "\nWord: " + _word;
+			}
 			
 			new AlertDialog.Builder(context)
-			.setTitle(word)
-			.setMessage("Word: " + word)
+			.setTitle(jsWord)
+			.setMessage(data)
 			.setPositiveButton(android.R.string.ok, null).show();
 		}
 		
