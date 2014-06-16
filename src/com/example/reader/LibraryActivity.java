@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.Locale;
 
 import com.example.reader.popups.RenameActivity;
+import com.example.reader.types.LibraryAdapter;
 import com.example.reader.types.LibraryItem;
 import com.example.reader.types.Pair;
 import com.example.reader.types.SideSelector;
@@ -240,6 +241,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			intent.putExtra("file", libItems.first());
 			intent.putExtra("json", libItems.second());
 			intent.putExtra("title", libItems.first().getName());
+			intent.putExtra("loadFiles", true);
 			intent.putExtra("showGUI", true);
 			this.startActivity(intent);
 			
@@ -412,6 +414,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			intent.putExtra("file", libItems.first());
 			intent.putExtra("json", libItems.second());
 			intent.putExtra("title", libItems.first().getName());
+			intent.putExtra("loadFiles", true);
 			intent.putExtra("showGUI", false);
 			this.startActivity(intent);
 		} else if(item.getName().endsWith(".json")){

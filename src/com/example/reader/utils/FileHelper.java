@@ -69,6 +69,9 @@ public class FileHelper {
 	}
 	
 	public static String readFromFile(File file){
+		if(file==null)
+			return null;
+		
 		try {
 			InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "UTF-8");
 			BufferedReader br = new BufferedReader(isr);

@@ -12,7 +12,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_gravity="center"
 	    android:clipToPadding="false"
-	    android:padding="@dimen/spacer"
+	    android:padding="@dimen/spacer_8"
 	    android:gravity="center" >
 	    
 	    <com.example.reader.types.ColorSquare
@@ -25,7 +25,7 @@
 	        android:id="@+id/color_picker_hue"
 	        android:layout_width="@dimen/hue_width"
 	        android:layout_height="@dimen/hsv_height"
-	        android:layout_marginLeft="@dimen/spacer"
+	        android:layout_marginLeft="@dimen/spacer_8"
 	        android:layout_toRightOf="@id/color_picker_main"
 	        android:scaleType="fitXY"
 	        android:src="@drawable/color_hue"
@@ -35,7 +35,7 @@
 	        android:id="@+id/color_picker_alpha_checkered"
 	        android:layout_width="@dimen/hue_width"
 	        android:layout_height="@dimen/hsv_height"
-	        android:layout_marginLeft="@dimen/spacer"
+	        android:layout_marginLeft="@dimen/spacer_8"
 	        android:layout_toRightOf="@id/color_picker_hue"
 	        android:scaleType="fitXY"
 	        android:src="@drawable/alpha_checkered_tiled"
@@ -45,7 +45,7 @@
 	        android:id="@+id/color_picker_overlay"
 	        android:layout_width="@dimen/hue_width"
 	        android:layout_height="@dimen/hsv_height"
-	        android:layout_marginLeft="@dimen/spacer"
+	        android:layout_marginLeft="@dimen/spacer_8"
 	        android:layout_toRightOf="@id/color_picker_hue"/>	    
 	    
 	    <ImageView 
@@ -78,7 +78,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_below="@id/color_picker_main"
 	        android:layout_centerHorizontal="true"
-	        android:layout_marginTop="@dimen/spacer"
+	        android:layout_marginTop="@dimen/spacer_8"
 	        android:gravity="center"
 	        android:orientation="horizontal">
 	        
@@ -101,8 +101,8 @@
 	        <ImageView
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:paddingLeft="@dimen/spacer"
-	            android:paddingRight="@dimen/spacer"
+	            android:paddingLeft="@dimen/spacer_8"
+	            android:paddingRight="@dimen/spacer_8"
 	            android:src="@drawable/color_cursor"
 	            android:contentDescription="@string/empty"/>
 	        

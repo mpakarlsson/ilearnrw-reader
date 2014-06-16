@@ -1,4 +1,4 @@
-package com.example.reader;
+package com.example.reader.types;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
 
-import com.example.reader.types.LibraryItem;
+import com.example.reader.R;
+import com.example.reader.R.id;
+import com.example.reader.R.layout;
 
 import android.content.Context;
 import android.view.LayoutInflater;

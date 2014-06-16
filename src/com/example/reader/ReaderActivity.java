@@ -1,6 +1,5 @@
 package com.example.reader;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,7 +10,6 @@ import com.example.reader.interfaces.TTSReadingCallback;
 import com.example.reader.popups.ModeActivity;
 import com.example.reader.popups.SearchActivity;
 import com.example.reader.types.Pair;
-import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.Helper;
 
 import android.annotation.SuppressLint;
@@ -82,14 +80,12 @@ public class ReaderActivity
 	private String defaultSentence= "";
 	private int currentPosition;
 	
-	private static String html, fileHtml;
+	private static String html, bundleJSON, bundleHtml;
 	
 	private double highlightSpeed;
 
 	private boolean isHighlighting;
 	
-	private File libraryFile;
-	private File libraryJson;
 	private String libraryTitle;
 	
 	private final static int FLAG_SEARCH = 10000;
@@ -130,8 +126,9 @@ public class ReaderActivity
 		setContentView(R.layout.activity_reader);
 		
 		Bundle libBundle 	= getIntent().getExtras();
-		libraryFile			= (File) libBundle.get("file");
-		libraryJson			= (File) libBundle.get("json");
+		
+		bundleHtml			= libBundle.getString("html");
+		bundleJSON			= libBundle.getString("json");
 		libraryTitle		= libBundle.getString("title");
 		
 		sp 			= PreferenceManager.getDefaultSharedPreferences(this);
@@ -193,8 +190,7 @@ public class ReaderActivity
 		reader.getSettings().setDefaultFontSize(22);
 		
 		reader.setWebViewClient(new MyWebViewClient());
-		fileHtml 	= FileHelper.readFromFile(libraryFile);
-		html 		= updateHtml(fileHtml);
+		html 		= updateHtml(bundleHtml);
 		sentenceIds	= new ArrayList<String>();
 		
 		reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
@@ -322,9 +318,11 @@ public class ReaderActivity
 						return;
 					} else {
 						Intent intent = new Intent(ReaderActivity.this, PresentationModule.class);
-						intent.putExtra("file", libraryFile);
-						intent.putExtra("json", libraryJson);
+						
+						intent.putExtra("html", bundleHtml);
+						intent.putExtra("json", bundleJSON);
 						intent.putExtra("title", libraryTitle);
+						intent.putExtra("loadFiles", false);
 						intent.putExtra("showGUI", true);
 						startActivity(intent);
 						return;
@@ -334,7 +332,7 @@ public class ReaderActivity
 			}
 			
 			updateGUI();			
-			html = updateHtml(fileHtml);
+			html = updateHtml(bundleHtml);
 			reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
 			setTTS();
 		}

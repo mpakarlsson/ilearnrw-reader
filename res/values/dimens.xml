@@ -7,9 +7,13 @@
     <dimen name="hsv_width">240dp</dimen>
     <dimen name="hsv_height">240dp</dimen>
     <dimen name="hue_width">30dp</dimen>
-    <dimen name="spacer">8dp</dimen>
+    
+    <dimen name="spacer_8">8dp</dimen>
+    <dimen name="spacer_4">4dp</dimen>
     
     <dimen name="slider_stroke">1dp</dimen>
     
+    
+    <dimen name="font_size_default">14sp</dimen>
 
 </resources>

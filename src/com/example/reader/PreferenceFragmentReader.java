@@ -136,10 +136,8 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 				return true;
 			}
 		}); 
-		
 	}	
 	
-
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {			
 		if(!preference.getTitle().toString().equals(newValue)){

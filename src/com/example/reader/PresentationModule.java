@@ -8,12 +8,16 @@ import java.io.File;
 import java.util.ArrayList;
 
 
+
+
 import com.example.reader.interfaces.ColorPickerListener;
 import com.example.reader.interfaces.OnAsyncTask;
 import com.example.reader.interfaces.OnProfileFetched;
 import com.example.reader.results.ProfileResult;
 import com.example.reader.tasks.ProfileTask;
 import com.example.reader.types.ColorPickerDialog;
+import com.example.reader.types.BasicListAdapter;
+import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.HttpHelper;
 
 import android.app.Activity;
@@ -52,8 +56,9 @@ public class PresentationModule
 	private RadioButton rbtnRule1, rbtnRule2, rbtnRule3, rbtnRule4;
 	private Spinner spCategories, spProblems;
 	private ImageView colorBox;
-	private File file = null;
-	private File json = null;
+	private File fileHtml = null;
+	private File fileJSON = null;
+	private String html, json;
 	private String name = "";
 	private Boolean showGUI = false;
 	
@@ -82,14 +87,28 @@ public class PresentationModule
 	
 		TAG = getClass().getName();
 		
-		Bundle bundle = getIntent().getExtras();
-		file = (File)bundle.get("file");
-		json = (File)bundle.get("json");
-		name = bundle.getString("title", "");
-		showGUI = bundle.getBoolean("showGUI", false);
-
-		categories = new ArrayList<String>();
-		problems = new ArrayList<String>();
+		Bundle bundle 	= getIntent().getExtras();
+		
+		boolean loadFiles = true;
+		if(bundle.containsKey("loadFiles"))
+			loadFiles = bundle.getBoolean("loadFiles");
+		
+		name 			= bundle.getString("title", "");
+		showGUI 		= bundle.getBoolean("showGUI", false);
+		
+		if(loadFiles){
+			fileHtml 		= (File)bundle.get("file");
+			fileJSON 		= (File)bundle.get("json");
+			
+			html	= FileHelper.readFromFile(fileHtml);
+			json	= FileHelper.readFromFile(fileJSON);
+		} else {
+			html = bundle.getString("html");
+			json = bundle.getString("json");
+		}
+		
+		categories 	= new ArrayList<String>();
+		problems 	= new ArrayList<String>();
 	
 		if(!showGUI){
 			// Todo: Do rules as-is
@@ -247,7 +266,7 @@ public class PresentationModule
 	
 	private void finished(){
 		Intent intent = new Intent(PresentationModule.this, ReaderActivity.class);
-		intent.putExtra("file", file);
+		intent.putExtra("html", html);
 		intent.putExtra("json", json);
 		intent.putExtra("title", name);
 		startActivity(intent);
@@ -295,7 +314,7 @@ public class PresentationModule
 			problems.add((i+1) + ". " + str);
 		}
 		
-		ArrayAdapter<String> problemAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, problems);
+		ArrayAdapter<String> problemAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, problems);
 		problemAdapter.notifyDataSetChanged();
 		spProblems.setAdapter(problemAdapter);
 		
@@ -332,7 +351,7 @@ public class PresentationModule
 		currentCategoryPos 	= 0;
 		updateProblems(currentCategoryPos);
 		
-		ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, categories);
+		ArrayAdapter<String> categoryAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, categories);
 		spCategories.setAdapter(categoryAdapter);
 		
 	}

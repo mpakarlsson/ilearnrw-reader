@@ -13,8 +13,10 @@ import java.util.List;
 import java.util.Locale;
 
 
+
 import com.example.reader.interfaces.OnAsyncTask;
 import com.example.reader.tasks.AddToLibraryTask;
+import com.example.reader.types.BasicListAdapter;
 import com.example.reader.types.ExplorerItem;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.HttpHelper;
@@ -136,9 +138,8 @@ public class AddToLibraryExplorerActivity
 			listItems[i] = items.get(i).getItem();
 		}
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
+		ArrayAdapter<String> adapter = new BasicListAdapter(this, R.layout.textview_item_multiline, listItems, 20, true);
 		lvList.setAdapter(adapter);
-		
 	}
 
 	
