@@ -4,6 +4,7 @@
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_mode">ModeActivity</string>
     <string name="title_activity_rename">RenameActivity</string>
+    <string name="title_activity_word">WordActivity</string>
     <string name="title_reader_settings">ReaderSettings</string>
     
     <string name="content_descr_btn_lib">Back to library</string>
@@ -24,4 +25,11 @@
 	<string name="color_picker">Choose a color</string>	
 	
 	<string name="add_tricky_word">Add tricky word</string>
+	
+	<string-array 
+	    name="word_information">
+	    <item>Stem:</item>
+	    <item>Syllables:</item>
+	    <item>Problems:</item>
+	</string-array>
 </resources>

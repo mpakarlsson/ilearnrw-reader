@@ -8,6 +8,8 @@
     <dimen name="hsv_height">240dp</dimen>
     <dimen name="hue_width">30dp</dimen>
     
+    <dimen name="spacer_25">25dp</dimen>
+    <dimen name="spacer_10">10dp</dimen>
     <dimen name="spacer_8">8dp</dimen>
     <dimen name="spacer_4">4dp</dimen>
     

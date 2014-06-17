@@ -71,6 +71,11 @@
             android:label="@string/title_activity_rename" 
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
         </activity>
+        <activity
+            android:name="com.example.reader.popups.WordActivity"
+            android:label="@string/title_activity_word" 
+            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
+        </activity>
         
         
         

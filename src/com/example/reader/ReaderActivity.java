@@ -1,6 +1,8 @@
 package com.example.reader;
 
 import ilearnrw.annotation.UserBasedAnnotatedWord;
+import ilearnrw.textclassification.SeverityOnWordProblemInfo;
+import ilearnrw.textclassification.StringMatchesInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,8 +13,8 @@ import com.example.reader.interfaces.TTSHighlightCallback;
 import com.example.reader.interfaces.TTSReadingCallback;
 import com.example.reader.popups.ModeActivity;
 import com.example.reader.popups.SearchActivity;
+import com.example.reader.popups.WordActivity;
 import com.example.reader.results.AnnotatedWordSetResult;
-import com.example.reader.results.TextAnnotationResult;
 import com.example.reader.types.Pair;
 import com.example.reader.utils.Helper;
 import com.google.gson.Gson;
@@ -950,34 +952,41 @@ public class ReaderActivity
 		public void showMoreInformation(String jsWord){
 			
 			ArrayList<UserBasedAnnotatedWord> words = annotationData.words;
-			String _word = "", data = "";
+			String _word = "";
 			
 			_word = jsWord.toLowerCase(Locale.getDefault());
+			
+			ArrayList<Integer> values = new ArrayList<Integer>();
 			
 			for(int i=0; i<words.size(); i++){
 				UserBasedAnnotatedWord word = words.get(i);
 				if(_word.equals(word.getWord())){
-					data = "Word: " + word.getWord();
-					data += "\nType: " + word.getType();
-					data += "\nStem: " + word.getStem();
-					data += "\nPhonetics: " + word.getPhonetics();
-					data += "\nNum syllables: " + word.getNumberOfSyllables();
-					data += "\nGraphemes/Phonemes: " + word.getGraphemesPhonemes();
-					data += "\nWord in syllables: " + word.getWordInToSyllables();
+					Intent in = new Intent(getBaseContext(), WordActivity.class);
+					in.putExtra("word", word.getWord());
+					in.putExtra("stem", word.getStem());
+					in.putExtra("wordInSyllables", word.getWordInToSyllables());
 					
+					ArrayList<SeverityOnWordProblemInfo> problems = word.getUserSeveritiesOnWordProblems();
+					
+					for(int j=0; j<problems.size(); j++){
+						SeverityOnWordProblemInfo problem = problems.get(j);
+						ArrayList<StringMatchesInfo> infos = problem.getMatched();
+						
+						for(int k=0; k<infos.size(); k++){
+							StringMatchesInfo info = infos.get(k);
+							
+							values.add(j);
+							values.add(info.getStart());
+							values.add(info.getEnd());
+						}
+					}
+					
+					in.putIntegerArrayListExtra("problems", values);
+					startActivity(in);					
 					break;
 				}
 			}
-			
-			if(data.isEmpty()){
-				data = "This word does not exist within the dictionary.";
-				data += "\nWord: " + _word;
-			}
-			
-			new AlertDialog.Builder(context)
-			.setTitle(jsWord)
-			.setMessage(data)
-			.setPositiveButton(android.R.string.ok, null).show();
+		
 		}
 		
 		@JavascriptInterface

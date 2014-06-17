@@ -1,11 +1,11 @@
 package com.example.reader.types;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.example.reader.R;
 
 import android.content.Context;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 public class WordPopupAdapter extends ArrayAdapter<String>{
 	private List<String> objects;
+	private List<Spannable> items;
 	private LayoutInflater inflater;
 	
 	private ViewHolder viewHolder;
@@ -30,88 +31,49 @@ public class WordPopupAdapter extends ArrayAdapter<String>{
 		public TextView data;
 	};
 	
-	public WordPopupAdapter(Context context, int resource, List<String> objects) {
+	public WordPopupAdapter(Context context, int resource, List<String> objects, List<Spannable> items) {
 		super(context, resource, objects);
-		init(context, objects, -1, colorEven, colorOdd, colorRows);
+		init(context, objects, items, -1, colorEven, colorOdd, colorRows);
 	}
 	
-	public WordPopupAdapter(Context context, int resource, List<String> objects, int textSize) {
+	public WordPopupAdapter(Context context, int resource, List<String> objects, List<Spannable> items, int textSize) {
 		super(context, resource, objects);
-		init(context, objects, textSize, colorEven, colorOdd, colorRows);
+		init(context, objects, items, textSize, colorEven, colorOdd, colorRows);
 	}
 	
-	public WordPopupAdapter(Context context, int resource, List<String> objects, boolean isColoring) {
+	public WordPopupAdapter(Context context, int resource, List<String> objects, List<Spannable> items, boolean isColoring) {
 		super(context, resource, objects);
-		init(context, objects, -1, colorEven, colorOdd, isColoring);
+		init(context, objects, items, -1, colorEven, colorOdd, isColoring);
 	}
 	
-	public WordPopupAdapter(Context context, int resource, List<String> objects, int textSize, boolean isColoring) {
+	public WordPopupAdapter(Context context, int resource, List<String> objects, List<Spannable> items, int textSize, boolean isColoring) {
 		super(context, resource, objects);
-		init(context, objects, textSize,  colorEven, colorOdd, isColoring);
+		init(context, objects, items, textSize,  colorEven, colorOdd, isColoring);
 	}
 	
-	public WordPopupAdapter(Context context, int resource, List<String> objects, int color1, int color2) {
+	public WordPopupAdapter(Context context, int resource, List<String> objects, List<Spannable> items, int color1, int color2) {
 		super(context, resource, objects);
-		init(context, objects, -1, color1, color2, colorRows);
+		init(context, objects, items, -1, color1, color2, colorRows);
 	}
 	
-	public WordPopupAdapter(Context context, int resource, List<String> objects, int textSize, int color1, int color2) {
+	public WordPopupAdapter(Context context, int resource, List<String> objects, List<Spannable> items, int textSize, int color1, int color2) {
 		super(context, resource, objects);
-		init(context, objects, textSize, color1, color2, colorRows);
+		init(context, objects, items, textSize, color1, color2, colorRows);
 	}
 	
-	public WordPopupAdapter(Context context, int resource, List<String> objects, int color1, int color2, boolean isColoring) {
+	public WordPopupAdapter(Context context, int resource, List<String> objects, List<Spannable> items, int color1, int color2, boolean isColoring) {
 		super(context, resource, objects);
-		init(context, objects, -1, color1, color2, isColoring);
+		init(context, objects, items, -1, color1, color2, isColoring);
 	}
 
-	public WordPopupAdapter(Context context, int resource, List<String> objects, int textSize, int color1, int color2, boolean isColoring) {
+	public WordPopupAdapter(Context context, int resource, List<String> objects, List<Spannable> items, int textSize, int color1, int color2, boolean isColoring) {
 		super(context, resource, objects);
-		init(context, objects, textSize, color1, color2, isColoring);
+		init(context, objects, items, textSize, color1, color2, isColoring);
 	}
 	
-	public WordPopupAdapter(Context context, int resource, String[] objects){
-		super(context, resource, objects);
-		init(context, objects, -1, colorEven, colorOdd, colorRows);
-	}
-	
-	public WordPopupAdapter(Context context, int resource, String[] objects, int textSize){
-		super(context, resource, objects);
-		init(context, objects, textSize, colorEven, colorOdd, colorRows);
-	}
-	
-	public WordPopupAdapter(Context context, int resource, String[] objects, boolean isColoring){
-		super(context, resource, objects);
-		init(context, objects, -1, colorEven, colorOdd, isColoring);
-	}
-	
-	public WordPopupAdapter(Context context, int resource, String[] objects, int textSize, boolean isColoring){
-		super(context, resource, objects);
-		init(context, objects, textSize, colorEven, colorOdd, isColoring);
-	}
-	
-	public WordPopupAdapter(Context context, int resource, String[] objects, int color1, int color2){
-		super(context, resource, objects);
-		init(context, objects, -1, color1, color2, colorRows);
-	}
-	
-	public WordPopupAdapter(Context context, int resource, String[] objects, int textSize, int color1, int color2){
-		super(context, resource, objects);
-		init(context, objects, textSize, color1, color2, colorRows);
-	}
-	
-	public WordPopupAdapter(Context context, int resource, String[] objects, int color1, int color2, boolean isColoring){
-		super(context, resource, objects);
-		init(context, objects, -1, color1, color2, isColoring);
-	}
-	
-	public WordPopupAdapter(Context context, int resource, String[] objects, int textSize, int color1, int color2, boolean isColoring){
-		super(context, resource, objects);
-		init(context, objects, textSize, color1, color2, isColoring);
-	}
-	
-	private void init(Context context, List<String> objects, int textSize, int color1, int color2, boolean isColoring){
+	private void init(Context context, List<String> objects, List<Spannable> items, int textSize, int color1, int color2, boolean isColoring){
 		this.objects 	= objects;
+		this.items		= items;
 		this.inflater	= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		colorEven		= color1;
 		colorOdd		= color2;
@@ -122,19 +84,7 @@ public class WordPopupAdapter extends ArrayAdapter<String>{
 		else
 			this.textSize = textSize;
 	}
-	
-	private void init(Context context, String[] objects, int textSize, int color1, int color2, boolean isColoring){
-		this.objects 	= Arrays.asList(objects);;
-		this.inflater	= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		colorEven		= color1;
-		colorOdd		= color2;
-		colorRows		= isColoring;
-		
-		if(textSize == -1)
-			this.textSize = context.getResources().getDimension(R.dimen.font_size_default);
-		else
-			this.textSize = textSize;
-	}
+
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -152,9 +102,10 @@ public class WordPopupAdapter extends ArrayAdapter<String>{
 		View view = convertView;
 		
 		if(view==null){
-			view 			= inflater.inflate(R.layout.row_word_popup, null);
-			viewHolder 		= new ViewHolder();
-			viewHolder.title = (TextView) view.findViewById(R.id.tv_word_word);
+			view 				= inflater.inflate(R.layout.row_word_popup, null);
+			viewHolder 			= new ViewHolder();
+			viewHolder.title 	= (TextView) view.findViewById(R.id.tv_item_title);
+			viewHolder.data		= (TextView) view.findViewById(R.id.tv_item_info);
 			viewHolder.title.setTextSize(textSize);
 			view.setTag(viewHolder);
 		}
@@ -163,8 +114,10 @@ public class WordPopupAdapter extends ArrayAdapter<String>{
 			view.setBackgroundColor(position%2==0 ? colorEven : colorOdd);
 		
 		viewHolder 	= (ViewHolder) view.getTag();
-		String item = objects.get(position);
-		viewHolder.title.setText(item);
+		viewHolder.title.setText(objects.get(position));
+		
+		viewHolder.data.setText(items.get(position));
+		
 		return view;
 	}
 }
