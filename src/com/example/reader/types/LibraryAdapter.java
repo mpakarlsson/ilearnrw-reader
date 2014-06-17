@@ -55,7 +55,7 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 		View v = convertView;
 		if(v == null){
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = inflater.inflate(R.layout.library_row, null);
+			v = inflater.inflate(R.layout.row_library, null);
 		}
 		
 		final LibraryItem item = objects.get(position);

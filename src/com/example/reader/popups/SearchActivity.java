@@ -30,7 +30,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnEdito
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_search);
+		setContentView(R.layout.dialog_activity_search);
 		
 		posX = getIntent().getFloatExtra("posX", -1);
 		posY = getIntent().getFloatExtra("posY", -1);

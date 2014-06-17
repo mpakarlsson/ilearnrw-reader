@@ -30,7 +30,7 @@ public class RenameActivity extends Activity implements OnClickListener, OnEdito
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_rename);
+		setContentView(R.layout.dialog_activity_rename);
 	
 		Bundle b = getIntent().getExtras();
 		orgName = b.getString("name");

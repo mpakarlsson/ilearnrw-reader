@@ -97,7 +97,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		}
 		sortValues();
 		
-		adapter = new LibraryAdapter(this, R.layout.library_row, files);
+		adapter = new LibraryAdapter(this, R.layout.row_library, files);
 		
 		library = (ListView) findViewById(R.id.library_list);
 		library.setAdapter(adapter);
@@ -338,7 +338,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 					files.add(new LibraryItem(file.getName(), file));
 				}
 				sortValues();
-				adapter = new LibraryAdapter(this, R.layout.library_row, files);
+				adapter = new LibraryAdapter(this, R.layout.row_library, files);
 				library.setAdapter(adapter);
 
 				

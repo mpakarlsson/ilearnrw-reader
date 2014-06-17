@@ -18,7 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:src="@drawable/search_mini"
-        style="?android:attr/buttonBarButtonStyle"/>
+        style="?android:attr/buttonBarButtonStyle"
+        android:contentDescription="@string/empty"/>
     
 
 </LinearLayout>

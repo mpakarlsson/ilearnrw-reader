@@ -14,6 +14,7 @@
     <string name="empty"></string>
 	<string name="token_expired_refresh">Token expired. Fetching new one&#8230;</string>
 	<string name="token_error_retry">Retrying task&#8230;</string>
+	<string name="default_text">Default</string>
     
     
     <!-- Activity titles -->

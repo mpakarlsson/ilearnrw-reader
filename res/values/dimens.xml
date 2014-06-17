@@ -15,5 +15,6 @@
     
     
     <dimen name="font_size_default">14sp</dimen>
+    <dimen name="font_size_default_title">22sp</dimen>
 
 </resources>

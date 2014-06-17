@@ -24,7 +24,7 @@ public class ModeActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_mode);
+		setContentView(R.layout.dialog_activity_mode);
 	
 		Bundle bundle = getIntent().getExtras();	
 		posX = bundle.getFloat("posX", -1);
