@@ -314,7 +314,7 @@ public class PresentationModule
 			problems.add((i+1) + ". " + str);
 		}
 		
-		ArrayAdapter<String> problemAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, problems);
+		ArrayAdapter<String> problemAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, problems, true);
 		problemAdapter.notifyDataSetChanged();
 		spProblems.setAdapter(problemAdapter);
 		
@@ -351,7 +351,7 @@ public class PresentationModule
 		currentCategoryPos 	= 0;
 		updateProblems(currentCategoryPos);
 		
-		ArrayAdapter<String> categoryAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, categories);
+		ArrayAdapter<String> categoryAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, categories, true);
 		spCategories.setAdapter(categoryAdapter);
 		
 	}

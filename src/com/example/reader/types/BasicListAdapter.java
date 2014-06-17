@@ -137,17 +137,17 @@ public class BasicListAdapter extends ArrayAdapter<String>{
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		return setupView(position, convertView, parent, true);
+		return setupView(position, convertView, parent, colorRows);
 	}
 
 
 	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-		return setupView(position, convertView, parent, true);
+		return setupView(position, convertView, parent, colorRows);
 	}
 
 	
-	private View setupView(int position, View convertView, ViewGroup parent, boolean isDropDown){
+	private View setupView(int position, View convertView, ViewGroup parent, boolean isColoring){
 		View view = convertView;
 		
 		if(view==null){
@@ -158,7 +158,7 @@ public class BasicListAdapter extends ArrayAdapter<String>{
 			view.setTag(viewHolder);
 		}
 		
-		if(isDropDown)
+		if(isColoring)
 			view.setBackgroundColor(position%2==0 ? colorEven : colorOdd);
 		
 		viewHolder 	= (ViewHolder) view.getTag();
