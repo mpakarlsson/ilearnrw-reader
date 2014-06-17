@@ -26,7 +26,8 @@ public class WordPopupAdapter extends ArrayAdapter<String>{
 	private float textSize;
 	
 	static class ViewHolder{
-		public TextView item;
+		public TextView title;
+		public TextView data;
 	};
 	
 	public WordPopupAdapter(Context context, int resource, List<String> objects) {
@@ -151,10 +152,10 @@ public class WordPopupAdapter extends ArrayAdapter<String>{
 		View view = convertView;
 		
 		if(view==null){
-			view 			= inflater.inflate(R.layout.textview_item_multiline, null);
+			view 			= inflater.inflate(R.layout.row_word_popup, null);
 			viewHolder 		= new ViewHolder();
-			viewHolder.item = (TextView) view.findViewById(R.id.tv_spinner_item);
-			viewHolder.item.setTextSize(textSize);
+			viewHolder.title = (TextView) view.findViewById(R.id.tv_word_word);
+			viewHolder.title.setTextSize(textSize);
 			view.setTag(viewHolder);
 		}
 		
@@ -163,7 +164,7 @@ public class WordPopupAdapter extends ArrayAdapter<String>{
 		
 		viewHolder 	= (ViewHolder) view.getTag();
 		String item = objects.get(position);
-		viewHolder.item.setText(item);
+		viewHolder.title.setText(item);
 		return view;
 	}
 }

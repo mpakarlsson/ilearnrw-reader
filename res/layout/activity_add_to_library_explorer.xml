@@ -14,10 +14,4 @@
 	    android:id="@+id/lv_atl_list"
 	    android:layout_height="wrap_content"
 	    android:layout_width="match_parent"/>
-	
-	<TextView
-	    android:id="@+id/tv_atl_empty"
-	    android:layout_height="wrap_content"
-	    android:layout_width="match_parent"
-	    android:text="@string/no_data"/>
 </LinearLayout>

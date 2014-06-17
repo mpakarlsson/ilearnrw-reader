@@ -76,7 +76,14 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		        try {
 					int resourceID=fields[count].getInt(fields[count]);
 					InputStream is = getResources().openRawResource(resourceID);
-					File f = new File(libDir, fields[count].getName()+".txt");
+					String name = fields[count].getName();
+					
+					if(name.startsWith("_j_"))
+						name = name.substring(3) + ".json";
+					else if(name.startsWith("_t_"))
+						name = name.substring(3) + ".txt";
+					
+					File f = new File(libDir, name);
 					FileHelper.saveFile(is, f);
 					is.close();
 		        } catch (IllegalAccessException e) {
@@ -392,6 +399,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						intent = new Intent(getBaseContext(), AddToLibraryORBActivity.class);
 					
 					startActivityForResult(intent, FLAG_ADD_TO_DEVICE);
+					dialog.cancel();
 				}
 			});
 			dialog = builder.create();

@@ -56,8 +56,8 @@ public class WordActivity extends Activity {
 		
 		ArrayList<String> objects = new ArrayList<String>(Arrays.asList("a", "b", "c", "d", "e", "f", "g"));
 		
-		ArrayAdapter<String> adapter = new BasicListAdapter(this, R.layout.row_word_popup, objects, true);
-		list.setAdapter(adapter);
+		//ArrayAdapter<String> adapter = new WordPopupAdapter(this, R.layout.row_word_popup, objects, true);
+		//list.setAdapter(adapter);
 	}
 
 	

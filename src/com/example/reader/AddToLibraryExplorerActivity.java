@@ -45,6 +45,7 @@ public class AddToLibraryExplorerActivity
 	
 	private List<ExplorerItem> items = null;
 	private String root = Environment.getExternalStorageDirectory().getPath();
+	private String currentDir, currentParent;
 	private TextView tvPath;
 	private ListView lvList;
 	private String[] FILE_ENDINGS = { "html", "txt" };
@@ -92,7 +93,17 @@ public class AddToLibraryExplorerActivity
 		});
 	}
 
+	@Override
+	public void onBackPressed() {
+		if(currentDir.equals(root)){
+			super.onBackPressed();
+		}
+		else
+			getDirectory(currentParent);
+	}
+
 	private void getDirectory(String dir){
+		currentDir = dir;
 		tvPath.setText(dir);
 		
 		items = new ArrayList<ExplorerItem>();
@@ -131,6 +142,9 @@ public class AddToLibraryExplorerActivity
 		if(!dir.equals(root)){
 			items.add(0, new ExplorerItem("/", root));
 			items.add(1, new ExplorerItem("../", f.getParent()));
+			currentParent = f.getParent();
+		} else {
+			currentParent = "";
 		}
 		
 		String[] listItems = new String[items.size()];
@@ -148,7 +162,6 @@ public class AddToLibraryExplorerActivity
 		
 		if(index!=-1){
 			String ending = name.substring(index+1);
-
 			ending = ending.toLowerCase(Locale.getDefault()).trim();
 			
 			if(ending.isEmpty())
