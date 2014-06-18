@@ -19,6 +19,7 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -136,6 +137,16 @@ public class WordActivity
 			break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	
+	
+
+	@Override
+	public void onAttachedToWindow() {
+		super.onAttachedToWindow();
+		
+		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 	}
 
 

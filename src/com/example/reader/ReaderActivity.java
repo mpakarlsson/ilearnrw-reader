@@ -124,6 +124,10 @@ public class ReaderActivity
 		public int getValue(){
 			return value;
 		}
+		
+		public String getName(){
+			return name;
+		}
 	}
 	
 	public static enum ReaderStatus {
@@ -180,6 +184,10 @@ public class ReaderActivity
 		ibtnNext.setOnClickListener(this);
 		ibtnSettings.setOnClickListener(this);
 		
+		ibtnPlay.setEnabled(false);
+		ibtnNext.setEnabled(false);
+		ibtnPrev.setEnabled(false);
+		
 		top					= (RelativeLayout) findViewById(R.id.reader_top);
 		bottom 				= (RelativeLayout) findViewById(R.id.reader_bottom);
 		rlHighlightSpeed 	= (RelativeLayout) findViewById(R.id.reader_body_highlight_speed);
@@ -223,6 +231,30 @@ public class ReaderActivity
 		isHighlighting =  sp.getBoolean("highlighting", true);
 
 		highlightParts = new HashMap<String, Pair<String>>();
+		
+		int mode = sp.getInt("readerMode", -1);
+		if(mode==-1){
+			reader_mode = ReaderMode.Listen;
+			mode = reader_mode.getValue();
+			spEditor.putInt("readerMode", mode).commit();
+			Toast.makeText(this, "No reader mode set. Listen mode is selected", Toast.LENGTH_LONG).show();
+		} else {
+			switch(mode){
+			case 0:
+				reader_mode = ReaderMode.Listen;
+				break;
+			case 1:
+				reader_mode = ReaderMode.Guidance;
+				break;
+			case 2:
+				reader_mode = ReaderMode.Chunking;
+				break;
+			default:
+				reader_mode = ReaderMode.Listen;
+				break;
+			}
+		}
+		
 
 		updateGUI();
 	}
@@ -230,31 +262,6 @@ public class ReaderActivity
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		int mode = sp.getInt("readerMode", -1);
-		if(mode==-1){
-			spEditor.putInt("readerMode", ReaderMode.Listen.getValue()).commit();
-			Toast.makeText(this, "No reader mode set. Listen mode is selected", Toast.LENGTH_LONG).show();
-		}
-		
-		switch(mode){
-		case 0:
-			reader_mode = ReaderMode.Listen;
-			rlHighlightSpeed.setVisibility(View.GONE);
-			break;
-		case 1:
-			reader_mode = ReaderMode.Guidance;
-			rlHighlightSpeed.setVisibility(View.VISIBLE);
-			break;
-		case 2: 
-			reader_mode = ReaderMode.Chunking;
-			rlHighlightSpeed.setVisibility(View.GONE);
-			break;
-		default:
-			reader_mode = ReaderMode.Listen;
-			rlHighlightSpeed.setVisibility(View.GONE);
-			break;
-		}
 	}
 
 	@Override
@@ -404,6 +411,11 @@ public class ReaderActivity
 			break;
 			
 		case R.id.ibtn_mode_reader:
+			if(reader_mode == ReaderMode.Listen){
+				tts.stop();
+			} else if(reader_mode == ReaderMode.Guidance){
+				highlightHandler.removeCallbacks(highlightRunnable);
+			}
 			Intent mode_intent = new Intent(this, ModeActivity.class);
 			mode_intent.putExtra("posX", ibtnMode.getX());
 			mode_intent.putExtra("posY", (bottom.getY()-ibtnMode.getHeight()));
@@ -1139,7 +1151,9 @@ public class ReaderActivity
 		this.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				// Todo: activate tts
+				ibtnPlay.setEnabled(true);
+				ibtnNext.setEnabled(true);
+				ibtnPrev.setEnabled(true);
 			}
 		});
 		

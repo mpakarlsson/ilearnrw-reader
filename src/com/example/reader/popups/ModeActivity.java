@@ -6,17 +6,15 @@ import com.example.reader.ReaderActivity.ReaderMode;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RadioButton;
-import android.widget.Toast;
 
 public class ModeActivity extends Activity {
 	
 	public static float posX, posY;
-	public static int imageHeight, mode;
+	public static int imageHeight;
 	public static RadioButton listen, guidance, chunking;
 	
 	static final int PICK_READER_MODE = 1;
@@ -70,34 +68,24 @@ public class ModeActivity extends Activity {
 	
 
 	public void onRadioButtonClicked(View view) {
+		Intent intent=new Intent();
+		intent.putExtra("chosenMode", -1);
+		
 	    switch(view.getId()) {
 	        case R.id.rdbtn_mode_listen:
-	            if(mode!=0){
-	            	mode=0;
-	            	PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("readerMode", mode).commit();
-	            } else
-	            	Toast.makeText(this, "Listen mode, already active.", Toast.LENGTH_SHORT).show();
+	            intent.putExtra("chosenMode", 0);
+	           
 	            break;
 	        case R.id.rdbtn_mode_highlight:
-	        	if(mode!=1){
-	            	mode=1;
-	            	PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("readerMode", mode).commit();
-	            } else
-	            	Toast.makeText(this, "Guidance mode, already active.", Toast.LENGTH_SHORT).show();
+	        	intent.putExtra("chosenMode", 1);
+	        	
 	        	break;
 	        case R.id.rdbtn_mode_chunking:
-	        	//if(mode!=2){
-	            //	mode=2;
-	            //	getPreferences(MODE_PRIVATE).edit().putInt("readerMode", mode);
-	            //} 
-            	Toast.makeText(this, "Chunking mode not available, Listen mode chosen instead", Toast.LENGTH_SHORT).show();
-            	mode = 0;
-            	PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("readerMode", mode).commit();
+            	intent.putExtra("chosenMode", 0);
+            	
 	        	break;
 	    }
 	    
-	    Intent intent=new Intent();
-	    intent.putExtra("chosenMode", mode);
 	    setResult(RESULT_OK, intent);
 	    finish();
 	}
