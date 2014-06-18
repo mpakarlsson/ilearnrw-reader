@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.example.reader.R;
+import com.example.reader.ReaderActivity;
+import com.example.reader.interfaces.OnTextToSpeechComplete;
+import com.example.reader.texttospeech.TextToSpeechBase;
 import com.example.reader.types.WordPopupAdapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -21,18 +26,27 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class WordActivity extends Activity {
+public class WordActivity 
+	extends 
+		Activity 
+	implements
+		OnTextToSpeechComplete {
 
 	private TextView tvTitle;
 	private ImageView ivSpeak;
 	private ListView list;
 	private Button btnAddTrickyWord, btnOk;
+	private TextToSpeechBase tts;
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialog_activity_word);
+		
+		Intent checkTTSIntent = new Intent(); 
+		checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+		startActivityForResult(checkTTSIntent, ReaderActivity.FLAG_CHECK_TTS);
 		
 		Bundle b = getIntent().getExtras();
 		
@@ -54,9 +68,10 @@ public class WordActivity extends Activity {
 		ivSpeak.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//Todo: remake tts into a service
+				tts.speak(tvTitle.getText().toString());
 			}
 		});
+		ivSpeak.setEnabled(false);
 		
 		btnAddTrickyWord.setOnClickListener(new OnClickListener() {
 			@Override
@@ -76,8 +91,6 @@ public class WordActivity extends Activity {
 		ArrayList<Spannable> items		= new ArrayList<Spannable>();		//new ArrayList<String>(Arrays.asList("a", "b", "c", "d", "e", "f", "g"));
 		items.add(new SpannableString(stem));
 		items.add(new SpannableString(wordInSyllables));
-		
-		
 		
 		
 		Spannable currSpan = null;
@@ -110,6 +123,31 @@ public class WordActivity extends Activity {
 		list.setAdapter(adapter);
 	}
 
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	
+		switch(requestCode){
+		case ReaderActivity.FLAG_CHECK_TTS:
+			if(resultCode == RESULT_OK || resultCode == RESULT_FIRST_USER) {
+				tts = new TextToSpeechBase(this, this, requestCode, resultCode, data);
+			}
+			
+			break;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+
+	@Override
+	public void onTextToSpeechInitialized() {
+		ivSpeak.setEnabled(true);
+	}
+
+	@Override
+	protected void onDestroy() {
+		tts.destroy();
+		super.onDestroy();
+	}
 	
 }

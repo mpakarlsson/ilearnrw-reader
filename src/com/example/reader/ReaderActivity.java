@@ -9,12 +9,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 
+import com.example.reader.interfaces.OnTextToSpeechComplete;
 import com.example.reader.interfaces.TTSHighlightCallback;
 import com.example.reader.interfaces.TTSReadingCallback;
 import com.example.reader.popups.ModeActivity;
 import com.example.reader.popups.SearchActivity;
 import com.example.reader.popups.WordActivity;
 import com.example.reader.results.AnnotatedWordSetResult;
+import com.example.reader.texttospeech.TextToSpeechIdDriven;
 import com.example.reader.types.Pair;
 import com.example.reader.utils.Helper;
 import com.google.gson.Gson;
@@ -56,7 +58,8 @@ public class ReaderActivity
 		OnLongClickListener, 
 		OnSeekBarChangeListener, 
 		TTSHighlightCallback, 
-		TTSReadingCallback {
+		TTSReadingCallback,
+		OnTextToSpeechComplete {
 
 	private final String TAG = getClass().getName();
 	
@@ -69,7 +72,7 @@ public class ReaderActivity
 	private ReaderMode reader_mode;
 	private ReaderStatus reader_status;
 	
-	private TTS tts;
+	private TextToSpeechIdDriven tts;
 	private TTSHighlightCallback cbHighlight;
 	private TTSReadingCallback cbSpoken;
 
@@ -96,9 +99,10 @@ public class ReaderActivity
 
 	private AnnotatedWordSetResult annotationData;
 	
-	private final static int FLAG_SEARCH = 10000;
-	private final static int FLAG_MODE = 10001;
-	private final static int FLAG_REFRESH_WEBVIEW = 10002;
+	public final static int FLAG_SEARCH = 10000;
+	public final static int FLAG_MODE = 10001;
+	public final static int FLAG_REFRESH_WEBVIEW = 10002;
+	public final static int FLAG_CHECK_TTS = 10003;
 	
 	public static enum ReaderMode {
 		Listen("Listen", 0),
@@ -186,7 +190,7 @@ public class ReaderActivity
 		
 		Intent checkTTSIntent = new Intent(); 
 		checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-		startActivityForResult(checkTTSIntent, 0);
+		startActivityForResult(checkTTSIntent, FLAG_CHECK_TTS);
 		
 		cbHighlight 	= this;
 		cbSpoken 		= this;
@@ -266,13 +270,14 @@ public class ReaderActivity
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(tts==null){
-			tts = new TTS(ReaderActivity.this, CURR_SENT, cbHighlight, cbSpoken, requestCode, resultCode, data);
-			setTTS();
-		}
-		
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {		
 		switch (requestCode) {
+		case FLAG_CHECK_TTS:
+			if(tts==null){
+				tts = new TextToSpeechIdDriven(ReaderActivity.this, this,  CURR_SENT, cbHighlight, cbSpoken, requestCode, resultCode, data);
+				setTTS();
+			}
+			break;
 		case FLAG_SEARCH:
 		{
 			if(resultCode == RESULT_OK){
@@ -718,10 +723,13 @@ public class ReaderActivity
 		if(id==null)
 			return;
 		
-		reader.loadUrl("javascript:speakSentence('" + id + "');");
-		// Todo: fetch sentence to speak through js
-		
-		//tts.speak(sentences, pos, id);
+		final String _id = id;
+		this.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				reader.loadUrl("javascript:speakSentence('" + _id + "');");
+			}
+		});
 	}
 
 	private String updateHtml(String html){
@@ -1124,6 +1132,17 @@ public class ReaderActivity
 					setPlayStatus(ReaderStatus.Enabled, true);
 			}
 		});
+	}
+	
+	@Override
+	public void onTextToSpeechInitialized() {
+		this.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				// Todo: activate tts
+			}
+		});
+		
 	}
 	
 	private class HighlightRunnable implements Runnable{

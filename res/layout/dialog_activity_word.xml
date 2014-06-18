@@ -30,7 +30,7 @@
             android:scaleType="fitXY"
             android:contentDescription="@string/empty"
             android:layout_alignParentRight="true"
-            android:src="@drawable/speaker"/>
+            android:src="@drawable/listen_image_selector"/>
         
     </RelativeLayout>
     
