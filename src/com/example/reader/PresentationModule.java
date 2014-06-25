@@ -1,14 +1,13 @@
 package com.example.reader;
 
+import ilearnrw.textadaptation.TextAnnotationModule;
 import ilearnrw.user.problems.ProblemDefinition;
 import ilearnrw.user.problems.ProblemDefinitionIndex;
 import ilearnrw.user.problems.ProblemDescription;
+import ilearnrw.user.profile.UserProfile;
 
 import java.io.File;
 import java.util.ArrayList;
-
-
-
 
 import com.example.reader.interfaces.ColorPickerListener;
 import com.example.reader.interfaces.OnAsyncTask;
@@ -81,11 +80,17 @@ public class PresentationModule
 	private int currentCategoryPos;
 	private int currentProblemPos;
 	
+	//private UserProfile userProfile;
+	
+	//private TextAnnotationModule txModule;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	
 		TAG = getClass().getName();
+		
+		//initTextAnnotationModule();
 		
 		Bundle bundle 	= getIntent().getExtras();
 		
@@ -96,9 +101,13 @@ public class PresentationModule
 		name 			= bundle.getString("title", "");
 		showGUI 		= bundle.getBoolean("showGUI", false);
 		
+		
+		
 		if(loadFiles){
 			fileHtml 		= (File)bundle.get("file");
 			fileJSON 		= (File)bundle.get("json");
+			
+			//Log.i("Test", "I am name: " +fileHtml);
 			
 			html	= FileHelper.readFromFile(fileHtml);
 			json	= FileHelper.readFromFile(fileJSON);
@@ -131,6 +140,11 @@ public class PresentationModule
 			finish();
 		
 	}
+	
+	/*private void initTextAnnotationModule()
+	{
+		
+	}*/
 	
 	private void init(){
 		spCategories 	= (Spinner) findViewById(R.id.categories);
@@ -353,6 +367,8 @@ public class PresentationModule
 		
 		ArrayAdapter<String> categoryAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, categories, true);
 		spCategories.setAdapter(categoryAdapter);
+		
+		//this.userProfile = profile.profile;
 		
 	}
 	
