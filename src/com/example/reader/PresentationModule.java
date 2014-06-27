@@ -93,8 +93,6 @@ public class PresentationModule
 	
 		TAG = getClass().getName();
 		
-		//initTextAnnotationModule();
-		
 		Bundle bundle 	= getIntent().getExtras();
 		
 		boolean loadFiles = true;
@@ -105,13 +103,9 @@ public class PresentationModule
 		showGUI 		= bundle.getBoolean("showGUI", false);
 		trickyWords		= new ArrayList<Word>();
 		
-		
-		
 		if(loadFiles){
 			fileHtml 		= (File)bundle.get("file");
 			fileJSON 		= (File)bundle.get("json");
-			
-			//Log.i("Test", "I am name: " +fileHtml);
 			
 			html	= FileHelper.readFromFile(fileHtml);
 			json	= FileHelper.readFromFile(fileJSON);
@@ -134,12 +128,16 @@ public class PresentationModule
 			throw new IllegalArgumentException("Missing id or token");
 		}
 		init();
+		Log.i("Result", txModule.getProfile().getLanguage().toString());
+		try{
+			txModule.sendPostToServer(token);
+			Log.i("Result", txModule.getJSONFile());
+		}
+		catch (Exception e)
+		{
+			Log.i("Exception", e.toString());
+		}
 	}
-	
-	/*private void initTextAnnotationModule()
-	{
-		
-	}*/
 	
 	private void init(){
 		container		= (LinearLayout) findViewById(R.id.presentation_module_container);
@@ -181,7 +179,6 @@ public class PresentationModule
 		spProblems.setOnItemSelectedListener(this);
 		
 		new ProfileTask(this, showGUI, this, this).run(userId, token);
-
 	}
 	
 	@Override
@@ -377,8 +374,8 @@ public class PresentationModule
 		ArrayAdapter<String> categoryAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, categories, true);
 		spCategories.setAdapter(categoryAdapter);
 		
-		UserProfile prof = new UserProfile(profile.language, profile.userProblems, profile.preferences);
-		//txModule = new TextAnnotationModule(html, prof);
+		userProfile = new UserProfile(profile.language, profile.userProblems, profile.preferences);
+		txModule = new TextAnnotationModule(html, userProfile);
 		
 	}
 	
