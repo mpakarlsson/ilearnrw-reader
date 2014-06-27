@@ -15,7 +15,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.reader.R;
-import com.example.reader.interfaces.OnAsyncTask;
+import com.example.reader.interfaces.OnHttpListener;
 import com.example.reader.results.TextAnnotationResult;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.HttpHelper;
@@ -27,17 +27,17 @@ public class AddToLibraryTask extends AsyncTask<String, Void, TextAnnotationResu
 	private Activity activity;
 	private String filename;
 	private String TAG, fault;
-	private OnAsyncTask listener;
+	private OnHttpListener listener;
 	
 	
-	public AddToLibraryTask(Context context, Activity activity, OnAsyncTask listener){
+	public AddToLibraryTask(Context context, Activity activity, OnHttpListener listener){
 		this.context 	= context;
 		this.activity 	= activity;
 		this.TAG 		= "";
 		this.listener 	= listener;
 	}
 	
-	public AddToLibraryTask(Context context, Activity activity, OnAsyncTask listener, String tag){
+	public AddToLibraryTask(Context context, Activity activity, OnHttpListener listener, String tag){
 		this.context 	= context;
 		this.activity 	= activity;
 		this.TAG 		= tag;

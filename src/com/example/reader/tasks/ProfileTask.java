@@ -10,7 +10,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 
 import com.example.reader.R;
-import com.example.reader.interfaces.OnAsyncTask;
+import com.example.reader.interfaces.OnHttpListener;
 import com.example.reader.interfaces.OnProfileFetched;
 import com.example.reader.results.ProfileResult;
 import com.example.reader.utils.HttpHelper;
@@ -20,12 +20,14 @@ public class ProfileTask extends AsyncTask<String, Void, ProfileResult>{
 	private ProgressDialog dialog;
 	private Context context;
 	private OnProfileFetched profileListener;
-	private OnAsyncTask asyncListener;
+	private OnHttpListener asyncListener;
+	private Boolean isShowGui;
 	
-	public ProfileTask(Context context, OnAsyncTask asyncListener, OnProfileFetched profileListener){
+	public ProfileTask(Context context, Boolean showGUI, OnHttpListener asyncListener, OnProfileFetched profileListener){
 		this.context 			= context;
 		this.profileListener 	= profileListener;
 		this.asyncListener		= asyncListener;
+		this.isShowGui			= showGUI;
 		
 	}
 	
@@ -35,26 +37,28 @@ public class ProfileTask extends AsyncTask<String, Void, ProfileResult>{
 	
 	@Override
 	protected void onPreExecute() {
-		dialog = new ProgressDialog(context);
-		dialog.setTitle(context.getString(R.string.dialog_fetch_user_problems_title));
-		dialog.setMessage(context.getString(R.string.dialog_fetch_user_problems_summary));
-		dialog.setCancelable(true);
-		dialog.setCanceledOnTouchOutside(false);
-		dialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				cancel(true);
-				dialog.dismiss();
-			}
-		});
-		dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				cancel(true);
-				dialog.dismiss();
-			}
-		});
-		dialog.show();
+		if(isShowGui){
+			dialog = new ProgressDialog(context);
+			dialog.setTitle(context.getString(R.string.dialog_fetch_user_problems_title));
+			dialog.setMessage(context.getString(R.string.dialog_fetch_user_problems_summary));
+			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					cancel(true);
+					dialog.dismiss();
+				}
+			});
+			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					cancel(true);
+					dialog.dismiss();
+				}
+			});
+			dialog.show();
+		}
 		super.onPreExecute();
 	}
 	
@@ -80,10 +84,11 @@ public class ProfileTask extends AsyncTask<String, Void, ProfileResult>{
 	
 	@Override
 	protected void onPostExecute(ProfileResult result) {
-		if(dialog.isShowing()) {
-			dialog.dismiss();
+		if(isShowGui){
+			if(dialog.isShowing()) {
+				dialog.dismiss();
+			}
 		}
-		
 		if(result != null){
 			profileListener.onProfileFetched(result);
 		}

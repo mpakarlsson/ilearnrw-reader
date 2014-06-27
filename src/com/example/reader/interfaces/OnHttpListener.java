@@ -1,5 +1,5 @@
 package com.example.reader.interfaces;
 
-public interface OnAsyncTask {
+public interface OnHttpListener {
 	void onTokenExpired(String... params);
 }

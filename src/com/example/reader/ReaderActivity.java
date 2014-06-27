@@ -3,6 +3,7 @@ package com.example.reader;
 import ilearnrw.annotation.UserBasedAnnotatedWord;
 import ilearnrw.textclassification.SeverityOnWordProblemInfo;
 import ilearnrw.textclassification.StringMatchesInfo;
+import ilearnrw.textclassification.Word;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,10 +100,13 @@ public class ReaderActivity
 
 	private AnnotatedWordSetResult annotationData;
 	
-	public final static int FLAG_SEARCH = 10000;
-	public final static int FLAG_MODE = 10001;
-	public final static int FLAG_REFRESH_WEBVIEW = 10002;
-	public final static int FLAG_CHECK_TTS = 10003;
+	private ArrayList<Word> trickyWords;
+	
+	public final static int FLAG_SEARCH 			= 10000;
+	public final static int FLAG_MODE 				= 10001;
+	public final static int FLAG_REFRESH_WEBVIEW 	= 10002;
+	public final static int FLAG_CHECK_TTS 			= 10003;
+	public final static int FLAG_WORD_POPUP 		= 10004;
 	
 	public static enum ReaderMode {
 		Listen("Listen", 0),
@@ -135,6 +139,7 @@ public class ReaderActivity
 		Disabled
 	}
 	
+	@SuppressWarnings("unchecked")
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +152,7 @@ public class ReaderActivity
 		bundleJSON			= libBundle.getString("json");
 		libraryTitle		= libBundle.getString("title");
 		annotationData		= new Gson().fromJson(bundleJSON, AnnotatedWordSetResult.class);
+		trickyWords			= (ArrayList<Word>) libBundle.get("trickyWords");
 		
 		sp 			= PreferenceManager.getDefaultSharedPreferences(this);
 		spEditor 	= sp.edit();
@@ -276,6 +282,7 @@ public class ReaderActivity
 		super.onDestroy();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {		
 		switch (requestCode) {
@@ -294,7 +301,13 @@ public class ReaderActivity
 			}
 		}
 			break;
-			
+		case FLAG_WORD_POPUP:
+		{
+			if(resultCode == RESULT_OK){
+				trickyWords = (ArrayList<Word>) data.getExtras().get("trickyWords");
+			}
+		}
+			break;
 		case FLAG_MODE:
 		{
 			if(resultCode == RESULT_OK){
@@ -985,6 +998,7 @@ public class ReaderActivity
 					in.putExtra("word", word.getWord());
 					in.putExtra("stem", word.getStem());
 					in.putExtra("wordInSyllables", word.getWordInToSyllables());
+					in.putExtra("trickyWords", trickyWords);
 					
 					ArrayList<SeverityOnWordProblemInfo> problems = word.getUserSeveritiesOnWordProblems();
 					
@@ -1002,7 +1016,7 @@ public class ReaderActivity
 					}
 					
 					in.putIntegerArrayListExtra("problems", values);
-					startActivity(in);					
+					startActivityForResult(in, FLAG_WORD_POPUP);
 					break;
 				}
 			}

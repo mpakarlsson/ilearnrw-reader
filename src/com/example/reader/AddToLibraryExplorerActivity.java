@@ -14,7 +14,7 @@ import java.util.Locale;
 
 
 
-import com.example.reader.interfaces.OnAsyncTask;
+import com.example.reader.interfaces.OnHttpListener;
 import com.example.reader.tasks.AddToLibraryTask;
 import com.example.reader.types.BasicListAdapter;
 import com.example.reader.types.ExplorerItem;
@@ -41,7 +41,7 @@ public class AddToLibraryExplorerActivity
 	extends 
 		Activity 
 	implements 
-		OnAsyncTask {
+		OnHttpListener {
 	
 	private List<ExplorerItem> items = null;
 	private String root = Environment.getExternalStorageDirectory().getPath();
