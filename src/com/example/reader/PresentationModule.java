@@ -83,9 +83,9 @@ public class PresentationModule
 	private int currentCategoryPos;
 	private int currentProblemPos;
 	
-	//private UserProfile userProfile;
+	private UserProfile userProfile;
 	
-	//private TextAnnotationModule txModule;
+	private TextAnnotationModule txModule;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -377,7 +377,8 @@ public class PresentationModule
 		ArrayAdapter<String> categoryAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, categories, true);
 		spCategories.setAdapter(categoryAdapter);
 		
-		//this.userProfile = profile.profile;
+		UserProfile prof = new UserProfile(profile.language, profile.userProblems, profile.preferences);
+		//txModule = new TextAnnotationModule(html, prof);
 		
 	}
 	

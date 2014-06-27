@@ -1,9 +1,11 @@
 package com.example.reader.results;
 
+import ilearnrw.user.UserPreferences;
 import ilearnrw.user.profile.UserProblems;
-import ilearnrw.user.profile.UserProfile;
+import ilearnrw.utils.LanguageCode;
 
 public class ProfileResult {
 	public UserProblems userProblems;
-	public UserProfile profile;
+	public UserPreferences preferences;
+	public LanguageCode language;
 }
