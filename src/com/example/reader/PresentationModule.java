@@ -1,5 +1,6 @@
 package com.example.reader;
 
+import ilearnrw.textclassification.Word;
 import ilearnrw.user.problems.ProblemDefinition;
 import ilearnrw.user.problems.ProblemDefinitionIndex;
 import ilearnrw.user.problems.ProblemDescription;
@@ -7,11 +8,8 @@ import ilearnrw.user.problems.ProblemDescription;
 import java.io.File;
 import java.util.ArrayList;
 
-
-
-
 import com.example.reader.interfaces.ColorPickerListener;
-import com.example.reader.interfaces.OnAsyncTask;
+import com.example.reader.interfaces.OnHttpListener;
 import com.example.reader.interfaces.OnProfileFetched;
 import com.example.reader.results.ProfileResult;
 import com.example.reader.tasks.ProfileTask;
@@ -46,7 +44,7 @@ public class PresentationModule
 	implements 
 		OnClickListener, 
 		OnCheckedChangeListener,
-		OnAsyncTask,
+		OnHttpListener,
 		OnProfileFetched,
 		OnItemSelectedListener {
 
@@ -61,6 +59,8 @@ public class PresentationModule
 	private String html, json;
 	private String name = "";
 	private Boolean showGUI = false;
+	
+	private ArrayList<Word> trickyWords;
 	
 	private SharedPreferences sp;
 	
@@ -95,6 +95,7 @@ public class PresentationModule
 		
 		name 			= bundle.getString("title", "");
 		showGUI 		= bundle.getBoolean("showGUI", false);
+		trickyWords		= new ArrayList<Word>();
 		
 		if(loadFiles){
 			fileHtml 		= (File)bundle.get("file");
@@ -109,11 +110,6 @@ public class PresentationModule
 		
 		categories 	= new ArrayList<String>();
 		problems 	= new ArrayList<String>();
-	
-		if(!showGUI){
-			// Todo: Do rules as-is
-			finished();
-		}
 		
 		setContentView(R.layout.activity_presentation_module);
 		
@@ -121,15 +117,11 @@ public class PresentationModule
 		sp.edit().putBoolean("showGUI", showGUI).commit();
 		int id = sp.getInt("id",-1);
 		String token = sp.getString("authToken", "");
-		if(id==-1 || token.isEmpty())
+		if(id==-1 || token.isEmpty()) {
 			finished(); // If you don't have an id something is terribly wrong
-		
-		if(showGUI)
-			init();
-		
-		if(!showGUI)
-			finish();
-		
+			throw new IllegalArgumentException("Missing id or token");
+		}
+		init();
 	}
 	
 	private void init(){
@@ -165,7 +157,7 @@ public class PresentationModule
 		spCategories.setOnItemSelectedListener(this);
 		spProblems.setOnItemSelectedListener(this);
 		
-		new ProfileTask(this, this, this).run(userId, token);
+		new ProfileTask(this, showGUI, this, this).run(userId, token);
 
 	}
 	
@@ -269,6 +261,7 @@ public class PresentationModule
 		intent.putExtra("html", html);
 		intent.putExtra("json", json);
 		intent.putExtra("title", name);
+		intent.putExtra("trickyWords", (ArrayList<Word>) trickyWords);
 		startActivity(intent);
 	}
 
@@ -328,7 +321,7 @@ public class PresentationModule
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					new ProfileTask(PresentationModule.this, PresentationModule.this, PresentationModule.this).run(params[0], newToken);
+					new ProfileTask(PresentationModule.this, showGUI, PresentationModule.this, PresentationModule.this).run(params[0], newToken);
 					Log.d(TAG, getString(R.string.token_error_retry));
 					Toast.makeText(PresentationModule.this, getString(R.string.token_error_retry), Toast.LENGTH_SHORT).show();
 				}
@@ -338,8 +331,15 @@ public class PresentationModule
 
 	@Override
 	public void onProfileFetched(ProfileResult profile) {
+		trickyWords = (ArrayList<Word>) profile.userProblems.getTrickyWords();
+		
+		if(!showGUI){
+			finished();
+			return;
+		}
 		
 		ProblemDefinitionIndex index 		= profile.userProblems.getProblems();
+		
 		definitions 	= index.getProblemsIndex();
 		descriptions 	= index.getProblems();
 		

@@ -7,8 +7,6 @@ import java.util.Locale;
 import java.util.Set;
 
 import com.example.reader.R;
-import com.example.reader.R.id;
-import com.example.reader.R.layout;
 
 import android.content.Context;
 import android.view.LayoutInflater;

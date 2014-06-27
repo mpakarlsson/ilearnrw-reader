@@ -25,6 +25,16 @@
 	<string name="color_picker">Choose a color</string>	
 	
 	<string name="add_tricky_word">Add tricky word</string>
+	<string name="remove_tricky_word">Remove tricky word</string>
+	
+	<string name="dialog_remove_tricky_word_title">Remove tricky word</string>
+	<string name="dialog_remove_tricky_word_summary">Removing tricky word. Please wait&#8230;</string>
+	<string name="dialog_add_tricky_word_title">Add tricky word</string>
+	<string name="dialog_add_tricky_word_summary">Adding tricky word. Please wait&#8230;</string>
+	<string name="success_added_word">Added word to tricky list</string>
+	<string name="success_removed_word">Removed word from tricky list</string>
+	<string name="failed_add_word">Failed to add word to tricky list</string>
+	<string name="failed_remove_word">Failed to remove word from tricky list</string>
 	
 	<string-array 
 	    name="word_information">
