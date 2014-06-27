@@ -48,7 +48,7 @@ public class PresentationModule
 		OnProfileFetched,
 		OnItemSelectedListener {
 
-	private LinearLayout colorLayout;
+	private LinearLayout colorLayout, container;
 	private Button btnOk, btnCancel;
 	private RadioGroup rulesGroup;
 	private RadioButton rbtnRule1, rbtnRule2, rbtnRule3, rbtnRule4;
@@ -125,6 +125,12 @@ public class PresentationModule
 	}
 	
 	private void init(){
+		container		= (LinearLayout) findViewById(R.id.presentation_module_container);
+		if(showGUI)
+			container.setVisibility(View.VISIBLE);
+		else
+			container.setVisibility(View.GONE);
+		
 		spCategories 	= (Spinner) findViewById(R.id.categories);
 		spProblems 		= (Spinner) findViewById(R.id.problems);
 		
