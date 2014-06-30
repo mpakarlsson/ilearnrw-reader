@@ -128,7 +128,6 @@ public class PresentationModule
 			throw new IllegalArgumentException("Missing id or token");
 		}
 		init();
-		
 	}
 	
 	
@@ -181,22 +180,6 @@ public class PresentationModule
 		
 		case R.id.pm_btn_ok:
 			
-			//int color = sp.getInt("pm_color_0_0", DEFAULT_COLOR);
-			//int rule = sp.getInt("pm_rule_0_0", DEFAULT_RULE);
-			
-			/*if (rbtnRule1.isChecked() || rbtnRule2.isChecked())
-			{
-				Log.i("Checked", "rbtnRule2");
-				Log.i("Checked", this.txModule.getBackgroundColor());
-				this.txModule.getPresentationRulesModule().setTextColor(category, problem, currentColor+"");
-				
-			}
-			else if (rbtnRule3.isChecked() || rbtnRule4.isChecked())
-			{
-				Log.i("Checked", "rbtnRule3");
-				
-			}*/
-			
 			for (int i = 0; i < categories.size(); i++)
 			{
 				for (int j = 0; j < this.problems.size(); j++)
@@ -205,8 +188,6 @@ public class PresentationModule
 					int rule = sp.getInt("pm_rule_"+i+"_"+j, DEFAULT_RULE); 
 					
 					this.txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
-					Log.i("Rule", color+"");
-					//Log.i("Rule", this.txModule.getPresentationRulesModule().getHighlightingColor(i, j)+"");
 					
 					if (rbtnRule1.isChecked() || rbtnRule2.isChecked())
 					{
@@ -216,8 +197,6 @@ public class PresentationModule
 					{
 						this.txModule.getPresentationRulesModule().setHighlightingColor(i, j, color);
 					}
-					//Log.i("Rule", this.txModule.getPresentationRulesModule().getTextColor(i, j)+"");
-					//Log.i("Rule", this.txModule.getPresentationRulesModule().getHighlightingColor(i, j)+"");
 				}
 			}
 			
@@ -311,6 +290,17 @@ public class PresentationModule
 	}
 	
 	private void finished(){
+		try
+		{
+			String input = "text/annotate?userId=" + 1 + "&lc=EN&token=";
+			
+			String result = txModule.sendPostToServer(sp.getString("authToken", ""), input);
+			Log.i("Result", result);
+		}
+		catch (Exception e)
+		{
+			Log.i("Exception", "I am here: " +e.toString());
+		}
 		Intent intent = new Intent(PresentationModule.this, ReaderActivity.class);
 		intent.putExtra("html", html);
 		intent.putExtra("json", json);
@@ -410,15 +400,6 @@ public class PresentationModule
 		
 		userProfile = new UserProfile(profile.language, profile.userProblems, profile.preferences);
 		txModule = new TextAnnotationModule(html, userProfile);
-		
-		try{
-			txModule.sendPostToServer(sp.getString("authToken", ""));
-			Log.i("Result", txModule.getJSONFile());
-		}
-		catch (Exception e)
-		{
-			Log.i("Exception", e.toString());
-		}
 		
 	}
 	
