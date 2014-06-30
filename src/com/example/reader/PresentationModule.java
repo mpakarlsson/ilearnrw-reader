@@ -128,16 +128,10 @@ public class PresentationModule
 			throw new IllegalArgumentException("Missing id or token");
 		}
 		init();
-		Log.i("Result", txModule.getProfile().getLanguage().toString());
-		try{
-			txModule.sendPostToServer(token);
-			Log.i("Result", txModule.getJSONFile());
-		}
-		catch (Exception e)
-		{
-			Log.i("Exception", e.toString());
-		}
+		
 	}
+	
+	
 	
 	private void init(){
 		container		= (LinearLayout) findViewById(R.id.presentation_module_container);
@@ -186,6 +180,46 @@ public class PresentationModule
 		switch(v.getId()){
 		
 		case R.id.pm_btn_ok:
+			
+			//int color = sp.getInt("pm_color_0_0", DEFAULT_COLOR);
+			//int rule = sp.getInt("pm_rule_0_0", DEFAULT_RULE);
+			
+			/*if (rbtnRule1.isChecked() || rbtnRule2.isChecked())
+			{
+				Log.i("Checked", "rbtnRule2");
+				Log.i("Checked", this.txModule.getBackgroundColor());
+				this.txModule.getPresentationRulesModule().setTextColor(category, problem, currentColor+"");
+				
+			}
+			else if (rbtnRule3.isChecked() || rbtnRule4.isChecked())
+			{
+				Log.i("Checked", "rbtnRule3");
+				
+			}*/
+			
+			for (int i = 0; i < categories.size(); i++)
+			{
+				for (int j = 0; j < this.problems.size(); j++)
+				{
+					int color = sp.getInt("pm_color_"+i+"_"+j, DEFAULT_COLOR);
+					int rule = sp.getInt("pm_rule_"+i+"_"+j, DEFAULT_RULE); 
+					
+					this.txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
+					Log.i("Rule", color+"");
+					//Log.i("Rule", this.txModule.getPresentationRulesModule().getHighlightingColor(i, j)+"");
+					
+					if (rbtnRule1.isChecked() || rbtnRule2.isChecked())
+					{
+						this.txModule.getPresentationRulesModule().setTextColor(i, j, color);
+					}
+					else if (rbtnRule3.isChecked() || rbtnRule4.isChecked())
+					{
+						this.txModule.getPresentationRulesModule().setHighlightingColor(i, j, color);
+					}
+					//Log.i("Rule", this.txModule.getPresentationRulesModule().getTextColor(i, j)+"");
+					//Log.i("Rule", this.txModule.getPresentationRulesModule().getHighlightingColor(i, j)+"");
+				}
+			}
 			
 			finished();
 			break;
@@ -376,6 +410,15 @@ public class PresentationModule
 		
 		userProfile = new UserProfile(profile.language, profile.userProblems, profile.preferences);
 		txModule = new TextAnnotationModule(html, userProfile);
+		
+		try{
+			txModule.sendPostToServer(sp.getString("authToken", ""));
+			Log.i("Result", txModule.getJSONFile());
+		}
+		catch (Exception e)
+		{
+			Log.i("Exception", e.toString());
+		}
 		
 	}
 	
