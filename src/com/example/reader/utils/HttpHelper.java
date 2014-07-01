@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.protocol.HTTP;
 
 import com.example.reader.results.TokenResult;
 import com.google.gson.Gson;
@@ -38,7 +39,7 @@ public class HttpHelper {
 		post.setHeader("Content-Type", "application/json;charset=utf-8");
 		
 		try {
-			post.setEntity(new StringEntity(data));
+			post.setEntity(new StringEntity(data, HTTP.UTF_8));
 			response = client.execute(post);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
