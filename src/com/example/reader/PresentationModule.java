@@ -117,8 +117,6 @@ public class PresentationModule
 			json = bundle.getString("json");
 		}
 		
-		
-		
 		categories 	= new ArrayList<String>();
 		problems 	= new ArrayList<String>();
 		
@@ -128,6 +126,23 @@ public class PresentationModule
 		sp.edit().putBoolean("showGUI", showGUI).commit();
 		int id = sp.getInt("id",-1);
 		String token = sp.getString("authToken", "");
+		
+		txModule = new TextAnnotationModule(html);
+		
+		if (userProfile != null)
+		{
+			txModule.initializePresentationModule();
+		}
+		else
+		{
+			txModule.initializePresentationModuleFromServer(token, id+"");
+		}
+		
+		txModule.setJSONFile(json);
+		txModule.setInputHTMLFile(html);
+		txModule.annotateText();
+		
+		
 		if(id==-1 || token.isEmpty()) {
 			finished(); // If you don't have an id something is terribly wrong
 			throw new IllegalArgumentException("Missing id or token");
@@ -314,8 +329,6 @@ public class PresentationModule
 		intent.putExtra("json", json);
 		intent.putExtra("title", name);
 		intent.putExtra("trickyWords", (ArrayList<Word>) trickyWords);
-		
-		
 		startActivity(intent);
 	}
 
