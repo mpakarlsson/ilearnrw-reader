@@ -1,5 +1,7 @@
 package com.example.reader.tasks;
 
+import ilearnrw.user.profile.UserProfile;
+
 import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
@@ -12,11 +14,10 @@ import android.os.AsyncTask;
 import com.example.reader.R;
 import com.example.reader.interfaces.OnHttpListener;
 import com.example.reader.interfaces.OnProfileFetched;
-import com.example.reader.results.ProfileResult;
 import com.example.reader.utils.HttpHelper;
 import com.google.gson.Gson;
 
-public class ProfileTask extends AsyncTask<String, Void, ProfileResult>{
+public class ProfileTask extends AsyncTask<String, Void, UserProfile>{
 	private ProgressDialog dialog;
 	private Context context;
 	private OnProfileFetched profileListener;
@@ -63,7 +64,7 @@ public class ProfileTask extends AsyncTask<String, Void, ProfileResult>{
 	}
 	
 	@Override
-	protected ProfileResult doInBackground(String... params) {
+	protected UserProfile doInBackground(String... params) {
 		HttpResponse response = HttpHelper.get("http://api.ilearnrw.eu/ilearnrw/profile?userId=" + params[0] + "&token=" + params[1]);
 		ArrayList<String> data = HttpHelper.handleResponse(response);
 		
@@ -72,9 +73,9 @@ public class ProfileTask extends AsyncTask<String, Void, ProfileResult>{
 				asyncListener.onTokenExpired(params[0], params[1]);
 			return null;
 		} else {
-			ProfileResult result = null;
+			UserProfile result = null;
 			try {
-				result = new Gson().fromJson(data.get(1), ProfileResult.class);
+				result = new Gson().fromJson(data.get(1), UserProfile.class);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -83,7 +84,7 @@ public class ProfileTask extends AsyncTask<String, Void, ProfileResult>{
 	}
 	
 	@Override
-	protected void onPostExecute(ProfileResult result) {
+	protected void onPostExecute(UserProfile result) {
 		if(isShowGui){
 			if(dialog.isShowing()) {
 				dialog.dismiss();

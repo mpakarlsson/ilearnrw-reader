@@ -1,7 +1,7 @@
 package com.example.reader.interfaces;
 
-import com.example.reader.results.ProfileResult;
+import ilearnrw.user.profile.UserProfile;
 
 public interface OnProfileFetched {
-	void onProfileFetched(ProfileResult profile);
+	void onProfileFetched(UserProfile profile);
 }

@@ -1,6 +1,7 @@
 package com.example.reader.popups;
 
 import ilearnrw.textclassification.Word;
+import ilearnrw.user.profile.UserProfile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +12,6 @@ import com.example.reader.interfaces.OnHttpListener;
 import com.example.reader.interfaces.OnProfileFetched;
 import com.example.reader.interfaces.OnTextToSpeechComplete;
 import com.example.reader.interfaces.OnTrickyWordListener;
-import com.example.reader.results.ProfileResult;
 import com.example.reader.tasks.ProfileTask;
 import com.example.reader.tasks.TrickyWordsTask;
 import com.example.reader.texttospeech.TextToSpeechBase;
@@ -288,8 +288,8 @@ public class WordActivity
 
 
 	@Override
-	public void onProfileFetched(ProfileResult profile) {
-		trickyWords = (ArrayList<Word>) profile.userProblems.getTrickyWords();
+	public void onProfileFetched(UserProfile profile) {
+		trickyWords = (ArrayList<Word>) profile.getUserProblems().getTrickyWords();
 		
 		if(isAdding){
 			btnAddTrickyWord.setText(getResources().getString(R.string.remove_tricky_word));

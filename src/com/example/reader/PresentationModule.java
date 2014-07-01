@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import com.example.reader.interfaces.ColorPickerListener;
 import com.example.reader.interfaces.OnHttpListener;
 import com.example.reader.interfaces.OnProfileFetched;
-import com.example.reader.results.ProfileResult;
 import com.example.reader.tasks.ProfileTask;
 import com.example.reader.types.ColorPickerDialog;
 import com.example.reader.types.BasicListAdapter;
@@ -135,7 +134,7 @@ public class PresentationModule
 		}
 		else
 		{
-			txModule.initializePresentationModuleFromServer(token, id+"");
+			//txModule.initializePresentationModuleFromServer(token, id+"");
 		}
 		
 		txModule.setJSONFile(json);
@@ -403,15 +402,15 @@ public class PresentationModule
 	
 
 	@Override
-	public void onProfileFetched(ProfileResult profile) {
-		trickyWords = (ArrayList<Word>) profile.userProblems.getTrickyWords();
+	public void onProfileFetched(UserProfile profile) {
+		trickyWords = (ArrayList<Word>) profile.getUserProblems().getTrickyWords();
 		
 		if(!showGUI){
 			finished();
 			return;
 		}
 		
-		ProblemDefinitionIndex index 		= profile.userProblems.getProblems();
+		ProblemDefinitionIndex index 		= profile.getUserProblems().getProblems();
 		
 		definitions 	= index.getProblemsIndex();
 		descriptions 	= index.getProblems();
@@ -426,8 +425,6 @@ public class PresentationModule
 		
 		ArrayAdapter<String> categoryAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, categories, true);
 		spCategories.setAdapter(categoryAdapter);
-		
-		userProfile = new UserProfile(profile.language, profile.userProblems, profile.preferences);
 		
 	}
 	
