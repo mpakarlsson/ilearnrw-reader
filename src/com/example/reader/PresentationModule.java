@@ -117,6 +117,8 @@ public class PresentationModule
 			json = bundle.getString("json");
 		}
 		
+		
+		
 		categories 	= new ArrayList<String>();
 		problems 	= new ArrayList<String>();
 		
@@ -126,10 +128,24 @@ public class PresentationModule
 		sp.edit().putBoolean("showGUI", showGUI).commit();
 		int id = sp.getInt("id",-1);
 		String token = sp.getString("authToken", "");
+		
+		txModule = new TextAnnotationModule(html);
+		
+		if (userProfile != null)
+		{
+			txModule.initializePresentationModule();
+		}
+		else
+		{
+			txModule.initializePresentationModuleFromServer(token, id+"");
+		}
+		
+		
 		if(id==-1 || token.isEmpty()) {
 			finished(); // If you don't have an id something is terribly wrong
 			throw new IllegalArgumentException("Missing id or token");
 		}
+		
 		init();
 	}
 	
@@ -182,8 +198,6 @@ public class PresentationModule
 				sp.edit().putBoolean("pm_enabled_" + currentCategoryPos + "_" + currentProblemPos, isChecked).commit();
 			}
 		});
-		
-		
 		new ProfileTask(this, showGUI, this, this).run(userId, token);
 	}
 	
@@ -210,6 +224,8 @@ public class PresentationModule
 					{
 						this.txModule.getPresentationRulesModule().setHighlightingColor(i, j, color);
 					}
+					
+					this.txModule.getPresentationRulesModule().setActivated(i, j, this.chkSwitch.isChecked());
 				}
 			}
 			
@@ -306,22 +322,14 @@ public class PresentationModule
 	}
 	
 	private void finished(){
-		try
-		{
-			String input = "text/annotate?userId=" + 1 + "&lc=EN&token=";
-			
-			String result = txModule.sendPostToServer(sp.getString("authToken", ""), input);
-			Log.i("Result", result);
-		}
-		catch (Exception e)
-		{
-			Log.i("Exception", "I am here: " +e.toString());
-		}
+		
 		Intent intent = new Intent(PresentationModule.this, ReaderActivity.class);
 		intent.putExtra("html", html);
 		intent.putExtra("json", json);
 		intent.putExtra("title", name);
 		intent.putExtra("trickyWords", (ArrayList<Word>) trickyWords);
+		
+		
 		startActivity(intent);
 	}
 
@@ -393,6 +401,7 @@ public class PresentationModule
 			});
 		}
 	}
+	
 
 	@Override
 	public void onProfileFetched(ProfileResult profile) {
@@ -420,7 +429,6 @@ public class PresentationModule
 		spCategories.setAdapter(categoryAdapter);
 		
 		userProfile = new UserProfile(profile.language, profile.userProblems, profile.preferences);
-		txModule = new TextAnnotationModule(html, userProfile);
 		
 	}
 	
