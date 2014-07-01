@@ -114,6 +114,7 @@ public class PresentationModule
 			json = bundle.getString("json");
 		}
 		
+		
 		categories 	= new ArrayList<String>();
 		problems 	= new ArrayList<String>();
 		
@@ -128,6 +129,8 @@ public class PresentationModule
 			throw new IllegalArgumentException("Missing id or token");
 		}
 		init();
+		
+		
 	}
 	
 	
@@ -172,6 +175,8 @@ public class PresentationModule
 		spProblems.setOnItemSelectedListener(this);
 		
 		new ProfileTask(this, showGUI, this, this).run(userId, token);
+		
+		
 	}
 	
 	@Override
@@ -199,6 +204,16 @@ public class PresentationModule
 					}
 				}
 			}
+			
+			
+			//txModule.setProfile(userProfile);
+			
+			txModule.setJSONFile(this.json);
+			Log.i("JSN", this.json);
+			
+			txModule.setInputHTMLFile(this.html);
+			Log.i("HTML", this.html);
+			//txModule.annotateText();
 			
 			finished();
 			break;
@@ -290,17 +305,7 @@ public class PresentationModule
 	}
 	
 	private void finished(){
-		try
-		{
-			String input = "text/annotate?userId=" + 1 + "&lc=EN&token=";
-			
-			String result = txModule.sendPostToServer(sp.getString("authToken", ""), input);
-			Log.i("Result", result);
-		}
-		catch (Exception e)
-		{
-			Log.i("Exception", "I am here: " +e.toString());
-		}
+		
 		Intent intent = new Intent(PresentationModule.this, ReaderActivity.class);
 		intent.putExtra("html", html);
 		intent.putExtra("json", json);
@@ -399,8 +404,9 @@ public class PresentationModule
 		spCategories.setAdapter(categoryAdapter);
 		
 		userProfile = new UserProfile(profile.language, profile.userProblems, profile.preferences);
-		txModule = new TextAnnotationModule(html, userProfile);
 		
+		txModule = new TextAnnotationModule(html,userProfile);
+		Log.i("TXMODULE", txModule.toString());
 	}
 	
 }
