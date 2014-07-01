@@ -309,21 +309,6 @@ public class PresentationModule
 	}
 	
 	private void finished(){
-<<<<<<< HEAD
-		
-=======
-		try
-		{
-			String input = "text/annotate?userId=" + 1 + "&lc=EN&token=";
-			
-			//String result = txModule.sendPostToServer(sp.getString("authToken", ""), input);
-			//Log.i("Result", result);
-		}
-		catch (Exception e)
-		{
-			Log.i("Exception", "I am here: " +e.toString());
-		}
->>>>>>> origin/master
 		Intent intent = new Intent(PresentationModule.this, ReaderActivity.class);
 		intent.putExtra("html", html);
 		intent.putExtra("json", json);
