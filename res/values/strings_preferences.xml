@@ -9,7 +9,7 @@
     <string name="pref_extras_category_title">Extras</string>
    	<string name="pref_presentation_rules_category_title">Presentation rules</string>
    	<string name="pref_reset_category_title">Resets</string>
-   	
+   	<string name="pref_apply_category_title">Confirm</string>
    	
     <string name="pref_highlighter_speed">pref_highlighter_speed</string>
     
@@ -39,7 +39,9 @@
     
     <string name="pref_reader_reset">Reset</string>
     <string name="pref_reader_reset_summary">Reset reader options</string>  
-   
+
+    <string name="pref_apply_title">Apply changes</string>
+    
 	<string name="pref_presentation_rules_title">Change rules</string>
 	<string name="pref_presentation_rules_summary">Change presentation rules</string>
 	
@@ -59,6 +61,7 @@
 	<string name="pref_layout_text_summary">Change text color</string>
 	<string name="pref_layout_text">pref_layout_text</string>
 
+	
 	
 	<string-array name="pref_languages">
         <item>English</item>

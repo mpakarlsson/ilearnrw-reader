@@ -128,24 +128,10 @@ public class PresentationModule
 		sp.edit().putBoolean("showGUI", showGUI).commit();
 		int id = sp.getInt("id",-1);
 		String token = sp.getString("authToken", "");
-		
-		txModule = new TextAnnotationModule(html);
-		
-		if (userProfile != null)
-		{
-			txModule.initializePresentationModule();
-		}
-		else
-		{
-			txModule.initializePresentationModuleFromServer(token, id+"");
-		}
-		
-		
 		if(id==-1 || token.isEmpty()) {
 			finished(); // If you don't have an id something is terribly wrong
 			throw new IllegalArgumentException("Missing id or token");
 		}
-		
 		init();
 	}
 	
@@ -207,9 +193,10 @@ public class PresentationModule
 		
 		case R.id.pm_btn_ok:
 			
-			for (int i = 0; i < categories.size(); i++)
+			for (int i = 0; i < definitions.length; i++)
 			{
-				for (int j = 0; j < this.problems.size(); j++)
+				int problemSize = descriptions[i].length;
+				for (int j = 0; j < problemSize; j++)
 				{
 					int color = sp.getInt("pm_color_"+i+"_"+j, DEFAULT_COLOR);
 					int rule = sp.getInt("pm_rule_"+i+"_"+j, DEFAULT_RULE); 
@@ -322,7 +309,21 @@ public class PresentationModule
 	}
 	
 	private void finished(){
+<<<<<<< HEAD
 		
+=======
+		try
+		{
+			String input = "text/annotate?userId=" + 1 + "&lc=EN&token=";
+			
+			//String result = txModule.sendPostToServer(sp.getString("authToken", ""), input);
+			//Log.i("Result", result);
+		}
+		catch (Exception e)
+		{
+			Log.i("Exception", "I am here: " +e.toString());
+		}
+>>>>>>> origin/master
 		Intent intent = new Intent(PresentationModule.this, ReaderActivity.class);
 		intent.putExtra("html", html);
 		intent.putExtra("json", json);
@@ -419,7 +420,7 @@ public class PresentationModule
 		
 		categories.clear();
 		for(int i=0; i<definitions.length;i++){
-				categories.add((i+1) + ". " + definitions[i].getType().getUrl());
+				categories.add((i+1) + ". " + definitions[i].getURI());
 		}
 		
 		currentCategoryPos 	= 0;
