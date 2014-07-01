@@ -1,11 +1,13 @@
 package com.example.reader;
 
+import ilearnrw.textadaptation.PresentationRulesModule;
 import ilearnrw.textadaptation.TextAnnotationModule;
 import ilearnrw.textclassification.Word;
 import ilearnrw.user.problems.ProblemDefinition;
 import ilearnrw.user.problems.ProblemDefinitionIndex;
 import ilearnrw.user.problems.ProblemDescription;
 import ilearnrw.user.profile.UserProfile;
+import ilearnrw.utils.ServerHelperClass;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import com.example.reader.types.ColorPickerDialog;
 import com.example.reader.types.BasicListAdapter;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.HttpHelper;
+import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -124,23 +127,7 @@ public class PresentationModule
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		sp.edit().putBoolean("showGUI", showGUI).commit();
 		int id = sp.getInt("id",-1);
-		String token = sp.getString("authToken", "");
-		
-		txModule = new TextAnnotationModule(html);
-		
-		if (userProfile != null)
-		{
-			txModule.initializePresentationModule();
-		}
-		else
-		{
-			//txModule.initializePresentationModuleFromServer(token, id+"");
-		}
-		
-		txModule.setJSONFile(json);
-		txModule.setInputHTMLFile(html);
-		txModule.annotateText();
-		
+		String token = sp.getString("authToken", "");		
 		
 		if(id==-1 || token.isEmpty()) {
 			finished(); // If you don't have an id something is terribly wrong
@@ -404,6 +391,21 @@ public class PresentationModule
 	@Override
 	public void onProfileFetched(UserProfile profile) {
 		trickyWords = (ArrayList<Word>) profile.getUserProblems().getTrickyWords();
+		
+		
+		txModule = new TextAnnotationModule(html);
+		
+		if (profile != null)
+		{
+			txModule.initializePresentationModule(new UserProfile(profile.language, profile.userProblems, profile.preferences));
+		}
+		
+		txModule.setJSONFile(json);
+		txModule.setInputHTMLFile(html);
+		txModule.annotateText();
+		
+		
+		
 		
 		if(!showGUI){
 			finished();
