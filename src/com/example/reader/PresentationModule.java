@@ -193,9 +193,10 @@ public class PresentationModule
 		
 		case R.id.pm_btn_ok:
 			
-			for (int i = 0; i < categories.size(); i++)
+			for (int i = 0; i < definitions.length; i++)
 			{
-				for (int j = 0; j < this.problems.size(); j++)
+				int problemSize = descriptions[i].length;
+				for (int j = 0; j < problemSize; j++)
 				{
 					int color = sp.getInt("pm_color_"+i+"_"+j, DEFAULT_COLOR);
 					int rule = sp.getInt("pm_rule_"+i+"_"+j, DEFAULT_RULE); 
@@ -310,8 +311,8 @@ public class PresentationModule
 		{
 			String input = "text/annotate?userId=" + 1 + "&lc=EN&token=";
 			
-			String result = txModule.sendPostToServer(sp.getString("authToken", ""), input);
-			Log.i("Result", result);
+			//String result = txModule.sendPostToServer(sp.getString("authToken", ""), input);
+			//Log.i("Result", result);
 		}
 		catch (Exception e)
 		{
@@ -410,7 +411,7 @@ public class PresentationModule
 		
 		categories.clear();
 		for(int i=0; i<definitions.length;i++){
-				categories.add((i+1) + ". " + definitions[i].getType().getUrl());
+				categories.add((i+1) + ". " + definitions[i].getURI());
 		}
 		
 		currentCategoryPos 	= 0;
