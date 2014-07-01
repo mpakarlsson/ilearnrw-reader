@@ -1,13 +1,11 @@
 package com.example.reader;
 
-import ilearnrw.textadaptation.PresentationRulesModule;
 import ilearnrw.textadaptation.TextAnnotationModule;
 import ilearnrw.textclassification.Word;
 import ilearnrw.user.problems.ProblemDefinition;
 import ilearnrw.user.problems.ProblemDefinitionIndex;
 import ilearnrw.user.problems.ProblemDescription;
 import ilearnrw.user.profile.UserProfile;
-import ilearnrw.utils.ServerHelperClass;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,7 +18,6 @@ import com.example.reader.types.ColorPickerDialog;
 import com.example.reader.types.BasicListAdapter;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.HttpHelper;
-import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -87,8 +84,6 @@ public class PresentationModule
 	
 	private int currentCategoryPos;
 	private int currentProblemPos;
-	
-	private UserProfile userProfile;
 	
 	private TextAnnotationModule txModule;
 	
@@ -395,16 +390,13 @@ public class PresentationModule
 		
 		txModule = new TextAnnotationModule(html);
 		
-		if (profile != null)
-		{
-			txModule.initializePresentationModule(new UserProfile(profile.language, profile.userProblems, profile.preferences));
+		if (profile != null){
+			txModule.initializePresentationModule(profile);
 		}
 		
 		txModule.setJSONFile(json);
 		txModule.setInputHTMLFile(html);
 		txModule.annotateText();
-		
-		
 		
 		
 		if(!showGUI){
