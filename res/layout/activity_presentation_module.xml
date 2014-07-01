@@ -27,6 +27,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <CheckBox
+        android:id="@+id/pm_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/presentation_rule_switch"
+        android:checked="true" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

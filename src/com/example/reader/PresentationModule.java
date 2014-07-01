@@ -31,6 +31,8 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -52,6 +54,7 @@ public class PresentationModule
 
 	private LinearLayout colorLayout, container;
 	private Button btnOk, btnCancel;
+	private CheckBox chkSwitch;
 	private RadioGroup rulesGroup;
 	private RadioButton rbtnRule1, rbtnRule2, rbtnRule3, rbtnRule4;
 	private Spinner spCategories, spProblems;
@@ -114,7 +117,6 @@ public class PresentationModule
 			json = bundle.getString("json");
 		}
 		
-		
 		categories 	= new ArrayList<String>();
 		problems 	= new ArrayList<String>();
 		
@@ -129,8 +131,6 @@ public class PresentationModule
 			throw new IllegalArgumentException("Missing id or token");
 		}
 		init();
-		
-		
 	}
 	
 	
@@ -147,6 +147,8 @@ public class PresentationModule
 		
 		btnOk 		= (Button) findViewById(R.id.pm_btn_ok);
 		btnCancel 	= (Button) findViewById(R.id.pm_btn_cancel);
+		
+		chkSwitch	= (CheckBox) findViewById(R.id.pm_switch);
 		
 		rulesGroup 	= (RadioGroup) findViewById(R.id.pm_rules);
 		rbtnRule1 	= (RadioButton) findViewById(R.id.pm_rule1);
@@ -174,9 +176,15 @@ public class PresentationModule
 		spCategories.setOnItemSelectedListener(this);
 		spProblems.setOnItemSelectedListener(this);
 		
+		chkSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				sp.edit().putBoolean("pm_enabled_" + currentCategoryPos + "_" + currentProblemPos, isChecked).commit();
+			}
+		});
+		
+		
 		new ProfileTask(this, showGUI, this, this).run(userId, token);
-		
-		
 	}
 	
 	@Override
@@ -204,16 +212,6 @@ public class PresentationModule
 					}
 				}
 			}
-			
-			
-			//txModule.setProfile(userProfile);
-			
-			txModule.setJSONFile(this.json);
-			Log.i("JSN", this.json);
-			
-			txModule.setInputHTMLFile(this.html);
-			Log.i("HTML", this.html);
-			//txModule.annotateText();
 			
 			finished();
 			break;
@@ -278,13 +276,16 @@ public class PresentationModule
 		case R.id.categories:
 			currentCategoryPos = pos;
 			updateProblems(currentCategoryPos);
-			updateRule(currentCategoryPos, currentProblemPos);
+			updateColor(currentCategoryPos, 0);
+			updateRule(currentCategoryPos, 0);
+			updateEnabled(currentCategoryPos, 0);
 			break;
 			
 		case R.id.problems:
 			currentProblemPos = pos;
 			updateColor(currentCategoryPos, currentProblemPos);
 			updateRule(currentCategoryPos, currentProblemPos);
+			updateEnabled(currentCategoryPos, currentProblemPos);
 			break;
 		
 		default:
@@ -305,7 +306,17 @@ public class PresentationModule
 	}
 	
 	private void finished(){
-		
+		try
+		{
+			String input = "text/annotate?userId=" + 1 + "&lc=EN&token=";
+			
+			String result = txModule.sendPostToServer(sp.getString("authToken", ""), input);
+			Log.i("Result", result);
+		}
+		catch (Exception e)
+		{
+			Log.i("Exception", "I am here: " +e.toString());
+		}
 		Intent intent = new Intent(PresentationModule.this, ReaderActivity.class);
 		intent.putExtra("html", html);
 		intent.putExtra("json", json);
@@ -335,6 +346,11 @@ public class PresentationModule
 			rbtnRule4.setChecked(true);
 			break;
 		}
+	}
+	
+	private void updateEnabled(int category, int problem){
+		boolean isChecked = sp.getBoolean("pm_enabled_"+category+"_"+problem, true);
+		chkSwitch.setChecked(isChecked);
 	}
 	
 	private void updateProblems(int index){
@@ -404,9 +420,8 @@ public class PresentationModule
 		spCategories.setAdapter(categoryAdapter);
 		
 		userProfile = new UserProfile(profile.language, profile.userProblems, profile.preferences);
+		txModule = new TextAnnotationModule(html, userProfile);
 		
-		txModule = new TextAnnotationModule(html,userProfile);
-		Log.i("TXMODULE", txModule.toString());
 	}
 	
 }

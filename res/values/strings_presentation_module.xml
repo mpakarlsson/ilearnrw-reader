@@ -5,6 +5,8 @@
     <string name="choose_presentation_rule">Pick a presentation rule:</string>
     <string name="choose_color">Color: </string>
     
+    <string name="presentation_rule_switch">Enabled</string>
+    
     <!-- Rules -->
     <string name="problem_1">Paint the problematic part of word</string>
     <string name="problem_2">Paint the whole word</string>
