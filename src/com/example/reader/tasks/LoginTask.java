@@ -18,12 +18,16 @@ import com.example.reader.results.TokenResult;
 import com.example.reader.utils.HttpHelper;
 import com.google.gson.Gson;
 
-public class LoginTask extends AsyncTask<String, Void, TokenResult>{
+
+public class 
+		LoginTask 
+	extends 
+		AsyncTask<String, Void, TokenResult> 
+{
 	private ProgressDialog dialog;
 	private String username, fault;
 	private Context context;
 	private String TAG;
-	
 	
 	public LoginTask(Context context){
 		this.context = context;
@@ -94,6 +98,7 @@ public class LoginTask extends AsyncTask<String, Void, TokenResult>{
     		editor.commit();
 			
     		new UserDetailsTask(context, TAG).run(username, result.authToken);
+    		
 		} else{
 			Log.e(TAG, context.getString(R.string.login_failed) + " : " + fault);
 			Toast.makeText(context, context.getString(R.string.login_failed) + " : " + fault, Toast.LENGTH_SHORT).show();

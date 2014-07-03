@@ -17,23 +17,28 @@ import android.widget.Toast;
 
 import com.example.reader.LibraryActivity;
 import com.example.reader.R;
+import com.example.reader.interfaces.OnHttpListener;
+import com.example.reader.interfaces.OnProfileFetched;
 import com.example.reader.results.UserDetailResult;
 import com.example.reader.utils.HttpHelper;
 import com.google.gson.Gson;
 
-public class UserDetailsTask extends AsyncTask<String, Void, UserDetailResult>{
+public class 
+		UserDetailsTask 
+	extends 
+		AsyncTask<String, Void, UserDetailResult>
+	implements
+		OnHttpListener,
+		OnProfileFetched{
 	private ProgressDialog dialog;
 	private Context context;
 	private String TAG, fault;
-	
-	public UserDetailsTask(Context context){
-		this.context = context;
-		this.TAG = "";
-	}
+	private SharedPreferences sp;
 	
 	public UserDetailsTask(Context context, String tag){
-		this.context = context;
-		this.TAG = tag;
+		this.context 		= context;
+		this.TAG 			= tag;
+		sp 					= PreferenceManager.getDefaultSharedPreferences(context);
 	}
 	
 	public void run(String... params){
@@ -74,6 +79,7 @@ public class UserDetailsTask extends AsyncTask<String, Void, UserDetailResult>{
 			fault = data.get(0);			
 			return null;
 		} else {
+			
 			UserDetailResult userDetails = new Gson().fromJson(data.get(1), UserDetailResult.class);
 			return userDetails;
 		}
@@ -88,23 +94,43 @@ public class UserDetailsTask extends AsyncTask<String, Void, UserDetailResult>{
 		if(result != null){
 			Toast.makeText(context, context.getString(R.string.login_succeeded), Toast.LENGTH_SHORT).show();
 			
-			SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-			editor.putInt("id", result.id);
-			editor.putString("language", result.language);
-			editor.commit();
+			sp.edit().putInt("id", result.id);
+			sp.edit().putString("language", result.language);
+			sp.edit().commit();
 			
 			if(result.language.equals("EN"))
 				Locale.setDefault(new Locale("en"));	
 			else if(result.language.equals("GR"))
 				Locale.setDefault(new Locale("el"));
 			else
-				Locale.setDefault(new Locale("en"));			
+				Locale.setDefault(new Locale("en"));
 			
-    		Intent i2 = new Intent(context, LibraryActivity.class);
-    		context.startActivity(i2);
+			
+			new ProfileTask(context, this, this).run(Integer.toString(result.id), sp.getString("authToken", ""));
+
 		} else {
 			Log.e(TAG, context.getString(R.string.login_failed_fetching) + " : " + fault);
 			Toast.makeText(context, context.getString(R.string.login_failed_fetching), Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	@Override
+	public void onProfileFetched(String profile) {
+		sp.edit().putString("json_profile", profile).commit();
+		
+		Intent i2 = new Intent(context, LibraryActivity.class);
+		context.startActivity(i2);
+	}
+
+	@Override
+	public void onTokenExpired(String... params) {
+		// Token should not be expired here, if it is then something is wrong with its lifetime
+		if(HttpHelper.refreshTokens(context)){
+			final String newToken = PreferenceManager.getDefaultSharedPreferences(context).getString("authToken", "");
+			new ProfileTask(context, this, this).run(params[0], newToken);
+			
+			Log.d(TAG, context.getString(R.string.token_error_retry));
+			Toast.makeText(context, context.getString(R.string.token_error_retry), Toast.LENGTH_SHORT).show();
 		}
 	}
 };

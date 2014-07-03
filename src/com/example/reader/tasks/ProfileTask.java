@@ -1,7 +1,5 @@
 package com.example.reader.tasks;
 
-import ilearnrw.user.profile.UserProfile;
-
 import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
@@ -15,21 +13,17 @@ import com.example.reader.R;
 import com.example.reader.interfaces.OnHttpListener;
 import com.example.reader.interfaces.OnProfileFetched;
 import com.example.reader.utils.HttpHelper;
-import com.google.gson.Gson;
 
-public class ProfileTask extends AsyncTask<String, Void, UserProfile>{
+public class ProfileTask extends AsyncTask<String, Void, String>{
 	private ProgressDialog dialog;
 	private Context context;
 	private OnProfileFetched profileListener;
 	private OnHttpListener asyncListener;
-	private Boolean isShowGui;
 	
-	public ProfileTask(Context context, Boolean showGUI, OnHttpListener asyncListener, OnProfileFetched profileListener){
+	public ProfileTask(Context context, OnHttpListener asyncListener, OnProfileFetched profileListener){
 		this.context 			= context;
 		this.profileListener 	= profileListener;
-		this.asyncListener		= asyncListener;
-		this.isShowGui			= showGUI;
-		
+		this.asyncListener		= asyncListener;		
 	}
 	
 	public void run(String... params){
@@ -38,33 +32,32 @@ public class ProfileTask extends AsyncTask<String, Void, UserProfile>{
 	
 	@Override
 	protected void onPreExecute() {
-		if(isShowGui){
-			dialog = new ProgressDialog(context);
-			dialog.setTitle(context.getString(R.string.dialog_fetch_user_problems_title));
-			dialog.setMessage(context.getString(R.string.dialog_fetch_user_problems_summary));
-			dialog.setCancelable(true);
-			dialog.setCanceledOnTouchOutside(false);
-			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					cancel(true);
-					dialog.dismiss();
-				}
-			});
-			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					cancel(true);
-					dialog.dismiss();
-				}
-			});
-			dialog.show();
-		}
+		dialog = new ProgressDialog(context);
+		dialog.setTitle(context.getString(R.string.dialog_fetch_user_profile_title));
+		dialog.setMessage(context.getString(R.string.dialog_fetch_user_profile_summary));
+		dialog.setCancelable(true);
+		dialog.setCanceledOnTouchOutside(false);
+		dialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				cancel(true);
+				dialog.dismiss();
+			}
+		});
+		dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				cancel(true);
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
+
 		super.onPreExecute();
 	}
 	
 	@Override
-	protected UserProfile doInBackground(String... params) {
+	protected String doInBackground(String... params) {
 		HttpResponse response = HttpHelper.get("http://api.ilearnrw.eu/ilearnrw/profile?userId=" + params[0] + "&token=" + params[1]);
 		ArrayList<String> data = HttpHelper.handleResponse(response);
 		
@@ -73,22 +66,14 @@ public class ProfileTask extends AsyncTask<String, Void, UserProfile>{
 				asyncListener.onTokenExpired(params[0], params[1]);
 			return null;
 		} else {
-			UserProfile result = null;
-			try {
-				result = new Gson().fromJson(data.get(1), UserProfile.class);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return result;
+			return data.get(1);
 		}
 	}
 	
 	@Override
-	protected void onPostExecute(UserProfile result) {
-		if(isShowGui){
-			if(dialog.isShowing()) {
-				dialog.dismiss();
-			}
+	protected void onPostExecute(String result) {
+		if(dialog.isShowing()) {
+			dialog.dismiss();
 		}
 		if(result != null){
 			profileListener.onProfileFetched(result);

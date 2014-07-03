@@ -17,6 +17,9 @@
 	<string name="default_text">Default</string>
     
     
+	<string name="dialog_fetch_user_profile_title">User profile</string>
+    <string name="dialog_fetch_user_profile_summary">Fetching user profile. Please wait&#8230;</string>
+	
     <!-- Activity titles -->
     <string name="title_presentation_module">PresentationModule</string>
 </resources>

@@ -18,6 +18,7 @@ import com.example.reader.types.ColorPickerDialog;
 import com.example.reader.types.BasicListAdapter;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.HttpHelper;
+import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -128,6 +129,7 @@ public class PresentationModule
 			finished(); // If you don't have an id something is terribly wrong
 			throw new IllegalArgumentException("Missing id or token");
 		}
+		
 		init();
 	}
 	
@@ -180,7 +182,53 @@ public class PresentationModule
 				sp.edit().putBoolean("pm_enabled_" + currentCategoryPos + "_" + currentProblemPos, isChecked).commit();
 			}
 		});
-		new ProfileTask(this, showGUI, this, this).run(userId, token);
+		
+		String jsonProfile = sp.getString("json_profile", "");
+		
+		if(jsonProfile.isEmpty())
+			new ProfileTask(this, this, this).run(userId, token);
+		else {
+			initProfile(jsonProfile);
+		}
+	}
+	
+	private void initProfile(String json){
+		UserProfile profile = new Gson().fromJson(json, UserProfile.class);
+		trickyWords = (ArrayList<Word>) profile.getUserProblems().getTrickyWords();
+		
+		
+		txModule = new TextAnnotationModule(html);
+		
+		if (profile != null){
+			txModule.initializePresentationModule(profile);
+		}
+		
+		txModule.setJSONFile(json);
+		txModule.setInputHTMLFile(html);
+		txModule.annotateText();
+		
+		
+		if(!showGUI){
+			finished();
+			return;
+		}
+		
+		ProblemDefinitionIndex index 		= profile.getUserProblems().getProblems();
+		
+		definitions 	= index.getProblemsIndex();
+		descriptions 	= index.getProblems();
+		
+		categories.clear();
+		for(int i=0; i<definitions.length;i++){
+				categories.add((i+1) + ". " + definitions[i].getURI());
+		}
+		
+		currentCategoryPos 	= 0;
+		updateProblems(currentCategoryPos);
+		
+		ArrayAdapter<String> categoryAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, categories, true);
+		spCategories.setAdapter(categoryAdapter);
+		
 	}
 	
 	@Override
@@ -374,52 +422,17 @@ public class PresentationModule
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					new ProfileTask(PresentationModule.this, showGUI, PresentationModule.this, PresentationModule.this).run(params[0], newToken);
+					new ProfileTask(PresentationModule.this, PresentationModule.this, PresentationModule.this).run(params[0], newToken);
 					Log.d(TAG, getString(R.string.token_error_retry));
 					Toast.makeText(PresentationModule.this, getString(R.string.token_error_retry), Toast.LENGTH_SHORT).show();
 				}
 			});
 		}
 	}
-	
 
 	@Override
-	public void onProfileFetched(UserProfile profile) {
-		trickyWords = (ArrayList<Word>) profile.getUserProblems().getTrickyWords();
-		
-		
-		txModule = new TextAnnotationModule(html);
-		
-		if (profile != null){
-			txModule.initializePresentationModule(profile);
-		}
-		
-		txModule.setJSONFile(json);
-		txModule.setInputHTMLFile(html);
-		txModule.annotateText();
-		
-		
-		if(!showGUI){
-			finished();
-			return;
-		}
-		
-		ProblemDefinitionIndex index 		= profile.getUserProblems().getProblems();
-		
-		definitions 	= index.getProblemsIndex();
-		descriptions 	= index.getProblems();
-		
-		categories.clear();
-		for(int i=0; i<definitions.length;i++){
-				categories.add((i+1) + ". " + definitions[i].getURI());
-		}
-		
-		currentCategoryPos 	= 0;
-		updateProblems(currentCategoryPos);
-		
-		ArrayAdapter<String> categoryAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, categories, true);
-		spCategories.setAdapter(categoryAdapter);
-		
+	public void onProfileFetched(String result) {
+		initProfile(result);
 	}
 	
 }

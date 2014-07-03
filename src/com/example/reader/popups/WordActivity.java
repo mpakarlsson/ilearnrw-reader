@@ -17,6 +17,7 @@ import com.example.reader.tasks.TrickyWordsTask;
 import com.example.reader.texttospeech.TextToSpeechBase;
 import com.example.reader.types.WordPopupAdapter;
 import com.example.reader.utils.HttpHelper;
+import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -242,7 +243,7 @@ public class WordActivity
 						new TrickyWordsTask(WordActivity.this, isAdding, WordActivity.this, WordActivity.this).run(params[0], params[1], newToken);
 					}
 					else {
-						new ProfileTask(WordActivity.this, false, WordActivity.this, WordActivity.this).run(params[0], params[1]);
+						new ProfileTask(WordActivity.this, WordActivity.this, WordActivity.this).run(params[0], newToken);
 						isFetchingProfile = false;
 					} 
 					Log.d(TAG, getString(R.string.token_error_retry));
@@ -251,7 +252,7 @@ public class WordActivity
 			});
 		}
 	}
-	
+
 	@Override
 	public void onTrickyWord(Boolean success) {
 		if(success){
@@ -283,12 +284,15 @@ public class WordActivity
 		String userId = Integer.toString(sp.getInt("id", 0));
 		String token = sp.getString("authToken", "");
 		isFetchingProfile = true;
-		new ProfileTask(this, false, this, this).run(userId, token);
+		new ProfileTask(this, this, this).run(userId, token);
 	}
 
 
 	@Override
-	public void onProfileFetched(UserProfile profile) {
+	public void onProfileFetched(String result) {
+		
+		UserProfile profile = new Gson().fromJson(result, UserProfile.class);
+		
 		trickyWords = (ArrayList<Word>) profile.getUserProblems().getTrickyWords();
 		
 		if(isAdding){
