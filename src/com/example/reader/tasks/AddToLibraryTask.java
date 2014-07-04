@@ -21,11 +21,12 @@ import android.widget.Toast;
 import com.example.reader.R;
 import com.example.reader.interfaces.OnHttpListener;
 import com.example.reader.results.TextAnnotationResult;
+import com.example.reader.types.Pair;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.HttpHelper;
 import com.google.gson.Gson;
 
-public class AddToLibraryTask extends AsyncTask<String, Void, TextAnnotationResult>{
+public class AddToLibraryTask extends AsyncTask<String, Void, Pair<String>>{
 	private ProgressDialog dialog;
 	private Context context;
 	private Activity activity;
@@ -62,7 +63,7 @@ public class AddToLibraryTask extends AsyncTask<String, Void, TextAnnotationResu
 		wakeLock.acquire();
 		this.execute(params);
 	}
-	
+	 
 	
 	@Override
 	protected void onPreExecute() {
@@ -76,6 +77,8 @@ public class AddToLibraryTask extends AsyncTask<String, Void, TextAnnotationResu
 			public void onClick(DialogInterface dialog, int which) {
 				Toast.makeText(context, context.getString(R.string.annotation_aborted), Toast.LENGTH_SHORT).show();
 				dialog.dismiss();
+				if(wakeLock.isHeld()) wakeLock.release();
+				if(wifiLock.isHeld()) wifiLock.release();
 				cancel(true);
 			}
 		});
@@ -84,6 +87,8 @@ public class AddToLibraryTask extends AsyncTask<String, Void, TextAnnotationResu
 			public void onCancel(DialogInterface dialog) {
 				Toast.makeText(context, context.getString(R.string.annotation_aborted), Toast.LENGTH_SHORT).show();
 				dialog.dismiss();
+				if(wakeLock.isHeld()) wakeLock.release();
+				if(wifiLock.isHeld()) wifiLock.release();
 				cancel(true);
 			}
 		});
@@ -92,7 +97,7 @@ public class AddToLibraryTask extends AsyncTask<String, Void, TextAnnotationResu
 	}
 
 	@Override
-	protected TextAnnotationResult doInBackground(String... params) {
+	protected Pair<String> doInBackground(String... params) {
 		
 		filename = params[4];
 		HttpResponse response = HttpHelper.post("http://api.ilearnrw.eu/ilearnrw/text/annotate?userId=" + params[1] + "&lc=" + params[2]+ "&token=" + params[3], params[0]);
@@ -109,36 +114,30 @@ public class AddToLibraryTask extends AsyncTask<String, Void, TextAnnotationResu
 				listener.onTokenExpired(params[0], params[1], params[2], params[3], params[4]);
 			}
 
-			return null;
+			return new Pair<String>(fault, null);
 		} else {
-			System.out.println(data.get(1));
-			TextAnnotationResult result = null;
-			try {
-				String json = data.get(1);
-				result = new Gson().fromJson(json, TextAnnotationResult.class);
-			} catch (Exception e) {
-				e.printStackTrace();
-				result = null;
-			}
 			
-			return result;
+			return new Pair<String>(data.get(0), data.get(1));
 		}
 	}
 	
 	
 	@Override
-	protected void onPostExecute(TextAnnotationResult result) {
+	protected void onPostExecute(Pair<String> results) {
 		if(dialog.isShowing())
 			dialog.dismiss();
 		
 		wifiLock.release();
 		wakeLock.release();
 		
-		if(result != null){
-			
+		if(results.second() != null){
 			Toast.makeText(context, context.getString(R.string.annotation_succeeded), Toast.LENGTH_SHORT).show();
 			
 			Gson gson =  new Gson();
+			String json = results.second();
+			
+			TextAnnotationResult result = gson.fromJson(json, TextAnnotationResult.class);
+			
 			int index = filename.lastIndexOf(".");
 			String name = filename.substring(0, index);
 			File dir = context.getDir(context.getString(R.string.library_location), Context.MODE_PRIVATE);
@@ -156,8 +155,8 @@ public class AddToLibraryTask extends AsyncTask<String, Void, TextAnnotationResu
 			activity.setResult(Activity.RESULT_OK, intent);
 			activity.finish();
 		}  else {
-			Log.e(TAG, context.getString(R.string.annotation_failed) + " : " + fault);
-			Toast.makeText(context, context.getString(R.string.annotation_failed), Toast.LENGTH_SHORT).show();
+			Log.e(TAG, results.first() + " " + context.getString(R.string.annotation_failed) + " : " + fault);
+			Toast.makeText(context, results.first() + " " + context.getString(R.string.annotation_failed), Toast.LENGTH_SHORT).show();
 		}
 	}
 	
