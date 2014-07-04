@@ -10,7 +10,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManager.WifiLock;
 import android.os.AsyncTask;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -28,7 +32,10 @@ public class AddToLibraryTask extends AsyncTask<String, Void, TextAnnotationResu
 	private String filename;
 	private String TAG, fault;
 	private OnHttpListener listener;
-	
+	private WifiManager wifiManager;
+	private PowerManager powerManager;
+	private WifiLock wifiLock;
+	private WakeLock wakeLock;
 	
 	public AddToLibraryTask(Context context, Activity activity, OnHttpListener listener){
 		this.context 	= context;
@@ -45,6 +52,14 @@ public class AddToLibraryTask extends AsyncTask<String, Void, TextAnnotationResu
 	}
 	
 	public void run(String... params){
+		
+		wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+		powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+		wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL, "wifiLock");
+		wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "wakeLock");
+		
+		wifiLock.acquire();
+		wakeLock.acquire();
 		this.execute(params);
 	}
 	
@@ -115,6 +130,9 @@ public class AddToLibraryTask extends AsyncTask<String, Void, TextAnnotationResu
 	protected void onPostExecute(TextAnnotationResult result) {
 		if(dialog.isShowing())
 			dialog.dismiss();
+		
+		wifiLock.release();
+		wakeLock.release();
 		
 		if(result != null){
 			

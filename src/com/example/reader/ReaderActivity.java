@@ -248,15 +248,19 @@ public class ReaderActivity
 			switch(mode){
 			case 0:
 				reader_mode = ReaderMode.Listen;
+				rlHighlightSpeed.setVisibility(View.GONE);
 				break;
 			case 1:
 				reader_mode = ReaderMode.Guidance;
+				rlHighlightSpeed.setVisibility(View.VISIBLE);
 				break;
 			case 2:
 				reader_mode = ReaderMode.Chunking;
+				rlHighlightSpeed.setVisibility(View.GONE);
 				break;
 			default:
 				reader_mode = ReaderMode.Listen;
+				rlHighlightSpeed.setVisibility(View.GONE);
 				break;
 			}
 		}
