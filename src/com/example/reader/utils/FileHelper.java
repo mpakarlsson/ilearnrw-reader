@@ -144,7 +144,7 @@ public class FileHelper {
 			String line;
 			
 			while((line=br.readLine()) != null){
-				sb.append(line);
+				sb.append(line +"\n");
 			}
 			
 			return sb.toString();
