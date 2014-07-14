@@ -220,7 +220,7 @@ public class PresentationModule
 		
 		categories.clear();
 		for(int i=0; i<definitions.length;i++){
-				categories.add((i+1) + ". " + definitions[i].getURI());
+				categories.add((i+1) + ". " + definitions[i].getUri());
 		}
 		
 		currentCategoryPos 	= 0;
