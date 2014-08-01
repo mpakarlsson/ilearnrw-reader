@@ -94,6 +94,11 @@ public class
 		if(result != null){
 			Toast.makeText(context, context.getString(R.string.login_succeeded), Toast.LENGTH_SHORT).show();
 			
+			SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+			editor.putInt("id", result.id);
+			editor.putString("language", result.language);
+			editor.commit();
+			
 			sp.edit().putInt("id", result.id);
 			sp.edit().putString("language", result.language);
 			sp.edit().commit();

@@ -107,9 +107,9 @@ public class PresentationModule
 		if(loadFiles){
 			fileHtml 		= (File)bundle.get("file");
 			fileJSON 		= (File)bundle.get("json");
-			
-			html	= FileHelper.readFromFile(fileHtml);
+
 			json	= FileHelper.readFromFile(fileJSON);
+			html	= FileHelper.readFromFile(fileHtml);
 		} else {
 			html = bundle.getString("html");
 			json = bundle.getString("json");
@@ -192,8 +192,8 @@ public class PresentationModule
 		}
 	}
 	
-	private void initProfile(String json){
-		UserProfile profile = new Gson().fromJson(json, UserProfile.class);
+	private void initProfile(String jsonProfile){
+		UserProfile profile = new Gson().fromJson(jsonProfile, UserProfile.class);
 		trickyWords = (ArrayList<Word>) profile.getUserProblems().getTrickyWords();
 		
 		
@@ -213,7 +213,7 @@ public class PresentationModule
 			return;
 		}
 		
-		ProblemDefinitionIndex index 		= profile.getUserProblems().getProblems();
+		ProblemDefinitionIndex index = profile.getUserProblems().getProblems();
 		
 		definitions 	= index.getProblemsIndex();
 		descriptions 	= index.getProblems();
