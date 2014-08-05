@@ -87,6 +87,7 @@ public class PresentationModule
 	private int currentProblemPos;
 	
 	private TextAnnotationModule txModule;
+	private UserProfile profile;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -193,20 +194,23 @@ public class PresentationModule
 	}
 	
 	private void initProfile(String jsonProfile){
-		UserProfile profile = new Gson().fromJson(jsonProfile, UserProfile.class);
+		profile = new Gson().fromJson(jsonProfile, UserProfile.class);
 		trickyWords = (ArrayList<Word>) profile.getUserProblems().getTrickyWords();
 		
-		
 		txModule = new TextAnnotationModule(html);
+		System.out.println(" I am called");
 		
-		if (profile != null){
+		if (profile != null && txModule.getPresentationRulesModule() == null){
 			txModule.initializePresentationModule(profile);
 		}
 		
 		txModule.setJSONFile(json);
 		txModule.setInputHTMLFile(html);
+		txModule.setAnnotatedHTMLFile(html);
 		txModule.annotateText();
 		
+		html = txModule.getAnnotatedHTMLFile();
+		System.out.println(html);
 		
 		if(!showGUI){
 			finished();
@@ -236,6 +240,9 @@ public class PresentationModule
 		switch(v.getId()){
 		
 		case R.id.pm_btn_ok:
+			
+			if (this.txModule.getPresentationRulesModule() == null && profile != null)
+				txModule.initializePresentationModule(profile);
 			
 			for (int i = 0; i < definitions.length; i++)
 			{
