@@ -195,19 +195,21 @@ public class PresentationModule
 		profile = new Gson().fromJson(jsonProfile, UserProfile.class);
 		trickyWords = (ArrayList<Word>) profile.getUserProblems().getTrickyWords();
 		
-		txModule = new TextAnnotationModule(html);
-		
-		if (profile != null && txModule.getPresentationRulesModule() == null){
-			txModule.initializePresentationModule(profile);
+		if (txModule==null)
+		{
+			txModule = new TextAnnotationModule(html);
 		}
 		
+		if (txModule.getPresentationRulesModule() == null){
+			txModule.initializePresentationModule(profile);
+		}
+
 		txModule.setJSONFile(json);
 		txModule.setInputHTMLFile(html);
 		txModule.setAnnotatedHTMLFile(html);
 		txModule.annotateText();
 		
 		html = txModule.getAnnotatedHTMLFile();
-		System.out.println(html);
 		
 		if(!showGUI){
 			finished();
@@ -237,10 +239,6 @@ public class PresentationModule
 		switch(v.getId()){
 		
 		case R.id.pm_btn_ok:
-			
-			if (this.txModule.getPresentationRulesModule() == null && profile != null)
-				txModule.initializePresentationModule(profile);
-			
 			for (int i = 0; i < definitions.length; i++)
 			{
 				int problemSize = descriptions[i].length;
