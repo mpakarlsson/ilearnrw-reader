@@ -134,8 +134,6 @@ public class PresentationModule
 		init();
 	}
 	
-	
-	
 	private void init(){
 		container		= (LinearLayout) findViewById(R.id.presentation_module_container);
 		if(showGUI)
@@ -198,7 +196,6 @@ public class PresentationModule
 		trickyWords = (ArrayList<Word>) profile.getUserProblems().getTrickyWords();
 		
 		txModule = new TextAnnotationModule(html);
-		System.out.println(" I am called");
 		
 		if (profile != null && txModule.getPresentationRulesModule() == null){
 			txModule.initializePresentationModule(profile);
