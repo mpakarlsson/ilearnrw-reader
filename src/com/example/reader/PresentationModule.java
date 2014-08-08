@@ -204,8 +204,8 @@ public class PresentationModule
 			txModule.initializePresentationModule(profile);
 		}
 
-		txModule.setJSONFile(json);
-		txModule.setInputHTMLFile(html);
+		txModule.setInputJSON(json);
+		txModule.setInputHTML(html);
 		txModule.setAnnotatedHTMLFile(html);
 		txModule.annotateText();
 		
