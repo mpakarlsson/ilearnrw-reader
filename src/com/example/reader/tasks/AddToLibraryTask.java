@@ -1,5 +1,7 @@
 package com.example.reader.tasks;
 
+import ilearnrw.annotation.AnnotatedPack;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -20,7 +22,6 @@ import android.widget.Toast;
 
 import com.example.reader.R;
 import com.example.reader.interfaces.OnHttpListener;
-import com.example.reader.results.TextAnnotationResult;
 import com.example.reader.types.Pair;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.HttpHelper;
@@ -136,15 +137,15 @@ public class AddToLibraryTask extends AsyncTask<String, Void, Pair<String>>{
 			Gson gson =  new Gson();
 			String json = results.second();
 			
-			TextAnnotationResult result = gson.fromJson(json, TextAnnotationResult.class);
+			AnnotatedPack result = gson.fromJson(json, AnnotatedPack.class);
 			
 			int index = filename.lastIndexOf(".");
 			String name = filename.substring(0, index);
 			File dir = context.getDir(context.getString(R.string.library_location), Context.MODE_PRIVATE);
 			
 			File newFile = new File(dir, filename);
-			FileHelper.saveFile(result.html, newFile);
-			String wordSet = gson.toJson(result.wordSet);
+			FileHelper.saveFile(result.getHtml(), newFile);
+			String wordSet = gson.toJson(result.getWordSet());
 			File jsonFile = new File(dir, name+".json");
 			FileHelper.saveFile(wordSet, jsonFile);
 

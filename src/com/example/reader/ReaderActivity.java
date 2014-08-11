@@ -1,6 +1,7 @@
 package com.example.reader;
 
 import ilearnrw.annotation.UserBasedAnnotatedWord;
+import ilearnrw.annotation.UserBasedAnnotatedWordsSet;
 import ilearnrw.textclassification.SeverityOnWordProblemInfo;
 import ilearnrw.textclassification.StringMatchesInfo;
 import ilearnrw.textclassification.Word;
@@ -16,7 +17,6 @@ import com.example.reader.interfaces.TTSReadingCallback;
 import com.example.reader.popups.ModeActivity;
 import com.example.reader.popups.SearchActivity;
 import com.example.reader.popups.WordActivity;
-import com.example.reader.results.AnnotatedWordSetResult;
 import com.example.reader.texttospeech.TextToSpeechIdDriven;
 import com.example.reader.types.Pair;
 import com.example.reader.utils.Helper;
@@ -98,7 +98,7 @@ public class ReaderActivity
 
 	private boolean isHighlighting;
 
-	private AnnotatedWordSetResult annotationData;
+	private UserBasedAnnotatedWordsSet annotationData;
 	
 	private ArrayList<Word> trickyWords;
 	
@@ -151,7 +151,7 @@ public class ReaderActivity
 		bundleHtml			= libBundle.getString("html");
 		bundleJSON			= libBundle.getString("json");
 		libraryTitle		= libBundle.getString("title");
-		annotationData		= new Gson().fromJson(bundleJSON, AnnotatedWordSetResult.class);
+		annotationData		= new Gson().fromJson(bundleJSON, UserBasedAnnotatedWordsSet.class);
 		trickyWords			= (ArrayList<Word>) libBundle.get("trickyWords");
 		
 		sp 			= PreferenceManager.getDefaultSharedPreferences(this);
@@ -988,7 +988,7 @@ public class ReaderActivity
 		@JavascriptInterface
 		public void showMoreInformation(String jsWord){
 			
-			ArrayList<UserBasedAnnotatedWord> words = annotationData.words;
+			ArrayList<UserBasedAnnotatedWord> words = annotationData.getWords();
 			String _word = "";
 			
 			_word = jsWord.toLowerCase(Locale.getDefault());

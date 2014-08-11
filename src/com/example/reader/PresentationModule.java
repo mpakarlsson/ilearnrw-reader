@@ -1,5 +1,6 @@
 package com.example.reader;
 
+import ilearnrw.annotation.UserBasedAnnotatedWordsSet;
 import ilearnrw.textadaptation.TextAnnotationModule;
 import ilearnrw.textclassification.Word;
 import ilearnrw.user.problems.ProblemDefinition;
@@ -65,6 +66,8 @@ public class PresentationModule
 	private String name = "";
 	private Boolean showGUI = false;
 	
+	private Gson gson;
+	
 	private ArrayList<Word> trickyWords;
 	
 	private SharedPreferences sp;
@@ -104,6 +107,7 @@ public class PresentationModule
 		name 			= bundle.getString("title", "");
 		showGUI 		= bundle.getBoolean("showGUI", false);
 		trickyWords		= new ArrayList<Word>();
+		gson			= new Gson();
 		
 		if(loadFiles){
 			fileHtml 		= (File)bundle.get("file");
@@ -192,34 +196,23 @@ public class PresentationModule
 	}
 	
 	private void initProfile(String jsonProfile){
-		profile = new Gson().fromJson(jsonProfile, UserProfile.class);
-		trickyWords = (ArrayList<Word>) profile.getUserProblems().getTrickyWords();
-		
-		if (txModule==null)
-		{
-			txModule = new TextAnnotationModule(html);
-		}
-		
-		if (txModule.getPresentationRulesModule() == null){
-			txModule.initializePresentationModule(profile);
-		}
-
-		//txModule.setInputJSON(json);
-		//txModule.setInputHTML(html);
-		txModule.setAnnotatedHTMLFile(html);
-		txModule.annotateText();
-		
-		html = txModule.getAnnotatedHTMLFile();
-		
-		if(!showGUI){
-			finished();
-			return;
-		}
+		profile = gson.fromJson(jsonProfile, UserProfile.class);
+		trickyWords = (ArrayList<Word>) profile.getUserProblems().getTrickyWords();		
+		 
+		initTxModule();
 		
 		ProblemDefinitionIndex index = profile.getUserProblems().getProblems();
 		
 		definitions 	= index.getProblemsIndex();
 		descriptions 	= index.getProblems();
+		
+		if(!showGUI){
+			txModule.annotateText();
+			html = txModule.getAnnotatedHTMLFile();
+			btnOk.callOnClick();
+			finished();
+			return;
+		}
 		
 		categories.clear();
 		for(int i=0; i<definitions.length;i++){
@@ -232,6 +225,17 @@ public class PresentationModule
 		ArrayAdapter<String> categoryAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, categories, true);
 		spCategories.setAdapter(categoryAdapter);
 		
+	}
+	
+	private void initTxModule(){
+		if (txModule==null)
+			txModule = new TextAnnotationModule(html);
+		
+		if (txModule.getPresentationRulesModule() == null)
+			txModule.initializePresentationModule(profile);
+
+		txModule.setInputHTMLFile(html);
+		txModule.setJSonObject(gson.fromJson(json, UserBasedAnnotatedWordsSet.class));
 	}
 	
 	@Override
