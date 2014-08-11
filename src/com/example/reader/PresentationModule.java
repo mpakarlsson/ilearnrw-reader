@@ -207,8 +207,6 @@ public class PresentationModule
 		descriptions 	= index.getProblems();
 		
 		if(!showGUI){
-			txModule.annotateText();
-			html = txModule.getAnnotatedHTMLFile();
 			btnOk.callOnClick();
 			finished();
 			return;
@@ -265,6 +263,9 @@ public class PresentationModule
 					this.txModule.getPresentationRulesModule().setActivated(i, j, this.chkSwitch.isChecked());
 				}
 			}
+			
+			txModule.annotateText();
+			html = txModule.getAnnotatedHTMLFile();
 			
 			finished();
 			break;
