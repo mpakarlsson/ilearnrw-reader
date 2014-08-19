@@ -246,8 +246,10 @@ public class PresentationModule
 				int problemSize = descriptions[i].length;
 				for (int j = 0; j < problemSize; j++)
 				{
-					int color = sp.getInt("pm_color_"+i+"_"+j, DEFAULT_COLOR);
-					int rule = sp.getInt("pm_rule_"+i+"_"+j, DEFAULT_RULE); 
+					int color 			= sp.getInt("pm_color_"+i+"_"+j, DEFAULT_COLOR);
+					int rule 			= sp.getInt("pm_rule_"+i+"_"+j, DEFAULT_RULE); 
+					boolean isChecked 	= sp.getBoolean("pm_enabled_"+i+"_"+j, true);
+					
 					
 					this.txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
 					
@@ -260,7 +262,7 @@ public class PresentationModule
 						this.txModule.getPresentationRulesModule().setHighlightingColor(i, j, color);
 					}
 					
-					this.txModule.getPresentationRulesModule().setActivated(i, j, this.chkSwitch.isChecked());
+					this.txModule.getPresentationRulesModule().setActivated(i, j, isChecked);
 				}
 			}
 			

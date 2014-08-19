@@ -86,10 +86,12 @@ public class ReaderActivity
 	private SharedPreferences.Editor spEditor;
 	
 	public String CURR_SENT;
-	public final String SENTENCE_TAG = "sen";
+	public final String SENTENCE_TAG	= "sen";
+	public final String WORD_TAG 		= "w";
 	private ArrayList<String> sentenceIds;
 	private String defaultSentence= "";
 	private int currentPosition;
+	private String touchedId;
 	
 	private static String html, bundleJSON, bundleHtml;
 	private String libraryTitle;
@@ -232,7 +234,8 @@ public class ReaderActivity
 		ibtnSearchBack.setOnClickListener(this);
 		
 		searchbar.setVisibility(RelativeLayout.GONE);
-		
+
+		touchedId = "w0";
 		currentPosition = sp.getInt(CURR_SENT, 0);
 		isHighlighting =  sp.getBoolean("highlighting", true);
 
@@ -563,7 +566,8 @@ public class ReaderActivity
 	@Override
 	public boolean onLongClick(View v) {
 		removeSearches();
-		return false;
+		reader.loadUrl("javascript:longClick('"+touchedId+"');");
+		return true;
 	};
 	
 	@Override
@@ -878,15 +882,26 @@ public class ReaderActivity
 					"ReaderInterface.getSentences(result);" +
 				"}";
 		
+		String getWords =
+				"function getWords(){" +
+					"var words = document.getElementsByTagName('" +  WORD_TAG + "');" +
+					"for(var i=0; i<words.length; i++){" +
+						"words[i].ontouchstart = function(){" +
+							"ReaderInterface.touchWord(this.id);" +
+						"};" +
+					"}" +
+				"}";
+		
 		String speakSentence = 
 				"function speakSentence(id){" +
 					"var element = document.getElementById(id);" +
 					"ReaderInterface.speakSentence(element.innerText);" +
 				"}";
 		
-		String showMoreInformation = 
-				"function showMoreInformation() {" + 
-						"ReaderInterface.showMoreInformation(document.getSelection().toString());" +
+		String longClick = 
+				"function longClick(id) {" +
+					"var word = document.getElementById(id);" +
+					"ReaderInterface.longClick(word.innerHTML);" +
 				"}";
 		
 		String setCSSLink = "<link rel='stylesheet' href='css/default.css' type='text/css'>";
@@ -931,9 +946,10 @@ public class ReaderActivity
 				retrieveBodyContent +
 				scrollToElement +
 				getSentences +
+				getWords +
 				speakSentence +
 				showToast + 
-				showMoreInformation + 
+				longClick +
 				stopScripts +
 				setCSSLink +
 				cssBody +
@@ -953,6 +969,7 @@ public class ReaderActivity
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			reader.loadUrl("javascript:getSentences();");
+			reader.loadUrl("javascript:getWords();");
 		}	
 	};
 	
@@ -983,48 +1000,6 @@ public class ReaderActivity
 		@JavascriptInterface
 		public void logMessage(String tag, String text){
 			Log.d(tag, text);
-		}
-		
-		@JavascriptInterface
-		public void showMoreInformation(String jsWord){
-			
-			ArrayList<UserBasedAnnotatedWord> words = annotationData.getWords();
-			String _word = "";
-			
-			_word = jsWord.toLowerCase(Locale.getDefault());
-			
-			ArrayList<Integer> values = new ArrayList<Integer>();
-			
-			for(int i=0; i<words.size(); i++){
-				UserBasedAnnotatedWord word = words.get(i);
-				if(_word.equals(word.getWord())){
-					Intent in = new Intent(getBaseContext(), WordActivity.class);
-					in.putExtra("word", word.getWord());
-					in.putExtra("stem", word.getStem());
-					in.putExtra("wordInSyllables", word.getWordInToSyllables());
-					in.putExtra("trickyWords", trickyWords);
-					
-					ArrayList<SeverityOnWordProblemInfo> problems = word.getUserSeveritiesOnWordProblems();
-					
-					for(int j=0; j<problems.size(); j++){
-						SeverityOnWordProblemInfo problem = problems.get(j);
-						ArrayList<StringMatchesInfo> infos = problem.getMatched();
-						
-						for(int k=0; k<infos.size(); k++){
-							StringMatchesInfo info = infos.get(k);
-							
-							values.add(j);
-							values.add(info.getStart());
-							values.add(info.getEnd());
-						}
-					}
-					
-					in.putIntegerArrayListExtra("problems", values);
-					startActivityForResult(in, FLAG_WORD_POPUP);
-					break;
-				}
-			}
-		
 		}
 		
 		@JavascriptInterface
@@ -1063,6 +1038,55 @@ public class ReaderActivity
 				tts.speak(text, currentPosition, true);
 			else
 				tts.speak(text, currentPosition, false);
+		}
+		
+		@JavascriptInterface
+		public void touchWord(String id){
+			touchedId = id;
+		}
+		
+		@JavascriptInterface
+		public void longClick(String jsWord){			
+			ArrayList<UserBasedAnnotatedWord> words = annotationData.getWords();
+			String _word = "";
+			
+			
+			_word = jsWord.toLowerCase(Locale.getDefault());
+			
+			_word = _word.replace("\n", "");
+			_word = _word.trim();
+			
+			ArrayList<Integer> values = new ArrayList<Integer>();
+			
+			for(int i=0; i<words.size(); i++){
+				UserBasedAnnotatedWord word = words.get(i);
+				if(_word.equals(word.getWord())){
+					Intent in = new Intent(getBaseContext(), WordActivity.class);
+					in.putExtra("word", word.getWord());
+					in.putExtra("stem", word.getStem());
+					in.putExtra("wordInSyllables", word.getWordInToSyllables());
+					in.putExtra("trickyWords", trickyWords);
+					
+					ArrayList<SeverityOnWordProblemInfo> problems = word.getUserSeveritiesOnWordProblems();
+					
+					for(int j=0; j<problems.size(); j++){
+						SeverityOnWordProblemInfo problem = problems.get(j);
+						ArrayList<StringMatchesInfo> infos = problem.getMatched();
+						
+						for(int k=0; k<infos.size(); k++){
+							StringMatchesInfo info = infos.get(k);
+							
+							values.add(j);
+							values.add(info.getStart());
+							values.add(info.getEnd());
+						}
+					}
+					
+					in.putIntegerArrayListExtra("problems", values);
+					startActivityForResult(in, FLAG_WORD_POPUP);
+					break;
+				}
+			}
 		}
 		
 		@JavascriptInterface
