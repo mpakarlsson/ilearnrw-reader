@@ -86,7 +86,7 @@
         <com.example.reader.types.ExtendedWebView
 	        android:id="@+id/webview_reader"
 	        android:layout_width="match_parent"	
-	        android:layout_height="match_parent"/>        
+	        android:layout_height="match_parent" />     
         
 	</RelativeLayout>
 	

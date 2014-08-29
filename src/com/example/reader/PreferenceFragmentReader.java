@@ -67,19 +67,9 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		ColorPickerPreference backgroundPicker = (ColorPickerPreference)findPreference(a.getString(R.string.pref_background_color_title));
 		ColorPickerPreference textPicker = (ColorPickerPreference)findPreference(a.getString(R.string.pref_text_color_title));
 		
-		ListPreference languages = (ListPreference)findPreference(a.getString(R.string.pref_tts_language_title));
-		if(languages.getValue() == null)
-			languages.setValueIndex(0);
-		/*if(changed){
-			Intent i = new Intent();
-			i.putExtra("changed", changed);
-			getActivity().setResult(Activity.RESULT_OK, i);
-			getActivity().finish();
-		}*/
 		fontFace.setOnPreferenceChangeListener(this);
 		backgroundPicker.setOnPreferenceChangeListener(this);
 		textPicker.setOnPreferenceChangeListener(this);
-		languages.setOnPreferenceChangeListener(this);
 		
 		Preference apply = (Preference) findPreference("pref_apply");
 		apply.setOnPreferenceClickListener(new OnPreferenceClickListener() {

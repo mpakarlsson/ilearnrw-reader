@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_activity_library">LibraryActivity</string>
+    <string name="title_activity_library">User Library</string>
     <string name="title_activity_add_to_device_explorer">AddToDevice - Explorer</string>
     <string name="title_activity_add_to_device_orb">AddToDevice - Online Resource Bank</string>
+    <string name="title_activity_active_rules">Active Presentation Rules</string>
     
     <string name="library_add">Add new item to library</string>
     <string name="library_location">Library</string>

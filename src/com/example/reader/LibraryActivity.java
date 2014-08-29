@@ -43,7 +43,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 
 	private static ImageButton btnAdd;
 	private static ListView library;
-	private SideSelector sideSelector;
+	//private SideSelector sideSelector;
 	private static ArrayList<File> libraryFiles;
 	private ArrayList<LibraryItem> files;
 	
@@ -114,8 +114,8 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		btnAdd = (ImageButton) findViewById(R.id.ibtn_add_library);
 		btnAdd.setOnClickListener(this);
 		
-		sideSelector = (SideSelector) findViewById(R.id.library_side_selector);
-		sideSelector.setListView(library);
+		//sideSelector = (SideSelector) findViewById(R.id.library_side_selector);
+		//sideSelector.setListView(library);
 	}
 
 	@Override
@@ -244,7 +244,8 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		} else if(menuItemName.startsWith("Open file w/")){
 			Pair<File> libItems = FileHelper.getFilesFromLibrary(this, clickItem.getName());
 			
-			Intent intent = new Intent(this, PresentationModule.class);
+			//Intent intent = new Intent(this, PresentationModule.class);
+			Intent intent = new Intent(this, ActiveRules.class);
 			intent.putExtra("file", libItems.first());
 			intent.putExtra("json", libItems.second());
 			intent.putExtra("title", libItems.first().getName());
@@ -442,12 +443,12 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	
 	private void updateListView(){
 		adapter.notifyDataSetChanged();
-		sideSelector.setListView(library);
+		/*sideSelector.setListView(library);
 
 		if(sideSelector.getNumSections() == 0)
 			sideSelector.setVisibility(View.GONE);
 		else
-			sideSelector.setVisibility(View.VISIBLE);
+			sideSelector.setVisibility(View.VISIBLE);*/
 	}
 	
 	private void sortValues(){

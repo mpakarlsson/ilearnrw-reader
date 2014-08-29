@@ -22,6 +22,7 @@ import com.example.reader.utils.HttpHelper;
 import com.google.gson.Gson;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -36,8 +37,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -124,7 +127,7 @@ public class PresentationModule
 		problems 	= new ArrayList<String>();
 		
 		setContentView(R.layout.activity_presentation_module);
-		
+
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		sp.edit().putBoolean("showGUI", showGUI).commit();
 		int id = sp.getInt("id",-1);
@@ -445,5 +448,5 @@ public class PresentationModule
 	public void onProfileFetched(String result) {
 		initProfile(result);
 	}
-	
+
 }

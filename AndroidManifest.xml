@@ -36,6 +36,10 @@
             android:label="@string/title_activity_library" >
         </activity>
         <activity
+            android:name="com.example.reader.ActiveRules"
+            android:label="@string/title_activity_active_rules" >
+        </activity>
+        <activity
             android:name="com.example.reader.ReaderActivity"
             android:label="@string/title_activity_reader" 
             android:configChanges="orientation|screenSize">

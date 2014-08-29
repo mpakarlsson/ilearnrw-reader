@@ -77,7 +77,11 @@ public class SideSelector extends View {
 	
 	protected void onDraw(Canvas canvas){
 		int viewHeight = getPaddedHeight();
-		float charHeight = ((float) viewHeight / (float) (sections.length+1));
+		float charHeight = 1;
+		if (sections == null)
+			sections = new String[0];
+		if (sections.length >0)
+			charHeight = ((float) viewHeight / (float) (sections.length+1));
 		float widthCenter = getMeasuredWidth() * 0.5f;
 
 		paint.setColor(0xFF959899);

@@ -740,7 +740,7 @@ public class ReaderActivity
 	private void setTTS(){		
 		int pitchRate 	= sp.getInt(getString(R.string.pref_pitch_title), 9);
 		int speechRate 	= sp.getInt(getString(R.string.pref_speech_rate_title), 9);
-		String language = sp.getString(getString(R.string.pref_tts_language_title), "en_GB");
+		String language = "en_GB";
 		
 		double pitch = ((pitchRate + 1.0) / 10.0);
 		tts.setPitch((float)pitch);

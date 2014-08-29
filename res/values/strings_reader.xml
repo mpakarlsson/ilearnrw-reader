@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_activity_reader">ReaderActivity</string>
-    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_reader">Reader</string>
+    <string name="title_activity_search">Search</string>
     <string name="title_activity_mode">ModeActivity</string>
-    <string name="title_activity_rename">RenameActivity</string>
+    <string name="title_activity_rename">Rename Text</string>
     <string name="title_activity_word">WordActivity</string>
-    <string name="title_reader_settings">ReaderSettings</string>
+    <string name="title_reader_settings">Reader - Settings</string>
     
-    <string name="content_descr_btn_lib">Back to library</string>
+    <string name="content_descr_btn_lib">Back to Library</string>
 	<string name="content_descr_btn_mode">Change mode</string>
 	<string name="content_descr_btn_next">Next sentence</string>
 	<string name="content_descr_btn_play">Play</string>
@@ -22,7 +22,7 @@
 	<string name="reader_highlight_speed_title">Speed</string>
 	<string name="reader_highlight_speed_value">5.0/10.0</string>
 	
-	<string name="color_picker">Choose a color</string>	
+	<string name="color_picker">Choose a colour</string>	
 	
 	<string name="add_tricky_word">Add tricky word</string>
 	<string name="remove_tricky_word">Remove tricky word</string>
