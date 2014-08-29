@@ -316,6 +316,8 @@ public class PresentationModule
 			case R.id.pm_rule4:
 				currentRule = 4;
 				break;
+			default:
+				currentRule = 0;
 			}
 
 		default:
