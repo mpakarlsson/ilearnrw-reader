@@ -24,7 +24,8 @@
         <activity
             android:name="com.example.reader.LoginActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden" >
+            android:windowSoftInputMode="stateHidden" 
+    		android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,53 +34,63 @@
         </activity>
         <activity
             android:name="com.example.reader.LibraryActivity"
-            android:label="@string/title_activity_library" >
+            android:label="@string/title_activity_library" 
+    		android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.reader.ActiveRules"
-            android:label="@string/title_activity_active_rules" >
+            android:label="@string/title_activity_active_rules" 
+    		android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.reader.ReaderActivity"
             android:label="@string/title_activity_reader" 
-            android:configChanges="orientation|screenSize">
+            android:configChanges="orientation|screenSize" 
+    		android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.reader.PresentationModule"
-            android:label="@string/title_presentation_module" >
+            android:label="@string/title_presentation_module" 
+    		android:screenOrientation="portrait" >
         </activity>
         <activity android:name="com.example.reader.AddToLibraryExplorerActivity"
-            android:label="@string/title_activity_add_to_device_explorer" >
+            android:label="@string/title_activity_add_to_device_explorer" 
+    		android:screenOrientation="portrait" >
         </activity>
         <activity android:name="com.example.reader.AddToLibraryORBActivity"
-            android:label="@string/title_activity_add_to_device_orb" >
+            android:label="@string/title_activity_add_to_device_orb" 
+    		android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.reader.SettingsActivity"
             android:label="@string/title_reader_settings" 
-           >
+    		android:screenOrientation="portrait" >
         </activity>
         
         <activity
             android:name="com.example.reader.popups.SearchActivity"
             android:label="@string/title_activity_search" 
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden">
+            android:windowSoftInputMode="stateAlwaysHidden" 
+    		android:screenOrientation="portrait" >
         </activity>
          <activity
             android:name="com.example.reader.popups.ModeActivity"
             android:label="@string/title_activity_mode" 
-            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
+            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" 
+    		android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.reader.popups.RenameActivity"
             android:label="@string/title_activity_rename" 
-            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
+            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"  
+    		android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.reader.popups.WordActivity"
             android:label="@string/title_activity_word" 
-            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
+            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" 
+    		android:screenOrientation="portrait" >
         </activity>
         
         

@@ -32,7 +32,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/presentation_rule_switch"
-        android:checked="true" />
+        android:checked="false" />
+        <!-- the above checked box should be false by default 
+        to avoid conflicts with sharedpreferences -->
 
     <TextView
         android:layout_width="wrap_content"

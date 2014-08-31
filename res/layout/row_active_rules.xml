@@ -4,20 +4,56 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-	<ImageView
-	    android:contentDescription="@string/ok_icon"
-		android:id="@+id/icon"
-		android:layout_width="16dp"
-		android:paddingLeft="2dp"
-		android:paddingRight="2dp"
-		android:paddingTop="2dp"
-		android:layout_height="wrap_content"
-		android:src="@drawable/ok"/>
 	<TextView
-		android:id="@+id/label"
+		android:id="@+id/label_title_test"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:paddingTop="10dp"
 		android:textSize="24sp"/>
+	
+	<TextView
+		android:id="@+id/label_test"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="24sp"/>
+	
+	<TextView
+		android:id="@+id/active_rule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/problem_4" 
+		android:textSize="24sp"/>
+
+    <TextView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/active_color_label" />
+
+    <ImageView
+	    android:id="@+id/active_color"
+	    android:layout_width="48dp"
+	    android:layout_height="24dp" 
+	    android:contentDescription="@string/empty"
+	    android:layout_marginLeft="@dimen/spacer_8"/>
+	
+	<LinearLayout android:id="@+id/layoutButtons"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1.0" >
+
+        <Button
+            android:id="@+id/edit_active_rule"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight=".50"
+            android:text="" />
+
+        <Button
+            android:id="@+id/delete_active_rule"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight=".50"
+            android:text="" />
+    </LinearLayout>
 	
 </LinearLayout>

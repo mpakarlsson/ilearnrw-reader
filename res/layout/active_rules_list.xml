@@ -7,6 +7,17 @@
 		android:id="@+id/selection"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"/>
+	
+    <Button
+        android:id="@+id/exit_active_rules"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+	
+    <Button
+        android:id="@+id/add_active_rule"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+        
 	<ListView
 		android:id="@android:id/list"
 		android:layout_width="fill_parent" 

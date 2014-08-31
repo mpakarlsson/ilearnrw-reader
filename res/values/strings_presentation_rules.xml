@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="ok_icon">Ok</string>
+    <string name="active_rules">Active Rules</string>
+    <string name="edit_btn_text">Edit</string>
+    <string name="delete_btn_text">Delete</string>
+    <string name="add_btn_text">Add Rule</string>
+    <string name="confirm_btn_text">Confirm</string>
+    <string name="cancel_btn_text">Cancel</string>
+    <string name="fire_btn_text">Annotate Text</string>
+    <string name="active_color_label">Active Colour</string>
     
 </resources>

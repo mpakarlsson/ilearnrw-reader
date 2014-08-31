@@ -353,12 +353,12 @@ public class ReaderActivity
 					boolean show = b.getBoolean("showGUI", false);
 					
 					if(show){
-						Intent i = new Intent(this, PresentationModule.class);
+						Intent i = new Intent(this, ActiveRules.class);
 						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						startActivity(i);
 						return;
 					} else {
-						Intent intent = new Intent(ReaderActivity.this, PresentationModule.class);
+						Intent intent = new Intent(ReaderActivity.this, ActiveRules.class);
 						
 						intent.putExtra("html", bundleHtml);
 						intent.putExtra("json", bundleJSON);
