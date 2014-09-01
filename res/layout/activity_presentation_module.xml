@@ -4,7 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:layout_margin="@dimen/spacer_8">    
+    android:layout_margin="@dimen/spacer_8">  
+
+    
+    <TextView
+        android:id="@+id/pm_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp" />
+    
+    <TextView
+        android:id="@+id/pm__enabled_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,15 +39,6 @@
         android:id="@+id/problems"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <CheckBox
-        android:id="@+id/pm_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/presentation_rule_switch"
-        android:checked="false" />
-        <!-- the above checked box should be false by default 
-        to avoid conflicts with sharedpreferences -->
 
     <TextView
         android:layout_width="wrap_content"

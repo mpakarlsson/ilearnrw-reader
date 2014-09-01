@@ -12,4 +12,14 @@
     <string name="problem_2">Paint the whole word</string>
     <string name="problem_3">Highlight the problematic part of word</string>
     <string name="problem_4">Highlight the whole word</string>
+    
+    <!-- messages -->
+    <string name="dont_edit">You can only edit rules that are not enabled</string>
+    
+    <!-- labels -->
+    <string name="edit_mode">Edit Mode</string>
+    <string name="add_rule_mode">Select a Rule to enable and then press \'OK\'</string>
+    <string name="rule_enabled">This rule is currently Enabled</string>
+    <string name="rule_disabled">This rule is currently Disabled</string>
+    
 </resources>

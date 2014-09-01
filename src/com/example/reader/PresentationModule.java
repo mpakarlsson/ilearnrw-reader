@@ -36,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -53,7 +54,7 @@ public class PresentationModule
 
 	private LinearLayout colorLayout, container;
 	private Button btnOk, btnCancel;
-	private CheckBox chkSwitch;
+	private TextView chkSwitch;
 	private RadioGroup rulesGroup;
 	private RadioButton rbtnRule1, rbtnRule2, rbtnRule3, rbtnRule4;
 	private Spinner spCategories, spProblems;
@@ -86,10 +87,9 @@ public class PresentationModule
 	
 	private int currentCategoryPos;
 	private int currentProblemPos;
+	private boolean editMode; // or add new rule mode
 	
 	private UserProfile profile;
-	
-	private ArrayList<PreferenceItem> preferences;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -140,8 +140,7 @@ public class PresentationModule
 			init(0,0, false);
 	}
 	
-	private void init(int category, int index, boolean lockSpinners){
-		preferences = new ArrayList<PresentationModule.PreferenceItem>();
+	private void init(int category, int index, boolean editMode){
 		container		= (LinearLayout) findViewById(R.id.presentation_module_container);
 		if(showGUI)
 			container.setVisibility(View.VISIBLE);
@@ -150,8 +149,9 @@ public class PresentationModule
 		
 		spCategories 	= (Spinner) findViewById(R.id.categories);
 		spProblems 		= (Spinner) findViewById(R.id.problems);
-		
-		if (lockSpinners){
+
+		this.editMode = editMode;
+		if (editMode){
 			spCategories.setEnabled(false);
 			spProblems.setEnabled(false);
 		}
@@ -159,7 +159,11 @@ public class PresentationModule
 		btnOk 		= (Button) findViewById(R.id.pm_btn_ok);
 		btnCancel 	= (Button) findViewById(R.id.pm_btn_cancel);
 		
-		chkSwitch	= (CheckBox) findViewById(R.id.pm_switch);
+		chkSwitch	= (TextView) findViewById(R.id.pm_label);
+		if (editMode)
+			chkSwitch.setText(R.string.edit_mode);
+		else 
+			chkSwitch.setText(R.string.add_rule_mode);
 		
 		rulesGroup 	= (RadioGroup) findViewById(R.id.pm_rules);
 		rbtnRule1 	= (RadioButton) findViewById(R.id.pm_rule1);
@@ -187,18 +191,6 @@ public class PresentationModule
 
 		spCategories.setOnItemSelectedListener(this);
 		spProblems.setOnItemSelectedListener(this);
-		
-		chkSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				PreferenceItem pi = new PreferenceItem(currentCategoryPos, currentProblemPos);
-				if (!preferences.contains(pi))
-					preferences.add(pi);
-				pi = preferences.get(preferences.indexOf(pi));
-				pi.enabled = isChecked;
-				//sp.edit().putBoolean("pm_enabled_" + currentCategoryPos + "_" + currentProblemPos, isChecked).commit();
-			}
-		});
 		
 		String jsonProfile = sp.getString("json_profile", "");
 		
@@ -249,17 +241,19 @@ public class PresentationModule
 		switch(v.getId()){
 		
 		case R.id.pm_btn_ok:
-			while (!preferences.isEmpty()){
+			/*while (!preferences.isEmpty()){
 				PreferenceItem pi = preferences.remove(0);
 				sp.edit().putBoolean("pm_enabled_" + pi.cat + "_" + pi.idx, pi.enabled).commit();
 				sp.edit().putInt("pm_color_" + pi.cat + "_" + pi.idx, pi.color).commit();
 				sp.edit().putInt("pm_rule_"+pi.cat+"_"+pi.idx, pi.rule).commit();
-			}
+			}*/
+			sp.edit().putBoolean("pm_enabled_" + currentCategoryPos + "_" + currentProblemPos, true).commit();
+			sp.edit().putInt("pm_color_" + currentCategoryPos + "_" + currentProblemPos, currentColor).commit();
+			sp.edit().putInt("pm_rule_"+currentCategoryPos+"_"+currentProblemPos, currentRule).commit();
 			onBackPressed();
 			break;
 			
 		case R.id.pm_btn_cancel:
-			preferences.clear();
 			onBackPressed();
 			break;
 			
@@ -268,20 +262,23 @@ public class PresentationModule
 			ColorPickerDialog dialog = new ColorPickerDialog(this, color, new ColorPickerListener() {
 				@Override
 				public void onOk(ColorPickerDialog dialog, int color) {
-					PreferenceItem pi = new PreferenceItem(currentCategoryPos, currentProblemPos);
-					if (!preferences.contains(pi))
-						preferences.add(pi);
-					pi = preferences.get(preferences.indexOf(pi));
-					pi.color = color;
 					//sp.edit().putInt("pm_color_" + currentCategoryPos + "_" + currentProblemPos, color).commit();
-					updateColor(currentCategoryPos, currentProblemPos);
+					//updateColor(currentCategoryPos, currentProblemPos);
+					currentColor = color;
+					colorBox.setBackgroundColor(currentColor);
 				}
 				
 				@Override
 				public void onCancel(ColorPickerDialog dialog) {}
 			});
-			
-			dialog.show();
+
+			if (editMode || !sp.getBoolean("pm_enabled_"+currentCategoryPos+"_"+currentProblemPos, false)){
+				dialog.show();
+			}
+			else {
+				Toast toast = Toast.makeText(getApplicationContext(), R.string.dont_edit, Toast.LENGTH_SHORT);
+				toast.show();
+			}
 			break;
 		
 		}
@@ -289,6 +286,12 @@ public class PresentationModule
 	
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
+		if (!editMode && sp.getBoolean("pm_enabled_"+currentCategoryPos+"_"+currentProblemPos, false)){
+			updateRule(currentCategoryPos, currentProblemPos);
+			Toast toast = Toast.makeText(getApplicationContext(), R.string.dont_edit, Toast.LENGTH_SHORT);
+			toast.show();
+			return;
+		}
 		switch (group.getId()) {
 		case R.id.pm_rules:
 			
@@ -315,14 +318,8 @@ public class PresentationModule
 		default:
 			break;
 		}
-		
-		PreferenceItem pi = new PreferenceItem(currentCategoryPos, currentProblemPos);
-		if (!preferences.contains(pi))
-			preferences.add(pi);
-		pi = preferences.get(preferences.indexOf(pi));
-		pi.rule = currentRule;
 		//sp.edit().putInt("pm_rule_"+currentCategoryPos+"_"+currentProblemPos, currentRule).commit();
-		updateRule(currentCategoryPos, currentProblemPos);
+		//updateRule(currentCategoryPos, currentProblemPos);
 	}
 	
 	@Override
@@ -371,20 +368,12 @@ public class PresentationModule
 	}
 
 	private void updateColor(int category, int problem){
-		PreferenceItem pi = new PreferenceItem(category, problem);
-		if (preferences.contains(pi))
-			currentColor = preferences.get(preferences.indexOf(pi)).color;
-		else
-			currentColor = sp.getInt("pm_color_"+category+"_"+problem, DEFAULT_COLOR);
+		currentColor = sp.getInt("pm_color_"+category+"_"+problem, DEFAULT_COLOR);
 		colorBox.setBackgroundColor(currentColor);
 	}
 	
 	private void updateRule(int category, int problem){
-		PreferenceItem pi = new PreferenceItem(category, problem);
-		if (preferences.contains(pi))
-			currentRule = preferences.get(preferences.indexOf(pi)).rule;
-		else
-			currentRule = sp.getInt("pm_rule_"+category+"_"+problem, DEFAULT_RULE);
+		currentRule = sp.getInt("pm_rule_"+category+"_"+problem, DEFAULT_RULE);
 		switch(currentRule){
 		case 1:
 			rbtnRule1.setChecked(true);
@@ -402,11 +391,12 @@ public class PresentationModule
 	}
 	
 	private void updateEnabled(int category, int problem){
-		boolean isChecked = sp.getBoolean("pm_enabled_"+category+"_"+problem, false);
-		PreferenceItem pi = new PreferenceItem(category, problem);
-		if (preferences.contains(pi))
-			isChecked = preferences.get(preferences.indexOf(pi)).enabled;
-		chkSwitch.setChecked(isChecked);
+		//boolean isChecked = sp.getBoolean("pm_enabled_"+category+"_"+problem, false);
+		TextView enabledLabel = (TextView) findViewById(R.id.pm__enabled_label);
+		if (sp.getBoolean("pm_enabled_"+category+"_"+problem, false))
+			enabledLabel.setText(R.string.rule_enabled);
+		else
+			enabledLabel.setText(R.string.rule_disabled);
 	}
 	
 	private void updateProblems(int index){
@@ -454,49 +444,6 @@ public class PresentationModule
 	public void onProfileFetched(String result) {
 		initProfile(result);
 	}
-	
-	private class PreferenceItem{
-		int cat, idx;
-		boolean enabled;
-		int rule, color;
-		
-		public PreferenceItem(int cat, int idx) {
-			this.cat = cat;
-			this.idx = idx;
-			rule = sp.getInt("pm_rule_"+cat+"_"+idx, DEFAULT_RULE);
-			enabled = sp.getBoolean("pm_enabled_"+cat+"_"+idx, false);
-			color = sp.getInt("pm_color_"+cat+"_"+idx, DEFAULT_COLOR);
-		}
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + getOuterType().hashCode();
-			result = prime * result + cat;
-			result = prime * result + idx;
-			return result;
-		}
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			PreferenceItem other = (PreferenceItem) obj;
-			if (!getOuterType().equals(other.getOuterType()))
-				return false;
-			if (cat != other.cat)
-				return false;
-			if (idx != other.idx)
-				return false;
-			return true;
-		}
-		private PresentationModule getOuterType() {
-			return PresentationModule.this;
-		}
-		
-	}
+
 
 }

@@ -133,7 +133,7 @@ public class ActiveRules extends ListActivity {
 					{
 						int color 			= sp.getInt("pm_color_"+i+"_"+j, DEFAULT_COLOR);
 						int rule 			= sp.getInt("pm_rule_"+i+"_"+j, DEFAULT_RULE); 
-						boolean isChecked 	= sp.getBoolean("pm_enabled_"+i+"_"+j, true);
+						boolean isChecked 	= sp.getBoolean("pm_enabled_"+i+"_"+j, false);
 						
 						txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
 						
@@ -292,7 +292,7 @@ public class ActiveRules extends ListActivity {
 			for (int j = 0; j < descriptions[i].length; j++){
 				int color 			= sp.getInt("pm_color_"+i+"_"+j, DEFAULT_COLOR);
 				int rule 			= sp.getInt("pm_rule_"+i+"_"+j, DEFAULT_RULE); 
-				boolean isChecked 	= sp.getBoolean("pm_enabled_"+i+"_"+j, true);
+				boolean isChecked 	= sp.getBoolean("pm_enabled_"+i+"_"+j, false);
 				if (isChecked){
 					String text = "";
 					for (int k=0; k<descriptions[i][j].getDescriptions().length; k++)

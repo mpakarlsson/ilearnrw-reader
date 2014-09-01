@@ -6,7 +6,8 @@
 	<TextView
 		android:id="@+id/selection"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"/>
+		android:layout_height="wrap_content"
+        android:textSize="24sp" />
 	
     <Button
         android:id="@+id/exit_active_rules"
