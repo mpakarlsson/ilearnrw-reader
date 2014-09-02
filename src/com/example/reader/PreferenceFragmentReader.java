@@ -72,15 +72,6 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		backgroundPicker.setOnPreferenceChangeListener(this);
 		textPicker.setOnPreferenceChangeListener(this);
 		
-		Preference apply = (Preference) findPreference("pref_apply");
-		apply.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				getActivity().finish();
-				return true;
-			}
-		});
-		
 		Preference format = (Preference) findPreference("pref_reader_reset");
 		format.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override

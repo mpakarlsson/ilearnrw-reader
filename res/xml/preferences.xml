@@ -4,15 +4,6 @@
     xmlns:ns="http://schemas.android.com/apk/res/com.example.reader"
     android:key="reader_prefs"
     android:title="@string/reader_prefs">
-
-    <PreferenceCategory 
-        android:key="pref_category_apply"
-        android:title="@string/pref_apply_category_title">
-        
-        <Preference
-            android:key="pref_apply"
-            android:title="@string/pref_apply_title"/>
-    </PreferenceCategory>
     
     <PreferenceCategory 
         android:title="@string/pref_presentation_rules_category_title"
