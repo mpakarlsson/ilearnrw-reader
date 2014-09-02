@@ -61,7 +61,7 @@ public class PresentationModule
 	private ImageView colorBox;
 	private File fileHtml = null;
 	private File fileJSON = null;
-	private String html, json;
+	private String html, json, cleanHtml;
 	private String name = "";
 	private Boolean showGUI = false;
 	
@@ -112,11 +112,13 @@ public class PresentationModule
 			fileHtml 		= (File)bundle.get("file");
 			fileJSON 		= (File)bundle.get("json");
 
-			json	= FileHelper.readFromFile(fileJSON);
-			html	= FileHelper.readFromFile(fileHtml);
+			json		= FileHelper.readFromFile(fileJSON);
+			html		= FileHelper.readFromFile(fileHtml);
+			cleanHtml 	= html;
 		} else {
-			html = bundle.getString("html");
-			json = bundle.getString("json");
+			json 		= bundle.getString("json");
+			html 		= bundle.getString("cleanHtml");
+			cleanHtml 	= html;
 		}
 		
 		categories 	= new ArrayList<String>();
@@ -361,6 +363,7 @@ public class PresentationModule
 	private void finished(){
 		Intent intent = new Intent(PresentationModule.this, ReaderActivity.class);
 		intent.putExtra("html", html);
+		intent.putExtra("cleanHtml", cleanHtml);
 		intent.putExtra("json", json);
 		intent.putExtra("title", name);
 		intent.putExtra("trickyWords", (ArrayList<Word>) trickyWords);

@@ -93,7 +93,7 @@ public class ReaderActivity
 	private int currentPosition;
 	private String touchedId;
 	
-	private static String html, bundleJSON, bundleHtml;
+	private static String html, bundleJSON, bundleHtml, cleanHtml;
 	private String libraryTitle;
 	
 	private double highlightSpeed;
@@ -151,6 +151,7 @@ public class ReaderActivity
 		Bundle libBundle 	= getIntent().getExtras();
 		
 		bundleHtml			= libBundle.getString("html");
+		cleanHtml			= libBundle.getString("cleanHtml");
 		bundleJSON			= libBundle.getString("json");
 		libraryTitle		= libBundle.getString("title");
 		annotationData		= new Gson().fromJson(bundleJSON, UserBasedAnnotatedWordsSet.class);
@@ -362,6 +363,7 @@ public class ReaderActivity
 						
 						intent.putExtra("html", bundleHtml);
 						intent.putExtra("json", bundleJSON);
+						intent.putExtra("cleanHtml", cleanHtml);
 						intent.putExtra("title", libraryTitle);
 						intent.putExtra("loadFiles", false);
 						intent.putExtra("showGUI", true);

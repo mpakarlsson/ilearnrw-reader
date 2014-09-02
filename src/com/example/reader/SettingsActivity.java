@@ -15,7 +15,8 @@ public class SettingsActivity
 		String setting = getIntent().getExtras().getString("setting", "");
 		if(setting.equals("reader")){
 			FragmentTransaction ft = getFragmentManager().beginTransaction();
-			ft.replace(android.R.id.content, new PreferenceFragmentReader());
+			PreferenceFragmentReader pfr = new PreferenceFragmentReader();
+			ft.replace(android.R.id.content, pfr);
 			ft.commit();
 		}
 		else if(setting.equals("library"))

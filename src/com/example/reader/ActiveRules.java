@@ -39,7 +39,7 @@ public class ActiveRules extends ListActivity {
 	private TextView selection;
 	private File fileHtml = null;
 	private File fileJSON = null;
-	private String html, json;
+	private String html, json, cleanHtml;
 	private String name = "";
 	private Boolean showGUI = false;
 	private SharedPreferences sp;
@@ -79,11 +79,13 @@ public class ActiveRules extends ListActivity {
 			fileHtml 		= (File)bundle.get("file");
 			fileJSON 		= (File)bundle.get("json");
 
-			json	= FileHelper.readFromFile(fileJSON);
-			html	= FileHelper.readFromFile(fileHtml);
+			json		= FileHelper.readFromFile(fileJSON);
+			html		= FileHelper.readFromFile(fileHtml);
+			cleanHtml	= html;
 		} else {
-			html = bundle.getString("html");
-			json = bundle.getString("json");
+			json 		= bundle.getString("json");
+			html 		= bundle.getString("cleanHtml");
+			cleanHtml 	= html;
 		}
 		
 		activeProblems 	= new ArrayList<Problem>();
@@ -192,6 +194,7 @@ public class ActiveRules extends ListActivity {
 	private void finished(){
 		Intent intent = new Intent(ActiveRules.this, ReaderActivity.class);
 		intent.putExtra("html", html);
+		intent.putExtra("cleanHtml", cleanHtml);
 		intent.putExtra("json", json);
 		intent.putExtra("title", name);
 		intent.putExtra("trickyWords", (ArrayList<Word>) trickyWords);

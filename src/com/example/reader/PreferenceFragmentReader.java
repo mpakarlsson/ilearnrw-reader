@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 
@@ -128,8 +129,10 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		presentationRules.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
+				
 				Intent i = new Intent();
-				i.putExtra("showGUI", PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext()).getBoolean("showGUI", false));
+				i.putExtra("showGUI", prefs.getBoolean("showGUI", false));
 				getActivity().setResult(Activity.RESULT_OK, i);
 				getActivity().finish();
 				return true;
@@ -139,12 +142,9 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 	
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {			
-		if(!preference.getTitle().toString().equals(newValue)){
+		if(!preference.getTitle().toString().equals(newValue))
 			return true;
-		}
 		
 		return false;
 	}
-
-	
 }
