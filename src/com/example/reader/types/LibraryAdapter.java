@@ -1,18 +1,26 @@
 package com.example.reader.types;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
 
+import com.example.reader.ActiveRules;
+import com.example.reader.PresentationModule;
 import com.example.reader.R;
+import com.example.reader.utils.FileHelper;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
@@ -58,10 +66,34 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 		
 		final LibraryItem item = objects.get(position);
 		if(item != null){
+			
+			final Pair<File> libItems = FileHelper.getFilesFromLibrary(getContext(), item.getName());
+			
 			TextView tv_item = (TextView) v.findViewById(R.id.library_item);
-
+			
+			Button rules = (Button) v.findViewById(R.id.library_item_rules);
 			tv_item.setFocusable(false);
 			tv_item.setClickable(false);
+			
+			rules.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if(item.getName().endsWith(".txt") || item.getName().endsWith(".html")){
+						Intent intent = new Intent(getContext(), ActiveRules.class);
+						intent.putExtra("file", libItems.first());
+						intent.putExtra("json", libItems.second());
+						intent.putExtra("title", libItems.first().getName());
+						intent.putExtra("loadFiles", true);
+						intent.putExtra("showGUI", true);
+						getContext().startActivity(intent);
+					} else if(item.getName().endsWith(".json")){
+						jsonClicked();
+					}
+					else {
+						invalidClicked(item.getName());
+					}
+				}
+			});
 			
 			if(tv_item != null){
 				tv_item.setText(item.getName());
@@ -70,6 +102,20 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 		return v;
 	}
 
+	private void jsonClicked(){
+		new AlertDialog.Builder(getContext())
+		.setTitle(getContext().getString(R.string.dialog_json_title))
+		.setMessage(getContext().getString(R.string.dialog_json_message))
+		.setPositiveButton(android.R.string.ok, null).show();
+	}
+	
+	private void invalidClicked(String name){
+		new AlertDialog.Builder(getContext())
+		.setTitle(getContext().getString(R.string.folder_invalid))
+		.setMessage(getContext().getString(R.string.folder_open_failed) + name)
+		.setPositiveButton(android.R.string.ok, null).show();
+	}
+	
 	@Override
 	public void notifyDataSetChanged() {
 		alphaIndexer.clear();

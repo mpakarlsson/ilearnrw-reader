@@ -34,8 +34,9 @@
     <string name="external_storage_folder_name">Debug_IlearnRW</string>
     
     
+    <string name="library_open">Open file</string>
+    <string name="library_rules">Open rules</string>
     <string-array name="library_context_menu">
-        <item>Open file w/ presentation GUI</item>
         <item>Edit</item>
         <item>Delete</item>
         <item>Copy</item>

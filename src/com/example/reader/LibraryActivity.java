@@ -241,18 +241,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						Toast.makeText(getBaseContext(), getString(R.string.copy_file_external_failed), Toast.LENGTH_SHORT).show();
 				}
 			}).show();
-		} else if(menuItemName.startsWith("Open file w/")){
-			Pair<File> libItems = FileHelper.getFilesFromLibrary(this, clickItem.getName());
-			
-			//Intent intent = new Intent(this, PresentationModule.class);
-			Intent intent = new Intent(this, ActiveRules.class);
-			intent.putExtra("file", libItems.first());
-			intent.putExtra("json", libItems.second());
-			intent.putExtra("title", libItems.first().getName());
-			intent.putExtra("loadFiles", true);
-			intent.putExtra("showGUI", true);
-			this.startActivity(intent);
-			
 		}
 		
 		return true;
