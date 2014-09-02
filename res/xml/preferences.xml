@@ -43,7 +43,7 @@
             android:title="Line spacing"
             android:dialogTitle="Line spacing"
             android:summary=""
-            android:defaultValue="100"
+            android:defaultValue="125"
             android:entries="@array/pref_line_height"
 	    	android:entryValues="@array/pref_line_height_values"/>
 

@@ -435,6 +435,7 @@ public class ReaderActivity
 			
 		case R.id.ibtn_mode_reader:
 			if(reader_mode == ReaderMode.Listen){
+				setPlayStatus(ReaderStatus.Disabled, false);
 				tts.stop();
 			} else if(reader_mode == ReaderMode.Guidance){
 				highlightHandler.removeCallbacks(highlightRunnable);
@@ -448,7 +449,11 @@ public class ReaderActivity
 			break;
 			
 		case R.id.ibtn_settings_reader:
-			tts.stop();
+			if(tts.isSpeaking()){
+				setPlayStatus(ReaderStatus.Disabled, true);
+				tts.stop();
+			}
+			
 			Intent i = new Intent(this, SettingsActivity.class);
 			i.putExtra("setting", "reader");
 			startActivityForResult(i, FLAG_REFRESH_WEBVIEW);
@@ -915,7 +920,7 @@ public class ReaderActivity
 		backgroundColor 		= "#" + backgroundColor.substring(2);
 		textColor 				= "#" + textColor.substring(2);
 		
-		String lineHeight 		= sp.getString(getString(R.string.pref_line_height_title), "100");
+		String lineHeight 		= sp.getString(getString(R.string.pref_line_height_title), "125");
 		int fSize				= sp.getInt(getString(R.string.pref_font_size_title), 20);
 		String fontSize;
 		String letterSpacing 	= sp.getString(getString(R.string.pref_letter_spacing_title), "0");
