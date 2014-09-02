@@ -395,7 +395,7 @@ public class ReaderActivity
 		finish();
 	}
 
-	@Override
+	/*@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.reader, menu);
 		return true;
@@ -413,7 +413,8 @@ public class ReaderActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	 */
+	
 	@Override
 	public void onClick(View v) {		
 		switch (v.getId()) {
