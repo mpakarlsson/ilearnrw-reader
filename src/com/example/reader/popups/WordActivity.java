@@ -94,7 +94,9 @@ public class WordActivity
 		
 		String wordInSyllables 	= b.getString("wordInSyllables", "-"+strWord+"-");
 		String stem 			= b.getString("stem", strWord);
+		String phoneme			= b.getString("phoneme", "-");
 		ArrayList<Integer> problems = b.getIntegerArrayList("problems");
+		ArrayList<String> datas		= b.getStringArrayList("data");
 		trickyWords					= (ArrayList<Word>) b.get("trickyWords");
 		
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -141,7 +143,7 @@ public class WordActivity
 		ArrayList<Spannable> items		= new ArrayList<Spannable>();
 		items.add(new SpannableString(stem));
 		items.add(new SpannableString(wordInSyllables));
-		
+		items.add(new SpannableString(phoneme));
 		
 		Spannable currSpan = null;
 		int pos=-1;
@@ -158,7 +160,7 @@ public class WordActivity
 			} else{
 				if(currSpan!=null)
 					spans.add(currSpan);
-				currSpan = new SpannableString(strWord + "\n");
+				currSpan = new SpannableString(strWord + " - Problem(" + datas.get(i-1) + "," + datas.get(i) + ") " + datas.get(i-2) + "\n");
 				currSpan.setSpan(new BackgroundColorSpan(Color.YELLOW), start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 			}
 		}

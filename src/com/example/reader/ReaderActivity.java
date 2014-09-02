@@ -1065,6 +1065,7 @@ public class ReaderActivity
 			_word = _word.trim();
 			
 			ArrayList<Integer> values = new ArrayList<Integer>();
+			ArrayList<String> datas = new ArrayList<String>();
 			
 			for(int i=0; i<words.size(); i++){
 				UserBasedAnnotatedWord word = words.get(i);
@@ -1072,13 +1073,16 @@ public class ReaderActivity
 					Intent in = new Intent(getBaseContext(), WordActivity.class);
 					in.putExtra("word", word.getWord());
 					in.putExtra("stem", word.getStem());
+					in.putExtra("phoneme", word.getPhonetics());
 					in.putExtra("wordInSyllables", word.getWordInToSyllables());
 					in.putExtra("trickyWords", trickyWords);
 					
 					ArrayList<SeverityOnWordProblemInfo> problems = word.getUserSeveritiesOnWordProblems();
-					
 					for(int j=0; j<problems.size(); j++){
 						SeverityOnWordProblemInfo problem = problems.get(j);
+						problem.getCategory();
+						problem.getIndex();
+						
 						ArrayList<StringMatchesInfo> infos = problem.getMatched();
 						
 						for(int k=0; k<infos.size(); k++){
@@ -1087,10 +1091,17 @@ public class ReaderActivity
 							values.add(j);
 							values.add(info.getStart());
 							values.add(info.getEnd());
+							
+							datas.add(info.getMatchedPart());
+							datas.add(Integer.toString(problem.getCategory()));
+							datas.add(Integer.toString(problem.getIndex()));
+							
 						}
 					}
 					
+
 					in.putIntegerArrayListExtra("problems", values);
+					in.putStringArrayListExtra("data", datas);
 					startActivityForResult(in, FLAG_WORD_POPUP);
 					break;
 				}
