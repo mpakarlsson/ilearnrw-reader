@@ -64,7 +64,7 @@ public class ReaderActivity
 
 	private final String TAG = getClass().getName();
 	
-	private TextView tvTitle, tvHighlightSpeed, tvHighlightSpeedTitle;
+	private TextView tvTitle, tvHighlightSpeedTitle;
 	private WebView reader;
 	private ImageButton ibtnLib, ibtnSearch, ibtnMode, ibtnPrev, ibtnPlay, ibtnNext, ibtnSettings, ibtnSearchForward, ibtnSearchBack;
 	private RelativeLayout top, bottom, searchbar, rlHighlightSpeed;
@@ -165,7 +165,6 @@ public class ReaderActivity
 		tvTitle = (TextView) findViewById(R.id.tv_book_title_reader);
 		tvTitle.setText(libraryTitle);
 		
-		tvHighlightSpeed 		= (TextView) findViewById(R.id.tv_highlight_speed_value);
 		tvHighlightSpeedTitle	= (TextView) findViewById(R.id.tv_highlight_speed_title);
 		
 		sbHighLightSpeed = (SeekBar) findViewById(R.id.seekbar_highLight_speed);
@@ -174,8 +173,6 @@ public class ReaderActivity
 		highlightSpeed = Double.longBitsToDouble(sp.getLong(getString(R.string.pref_highlighter_speed), Double.doubleToLongBits(5.5)));
 		int hlSpeed = (int) (highlightSpeed * 10);
 		sbHighLightSpeed.setProgress(hlSpeed);
-		
-		tvHighlightSpeed.setText(String.format("%.1f", highlightSpeed) + "\n/\n" + String.format("%.1f", ((sbHighLightSpeed.getMax()*0.1) + 0.5)));
 		
 		ibtnLib 		= (ImageButton) findViewById(R.id.ibtn_lib_reader);
 		ibtnSearch 		= (ImageButton) findViewById(R.id.ibtn_search_reader);
@@ -583,9 +580,8 @@ public class ReaderActivity
 			boolean fromUser) {
 		switch(seekBar.getId()){
 		case R.id.seekbar_highLight_speed:
-			highlightSpeed = (seekBar.getProgress() * 0.1) + 0.5; // Slider values goes from 0.5 to 10.5
-			double max = ((seekBar.getMax()*0.1) + 0.5);
-			tvHighlightSpeed.setText(String.format("%.1f", highlightSpeed) + "\n/\n" + String.format("%.1f", max));
+			int flipValue = seekBar.getMax() - seekBar.getProgress();
+			highlightSpeed = (flipValue * 0.1) + 0.5; // Slider values goes from 0.5 to 10.5
 			break;
 		default:
 			break;
@@ -611,7 +607,8 @@ public class ReaderActivity
 		switch (seekBar.getId()) {
 		case R.id.seekbar_highLight_speed:
 			
-			highlightSpeed =  (seekBar.getProgress() * 0.1);
+			int flipValue = seekBar.getMax() - seekBar.getProgress();
+			highlightSpeed =  (flipValue * 0.1);
 			spEditor.putLong(getString(R.string.pref_highlighter_speed), Double.doubleToRawLongBits(highlightSpeed)).commit();
 			
 			highlightSpeed += 0.5;
@@ -639,7 +636,6 @@ public class ReaderActivity
 		int bottomColor = sp.getInt(getString(R.string.pref_layout_bottom), 0xffd3d3d3);
 		bottom.setBackgroundColor(bottomColor);
 		int textColor = sp.getInt(getString(R.string.pref_layout_text), 0xff000000);
-		tvHighlightSpeed.setTextColor(textColor);
 		tvHighlightSpeedTitle.setTextColor(textColor);
 		tvTitle.setTextColor(textColor);
 		
