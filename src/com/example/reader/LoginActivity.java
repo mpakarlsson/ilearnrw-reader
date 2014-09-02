@@ -1,12 +1,10 @@
 package com.example.reader;
 
-
 import com.example.reader.tasks.LoginTask;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -19,12 +17,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
-
 public class LoginActivity extends Activity implements OnClickListener {
 
 	private final String TAG = getClass().getName();
 
-	public Button btnLogin, btnLoginSkip, btnLogout;
+	public Button btnLogin, btnLogout;
 	public EditText etUsername, etPassword;
 	public CheckBox chkRM;
 	private SharedPreferences preferences;
@@ -36,7 +33,6 @@ public class LoginActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_login);
         
         btnLogin 		= (Button) findViewById(R.id.login_button);
-        btnLoginSkip 	= (Button) findViewById(R.id.login_button_skip);
         btnLogout 		= (Button) findViewById(R.id.login_logout);
         etUsername 		= (EditText) findViewById(R.id.login_username);
         etPassword 		= (EditText) findViewById(R.id.login_password);
@@ -55,7 +51,6 @@ public class LoginActivity extends Activity implements OnClickListener {
         etPassword.setSelection(password.length());
         
         btnLogin.setOnClickListener(this);
-        btnLoginSkip.setOnClickListener(this);
         btnLogout.setOnClickListener(this);
         
         chkRM.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -135,14 +130,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			new LoginTask(this, TAG).run(username, password);
 			break;
-
-		case R.id.login_button_skip:
-			Intent i2 = new Intent(this, LibraryActivity.class);
-			startActivity(i2);
-			updateButtons();
-			isLoggedIn = true;
-			preferences.edit().putBoolean("isLoggedIn", isLoggedIn).commit();
-			break;
 		
 		case R.id.login_logout:
 			new AlertDialog.Builder(this)
@@ -177,14 +164,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	private void updateButtons(){
-		
-		if(isLoggedIn){
-        	btnLoginSkip.setVisibility(View.GONE);
+	private void updateButtons(){		
+		if(isLoggedIn)
         	btnLogout.setVisibility(View.VISIBLE);
-        } else {
-        	btnLoginSkip.setVisibility(View.VISIBLE);
+        else
         	btnLogout.setVisibility(View.GONE);
-        }
 	}
 }

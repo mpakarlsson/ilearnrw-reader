@@ -76,15 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/spacer_8"
-            android:text="@string/logout"/>
-        
-        <Button 
-            android:id="@+id/login_button_skip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/spacer_8"
-            android:text="Skip login"/>        
+            android:text="@string/logout"/>      
         
     </LinearLayout>
     
