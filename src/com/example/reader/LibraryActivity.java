@@ -366,7 +366,10 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.ibtn_add_library:
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			Intent intent = new Intent(getBaseContext(), AddToLibraryExplorerActivity.class);
+			startActivityForResult(intent, FLAG_ADD_TO_DEVICE);
+			
+			/*AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			LayoutInflater inflater = getLayoutInflater();
 			View convertView = (View) inflater.inflate(R.layout.dialog_add_to_device, null);
 			builder.setView(convertView);
@@ -393,6 +396,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			});
 			dialog = builder.create();
 			dialog.show();
+			*/
 			break;
 
 		default:
