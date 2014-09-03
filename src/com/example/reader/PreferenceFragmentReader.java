@@ -65,8 +65,11 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		if(fontFace.getValue() == null)
 			fontFace.setValueIndex(0);
 		
-		ColorPickerPreference backgroundPicker = (ColorPickerPreference)findPreference(a.getString(R.string.pref_background_color_title));
-		ColorPickerPreference textPicker = (ColorPickerPreference)findPreference(a.getString(R.string.pref_text_color_title));
+		
+		String name = a.getString(R.string.pref_background_color_title);
+		ColorPickerPreference backgroundPicker = (ColorPickerPreference)findPreference(name);
+		name = a.getString(R.string.pref_text_color_title);
+		ColorPickerPreference textPicker = (ColorPickerPreference)findPreference(name);
 		
 		fontFace.setOnPreferenceChangeListener(this);
 		backgroundPicker.setOnPreferenceChangeListener(this);
@@ -101,10 +104,6 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 						edit.remove(getString(R.string.pref_speech_rate_title));
 						edit.remove(getString(R.string.pref_pitch_title));
 						edit.remove(getString(R.string.pref_tts_language_title));
-						edit.remove(getString(R.string.pref_layout_top));
-						edit.remove(getString(R.string.pref_layout_bottom));
-						edit.remove(getString(R.string.pref_layout_slider));
-						edit.remove(getString(R.string.pref_layout_text));
 						edit.commit();						
 						a.finish();
 						return;

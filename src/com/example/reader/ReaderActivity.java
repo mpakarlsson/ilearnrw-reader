@@ -631,15 +631,7 @@ public class ReaderActivity
 	}
 	
 	private void updateGUI(){
-		int topColor = sp.getInt(getString(R.string.pref_layout_top), 0xffd3d3d3);
-		top.setBackgroundColor(topColor);
-		int bottomColor = sp.getInt(getString(R.string.pref_layout_bottom), 0xffd3d3d3);
-		bottom.setBackgroundColor(bottomColor);
-		int textColor = sp.getInt(getString(R.string.pref_layout_text), 0xff000000);
-		tvHighlightSpeedTitle.setTextColor(textColor);
-		tvTitle.setTextColor(textColor);
-		
-		int sliderProgressColor = sp.getInt(getString(R.string.pref_layout_slider), 0xff555555);
+		int sliderProgressColor = 0xff555555;
 		
 		int backgroundColor = sp.getInt("pref_background_color", 0xffffffff);
 		

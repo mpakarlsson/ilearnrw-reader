@@ -115,40 +115,6 @@
         
     </PreferenceCategory>
     
-    <PreferenceCategory 
-        android:title="@string/pref_extras_category_title"
-        android:key="pref_extras_settings">
-        
-		<com.example.reader.types.ColorPickerPreference
-			android:key="@string/pref_layout_top"
-            android:title="@string/pref_layout_top_title"
-            android:summary="@string/pref_layout_top_summary"
-            android:defaultValue="@color/LightGrey" 
-            ns:supportsAlpha="false"/>
-        
-        <com.example.reader.types.ColorPickerPreference
-            android:key="@string/pref_layout_bottom"
-			android:title="@string/pref_layout_bottom_title"
-            android:summary="@string/pref_layout_bottom_summary"
-            android:defaultValue="@color/LightGrey" 
-            ns:supportsAlpha="false"/>
-        
-        <com.example.reader.types.ColorPickerPreference
-            android:key="@string/pref_layout_slider"
-            android:title="@string/pref_layout_slider_title"
-            android:summary="@string/pref_layout_slider_summary"
-            android:defaultValue="0xff555555" 
-            ns:supportsAlpha="false"/>
-        
-        <com.example.reader.types.ColorPickerPreference
-            android:key="@string/pref_layout_text"
-            android:title="@string/pref_layout_text_title"
-            android:summary="@string/pref_layout_text_summary"
-            android:defaultValue="0xff000000" 
-            ns:supportsAlpha="false"/>
-        
-    </PreferenceCategory>
-    
     <PreferenceCategory
         android:title="@string/pref_reset_category_title"
         android:key="pref_reset_settings">
