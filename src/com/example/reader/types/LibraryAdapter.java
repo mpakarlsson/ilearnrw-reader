@@ -96,7 +96,11 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 			});
 			
 			if(tv_item != null){
-				tv_item.setText(item.getName());
+				String name = item.getName();
+				
+				if(name.endsWith(".txt"))
+					name = name.substring(0,name.length()-4);
+				tv_item.setText(name);
 			}
 		}
 		return v;

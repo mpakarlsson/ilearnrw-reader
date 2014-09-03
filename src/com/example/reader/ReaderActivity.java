@@ -163,6 +163,10 @@ public class ReaderActivity
 		CURR_SENT 		= bookTitle.first() + "_" + bookTitle.second().substring(1);
 		
 		tvTitle = (TextView) findViewById(R.id.tv_book_title_reader);
+		
+		if(libraryTitle.endsWith(".txt"))
+			libraryTitle = libraryTitle.substring(0, libraryTitle.length()-4);
+		
 		tvTitle.setText(libraryTitle);
 		
 		tvHighlightSpeedTitle	= (TextView) findViewById(R.id.tv_highlight_speed_title);
