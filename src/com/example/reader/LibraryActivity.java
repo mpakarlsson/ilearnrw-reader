@@ -119,15 +119,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.library, menu);
-		return true;
-	}
-	
-	
-
-	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		switch (v.getId()) {
@@ -146,6 +137,13 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		}
 		
 	}
+	
+	/*@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.library, menu);
+		return true;
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -161,7 +159,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+	*/
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();

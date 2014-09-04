@@ -5,6 +5,7 @@
 	    <attr name="unitsLeft"		format="string"/>
 	    <attr name="unitsRight"		format="string"/>
 	    <attr name="statusNumber"	format="boolean"/>
+	    <attr name="textValues"		format="string"/>
 	</declare-styleable>
 	
 	<declare-styleable name="ColorPickerPreference">

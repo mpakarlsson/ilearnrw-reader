@@ -89,6 +89,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     	
 	}
     
+    /*
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.login, menu);
@@ -103,6 +104,8 @@ public class LoginActivity extends Activity implements OnClickListener {
         }
         return super.onOptionsItemSelected(item);
     }
+    
+    */
 
 	@Override
 	public void onClick(View v) {

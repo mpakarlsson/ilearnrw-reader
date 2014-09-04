@@ -19,7 +19,5 @@ public class SettingsActivity
 			ft.replace(android.R.id.content, pfr);
 			ft.commit();
 		}
-		else if(setting.equals("library"))
-			getFragmentManager().beginTransaction().replace(android.R.id.content, new PreferenceFragmentLibrary()).commit();
 	}
 }

@@ -660,7 +660,7 @@ public class ReaderActivity
 	public void highlight(String id){
 		id = checkId(id);
 		if(id != null){
-			reader.loadUrl("javascript:scrollToElement('" + id + "');");
+			//reader.loadUrl("javascript:scrollToElement('" + id + "');");
 			
 			String highlightColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
 			reader.loadUrl("javascript:highlight('" + id + "', '" + highlightColor + "');");

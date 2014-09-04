@@ -30,7 +30,8 @@
 			ns:min="15"
 			ns:unitsLeft=""
 			ns:unitsRight="pt"
-			ns:statusNumber="true"/>
+			ns:statusNumber="true"
+			ns:textValues="@array/pref_font_values"/>
          
          <ListPreference 
             android:key="pref_font_face"
