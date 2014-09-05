@@ -36,8 +36,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -64,10 +62,10 @@ public class ReaderActivity
 
 	private final String TAG = getClass().getName();
 	
-	private TextView tvTitle, tvHighlightSpeedTitle;
+	private TextView tvTitle;
 	private WebView reader;
 	private ImageButton ibtnLib, ibtnSearch, ibtnMode, ibtnPrev, ibtnPlay, ibtnNext, ibtnSettings, ibtnSearchForward, ibtnSearchBack;
-	private RelativeLayout top, bottom, searchbar, rlHighlightSpeed;
+	private RelativeLayout bottom, searchbar, rlHighlightSpeed;
 	private SeekBar sbHighLightSpeed;
 	
 	private ReaderMode reader_mode;
@@ -86,11 +84,12 @@ public class ReaderActivity
 	private SharedPreferences.Editor spEditor;
 	
 	public String CURR_SENT;
+	public String CURR_WORD;
 	public final String SENTENCE_TAG	= "sen";
 	public final String WORD_TAG 		= "w";
-	private ArrayList<String> sentenceIds;
-	private String defaultSentence= "";
-	private int currentPosition;
+	private ArrayList<String> sentenceIds, wordIds;
+	private String defaultSentence = "", defaultWord = "";
+	private int currSentPos, currWordPos;
 	private String touchedId;
 	
 	private static String html, bundleJSON, bundleHtml, cleanHtml;
@@ -116,10 +115,10 @@ public class ReaderActivity
 		Chunking("Chunking", 2);
 		
 		private String name;
-		private int value;
+		private int value;		
 		private ReaderMode(String name, int value){
-			this.name = name;
-			this.value = value;
+			this.name 	= name;
+			this.value 	= value;
 		}
 		
 		@Override
@@ -134,6 +133,36 @@ public class ReaderActivity
 		public String getName(){
 			return name;
 		}
+	}
+	
+	public static enum HighlightMode{
+		Paragraph("Paragraph", 0),
+		Sentence("Sentence", 1),
+		Word("Word", 2);
+		
+		private String name;
+		private int value;
+		
+		private HighlightMode(String name, int value){
+			this.name 	= name;
+			this.value 	= value;
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
+		
+		public int getValue(){
+			return value;
+		}
+		
+		public String getName(){
+			return name;
+		}
+		
+		
+		
 	}
 	
 	public static enum ReaderStatus {
@@ -169,8 +198,6 @@ public class ReaderActivity
 		
 		tvTitle.setText(libraryTitle);
 		
-		tvHighlightSpeedTitle	= (TextView) findViewById(R.id.tv_highlight_speed_title);
-		
 		sbHighLightSpeed = (SeekBar) findViewById(R.id.seekbar_highLight_speed);
 		sbHighLightSpeed.setOnSeekBarChangeListener(this);
 
@@ -198,7 +225,6 @@ public class ReaderActivity
 		ibtnNext.setEnabled(false);
 		ibtnPrev.setEnabled(false);
 		
-		top					= (RelativeLayout) findViewById(R.id.reader_top);
 		bottom 				= (RelativeLayout) findViewById(R.id.reader_bottom);
 		rlHighlightSpeed 	= (RelativeLayout) findViewById(R.id.reader_body_highlight_speed);
 		
@@ -238,8 +264,8 @@ public class ReaderActivity
 		searchbar.setVisibility(RelativeLayout.GONE);
 
 		touchedId = "w0";
-		currentPosition = sp.getInt(CURR_SENT, 0);
-		isHighlighting =  sp.getBoolean("highlighting", true);
+		currSentPos 	= sp.getInt(CURR_SENT, 0);
+		isHighlighting 	=  sp.getBoolean("highlighting", true);
 
 		highlightParts = new HashMap<String, Pair<String>>();
 		
@@ -469,21 +495,21 @@ public class ReaderActivity
 				tts.stop();
 			}
 			
-			currentPosition--;
-			if(currentPosition<0){
-				currentPosition=0;
+			currSentPos--;
+			if(currSentPos<0){
+				currSentPos=0;
 				doHighlightPrev = false;
 			}
 			
-			String next = sentenceIds.get(currentPosition+1);
-			String current = sentenceIds.get(currentPosition);
+			String next = sentenceIds.get(currSentPos+1);
+			String current = sentenceIds.get(currSentPos);
 			
 			if(doHighlightPrev){
 				removeHighlight(next);
 				highlight(current);
 			}
 			
-			spEditor.putInt(CURR_SENT, currentPosition).commit();
+			spEditor.putInt(CURR_SENT, currSentPos).commit();
 			
 			if(isSpeaking)
 				setPlayStatus(ReaderStatus.Enabled, false);
@@ -498,8 +524,8 @@ public class ReaderActivity
 			break;
 			
 		case R.id.ibtn_play_reader:
-			currentPosition = sp.getInt(CURR_SENT, 0);
-			String c = sentenceIds.get(currentPosition);
+			currSentPos = sp.getInt(CURR_SENT, 0);
+			String c = sentenceIds.get(currSentPos);
 			
 			if(reader_status == ReaderStatus.Disabled){
 				setPlayStatus(ReaderStatus.Enabled, true);
@@ -509,7 +535,7 @@ public class ReaderActivity
 					resetGuidance();
 				}
 			} else {
-				spEditor.putInt(CURR_SENT, currentPosition).commit();
+				spEditor.putInt(CURR_SENT, currSentPos).commit();
 				setPlayStatus(ReaderStatus.Disabled, true);
 				if(reader_mode == ReaderMode.Listen){
 					tts.stop();
@@ -530,17 +556,17 @@ public class ReaderActivity
 				tts.stop();
 			}
 			
-			currentPosition++;
-			if(currentPosition>sentenceIds.size()-1){
-				currentPosition=sentenceIds.size()-1;
+			currSentPos++;
+			if(currSentPos>sentenceIds.size()-1){
+				currSentPos=sentenceIds.size()-1;
 				doHighlightNext = false;
 			}
 			
-			String curr = sentenceIds.get(currentPosition);
-			String prev = sentenceIds.get(currentPosition-1);
+			String curr = sentenceIds.get(currSentPos);
+			String prev = sentenceIds.get(currSentPos-1);
 			
 
-			spEditor.putInt(CURR_SENT, currentPosition).commit();
+			spEditor.putInt(CURR_SENT, currSentPos).commit();
 			if(doHighlightNext){
 				removeHighlight(prev);
 				highlight(curr);
@@ -1018,10 +1044,10 @@ public class ReaderActivity
 			sentenceIds = new ArrayList<String>(Arrays.asList(sentences.split(",")));
 			defaultSentence = sentenceIds.get(0);
 			
-			if(currentPosition>=sentenceIds.size()-1)
-				currentPosition=sentenceIds.size()-1;
+			if(currSentPos>=sentenceIds.size()-1)
+				currSentPos=sentenceIds.size()-1;
 			
-			final String current = sentenceIds.get(currentPosition);
+			final String current = sentenceIds.get(currSentPos);
 			
 			runOnUiThread(new Runnable() {
 				@Override
@@ -1033,11 +1059,19 @@ public class ReaderActivity
 		}
 		
 		@JavascriptInterface
+		public void getWords(String words){
+			wordIds = new ArrayList<String>(Arrays.asList(words.split(",")));
+			defaultWord = wordIds.get(0);
+			
+			
+		}
+		
+		@JavascriptInterface
 		public void speakSentence(String text){
-			if(currentPosition==sentenceIds.size()-1)
-				tts.speak(text, currentPosition, true);
+			if(currSentPos==sentenceIds.size()-1)
+				tts.speak(text, currSentPos, true);
 			else
-				tts.speak(text, currentPosition, false);
+				tts.speak(text, currSentPos, false);
 		}
 		
 		@JavascriptInterface
@@ -1107,19 +1141,19 @@ public class ReaderActivity
 				public void run() {
 					removeSearches();
 					
-					String curr = sentenceIds.get(currentPosition);
+					String curr = sentenceIds.get(currSentPos);
 					removeHighlight(curr);
 					
 					for(int i=0;i<sentenceIds.size(); i++){
 						if(sentenceIds.get(i).equals(id)){
-							currentPosition = i;
+							currSentPos = i;
 							break;
 						}
 					}
 					
 					if(!isHighlighting || !curr.equals(id)){						
 						highlight(id);
-						spEditor.putInt(CURR_SENT, currentPosition).commit();
+						spEditor.putInt(CURR_SENT, currSentPos).commit();
 						isHighlighting = true;
 						
 						if(reader_status == ReaderStatus.Enabled){
@@ -1132,7 +1166,7 @@ public class ReaderActivity
 							}
 						}
 					} else {
-						spEditor.putInt(CURR_SENT, currentPosition).commit();
+						spEditor.putInt(CURR_SENT, currSentPos).commit();
 						isHighlighting = false;
 					}
 					
@@ -1164,7 +1198,7 @@ public class ReaderActivity
 			if(reader_status == ReaderStatus.Enabled){
 				int next = ++id;
 				spEditor.putInt(CURR_SENT, next).commit();
-				currentPosition = next;
+				currSentPos = next;
 				speakFromSentence(sentenceIds.get(next));
 			}
 		}
@@ -1215,18 +1249,18 @@ public class ReaderActivity
 	private class HighlightRunnable implements Runnable{
 		@Override
 		public void run() {
-			if(currentPosition==sentenceIds.size()-1){
+			if(currSentPos==sentenceIds.size()-1){
 				ibtnPlay.callOnClick();
 				return;
 			}
 			
-			String prev 	= sentenceIds.get(currentPosition++);
-			String current	= sentenceIds.get(currentPosition);
+			String prev 	= sentenceIds.get(currSentPos++);
+			String current	= sentenceIds.get(currSentPos);
 			
 			removeHighlight(prev);
 			highlight(current);
 			
-			spEditor.putInt(CURR_SENT, currentPosition).commit();
+			spEditor.putInt(CURR_SENT, currSentPos).commit();
 			
 			long millis = (long) (highlightSpeed * 1000);
 			highlightHandler.postDelayed(this, millis);

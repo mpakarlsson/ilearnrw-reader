@@ -71,18 +71,18 @@
         <activity
             android:name="com.example.reader.popups.SearchActivity"
             android:label="@string/title_activity_search" 
-            android:theme="@style/NoActionBar"
+            android:theme="@style/NoActionBarDialog"
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
          <activity
             android:name="com.example.reader.popups.ModeActivity"
             android:label="@string/title_activity_mode" 
-            android:theme="@style/NoActionBar">
+            android:theme="@style/NoActionBarDialog">
         </activity>
         <activity
             android:name="com.example.reader.popups.RenameActivity"
             android:label="@string/title_activity_rename" 
-            android:theme="@style/NoActionBar">
+            android:theme="@style/NoActionBarDialog">
         </activity>
         <activity
             android:name="com.example.reader.popups.WordActivity"
