@@ -136,7 +136,6 @@ public class ReaderActivity
 	}
 	
 	public static enum HighlightMode{
-		Paragraph("Paragraph", 0),
 		Sentence("Sentence", 1),
 		Word("Word", 2);
 		
@@ -253,7 +252,7 @@ public class ReaderActivity
 		reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
 		
 		reader_status = ReaderStatus.Disabled;
-		ibtnPlay.setImageResource(R.drawable.play);
+		ibtnPlay.setImageResource(R.drawable.image_selector_play);
 		
 		searchbar 			= (RelativeLayout) findViewById(R.id.search_buttons_layout);
 		ibtnSearchForward 	= (ImageButton) findViewById(R.id.ibtn_search_forward);
@@ -756,9 +755,9 @@ public class ReaderActivity
 	private void setPlayStatus(ReaderStatus status, boolean changeImage){	
 		if(changeImage){
 			if(status == ReaderStatus.Enabled)	
-				ibtnPlay.setImageResource(R.drawable.pause);
+				ibtnPlay.setImageResource(R.drawable.image_selector_pause);
 			else
-				ibtnPlay.setImageResource(R.drawable.play);
+				ibtnPlay.setImageResource(R.drawable.image_selector_play);
 		}
 		reader_status = status;
 	}
