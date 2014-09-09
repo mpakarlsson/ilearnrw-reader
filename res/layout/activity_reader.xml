@@ -19,7 +19,8 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        style="?android:attr/buttonBarButtonStyle"
-	        android:src="@drawable/lib"
+	        android:src="@drawable/image_selector_return_to_library"
+	        android:background="@android:color/transparent"
 	        android:contentDescription="@string/content_descr_btn_lib"
 	        android:layout_alignParentLeft="true"
 	        android:layout_marginTop="10dp"/>
@@ -31,6 +32,7 @@
 	        style="?android:attr/buttonBarButtonStyle"
 	        android:src="@drawable/search"
 	        android:contentDescription="@string/content_descr_btn_search"
+	        android:background="@android:color/transparent"
 	        android:layout_toRightOf="@id/ibtn_lib_reader"
 	        android:layout_marginTop="10dp"/>
         
@@ -48,16 +50,18 @@
 	            android:layout_height="wrap_content"
 	            android:layout_width="wrap_content"
 	            style="?android:attr/buttonBarStyle"
-	            android:src="@drawable/previous"
-	            android:contentDescription="@string/content_descr_btn_settings"/>
+	            android:src="@drawable/previous_mini"
+	            android:contentDescription="@string/content_descr_btn_settings"
+	            android:background="@android:color/transparent"/>
 	        
 	        <ImageButton
 	            android:id="@+id/ibtn_search_forward"
 	            android:layout_height="wrap_content"
 	            android:layout_width="wrap_content"
 	            style="?android:attr/buttonBarStyle"
-	            android:src="@drawable/next"
+	            android:src="@drawable/next_mini"
 	            android:contentDescription="@string/content_descr_btn_settings"
+	            android:background="@android:color/transparent"
 	            android:layout_marginLeft="5dp"
 	            android:layout_toRightOf="@id/ibtn_search_back"/>
         </RelativeLayout>
@@ -132,6 +136,7 @@
 	        style="?android:attr/buttonBarButtonStyle"
 	       	android:src="@drawable/mode"
 	        android:contentDescription="@string/content_descr_btn_mode"
+	        android:background="@android:color/transparent"
 	        android:layout_alignParentLeft="true"
 	        android:layout_marginTop="10dp"
 	        android:layout_marginBottom="5dp"/>
@@ -143,6 +148,7 @@
 	        style="?android:attr/buttonBarButtonStyle"
 	        android:src="@drawable/settings"
 	        android:contentDescription="@string/content_descr_btn_settings"
+	        android:background="@android:color/transparent"
 	        android:layout_alignParentRight="true"
 	        android:layout_marginTop="10dp"
 	        android:layout_marginBottom="5dp"/>
@@ -159,8 +165,9 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        style="?android:attr/buttonBarButtonStyle"
-		        android:src="@drawable/previous"
+		        android:src="@drawable/image_selector_previous"
 		        android:contentDescription="@string/content_descr_btn_previous"
+		        android:background="@android:color/transparent"
 		        android:layout_weight="1"
 		        android:layout_marginTop="10dp"
 		        android:layout_marginBottom="5dp"/>
@@ -170,8 +177,9 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        style="?android:attr/buttonBarButtonStyle"
-		        android:src="@drawable/play"
+		        android:src="@drawable/image_selector_play"
 		        android:contentDescription="@string/content_descr_btn_play"
+		        android:background="@android:color/transparent"
 		        android:layout_weight="1"
 		        android:layout_marginTop="10dp"
 		        android:layout_marginBottom="5dp"/>
@@ -181,8 +189,9 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        style="?android:attr/buttonBarButtonStyle"
-		       	android:src="@drawable/next"
+		       	android:src="@drawable/image_selector_next"
 		        android:contentDescription="@string/content_descr_btn_next"
+		        android:background="@android:color/transparent"
 		        android:layout_weight="1"
 		        android:layout_marginTop="10dp"
 		        android:layout_marginBottom="5dp"/>
