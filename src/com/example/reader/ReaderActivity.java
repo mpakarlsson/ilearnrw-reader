@@ -962,6 +962,9 @@ public class ReaderActivity
 					lineHeight +
 					"letter-spacing: " + letterSpacing + "pt;" +
 					"margin: " + margin + "%; " +
+					"outline-style: none; "+
+					"-webkit-touch-callout: none;"+
+					"-webkit-tap-highlight-color: rgba(0,0,0,0);"+
 				"}" +
 				"</style>" +
 				"";
