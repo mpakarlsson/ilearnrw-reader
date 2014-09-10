@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Reader preferences -->
+    <string name="reader_prefs">Ρυθμίσεις Εφαρμογής</string>
+    
+    <string name="pref_tts_category_title">Text-To-Speech</string>
+    <string name="pref_text_category_title">Κείμενο</string>
+   	<string name="pref_presentation_rules_category_title">Κανόνες Παρουσίασης</string>
+   	<string name="pref_reset_category_title">Resets</string>
+   	
+    <string name="pref_highlighter_speed">pref_highlighter_speed</string>
+    
+    <string name="pref_background_color_title">pref_background_color</string>
+    <string name="pref_background_color_posX_title">pref_background_click_posX</string>
+    <string name="pref_background_color_posY_title">pref_background_click_posY</string>
+    
+    
+    <string name="pref_text_color_title">pref_text_color</string>
+    <string name="pref_text_color_posX_title">pref_text_click_posX</string>
+    <string name="pref_text_color_posY_title">pref_text_click_posY</string>
+    
+    <string name="pref_highlight_color_title">pref_highlight_color</string>
+    <string name="pref_highlight_color_posX_title">pref_highlight_color_posX</string>
+    <string name="pref_highlight_color_posY_title">pref_highlight_color_posY</string>
+    
+    <string name="pref_font_size_title">pref_font_size</string>
+    <string name="pref_font_face_title">pref_font_face</string>
+    <string name="pref_line_height_title">pref_line_height</string>
+    <string name="pref_letter_spacing_title">pref_letter_spacing</string>
+    <string name="pref_margin_title">pref_margin</string>
+    
+    
+    <string name="pref_speech_rate_title">pref_speech_rate</string>
+    <string name="pref_pitch_title">pref_pitch</string>
+    <string name="pref_tts_language_title">pref_tts_language</string>
+    
+    <string name="pref_reader_reset">Reset</string>
+    <string name="pref_reader_reset_summary">Reset reader options</string>  
+    
+	<string name="pref_presentation_rules_title">Change rules</string>
+	<string name="pref_presentation_rules_summary">Change presentation rules</string>	
+	
+	<string-array name="pref_languages">
+        <item>English</item>
+        <item>Greek</item>
+    </string-array>
+    
+    <string-array name="pref_languages_values">
+        <item>en_GB</item>
+        <item>el_GR</item>
+    </string-array>
+    
+    <string-array name="pref_line_height">
+        <item>1.0</item>
+        <item>1.25</item>
+        <item>1.5</item>
+        <item>2.0</item>
+        <item>3.0</item>
+    </string-array>
+    
+    <string-array name="pref_line_height_values">
+        <item>100</item>
+        <item>125</item>
+        <item>150</item>
+        <item>200</item>
+        <item>300</item>
+    </string-array>
+    
+    <string-array name="pref_letter_spacing">
+        <item>Default</item>
+        <item>1 pt</item>
+        <item>2 pt</item>
+        <item>4 pt</item>
+        <item>8 pt</item>
+    </string-array>
+    
+    <string-array name="pref_letter_spacing_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>4</item>
+        <item>8</item>
+    </string-array>
+    
+    <string-array name="pref_margin">
+        <item>No margin</item>
+        <item>Cozy</item>
+        <item>Comfy</item>
+        <item>Roomy</item>
+    </string-array>
+
+    <string-array name="pref_margin_values">
+        <item>0</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+    </string-array>
+    
+    <string-array name="pref_font_values">
+        <item>test</item>
+        <item>rawr</item>
+    </string-array>
+</resources>

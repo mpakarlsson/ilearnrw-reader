@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="active_rules">Ενεργοί κανόνες</string>
+    <string name="edit_btn_text">Επεξεργασία</string>
+    <string name="delete_btn_text">Απενεργοποίηση</string>
+    <string name="add_btn_text">Ενεργοποίηση νέου κανόνα</string>
+    <string name="confirm_btn_text">Επιβεβαίωση</string>
+    <string name="cancel_btn_text">Ακύρωση</string>
+    <string name="fire_btn_text">Χρωμάτισε το κείμενο</string>
+    <string name="active_color_label">Ενεργοποίηση χρώματος</string>
+    
+</resources>

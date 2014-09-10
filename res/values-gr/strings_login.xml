@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="username">Username :</string>
+    <string name="password">Password :</string>
+    <string name="login_username_hint">Enter your username</string>
+    <string name="login_password_hint">Enter your password</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    
+    <string name="login_succeeded">Login succeeded</string>
+    <string name="login_failed">Failed to login</string>
+    <string name="login_failed_fetching">Failed to login, failed to get user data</string>
+    
+    <string name="dialog_login_title">Login</string>
+    <string name="dialog_login_message">Logging in. Please wait&#8230;</string>
+    
+    <string name="dialog_fetch_user_title">User details</string>
+    <string name="dialog_fetch_user_message">Fetching user details. Please wait&#8230;</string>
+</resources>

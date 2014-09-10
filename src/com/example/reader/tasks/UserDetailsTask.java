@@ -20,6 +20,7 @@ import com.example.reader.R;
 import com.example.reader.interfaces.OnHttpListener;
 import com.example.reader.interfaces.OnProfileFetched;
 import com.example.reader.results.UserDetailResult;
+import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.HttpHelper;
 import com.google.gson.Gson;
 
@@ -102,13 +103,9 @@ public class
 			sp.edit().putInt("id", result.id);
 			sp.edit().putString("language", result.language);
 			sp.edit().commit();
-			
-			if(result.language.equals("EN"))
-				Locale.setDefault(new Locale("en"));	
-			else if(result.language.equals("GR"))
-				Locale.setDefault(new Locale("el"));
-			else
-				Locale.setDefault(new Locale("en"));
+	
+			if(result.language.equals("GR"))
+				AppLocales.setLocales(context, "gr");
 			
 			
 			new ProfileTask(context, this, this).run(Integer.toString(result.id), sp.getString("authToken", ""));

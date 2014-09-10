@@ -1,0 +1,21 @@
+package com.example.reader.utils;
+
+import ilearnrw.utils.LanguageCode;
+
+import java.util.Locale;
+
+import android.content.Context;
+import android.content.res.Configuration;
+
+public class AppLocales {
+	public static void setLocales(Context context, String loc){
+		if (loc.equalsIgnoreCase("GR")){
+			Locale locale = new Locale("gr");
+			Locale.setDefault(locale);
+			Configuration config = new Configuration();
+			config.locale = locale;
+			context.getResources().updateConfiguration(config,
+					context.getResources().getDisplayMetrics());
+		}
+	}
+}
