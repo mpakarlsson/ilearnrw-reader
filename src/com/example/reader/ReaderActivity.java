@@ -201,8 +201,11 @@ public class ReaderActivity
 		sbHighLightSpeed.setOnSeekBarChangeListener(this);
 
 		highlightSpeed = Double.longBitsToDouble(sp.getLong(getString(R.string.pref_highlighter_speed), Double.doubleToLongBits(5.5)));
+		
 		int hlSpeed = (int) (highlightSpeed * 10);
-		sbHighLightSpeed.setProgress(hlSpeed);
+		int flipValue = sbHighLightSpeed.getMax() - hlSpeed;
+		
+		sbHighLightSpeed.setProgress(flipValue);
 		
 		ibtnLib 		= (ImageButton) findViewById(R.id.ibtn_lib_reader);
 		ibtnSearch 		= (ImageButton) findViewById(R.id.ibtn_search_reader);

@@ -105,7 +105,7 @@
                 android:contentDescription="@string/empty"
                 android:paddingLeft="@dimen/spacer_8"
                 android:paddingRight="@dimen/spacer_8"
-                android:src="@drawable/color_cursor" />
+                android:src="@drawable/old_new_colour" />
 
             <FrameLayout
                 android:layout_width="60dp"
