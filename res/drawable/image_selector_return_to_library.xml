@@ -2,9 +2,9 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
     
      <item android:state_pressed="true"
-           android:drawable="@drawable/lib_pressed" /> <!-- pressed -->
+           android:drawable="@drawable/library_pressed" /> <!-- pressed -->
      <item android:state_focused="true"
-           android:drawable="@drawable/lib_pressed" /> <!-- focused -->
-     <item android:drawable="@drawable/lib" /> <!-- default -->
+           android:drawable="@drawable/library_pressed" /> <!-- focused -->
+     <item android:drawable="@drawable/library" /> <!-- default -->
 
 </selector>
