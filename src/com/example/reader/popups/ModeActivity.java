@@ -15,7 +15,7 @@ public class ModeActivity extends Activity {
 	
 	public static float posX, posY;
 	public static int imageHeight;
-	public static RadioButton listen, guidance, chunking;
+	public static RadioButton listen, guidance;
 	
 	static final int PICK_READER_MODE = 1;
 	
@@ -31,7 +31,6 @@ public class ModeActivity extends Activity {
 	
 		listen = (RadioButton) findViewById(R.id.rdbtn_mode_listen);
 		guidance = (RadioButton) findViewById(R.id.rdbtn_mode_highlight);
-		chunking = (RadioButton) findViewById(R.id.rdbtn_mode_chunking);
 		
 		ReaderMode mode = (ReaderMode) bundle.get("readerMode");
 		
@@ -41,9 +40,6 @@ public class ModeActivity extends Activity {
 			break;
 		case 1:
 			guidance.setChecked(true);
-			break;
-		case 2:
-			chunking.setChecked(true);
 			break;
 		default:
 			break;
@@ -74,15 +70,9 @@ public class ModeActivity extends Activity {
 	    switch(view.getId()) {
 	        case R.id.rdbtn_mode_listen:
 	            intent.putExtra("chosenMode", 0);
-	           
 	            break;
 	        case R.id.rdbtn_mode_highlight:
 	        	intent.putExtra("chosenMode", 1);
-	        	
-	        	break;
-	        case R.id.rdbtn_mode_chunking:
-            	intent.putExtra("chosenMode", 0);
-            	
 	        	break;
 	    }
 	    
