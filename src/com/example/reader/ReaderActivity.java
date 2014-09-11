@@ -111,8 +111,7 @@ public class ReaderActivity
 	
 	public static enum ReaderMode {
 		Listen("Listen", 0),
-		Guidance("Guidance", 1),
-		Chunking("Chunking", 2);
+		Guidance("Guidance", 1);
 		
 		private String name;
 		private int value;		
@@ -188,7 +187,8 @@ public class ReaderActivity
 		sp 			= PreferenceManager.getDefaultSharedPreferences(this);
 		spEditor 	= sp.edit();
 		Pair<String> bookTitle = Helper.splitFileName(libraryTitle);
-		CURR_SENT 		= bookTitle.first() + "_" + bookTitle.second().substring(1);
+		CURR_SENT 		= bookTitle.first() + "_" + bookTitle.second().substring(1) + "_sent";
+		CURR_WORD		= bookTitle.first() + "_" + bookTitle.second().substring(1) + "_word";
 		
 		tvTitle = (TextView) findViewById(R.id.tv_book_title_reader);
 		
@@ -230,7 +230,7 @@ public class ReaderActivity
 		bottom 				= (RelativeLayout) findViewById(R.id.reader_bottom);
 		rlHighlightSpeed 	= (RelativeLayout) findViewById(R.id.reader_body_highlight_speed);
 		
-		highlightRunnable 	= new HighlightRunnable();
+		highlightRunnable	= new HighlightRunnable();
 		highlightHandler 	= new Handler();
 		
 		
@@ -287,10 +287,6 @@ public class ReaderActivity
 				reader_mode = ReaderMode.Guidance;
 				rlHighlightSpeed.setVisibility(View.VISIBLE);
 				break;
-			case 2:
-				reader_mode = ReaderMode.Chunking;
-				rlHighlightSpeed.setVisibility(View.GONE);
-				break;
 			default:
 				reader_mode = ReaderMode.Listen;
 				rlHighlightSpeed.setVisibility(View.GONE);
@@ -308,8 +304,8 @@ public class ReaderActivity
 	}
 
 	@Override
-	protected void onPause() {  
-		highlightHandler.removeCallbacks(highlightRunnable);
+	protected void onPause() {
+		turnOffHandler();
 		super.onPause();
 	}
 
@@ -359,10 +355,6 @@ public class ReaderActivity
 				case 1:
 					reader_mode = ReaderMode.Guidance;
 					rlHighlightSpeed.setVisibility(View.VISIBLE);
-					break;
-				case 2: 
-					reader_mode = ReaderMode.Chunking;
-					rlHighlightSpeed.setVisibility(View.GONE);
 					break;
 				default:
 					reader_mode = ReaderMode.Listen;
@@ -414,7 +406,9 @@ public class ReaderActivity
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-
+	private void turnOffHandler(){
+		highlightHandler.removeCallbacks(highlightRunnable);
+	}
 
 	@Override
 	public void onBackPressed() {
@@ -463,12 +457,12 @@ public class ReaderActivity
 			break;
 			
 		case R.id.ibtn_mode_reader:
-			if(reader_mode == ReaderMode.Listen){
-				setPlayStatus(ReaderStatus.Disabled, false);
+			setPlayStatus(ReaderStatus.Disabled, false);
+			highlightHandler.removeCallbacks(highlightRunnable);
+			
+			if(reader_mode == ReaderMode.Listen)
 				tts.stop();
-			} else if(reader_mode == ReaderMode.Guidance){
-				highlightHandler.removeCallbacks(highlightRunnable);
-			}
+				
 			Intent mode_intent = new Intent(this, ModeActivity.class);
 			mode_intent.putExtra("posX", ibtnMode.getX());
 			mode_intent.putExtra("posY", (bottom.getY()-ibtnMode.getHeight()));
@@ -537,9 +531,11 @@ public class ReaderActivity
 					resetGuidance();
 				}
 			} else {
-				spEditor.putInt(CURR_SENT, currSentPos).commit();
 				setPlayStatus(ReaderStatus.Disabled, true);
+				
 				if(reader_mode == ReaderMode.Listen){
+					spEditor.putInt(CURR_SENT, currSentPos).commit();
+					
 					tts.stop();
 					tts.rehighlight();
 				} else if(reader_mode == ReaderMode.Guidance){
@@ -905,19 +901,39 @@ public class ReaderActivity
 							"body = body.substring(body.indexOf(this.id));" +
 							"body = part + body;" +
 							"ReaderInterface.clickSentence(body, this.id);" +
-						"};" +					
+						"};" +
 					"}" +
 					"ReaderInterface.getSentences(result);" +
 				"}";
 		
 		String getWords =
 				"function getWords(){" +
+						
 					"var words = document.getElementsByTagName('" +  WORD_TAG + "');" +
+					"var result = '';" +
 					"for(var i=0; i<words.length; i++){" +
 						"words[i].ontouchstart = function(){" +
 							"ReaderInterface.touchWord(this.id);" +
 						"};" +
+						
+						"if(i+1==words.length){" +
+							"result += words[i].id;" +
+						"} else {" +
+							"result += words[i].id + ',';" +
+						"}" +
+							
+						"words[i].onclick = function() {" +
+							"var body = document.body.innerHTML;" +
+							"var index = body.indexOf(this.id);" +
+							"var part = body.substring(0, index);" +
+							"var lastIndex = part.lastIndexOf('<');" +
+							"part = part.substring(lastIndex);" +
+							"body = body.substring(body.indexOf(this.id));" +
+							"body = part + body;" +
+							"ReaderInterface.clickWord(body, this.id);" +
+						"};" +
 					"}" +
+					"ReaderInterface.getWords(result);" +
 				"}";
 		
 		String speakSentence = 
@@ -962,9 +978,10 @@ public class ReaderActivity
 					lineHeight +
 					"letter-spacing: " + letterSpacing + "pt;" +
 					"margin: " + margin + "%; " +
-					"outline-style: none; "+
-					"-webkit-touch-callout: none;"+
-					"-webkit-tap-highlight-color: rgba(0,0,0,0);"+
+					
+					"outline-style: none;" +
+					"-webkit-touch-callout: none;" +
+					"-webkit-tap-highlight-color: rgba(0,0,0,0);" +
 				"}" +
 				"</style>" +
 				"";
@@ -1068,6 +1085,18 @@ public class ReaderActivity
 			wordIds = new ArrayList<String>(Arrays.asList(words.split(",")));
 			defaultWord = wordIds.get(0);
 			
+			if(currWordPos >= wordIds.size()-1)
+				currWordPos =  wordIds.size()-1;
+			
+			final String current = wordIds.get(currWordPos);
+			
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					if(isHighlighting)
+						highlight(current);
+				}
+			});
 			
 		}
 		
@@ -1141,6 +1170,7 @@ public class ReaderActivity
 		
 		@JavascriptInterface
 		public void clickSentence(String html, final String id){
+			
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -1179,7 +1209,52 @@ public class ReaderActivity
 				}
 			});
 		}
+		
+		@JavascriptInterface
+		public void clickWord(String html, final String id){
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					removeSearches();
+					
+					String curr = wordIds.get(currWordPos);
+					removeHighlight(curr);
+					
+					for(int i=0;i<wordIds.size(); i++){
+						if(wordIds.get(i).equals(id)){
+							currWordPos = i;
+							break;
+						}
+					}
+					
+					if(!isHighlighting || !curr.equals(id)){						
+						highlight(id);
+						spEditor.putInt(CURR_WORD, currWordPos).commit();
+						isHighlighting = true;
+						
+						if(reader_status == ReaderStatus.Enabled){
+							if(reader_mode == ReaderMode.Listen)
+								speakFromSentence(id);
+							else if(reader_mode == ReaderMode.Guidance){
+								highlightHandler.removeCallbacks(highlightRunnable);
+								long millis = (long) (highlightSpeed * 1000);
+								highlightHandler.postDelayed(highlightRunnable, millis);							
+							}
+						}
+					} else {
+						spEditor.putInt(CURR_WORD, currWordPos).commit();
+						isHighlighting = false;
+					}
+					
+					spEditor.putBoolean("highlighting", isHighlighting).commit();
+				}
+			});
+			
+		}
+		
 	}
+	
+	
 
 
 	@Override
@@ -1254,22 +1329,34 @@ public class ReaderActivity
 	private class HighlightRunnable implements Runnable{
 		@Override
 		public void run() {
-			if(currSentPos==sentenceIds.size()-1){
-				ibtnPlay.callOnClick();
-				return;
-			}
 			
-			String prev 	= sentenceIds.get(currSentPos++);
-			String current	= sentenceIds.get(currSentPos);
+			String prev = "", current = "";
+			if(reader_mode == ReaderMode.Listen){
+				if(currSentPos==sentenceIds.size()-1){
+					ibtnPlay.callOnClick();
+					return;
+				}
+				prev 	= sentenceIds.get(currSentPos++);
+				current	= sentenceIds.get(currSentPos);
+				spEditor.putInt(CURR_SENT, currSentPos).commit();
+				
+			} else if(reader_mode == ReaderMode.Guidance){
+				if(currWordPos==wordIds.size()-1){
+					ibtnPlay.callOnClick();
+					return;
+				}
+				prev 	= wordIds.get(currWordPos++);
+				current	= wordIds.get(currWordPos);
+				spEditor.putInt(CURR_WORD, currWordPos).commit();
+				
+			}
 			
 			removeHighlight(prev);
 			highlight(current);
 			
-			spEditor.putInt(CURR_SENT, currSentPos).commit();
-			
 			long millis = (long) (highlightSpeed * 1000);
 			highlightHandler.postDelayed(this, millis);
+			
 		}
-		
 	}
 }
