@@ -459,25 +459,24 @@ public class ReaderActivity
 			break;
 			
 		case R.id.ibtn_play_reader:
-			currSentPos = sp.getInt(CURR_SENT, 0);
-			String c = sentenceIds.get(currSentPos);
-			
-			if(reader_status == ReaderStatus.Disabled){
-				setPlayStatus(ReaderStatus.Enabled, true);
-				if(reader_mode == ReaderMode.Listen) {
+			if(reader_mode == ReaderMode.Listen){
+				if(reader_status == ReaderStatus.Disabled){
+					setPlayStatus(ReaderStatus.Enabled, true);
+					currSentPos = sp.getInt(CURR_SENT, 0);
+					String c = sentenceIds.get(currSentPos);
 					speakFromSentence(c);
-				} else if(reader_mode == ReaderMode.Guidance){
-					resetGuidance();
-				}
-			} else {
-				setPlayStatus(ReaderStatus.Disabled, true);
-				
-				if(reader_mode == ReaderMode.Listen){
+				} else {
+					setPlayStatus(ReaderStatus.Disabled, true);
 					spEditor.putInt(CURR_SENT, currSentPos).commit();
-					
 					tts.stop();
 					tts.rehighlight();
-				} else if(reader_mode == ReaderMode.Guidance){
+				}
+			} else if(reader_mode == ReaderMode.Guidance){
+				if(reader_status == ReaderStatus.Disabled){
+					setPlayStatus(ReaderStatus.Enabled, true);
+					resetGuidance();
+				} else {
+					setPlayStatus(ReaderStatus.Disabled, true);
 					highlightHandler.removeCallbacks(highlightRunnable);
 				}
 			}
@@ -598,7 +597,6 @@ public class ReaderActivity
 		case R.id.seekbar_highLight_speed:
 			highlightHandler.removeCallbacks(highlightRunnable);
 			break;
-
 		default:
 			break;
 		}
@@ -606,10 +604,8 @@ public class ReaderActivity
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-		
 		switch (seekBar.getId()) {
 		case R.id.seekbar_highLight_speed:
-			
 			int flipValue = seekBar.getMax() - seekBar.getProgress();
 			highlightSpeed =  (flipValue * 0.1);
 			spEditor.putLong(getString(R.string.pref_highlighter_speed), Double.doubleToRawLongBits(highlightSpeed)).commit();
@@ -710,21 +706,26 @@ public class ReaderActivity
 	
 	private String checkId(String id){
 		if(id == null || id.isEmpty()){
-			if(!defaultSentence.isEmpty())
-				return defaultSentence;
-			else
-				return null;
+			if(reader_mode == ReaderMode.Listen){
+				if(!defaultSentence.isEmpty())
+					return defaultSentence;
+				else
+					return null;
+			} else if(reader_mode == ReaderMode.Guidance){
+				if(!defaultWord.isEmpty())
+					return defaultWord;
+				else
+					return null;
+			}
 		}
 		return id;
 	}
-	
 	
 	private void resetGuidance(){
 		highlightHandler.removeCallbacks(highlightRunnable);
 		long millis = (long) (highlightSpeed * 1000);
 		highlightHandler.postDelayed(highlightRunnable, millis);
 	}
-	
 	
 	private void setPlayStatus(ReaderStatus status, boolean changeImage){	
 		if(changeImage){
@@ -1037,7 +1038,7 @@ public class ReaderActivity
 		}
 		
 		@JavascriptInterface
-		public void getSentences(String sentences){
+		public void getSentences(String sentences){			
 			sentenceIds = new ArrayList<String>(Arrays.asList(sentences.split(",")));
 			defaultSentence = sentenceIds.get(0);
 			
@@ -1093,7 +1094,6 @@ public class ReaderActivity
 			ArrayList<UserBasedAnnotatedWord> words = annotationData.getWords();
 			String _word = "";
 			
-			
 			_word = jsWord.toLowerCase(Locale.getDefault());
 			
 			_word = _word.replace("\n", "");
@@ -1130,11 +1130,9 @@ public class ReaderActivity
 							datas.add(info.getMatchedPart());
 							datas.add(Integer.toString(problem.getCategory()));
 							datas.add(Integer.toString(problem.getIndex()));
-							
 						}
 					}
 					
-
 					in.putIntegerArrayListExtra("problems", values);
 					in.putStringArrayListExtra("data", datas);
 					startActivityForResult(in, FLAG_WORD_POPUP);
@@ -1145,6 +1143,8 @@ public class ReaderActivity
 		
 		@JavascriptInterface
 		public void clickSentence(String html, final String id){
+			if(reader_mode != ReaderMode.Listen)
+				return;
 			
 			runOnUiThread(new Runnable() {
 				@Override
@@ -1166,20 +1166,13 @@ public class ReaderActivity
 						spEditor.putInt(CURR_SENT, currSentPos).commit();
 						isHighlighting = true;
 						
-						if(reader_status == ReaderStatus.Enabled){
-							if(reader_mode == ReaderMode.Listen)
-								speakFromSentence(id);
-							else if(reader_mode == ReaderMode.Guidance){
-								highlightHandler.removeCallbacks(highlightRunnable);
-								long millis = (long) (highlightSpeed * 1000);
-								highlightHandler.postDelayed(highlightRunnable, millis);							
-							}
-						}
+						if(reader_status == ReaderStatus.Enabled)
+							speakFromSentence(id);
+						
 					} else {
 						spEditor.putInt(CURR_SENT, currSentPos).commit();
 						isHighlighting = false;
 					}
-					
 					spEditor.putBoolean("highlighting", isHighlighting).commit();
 				}
 			});
@@ -1187,6 +1180,9 @@ public class ReaderActivity
 		
 		@JavascriptInterface
 		public void clickWord(String html, final String id){
+			if(reader_mode != ReaderMode.Guidance)
+				return;
+			
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -1208,13 +1204,9 @@ public class ReaderActivity
 						isHighlighting = true;
 						
 						if(reader_status == ReaderStatus.Enabled){
-							if(reader_mode == ReaderMode.Listen)
-								speakFromSentence(id);
-							else if(reader_mode == ReaderMode.Guidance){
 								highlightHandler.removeCallbacks(highlightRunnable);
 								long millis = (long) (highlightSpeed * 1000);
 								highlightHandler.postDelayed(highlightRunnable, millis);							
-							}
 						}
 					} else {
 						spEditor.putInt(CURR_WORD, currWordPos).commit();
@@ -1228,8 +1220,6 @@ public class ReaderActivity
 		}
 		
 	}
-	
-	
 
 
 	@Override
