@@ -686,8 +686,7 @@ public class ReaderActivity
 	public void removeHighlight(String id){
 		id = checkId(id);
 		if(id != null){
-			String backgroundColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255))).substring(2);
-			reader.loadUrl("javascript:highlight('" + id + "', '" + backgroundColor + "');");
+			reader.loadUrl("javascript:removeHighlight('" + id + "');");
 		}
 	}
 	
@@ -825,6 +824,14 @@ public class ReaderActivity
 					"" +
 					"return true;" + 
 				"}";
+		
+		String removeHighlight =
+				"function removeHighlight(id){" +
+						"var element = document.getElementById(id);" +
+						"element.style.backgroundColor='transparent';" +
+						"" +
+						"return true;" + 
+					"}";
 		
 		String highlightPart =
 				"function highlightPart(id, start, end, color){" +
@@ -966,6 +973,7 @@ public class ReaderActivity
 				startScripts + 
 				highlightSentence +
 				highlightPart +
+				removeHighlight +
 				unhighlightPart +
 				retrieveBodyContent +
 				scrollToElement +
@@ -1224,7 +1232,6 @@ public class ReaderActivity
 
 	@Override
 	public void OnHighlight(int id) {
-		
 		final String curr = sentenceIds.get(id);
 		
 		this.runOnUiThread(new Runnable(){
@@ -1312,7 +1319,6 @@ public class ReaderActivity
 				prev 	= wordIds.get(currWordPos++);
 				current	= wordIds.get(currWordPos);
 				spEditor.putInt(CURR_WORD, currWordPos).commit();
-				
 			}
 			
 			removeHighlight(prev);
