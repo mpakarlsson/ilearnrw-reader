@@ -10,36 +10,36 @@
     <string name="content_descr_btn_lib">Επιστροφή στην Βιβλιοθήκη</string>
 	<string name="content_descr_btn_mode">Αλλαγή παρουσίασης</string>
 	<string name="content_descr_btn_next">Επόμενη πρόταση</string>
-	<string name="content_descr_btn_play">Play</string>
-	<string name="content_descr_btn_previous">Previous sentence</string>
-	<string name="content_descr_btn_search">Search</string>
-	<string name="content_descr_btn_settings">Settings</string>
+	<string name="content_descr_btn_play">Ξεκίνα</string>
+	<string name="content_descr_btn_previous">Προηγούμενη πρόταση</string>
+	<string name="content_descr_btn_search">Αναζήτηση</string>
+	<string name="content_descr_btn_settings">Ρυθμίσεις</string>
 	
 	<string name="mode_listen">Άκουσε</string>
-	<string name="mode_highlight">Guidance</string>
+	<string name="mode_highlight">Καθοδήγηση</string>
 	<string name="mode_chunking">Chunking</string>
 	
 	<string name="reader_highlight_speed_title">Ταχύτητα</string>
 	
 	<string name="color_picker">Επιλογή χρώματος</string>	
 	
-	<string name="add_tricky_word">Add tricky word</string>
-	<string name="remove_tricky_word">Remove tricky word</string>
+	<string name="add_tricky_word">Προσθήκη λέξης στις περίεργες</string>
+	<string name="remove_tricky_word">Αφαίρεση της λέξης από τις περίεργες</string>
 	
-	<string name="dialog_remove_tricky_word_title">Remove tricky word</string>
-	<string name="dialog_remove_tricky_word_summary">Removing tricky word. Please wait&#8230;</string>
-	<string name="dialog_add_tricky_word_title">Add tricky word</string>
-	<string name="dialog_add_tricky_word_summary">Adding tricky word. Please wait&#8230;</string>
-	<string name="success_added_word">Added word to tricky list</string>
-	<string name="success_removed_word">Removed word from tricky list</string>
-	<string name="failed_add_word">Failed to add word to tricky list</string>
-	<string name="failed_remove_word">Failed to remove word from tricky list</string>
+	<string name="dialog_remove_tricky_word_title">Αφαίρεση περίεργης λέξης</string>
+	<string name="dialog_remove_tricky_word_summary">Γίνεται αφαίρεση της περίεργης λέξης, παρακαλώ περιμένετε&#8230;</string>
+	<string name="dialog_add_tricky_word_title">Προσθήκη περίεργης λέξης</string>
+	<string name="dialog_add_tricky_word_summary">Γίνεται προσθήκη της λέξης στις περίεργες, παρακαλώ περιμένετε&#8230;</string>
+	<string name="success_added_word">Η λέξη προστέθηκε στην λίστα με τις περίεργες</string>
+	<string name="success_removed_word">Η λέξη αφαιρέθηκε από την λίστα με τις περίεργες</string>
+	<string name="failed_add_word">Συνέβει κάποιο σφάλμα κατά την προσθήκη της λέξης στην λίστα με τις περίεργες</string>
+	<string name="failed_remove_word">Συνέβει κάποιο σφάλμα κατά την διαγραφή της λέξης από την λίστα με τις περίεργες</string>
 	
 	<string-array 
 	    name="word_information">
-	    <item>Stem:</item>
-	    <item>Syllables:</item>
+	    <item>Ρίζα:</item>
+	    <item>Συλλαβές:</item>
 	    <item>Phoneme:</item>
-	    <item>Problems:</item>
+	    <item>Δυσκολίες:</item>
 	</string-array>
 </resources>

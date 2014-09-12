@@ -1,6 +1,7 @@
 package com.example.reader;
 
 import com.example.reader.tasks.LoginTask;
+import com.example.reader.utils.AppLocales;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,6 +32,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         
         btnLogin 		= (Button) findViewById(R.id.login_button);
         btnLogout 		= (Button) findViewById(R.id.login_logout);
@@ -39,10 +41,10 @@ public class LoginActivity extends Activity implements OnClickListener {
         
         chkRM = (CheckBox) findViewById(R.id.chk_remember_me);
         
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         final boolean isRemember = preferences.getBoolean("rememberMe", false);
         String username = preferences.getString("username", "");
-        String password = preferences.getString("password", "");       
+        String password = preferences.getString("password", "");     
+        
         
         chkRM.setChecked(isRemember);
         etUsername.setText(username);

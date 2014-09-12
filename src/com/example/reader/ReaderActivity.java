@@ -395,7 +395,7 @@ public class ReaderActivity
 				}
 			}
 			
-			updateGUI();			
+			updateGUI();
 			html = updateHtml(bundleHtml);
 			reader.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "about:blank");
 			setTTS();

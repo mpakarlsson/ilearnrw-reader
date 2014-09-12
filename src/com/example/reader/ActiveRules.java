@@ -219,8 +219,6 @@ public class ActiveRules extends ListActivity {
 
 	        final Problem item = getItem(position);
 	        if (item!= null) {
-	            // My layout has only one TextView
-	            TextView itemTitleView = (TextView) view.findViewById(R.id.label_title_test);
 	            TextView itemView = (TextView) view.findViewById(R.id.label_test);
 	            TextView activeRuleView = (TextView) view.findViewById(R.id.active_rule);
 	            ImageView activeColorView = (ImageView) view.findViewById(R.id.active_color);
@@ -243,8 +241,8 @@ public class ActiveRules extends ListActivity {
 					@Override
 					public void onClick(View v) {
 						AlertDialog.Builder alert = new AlertDialog.Builder(context);
-			            alert.setTitle("Alert!!");
-			            alert.setMessage("Are you sure to disable this rule?");
+			            alert.setTitle(getResources().getString(R.string.deactivate_rule_alert_title));
+			            alert.setMessage(getResources().getString(R.string.deactivate_rule));
 			            alert.setPositiveButton(R.string.confirm_btn_text, new DialogInterface.OnClickListener() {
 			            	public void onClick(DialogInterface dialog, int id) {
 			            		sp.edit().putBoolean("pm_enabled_" + item.category + "_" + item.index, false).commit();
@@ -262,8 +260,7 @@ public class ActiveRules extends ListActivity {
 					}
 				});
 	            if (itemView != null) {
-	            	itemTitleView.setText("Problem Description:");
-	                itemView.setText(String.format("%s", item.description));
+	                itemView.setText(String.format(getResources().getString(R.string.active_problem_description)+" %s", item.description));
 	                String rule = getResources().getString(R.string.problem_1);
 	                switch (sp.getInt("pm_rule_"+item.category+"_"+item.index, DEFAULT_RULE)){
 	                case 1:
@@ -280,7 +277,7 @@ public class ActiveRules extends ListActivity {
 	                	break;
 	                	
 	                }
-	                activeRuleView.setText("Rule: "+rule);
+	                activeRuleView.setText(getResources().getString(R.string.active_problem_rule)+" "+rule);
 	                activeColorView.setBackgroundColor(sp.getInt("pm_color_"+item.category+"_"+item.index, DEFAULT_COLOR));
 	            }
 	         }

@@ -8,6 +8,10 @@
     <string name="confirm_btn_text">Επιβεβαίωση</string>
     <string name="cancel_btn_text">Ακύρωση</string>
     <string name="fire_btn_text">Χρωμάτισε το κείμενο</string>
-    <string name="active_color_label">Ενεργοποίηση χρώματος</string>
+    <string name="active_color_label">Χρώμα</string>
+    <string name="active_problem_description">Περιγραφή Δυσκολίας: </string>
+    <string name="active_problem_rule">Κανόνας: </string>
+    <string name="deactivate_rule_alert_title">Προσοχή!</string>
+    <string name="deactivate_rule">Θέτε σίγουρα να διαγραφεί αυτός ο κανόνας;</string>
     
 </resources>

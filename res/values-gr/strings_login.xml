@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="username">Username :</string>
-    <string name="password">Password :</string>
-    <string name="login_username_hint">Enter your username</string>
-    <string name="login_password_hint">Enter your password</string>
-    <string name="login">Login</string>
-    <string name="logout">Logout</string>
+    <string name="username">Όνομα χρήστη :</string>
+    <string name="password">Κωδικός :</string>
+    <string name="login_username_hint">Εισάγετε το όνομα χρήστη</string>
+    <string name="login_password_hint">Εισάγετε τον κωδικό χρήστη</string>
+    <string name="login">Σύνδεση</string>
+    <string name="logout">Αποσύνδεση</string>
     
-    <string name="login_succeeded">Login succeeded</string>
-    <string name="login_failed">Failed to login</string>
-    <string name="login_failed_fetching">Failed to login, failed to get user data</string>
+    <string name="login_succeeded">Σύνδεση επιτυχής</string>
+    <string name="login_failed">Αποτυχία σύνδεσης</string>
+    <string name="login_failed_fetching">Αποτυχία σύνδεσης, αποτυχία ανάκτησης δεδομένων του χρήστη</string>
     
-    <string name="dialog_login_title">Login</string>
-    <string name="dialog_login_message">Logging in. Please wait&#8230;</string>
+    <string name="dialog_login_title">Σύνδεση</string>
+    <string name="dialog_login_message">Σύνδεση σε εξέλιξη, παρακαλώ περιμένετε&#8230;</string>
     
-    <string name="dialog_fetch_user_title">User details</string>
-    <string name="dialog_fetch_user_message">Fetching user details. Please wait&#8230;</string>
+    <string name="dialog_fetch_user_title">Πληροφορίες του χρήστη</string>
+    <string name="dialog_fetch_user_message">Ανάκτηση πληροφοριών του χρήστη, παρακαλώ περιμένετε&#8230;</string>
 </resources>

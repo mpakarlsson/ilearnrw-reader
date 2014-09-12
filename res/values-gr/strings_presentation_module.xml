@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="choose_category">Category:</string>
-    <string name="choose_problem">Problem:</string>
-    <string name="choose_presentation_rule">Pick a presentation rule:</string>
-    <string name="choose_color">Colour: </string>
+    <string name="choose_category">Γενική Κατηγορία:</string>
+    <string name="choose_problem">Ειδικό Πρόβλημα:</string>
+    <string name="choose_presentation_rule">Επιλέξτε έναν κανόνα παρουσίασης:</string>
+    <string name="choose_color">Χρώμα: </string>
     
-    <string name="presentation_rule_switch">Enabled</string>
+    <string name="presentation_rule_switch">Ενεργοποιημένος</string>
     
     <!-- Rules -->
-    <string name="problem_1">Paint the problematic part of word</string>
-    <string name="problem_2">Paint the whole word</string>
-    <string name="problem_3">Highlight the problematic part of word</string>
-    <string name="problem_4">Highlight the whole word</string>
+    <string name="problem_1">Χρωμάτισε το δύ<font fgcolor="#ffff0000">σκ</font>ολο μέρος της λέξης</string>
+    <string name="problem_2">Χρωμάτισε τις <font fgcolor="#ffff0000">δύσκολες</font> λέξεις</string>
+    <string name="problem_3">Τόνισε το δύ<font bgcolor="#ffff0000">σκ</font>ολο μέρος της λέξης</string>
+    <string name="problem_4">Τόνισε τις <font bgcolor="#ffff0000">δύσκολες</font> λέξεις</string>
     
     <!-- messages -->
-    <string name="dont_edit">You can only edit rules that are not enabled</string>
+    <string name="dont_edit">Συγνώμη, μόνο ανενεργοί κανόνες επιτρέπεται να τροποποιηθούν</string>
     
     <!-- labels -->
-    <string name="edit_mode">Edit Mode</string>
-    <string name="add_rule_mode">Select a Rule to enable and then press \'OK\'</string>
-    <string name="rule_enabled">This rule is currently Enabled</string>
-    <string name="rule_disabled">This rule is currently Disabled</string>
+    <string name="edit_mode">Επεξεργασία</string>
+    <string name="add_rule_mode">Επιλέξτε έναν κανόνα για ενεργοποίηση και μετά πατήστε \'OK\'</string>
+    <string name="rule_enabled">Ο κανόνας είναι ενεργός</string>
+    <string name="rule_disabled">Ο κανόνας είναι ανενεργός</string>
     
 </resources>

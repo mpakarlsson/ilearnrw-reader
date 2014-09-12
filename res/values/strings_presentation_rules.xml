@@ -9,5 +9,9 @@
     <string name="cancel_btn_text">Cancel</string>
     <string name="fire_btn_text">Annotate Text</string>
     <string name="active_color_label">Active Colour</string>
+    <string name="active_problem_description">Problem Description: </string>
+    <string name="active_problem_rule">Rule: </string>
+    <string name="deactivate_rule_alert_title">Alert!</string>
+    <string name="deactivate_rule">Are you sure to deactivate this rule?</string>
     
 </resources>

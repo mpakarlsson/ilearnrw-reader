@@ -7,7 +7,7 @@
     <string name="pref_tts_category_title">Text-To-Speech</string>
     <string name="pref_text_category_title">Κείμενο</string>
    	<string name="pref_presentation_rules_category_title">Κανόνες Παρουσίασης</string>
-   	<string name="pref_reset_category_title">Resets</string>
+   	<string name="pref_reset_category_title">Επαναφορά</string>
    	
     <string name="pref_highlighter_speed">pref_highlighter_speed</string>
     
@@ -35,15 +35,15 @@
     <string name="pref_pitch_title">pref_pitch</string>
     <string name="pref_tts_language_title">pref_tts_language</string>
     
-    <string name="pref_reader_reset">Reset</string>
-    <string name="pref_reader_reset_summary">Reset reader options</string>  
+    <string name="pref_reader_reset">Επαναφορά</string>
+    <string name="pref_reader_reset_summary">Επαναφορά αρχικών ρυθμίσεων</string>  
     
-	<string name="pref_presentation_rules_title">Change rules</string>
-	<string name="pref_presentation_rules_summary">Change presentation rules</string>	
+	<string name="pref_presentation_rules_title">Αλλαγή στους κανόνες</string>
+	<string name="pref_presentation_rules_summary">Αλλαγή στους κανόνες παρουσίασης</string>	
 	
 	<string-array name="pref_languages">
         <item>English</item>
-        <item>Greek</item>
+        <item>Ελληνικά</item>
     </string-array>
     
     <string-array name="pref_languages_values">
