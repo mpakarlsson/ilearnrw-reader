@@ -506,9 +506,11 @@ public class ReaderActivity
 		int direction = forward ? -1 : 1;
 		
 		if(reader_mode == ReaderMode.Listen){
+			spEditor.putBoolean("readerStepping", true).commit();
+			tts.stop();
+			
 			if(isSpeaking){
 				setPlayStatus(ReaderStatus.Disabled, false);
-				tts.stop();
 			}
 			
 			if(!forward){
@@ -1159,6 +1161,10 @@ public class ReaderActivity
 				public void run() {
 					removeSearches();
 					
+					spEditor.putBoolean("readerStepping", false).commit();
+					
+					
+					
 					String curr = sentenceIds.get(currSentPos);
 					removeHighlight(curr);
 					
@@ -1249,9 +1255,12 @@ public class ReaderActivity
 		if(read){
 			if(reader_status == ReaderStatus.Enabled){
 				int next = ++id;
-				spEditor.putInt(CURR_SENT, next).commit();
-				currSentPos = next;
-				speakFromSentence(sentenceIds.get(next));
+				
+				if(next==++currSentPos){
+					spEditor.putInt(CURR_SENT, next).commit();
+					currSentPos = next;
+					speakFromSentence(sentenceIds.get(next));
+				}
 			}
 		}
 
