@@ -17,5 +17,13 @@ public class AppLocales {
 			context.getResources().updateConfiguration(config,
 					context.getResources().getDisplayMetrics());
 		}
+		else {
+			Locale locale = new Locale("en");
+			Locale.setDefault(locale);
+			Configuration config = new Configuration();
+			config.locale = locale;
+			context.getResources().updateConfiguration(config,
+					context.getResources().getDisplayMetrics());
+		}
 	}
 }

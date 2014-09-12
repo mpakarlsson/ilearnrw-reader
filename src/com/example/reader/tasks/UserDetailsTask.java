@@ -108,7 +108,7 @@ public class
 				AppLocales.setLocales(context, "gr");
 			}
 			else {
-				AppLocales.setLocales(context, "");
+				AppLocales.setLocales(context, "en");
 			}
 			
 			
