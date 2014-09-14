@@ -7,12 +7,14 @@ import ilearnrw.user.problems.ProblemDefinition;
 import ilearnrw.user.problems.ProblemDefinitionIndex;
 import ilearnrw.user.problems.ProblemDescription;
 import ilearnrw.user.profile.UserProfile;
+import ilearnrw.utils.LanguageCode;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import com.example.reader.tasks.ProfileTask;
 import com.example.reader.types.BasicListAdapter;
+import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.FileHelper;
 import com.google.gson.Gson;
 
@@ -64,6 +66,9 @@ public class ActiveRules extends ListActivity {
 		
 		setContentView(R.layout.active_rules_list);
 		
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+		AppLocales.setLocales(getApplicationContext(), sp.getString("language", "en"));
+		
 		Bundle bundle 	= getIntent().getExtras();
 		
 		boolean loadFiles = true;
@@ -92,7 +97,6 @@ public class ActiveRules extends ListActivity {
 		listAdapter = new ProblemDescriptionAdapter(this, R.layout.row_active_rules, activeProblems);
 		setListAdapter(listAdapter);
 
-		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		sp.edit().putBoolean("showGUI", showGUI).commit();
 		int id = sp.getInt("id",-1);
 		String token = sp.getString("authToken", "");		
@@ -304,7 +308,7 @@ public class ActiveRules extends ListActivity {
 					ActiveRules.Problem prob = new Problem();
 					prob.category = i;
 					prob.index = j;
-					prob.description = text;
+					prob.description = "{"+text+"}";
 					activeProblems.add(prob);
 				}
 			}

@@ -14,10 +14,12 @@ import java.util.Locale;
 
 
 
+
 import com.example.reader.interfaces.OnHttpListener;
 import com.example.reader.tasks.AddToLibraryTask;
 import com.example.reader.types.BasicListAdapter;
 import com.example.reader.types.ExplorerItem;
+import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.HttpHelper;
 
@@ -50,11 +52,16 @@ public class AddToLibraryExplorerActivity
 	private ListView lvList;
 	private String[] FILE_ENDINGS = { "html", "txt" };
 	private String TAG;
-	
+
+	private SharedPreferences sp;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.activity_add_to_library_explorer);
+		
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+		AppLocales.setLocales(getApplicationContext(), sp.getString("language", "en"));
 		
 		TAG = getClass().getName();
 		

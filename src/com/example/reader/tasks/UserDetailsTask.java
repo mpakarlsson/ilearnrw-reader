@@ -104,12 +104,7 @@ public class
 			sp.edit().putString("language", result.language);
 			sp.edit().commit();
 
-			if(result.language.equals("GR")){
-				AppLocales.setLocales(context, "gr");
-			}
-			else {
-				AppLocales.setLocales(context, "en");
-			}
+			AppLocales.setLocales(context, result.language);
 			
 			
 			new ProfileTask(context, this, this).run(Integer.toString(result.id), sp.getString("authToken", ""));

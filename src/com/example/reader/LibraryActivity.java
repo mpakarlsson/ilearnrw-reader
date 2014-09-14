@@ -14,6 +14,7 @@ import com.example.reader.types.LibraryAdapter;
 import com.example.reader.types.LibraryItem;
 import com.example.reader.types.Pair;
 import com.example.reader.types.SideSelector;
+import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.Helper;
 
@@ -48,6 +49,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	private ArrayList<LibraryItem> files;
 	
 	private AlertDialog dialog;
+	private SharedPreferences preferences;
 	
 	public static final int FLAG_ADD_TO_DEVICE = 10000;
 	public static final int FLAG_UPDATE_FILE_NAME = 10001;
@@ -61,6 +63,9 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_library);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		AppLocales.setLocales(getApplicationContext(), preferences.getString("language", "en"));
 		
 		libDir = getDir(getString(R.string.library_location), MODE_PRIVATE);
 		
@@ -193,10 +198,10 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						Pair<String> fileName = Helper.splitFileName(clickItem.getName());
 					
 						String name = "current_" + fileName.first()+ "_" + fileName.second().substring(1);
-						SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-						sp.edit().remove(name).commit();
+						//SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+						preferences.edit().remove(name).commit();
 						
-						if(sp.getBoolean("showAll", false)){
+						if(preferences.getBoolean("showAll", false)){
 							for(int i=files.size()-1; i>=0; i--){
 								LibraryItem libItem = files.get(i);
 								Pair<String> fName = Helper.splitFileName(libItem.getName());

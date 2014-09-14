@@ -19,6 +19,7 @@ import com.example.reader.popups.SearchActivity;
 import com.example.reader.popups.WordActivity;
 import com.example.reader.texttospeech.TextToSpeechIdDriven;
 import com.example.reader.types.Pair;
+import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.Helper;
 import com.google.gson.Gson;
 
@@ -175,6 +176,10 @@ public class ReaderActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reader);
 		
+
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+		AppLocales.setLocales(getApplicationContext(), sp.getString("language", "en"));
+		
 		Bundle libBundle 	= getIntent().getExtras();
 		
 		bundleHtml			= libBundle.getString("html");
@@ -184,7 +189,6 @@ public class ReaderActivity
 		annotationData		= new Gson().fromJson(bundleJSON, UserBasedAnnotatedWordsSet.class);
 		trickyWords			= (ArrayList<Word>) libBundle.get("trickyWords");
 		
-		sp 			= PreferenceManager.getDefaultSharedPreferences(this);
 		spEditor 	= sp.edit();
 		Pair<String> bookTitle = Helper.splitFileName(libraryTitle);
 		CURR_SENT 		= bookTitle.first() + "_" + bookTitle.second().substring(1) + "_sent";

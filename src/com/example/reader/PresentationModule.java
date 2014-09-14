@@ -5,6 +5,7 @@ import ilearnrw.user.problems.ProblemDefinition;
 import ilearnrw.user.problems.ProblemDefinitionIndex;
 import ilearnrw.user.problems.ProblemDescription;
 import ilearnrw.user.profile.UserProfile;
+import ilearnrw.utils.LanguageCode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import com.example.reader.interfaces.OnProfileFetched;
 import com.example.reader.tasks.ProfileTask;
 import com.example.reader.types.ColorPickerDialog;
 import com.example.reader.types.BasicListAdapter;
+import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.HttpHelper;
 import com.google.gson.Gson;
@@ -95,6 +97,10 @@ public class PresentationModule
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	
+
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+		AppLocales.setLocales(getApplicationContext(), sp.getString("language", "en"));
+		
 		TAG = getClass().getName();
 		
 		Bundle bundle 	= getIntent().getExtras();
@@ -126,7 +132,6 @@ public class PresentationModule
 		
 		setContentView(R.layout.activity_presentation_module);
 
-		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		sp.edit().putBoolean("showGUI", showGUI).commit();
 		int id = sp.getInt("id",-1);
 		String token = sp.getString("authToken", "");		
@@ -221,7 +226,8 @@ public class PresentationModule
 		
 		categories.clear();
 		for(int i=0; i<definitions.length;i++){
-				categories.add((i+1) + ". " + definitions[i].getUri());
+			categories.add((i+1) + ". " + definitions[i].getUri());
+			//categories.add(getTitle(i));
 		}
 		
 		//currentCategoryPos 	= 0;
@@ -237,6 +243,54 @@ public class PresentationModule
 		spProblems.setSelection(currentProblemPos);
 		
 	}
+	
+	/*private String getTitle(int category){
+		if (profile.getLanguage() == LanguageCode.GR){
+			switch (category){
+			case 0:
+				return "Συλλαβισμός";
+			case 1:
+				return "Σύμφωνα";
+			case 2:
+				return "Φωνήεντα";
+			case 3:
+				return "Καταλήξεις (παραγωγικές)";
+			case 4:
+				return "Καταλήξεις (κλίσης)";
+			case 5:
+				return "Προθέματα";
+			case 6:
+				return "Γραφή-Ήχος";
+			case 7:
+				return "Ειδικές Λέξεις";
+			case 8:
+				return "Ειδικοί Χαρακτήρες";
+			}
+		}
+		else if (profile.getLanguage() == LanguageCode.EN){
+			switch (category){
+			case 0:
+				return "Syllabification";
+			case 1:
+				return "Vowels";
+			case 2:
+				return "Suffixing";
+			case 3:
+				return "Prefixing";
+			case 4:
+				return "Grapheme-Phoneme";
+			case 5:
+				return "Lettern Patterns";
+			case 6:
+				return "Letter Names";
+			case 7:
+				return "Sight Words";
+			case 8:
+				return "Confusing Letter Shapes";
+			}
+		}
+		return "";
+	}*/
 	
 	@Override
 	public void onClick(View v) {
