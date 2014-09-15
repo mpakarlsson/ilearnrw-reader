@@ -36,6 +36,7 @@
     
     <string name="library_open">Άνοιγμα αρχείου</string>
     <string name="library_rules">Κανόνες</string>
+    <string name="library_open_coloured">Χρωματισμός</string>
     <string-array name="library_context_menu">
         <item>Επεξεργασία</item>
         <item>Διαγραφή</item>

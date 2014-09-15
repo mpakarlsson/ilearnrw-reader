@@ -39,21 +39,14 @@ import android.widget.TextView;
 
 public class ActiveRules extends ListActivity {
 	private TextView selection;
-	private File fileHtml = null;
-	private File fileJSON = null;
-	private String html, json, cleanHtml;
-	private String name = "";
-	private Boolean showGUI = false;
 	private SharedPreferences sp;
 	
-	private ArrayList<Word> trickyWords;
 	private Gson gson;
 	private ArrayList<Problem> activeProblems;
 	
 	private ProblemDefinition[] definitions;
 	private ProblemDescription[][] descriptions;
 	private UserProfile profile;
-	private TextAnnotationModule txModule;
 	
 	private ProblemDescriptionAdapter listAdapter;
 
@@ -68,41 +61,18 @@ public class ActiveRules extends ListActivity {
 		
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 		AppLocales.setLocales(getApplicationContext(), sp.getString("language", "en"));
-		
-		Bundle bundle 	= getIntent().getExtras();
-		
-		boolean loadFiles = true;
-		if(bundle.containsKey("loadFiles"))
-			loadFiles = bundle.getBoolean("loadFiles");
-		
-		name 			= bundle.getString("title", "");
-		showGUI 		= bundle.getBoolean("showGUI", false);
-		trickyWords		= new ArrayList<Word>();
+				
 		gson			= new Gson();
-
-		if(loadFiles){
-			fileHtml 		= (File)bundle.get("file");
-			fileJSON 		= (File)bundle.get("json");
-
-			json		= FileHelper.readFromFile(fileJSON);
-			html		= FileHelper.readFromFile(fileHtml);
-			cleanHtml	= html;
-		} else {
-			json 		= bundle.getString("json");
-			html 		= bundle.getString("cleanHtml");
-			cleanHtml 	= html;
-		}
 		
 		activeProblems 	= new ArrayList<Problem>();
 		listAdapter = new ProblemDescriptionAdapter(this, R.layout.row_active_rules, activeProblems);
 		setListAdapter(listAdapter);
 
-		sp.edit().putBoolean("showGUI", showGUI).commit();
 		int id = sp.getInt("id",-1);
 		String token = sp.getString("authToken", "");		
 		
 		if(id==-1 || token.isEmpty()) {
-			finished(); // If you don't have an id something is terribly wrong
+			//finished(); // If you don't have an id something is terribly wrong
 			throw new IllegalArgumentException("Missing id or token");
 		}
 				
@@ -124,39 +94,6 @@ public class ActiveRules extends ListActivity {
 				startActivity(intent);
 			}
 		});
-
-        Button exit = (Button) this.findViewById(R.id.exit_active_rules);
-        exit.setText(R.string.fire_btn_text);
-        exit.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-
-				for (int i = 0; i < definitions.length; i++)
-				{
-					int problemSize = descriptions[i].length;
-					for (int j = 0; j < problemSize; j++)
-					{
-						int color 			= sp.getInt("pm_color_"+i+"_"+j, DEFAULT_COLOR);
-						int rule 			= sp.getInt("pm_rule_"+i+"_"+j, DEFAULT_RULE); 
-						boolean isChecked 	= sp.getBoolean("pm_enabled_"+i+"_"+j, false);
-						
-						txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
-						
-						txModule.getPresentationRulesModule().setTextColor(i, j, color);
-						txModule.getPresentationRulesModule().setHighlightingColor(i, j, color);
-						txModule.getPresentationRulesModule().setActivated(i, j, isChecked);
-					}
-				}
-				
-				txModule.annotateText();
-				html = txModule.getAnnotatedHTMLFile();
-				
-				finished();
-				//Intent intent = new Intent(ActiveRules.this, LibraryActivity.class);
-				//startActivity(intent);
-			}
-		});
         
         
 		selection=(TextView)findViewById(R.id.selection);
@@ -174,35 +111,12 @@ public class ActiveRules extends ListActivity {
 	
 	private void initProfile(String jsonProfile){
 		profile = gson.fromJson(jsonProfile, UserProfile.class);
-		trickyWords = (ArrayList<Word>) profile.getUserProblems().getTrickyWords();	
-		initTxModule();	
 		
 		ProblemDefinitionIndex index = profile.getUserProblems().getProblems();
 		
 		definitions 	= index.getProblemsIndex();
 		descriptions 	= index.getProblems();
 				
-	}
-	
-	private void initTxModule(){
-		if (txModule==null)
-			txModule = new TextAnnotationModule(html);
-		
-		if (txModule.getPresentationRulesModule() == null)
-			txModule.initializePresentationModule(profile);
-
-		txModule.setInputHTMLFile(html);
-		txModule.setJSonObject(gson.fromJson(json, UserBasedAnnotatedWordsSet.class));
-	}
-
-	private void finished(){
-		Intent intent = new Intent(ActiveRules.this, ReaderActivity.class);
-		intent.putExtra("html", html);
-		intent.putExtra("cleanHtml", cleanHtml);
-		intent.putExtra("json", json);
-		intent.putExtra("title", name);
-		intent.putExtra("trickyWords", (ArrayList<Word>) trickyWords);
-		startActivity(intent);
 	}
 	
 	public class ProblemDescriptionAdapter extends ArrayAdapter<Problem> {

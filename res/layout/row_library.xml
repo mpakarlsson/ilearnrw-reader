@@ -13,12 +13,12 @@
         android:textSize="35sp"/>
     
     <Button 
-        android:id="@+id/library_item_rules"
+        android:id="@+id/library_open_coloured"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         style="?android:attr/buttonBarButtonStyle"
-        android:text="@string/library_rules"
+        android:text="@string/library_open_coloured"
         android:textSize="35sp"
         android:paddingRight="40dp"/>
 

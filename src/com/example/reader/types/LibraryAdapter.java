@@ -1,5 +1,11 @@
 package com.example.reader.types;
 
+import ilearnrw.annotation.UserBasedAnnotatedWordsSet;
+import ilearnrw.textadaptation.TextAnnotationModule;
+import ilearnrw.textclassification.Word;
+import ilearnrw.user.problems.ProblemDefinitionIndex;
+import ilearnrw.user.profile.UserProfile;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,11 +16,15 @@ import java.util.Set;
 import com.example.reader.ActiveRules;
 import com.example.reader.PresentationModule;
 import com.example.reader.R;
+import com.example.reader.ReaderActivity;
 import com.example.reader.utils.FileHelper;
+import com.google.gson.Gson;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,10 +41,26 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 	private ArrayList<LibraryItem> objects;
 	private HashMap<String, Integer> alphaIndexer;
 	String[] sections;
+
+	private UserProfile profile;
+	private TextAnnotationModule txModule;
+
+	private SharedPreferences sp;
+
+	private final int DEFAULT_COLOR = 0xffff0000;
+	private final int DEFAULT_RULE	= 3;
 	
 	public LibraryAdapter(Context context, int textViewResourceId, ArrayList<LibraryItem> objects){
 		super(context, textViewResourceId, objects);
 		this.objects = objects;
+
+        sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        
+        String jsonProfile = sp.getString("json_profile", "");
+		
+		if(!jsonProfile.isEmpty()){
+			initProfile(jsonProfile);
+		}
 		
 		alphaIndexer = new HashMap<String, Integer>();
 		
@@ -70,21 +96,46 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 			final Pair<File> libItems = FileHelper.getFilesFromLibrary(getContext(), item.getName());
 			
 			TextView tv_item = (TextView) v.findViewById(R.id.library_item);
-			
-			Button rules = (Button) v.findViewById(R.id.library_item_rules);
+
+			Button openColoured = (Button) v.findViewById(R.id.library_open_coloured);
 			tv_item.setFocusable(false);
 			tv_item.setClickable(false);
 			
-			rules.setOnClickListener(new OnClickListener() {
+			/*openNormal.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					if(item.getName().endsWith(".txt") || item.getName().endsWith(".html")){
-						Intent intent = new Intent(getContext(), ActiveRules.class);
-						intent.putExtra("file", libItems.first());
+						Intent intent = new Intent(getContext(), ReaderActivity.class);
+						String html = FileHelper.readFromFile(libItems.first());
+						String json = FileHelper.readFromFile(libItems.second());
+						intent.putExtra("html", html);
+						intent.putExtra("cleanHtml", html);
+						intent.putExtra("json", json);
+						intent.putExtra("title", libItems.first().getName());
+						intent.putExtra("trickyWords", (ArrayList<Word>) profile.getUserProblems().getTrickyWords());
+						getContext().startActivity(intent);
+					} else if(item.getName().endsWith(".json")){
+						jsonClicked();
+					}
+					else {
+						invalidClicked(item.getName());
+					}
+				}
+			});*/
+			
+			openColoured.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if(item.getName().endsWith(".txt") || item.getName().endsWith(".html")){
+						Intent intent = new Intent(getContext(), ReaderActivity.class);
+						String clean = FileHelper.readFromFile(libItems.first());
+						String json = FileHelper.readFromFile(libItems.second());
+						String html = fireTxModule(clean, json);
+						intent.putExtra("html", html);
+						intent.putExtra("cleanHtml", clean);
 						intent.putExtra("json", libItems.second());
 						intent.putExtra("title", libItems.first().getName());
-						intent.putExtra("loadFiles", true);
-						intent.putExtra("showGUI", true);
+						intent.putExtra("trickyWords", (ArrayList<Word>) profile.getUserProblems().getTrickyWords());
 						getContext().startActivity(intent);
 					} else if(item.getName().endsWith(".json")){
 						jsonClicked();
@@ -164,5 +215,42 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 	@Override
 	public Object[] getSections() {
 		return sections;
+	}
+	
+	private void initProfile(String jsonProfile){
+		Gson gson = new Gson();
+		profile = gson.fromJson(jsonProfile, UserProfile.class);	
+	}
+	
+	private String fireTxModule(String html, String json){
+		Gson gson = new Gson();
+		if (txModule==null)
+			txModule = new TextAnnotationModule(html);
+		
+		if (txModule.getPresentationRulesModule() == null)
+			txModule.initializePresentationModule(profile);
+
+		for (int i = 0; i < profile.getUserProblems().getNumerOfRows(); i++)
+		{
+			int problemSize = profile.getUserProblems().getRowLength(i);
+			for (int j = 0; j < problemSize; j++)
+			{
+				int color 			= sp.getInt("pm_color_"+i+"_"+j, DEFAULT_COLOR);
+				int rule 			= sp.getInt("pm_rule_"+i+"_"+j, DEFAULT_RULE); 
+				boolean isChecked 	= sp.getBoolean("pm_enabled_"+i+"_"+j, false);
+				
+				txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
+				
+				txModule.getPresentationRulesModule().setTextColor(i, j, color);
+				txModule.getPresentationRulesModule().setHighlightingColor(i, j, color);
+				txModule.getPresentationRulesModule().setActivated(i, j, isChecked);
+			}
+		}
+
+		txModule.setInputHTMLFile(html);
+		txModule.setJSonObject(gson.fromJson(json, UserBasedAnnotatedWordsSet.class));
+		
+		txModule.annotateText();
+		return txModule.getAnnotatedHTMLFile();
 	}
 }

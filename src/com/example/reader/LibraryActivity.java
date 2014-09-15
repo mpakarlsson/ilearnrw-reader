@@ -1,5 +1,8 @@
 package com.example.reader;
 
+import ilearnrw.textclassification.Word;
+import ilearnrw.user.profile.UserProfile;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +20,7 @@ import com.example.reader.types.SideSelector;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.Helper;
+import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -50,6 +54,8 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	
 	private AlertDialog dialog;
 	private SharedPreferences preferences;
+
+	private UserProfile profile;
 	
 	public static final int FLAG_ADD_TO_DEVICE = 10000;
 	public static final int FLAG_UPDATE_FILE_NAME = 10001;
@@ -66,6 +72,12 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		AppLocales.setLocales(getApplicationContext(), preferences.getString("language", "en"));
+		
+		String jsonProfile = preferences.getString("json_profile", "");
+		
+		if(!jsonProfile.isEmpty()){
+			initProfile(jsonProfile);
+		}
 		
 		libDir = getDir(getString(R.string.library_location), MODE_PRIVATE);
 		
@@ -178,7 +190,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		String listItemName = clickItem.getName();
 		
 		
-		if(menuItemName.equals("Edit")){
+		if(menuItemName.equals("Edit") || menuItemName.equals("Επεξεργασία")){
 			if(listItemName.endsWith(".json")){
 				Toast.makeText(this, "You can't change name of a JSON file", Toast.LENGTH_SHORT).show();
 				return true;
@@ -188,7 +200,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			i.putExtra("name", listItemName);
 			startActivityForResult(i, FLAG_UPDATE_FILE_NAME);
 			
-		} else if(menuItemName.equals("Delete")){
+		} else if(menuItemName.equals("Delete") || menuItemName.equals("Διαγραφή")){
 			new AlertDialog.Builder(this)
 				.setTitle(getString(R.string.dialog_remove_item_confirmation) + listItemName)
 				.setNegativeButton(getString(android.R.string.no), null)
@@ -229,7 +241,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						updateListView();
 					}
 				}).show();			
-		} else if(menuItemName.equals("Copy")){			
+		} else if(menuItemName.equals("Copy") || menuItemName.equals("Αντιγραφή")){			
 			new AlertDialog.Builder(this)
 			.setTitle(getString(R.string.dialog_copy_item_confirmation))
 			.setNegativeButton(getString(android.R.string.no), null)
@@ -414,12 +426,19 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		Pair<File> libItems = FileHelper.getFilesFromLibrary(this, item.getName());
 		
 		if(item.getName().endsWith(".txt") || item.getName().endsWith(".html")){
-			Intent intent = new Intent(this, PresentationModule.class);
-			intent.putExtra("file", libItems.first());
+			String clean = FileHelper.readFromFile(libItems.first());
+			String json = FileHelper.readFromFile(libItems.second());
+			Intent intent = new Intent(this, ReaderActivity.class);
+			/*intent.putExtra("file", libItems.first());
 			intent.putExtra("json", libItems.second());
 			intent.putExtra("title", libItems.first().getName());
 			intent.putExtra("loadFiles", true);
-			intent.putExtra("showGUI", false);
+			intent.putExtra("showGUI", false);*/
+			intent.putExtra("html", clean);
+			intent.putExtra("cleanHtml", clean);
+			intent.putExtra("json", libItems.second());
+			intent.putExtra("title", libItems.first().getName());
+			intent.putExtra("trickyWords", (ArrayList<Word>) profile.getUserProblems().getTrickyWords());
 			this.startActivity(intent);
 		} else if(item.getName().endsWith(".json")){
 			new AlertDialog.Builder(this)
@@ -434,7 +453,11 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			.setPositiveButton(android.R.string.ok, null).show();
 		}
 	}
-
+	
+	private void initProfile(String jsonProfile){
+		Gson gson = new Gson();
+		profile = gson.fromJson(jsonProfile, UserProfile.class);	
+	}
 	
 	private void updateListView(){
 		adapter.notifyDataSetChanged();
