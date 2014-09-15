@@ -7,6 +7,7 @@ import android.graphics.drawable.PaintDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
 
@@ -14,7 +15,7 @@ public class SideSelector extends View {
 	public static final int BOTTOM_PADDING = 10;
 	
 	private SectionIndexer sectionIndexer = null;
-	private ListView list;
+	private GridView list;
 	private Paint paint;
 	private PaintDrawable drawable;
 	private String[] sections;
@@ -43,7 +44,7 @@ public class SideSelector extends View {
 		setBackground(drawable);
 	}
 	
-	public void setListView(ListView list){
+	public void setListView(GridView list){
 		this.list = list;
 		sectionIndexer = (SectionIndexer) list.getAdapter();
 

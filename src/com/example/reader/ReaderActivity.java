@@ -1118,7 +1118,7 @@ public class ReaderActivity
 		}
 		
 		@JavascriptInterface
-		public void longClick(String jsWord){			
+		public void longClick(String jsWord){		
 			ArrayList<UserBasedAnnotatedWord> words = annotationData.getWords();
 			String _word = "";
 			

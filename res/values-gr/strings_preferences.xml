@@ -8,6 +8,7 @@
     <string name="pref_text_category_title">Κείμενο</string>
    	<string name="pref_presentation_rules_category_title">Κανόνες Παρουσίασης</string>
    	<string name="pref_reset_category_title">Επαναφορά</string>
+   	<string name="pref_apply_category_title">Εφαρμογή</string>
    	
     <string name="pref_highlighter_speed">pref_highlighter_speed</string>
     
@@ -37,6 +38,9 @@
     
     <string name="pref_reader_reset">Επαναφορά</string>
     <string name="pref_reader_reset_summary">Επαναφορά αρχικών ρυθμίσεων</string>  
+    
+    <string name="pref_reader_apply">Εφαρμογή</string>
+    <string name="pref_reader_apply_summary">Εφαρμογή των αλλαγών</string>  
     
 	<string name="pref_presentation_rules_title">Αλλαγή στους κανόνες</string>
 	<string name="pref_presentation_rules_summary">Αλλαγή στους κανόνες παρουσίασης</string>	

@@ -1,5 +1,7 @@
 package com.example.reader;
 
+import ilearnrw.annotation.UserBasedAnnotatedWordsSet;
+import ilearnrw.textadaptation.TextAnnotationModule;
 import ilearnrw.textclassification.Word;
 import ilearnrw.user.problems.ProblemDefinition;
 import ilearnrw.user.problems.ProblemDefinitionIndex;
@@ -92,6 +94,7 @@ public class PresentationModule
 	private boolean editMode; // or add new rule mode
 	
 	private UserProfile profile;
+	private TextAnnotationModule txModule;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -243,6 +246,37 @@ public class PresentationModule
 		spProblems.setSelection(currentProblemPos);
 		
 	}
+	private String fireTxModule(String html, String json){
+		Gson gson = new Gson();
+		if (txModule==null)
+			txModule = new TextAnnotationModule(html);
+		
+		if (txModule.getPresentationRulesModule() == null)
+			txModule.initializePresentationModule(profile);
+
+		for (int i = 0; i < profile.getUserProblems().getNumerOfRows(); i++)
+		{
+			int problemSize = profile.getUserProblems().getRowLength(i);
+			for (int j = 0; j < problemSize; j++)
+			{
+				int color 			= sp.getInt(sp.getInt("id", 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
+				int rule 			= sp.getInt(sp.getInt("id", 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
+				boolean isChecked 	= sp.getBoolean(sp.getInt("id", 0)+"pm_enabled_"+i+"_"+j, false);
+				
+				txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
+				
+				txModule.getPresentationRulesModule().setTextColor(i, j, color);
+				txModule.getPresentationRulesModule().setHighlightingColor(i, j, color);
+				txModule.getPresentationRulesModule().setActivated(i, j, isChecked);
+			}
+		}
+
+		txModule.setInputHTMLFile(html);
+		txModule.setJSonObject(gson.fromJson(json, UserBasedAnnotatedWordsSet.class));
+		
+		txModule.annotateText();
+		return txModule.getAnnotatedHTMLFile();
+	}
 	
 	/*private String getTitle(int category){
 		if (profile.getLanguage() == LanguageCode.GR){
@@ -303,9 +337,9 @@ public class PresentationModule
 				sp.edit().putInt("pm_color_" + pi.cat + "_" + pi.idx, pi.color).commit();
 				sp.edit().putInt("pm_rule_"+pi.cat+"_"+pi.idx, pi.rule).commit();
 			}*/
-			sp.edit().putBoolean("pm_enabled_" + currentCategoryPos + "_" + currentProblemPos, true).commit();
-			sp.edit().putInt("pm_color_" + currentCategoryPos + "_" + currentProblemPos, currentColor).commit();
-			sp.edit().putInt("pm_rule_"+currentCategoryPos+"_"+currentProblemPos, currentRule).commit();
+			sp.edit().putBoolean(sp.getInt("id", 0)+"pm_enabled_" + currentCategoryPos + "_" + currentProblemPos, true).commit();
+			sp.edit().putInt(sp.getInt("id", 0)+"pm_color_" + currentCategoryPos + "_" + currentProblemPos, currentColor).commit();
+			sp.edit().putInt(sp.getInt("id", 0)+"pm_rule_"+currentCategoryPos+"_"+currentProblemPos, currentRule).commit();
 			onBackPressed();
 			break;
 			
@@ -314,7 +348,7 @@ public class PresentationModule
 			break;
 			
 		case R.id.pm_color_layout:
-			int color = sp.getInt("pm_color_" + currentCategoryPos + "_" + currentProblemPos, DEFAULT_COLOR);
+			int color = sp.getInt(sp.getInt("id", 0)+"pm_color_" + currentCategoryPos + "_" + currentProblemPos, DEFAULT_COLOR);
 			ColorPickerDialog dialog = new ColorPickerDialog(this, color, new ColorPickerListener() {
 				@Override
 				public void onOk(ColorPickerDialog dialog, int color) {
@@ -328,7 +362,7 @@ public class PresentationModule
 				public void onCancel(ColorPickerDialog dialog) {}
 			});
 
-			if (editMode || !sp.getBoolean("pm_enabled_"+currentCategoryPos+"_"+currentProblemPos, false)){
+			if (editMode || !sp.getBoolean(sp.getInt("id", 0)+"pm_enabled_"+currentCategoryPos+"_"+currentProblemPos, false)){
 				dialog.show();
 			}
 			else {
@@ -342,7 +376,7 @@ public class PresentationModule
 	
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
-		if (!editMode && sp.getBoolean("pm_enabled_"+currentCategoryPos+"_"+currentProblemPos, false)){
+		if (!editMode && sp.getBoolean(sp.getInt("id", 0)+"pm_enabled_"+currentCategoryPos+"_"+currentProblemPos, false)){
 			updateRule(currentCategoryPos, currentProblemPos);
 			Toast toast = Toast.makeText(getApplicationContext(), R.string.dont_edit, Toast.LENGTH_SHORT);
 			toast.show();
@@ -425,12 +459,12 @@ public class PresentationModule
 	}
 
 	private void updateColor(int category, int problem){
-		currentColor = sp.getInt("pm_color_"+category+"_"+problem, DEFAULT_COLOR);
+		currentColor = sp.getInt(sp.getInt("id", 0)+"pm_color_"+category+"_"+problem, DEFAULT_COLOR);
 		colorBox.setBackgroundColor(currentColor);
 	}
 	
 	private void updateRule(int category, int problem){
-		currentRule = sp.getInt("pm_rule_"+category+"_"+problem, DEFAULT_RULE);
+		currentRule = sp.getInt(sp.getInt("id", 0)+"pm_rule_"+category+"_"+problem, DEFAULT_RULE);
 		switch(currentRule){
 		case 1:
 			rbtnRule1.setChecked(true);
@@ -450,7 +484,7 @@ public class PresentationModule
 	private void updateEnabled(int category, int problem){
 		//boolean isChecked = sp.getBoolean("pm_enabled_"+category+"_"+problem, false);
 		TextView enabledLabel = (TextView) findViewById(R.id.pm__enabled_label);
-		if (sp.getBoolean("pm_enabled_"+category+"_"+problem, false))
+		if (sp.getBoolean(sp.getInt("id", 0)+"pm_enabled_"+category+"_"+problem, false))
 			enabledLabel.setText(R.string.rule_enabled);
 		else
 			enabledLabel.setText(R.string.rule_disabled);

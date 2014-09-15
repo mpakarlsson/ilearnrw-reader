@@ -8,11 +8,13 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
         android:textSize="24sp" />
-	
-    <Button
-        android:id="@+id/add_active_rule"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+		
+	<Button
+		android:id="@+id/add_active_rule"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+		android:text="@string/add_btn_text"
+	/>
         
 	<ListView
 		android:id="@android:id/list"

@@ -98,10 +98,11 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 			TextView tv_item = (TextView) v.findViewById(R.id.library_item);
 
 			Button openColoured = (Button) v.findViewById(R.id.library_open_coloured);
+			Button openNormal = (Button) v.findViewById(R.id.library_open_normal);
 			tv_item.setFocusable(false);
 			tv_item.setClickable(false);
 			
-			/*openNormal.setOnClickListener(new OnClickListener() {
+			openNormal.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					if(item.getName().endsWith(".txt") || item.getName().endsWith(".html")){
@@ -121,7 +122,7 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 						invalidClicked(item.getName());
 					}
 				}
-			});*/
+			});
 			
 			openColoured.setOnClickListener(new OnClickListener() {
 				@Override
@@ -235,9 +236,9 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 			int problemSize = profile.getUserProblems().getRowLength(i);
 			for (int j = 0; j < problemSize; j++)
 			{
-				int color 			= sp.getInt("pm_color_"+i+"_"+j, DEFAULT_COLOR);
-				int rule 			= sp.getInt("pm_rule_"+i+"_"+j, DEFAULT_RULE); 
-				boolean isChecked 	= sp.getBoolean("pm_enabled_"+i+"_"+j, false);
+				int color 			= sp.getInt(sp.getInt("id", 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
+				int rule 			= sp.getInt(sp.getInt("id", 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
+				boolean isChecked 	= sp.getBoolean(sp.getInt("id", 0)+"pm_enabled_"+i+"_"+j, false);
 				
 				txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
 				

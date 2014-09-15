@@ -39,6 +39,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -47,7 +48,8 @@ import android.widget.AdapterView.OnItemClickListener;
 public class LibraryActivity extends Activity implements OnClickListener , OnItemClickListener{
 
 	private static ImageButton btnAdd;
-	private static ListView library;
+	//private static ListView library;
+	private static GridView library;
 	private SideSelector sideSelector;
 	private static ArrayList<File> libraryFiles;
 	private ArrayList<LibraryItem> files;
@@ -123,11 +125,12 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		
 		adapter = new LibraryAdapter(this, R.layout.row_library, files);
 		
-		library = (ListView) findViewById(R.id.library_list);
+		library = (GridView) findViewById(R.id.library_grid);
 		library.setAdapter(adapter);
 		library.setOnItemClickListener(this);
 		registerForContextMenu(library);
 		
+
 		btnAdd = (ImageButton) findViewById(R.id.ibtn_add_library);
 		btnAdd.setOnClickListener(this);
 		
@@ -139,7 +142,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		switch (v.getId()) {
-		case R.id.library_list:
+		case R.id.library_grid:
 			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
 			menu.setHeaderTitle(files.get(info.position).getName());
 			String[] menuItems = getResources().getStringArray(R.array.library_context_menu);
@@ -210,7 +213,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						Pair<String> fileName = Helper.splitFileName(clickItem.getName());
 					
 						String name = "current_" + fileName.first()+ "_" + fileName.second().substring(1);
-						//SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+						
 						preferences.edit().remove(name).commit();
 						
 						if(preferences.getBoolean("showAll", false)){
@@ -429,11 +432,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			String clean = FileHelper.readFromFile(libItems.first());
 			String json = FileHelper.readFromFile(libItems.second());
 			Intent intent = new Intent(this, ReaderActivity.class);
-			/*intent.putExtra("file", libItems.first());
-			intent.putExtra("json", libItems.second());
-			intent.putExtra("title", libItems.first().getName());
-			intent.putExtra("loadFiles", true);
-			intent.putExtra("showGUI", false);*/
 			intent.putExtra("html", clean);
 			intent.putExtra("cleanHtml", clean);
 			intent.putExtra("json", libItems.second());

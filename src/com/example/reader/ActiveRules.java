@@ -84,7 +84,6 @@ public class ActiveRules extends ListActivity {
 		updateData();
 		
         Button add = (Button) this.findViewById(R.id.add_active_rule);
-        add.setText(R.string.add_btn_text);
         add.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -93,8 +92,7 @@ public class ActiveRules extends ListActivity {
 				intent.putExtra("showGUI", true);
 				startActivity(intent);
 			}
-		});
-        
+		});        
         
 		selection=(TextView)findViewById(R.id.selection);
 		selection.setText(R.string.active_rules);
@@ -163,7 +161,7 @@ public class ActiveRules extends ListActivity {
 			            alert.setMessage(getResources().getString(R.string.deactivate_rule));
 			            alert.setPositiveButton(R.string.confirm_btn_text, new DialogInterface.OnClickListener() {
 			            	public void onClick(DialogInterface dialog, int id) {
-			            		sp.edit().putBoolean("pm_enabled_" + item.category + "_" + item.index, false).commit();
+			            		sp.edit().putBoolean(sp.getInt("id", 0)+"pm_enabled_" + item.category + "_" + item.index, false).commit();
 			            		updateData();
 			       			}
 			            });
@@ -180,7 +178,7 @@ public class ActiveRules extends ListActivity {
 	            if (itemView != null) {
 	                itemView.setText(String.format(getResources().getString(R.string.active_problem_description)+" %s", item.description));
 	                String rule = getResources().getString(R.string.problem_1);
-	                switch (sp.getInt("pm_rule_"+item.category+"_"+item.index, DEFAULT_RULE)){
+	                switch (sp.getInt(sp.getInt("id", 0)+"pm_rule_"+item.category+"_"+item.index, DEFAULT_RULE)){
 	                case 1:
 	                	rule = getResources().getString(R.string.problem_1);
 	                	break;
@@ -196,7 +194,7 @@ public class ActiveRules extends ListActivity {
 	                	
 	                }
 	                activeRuleView.setText(getResources().getString(R.string.active_problem_rule)+" "+rule);
-	                activeColorView.setBackgroundColor(sp.getInt("pm_color_"+item.category+"_"+item.index, DEFAULT_COLOR));
+	                activeColorView.setBackgroundColor(sp.getInt(sp.getInt("id", 0)+"pm_color_"+item.category+"_"+item.index, DEFAULT_COLOR));
 	            }
 	         }
 
@@ -208,9 +206,9 @@ public class ActiveRules extends ListActivity {
 		activeProblems.clear();
 		for (int i = 0; i < definitions.length; i++){
 			for (int j = 0; j < descriptions[i].length; j++){
-				int color 			= sp.getInt("pm_color_"+i+"_"+j, DEFAULT_COLOR);
-				int rule 			= sp.getInt("pm_rule_"+i+"_"+j, DEFAULT_RULE); 
-				boolean isChecked 	= sp.getBoolean("pm_enabled_"+i+"_"+j, false);
+				int color 			= sp.getInt(sp.getInt("id", 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
+				int rule 			= sp.getInt(sp.getInt("id", 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
+				boolean isChecked 	= sp.getBoolean(sp.getInt("id", 0)+"pm_enabled_"+i+"_"+j, false);
 				if (isChecked){
 					String text = "";
 					for (int k=0; k<descriptions[i][j].getDescriptions().length; k++)
