@@ -21,6 +21,7 @@ public class TextToSpeechIdDriven extends TextToSpeechBase {
 	private final TTSReadingCallback cbReading;
 	
 	private int position;
+	private int startedPosition;
 	
 	private final String SENTENCE_TAG;
 	
@@ -39,6 +40,8 @@ public class TextToSpeechIdDriven extends TextToSpeechBase {
 			tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
 				@Override
 				public void onStart(String utteranceId) {
+					
+					startedPosition = position;
 					if(!utteranceId.equals("rehighlight"))
 						cbReading.OnStartedReading();
 					
@@ -62,7 +65,10 @@ public class TextToSpeechIdDriven extends TextToSpeechBase {
 						return;
 					}
 					
-					int pos = sp.getInt(SENTENCE_TAG, 0);
+					if(startedPosition != position){
+						return;
+					}
+					
 					if(utteranceId.equals("speakWithId")){
 						cbHighlight.OnRemoveHighlight(position, true);
 					}else if(utteranceId.equals("lastSpeakWithId")){
