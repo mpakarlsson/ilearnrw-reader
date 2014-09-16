@@ -47,7 +47,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class LibraryActivity extends Activity implements OnClickListener , OnItemClickListener{
 
-	private static ImageButton btnAdd;
+	private static ImageButton btnAdd, btnSettings;
 	//private static ListView library;
 	private static GridView library;
 	private SideSelector sideSelector;
@@ -133,6 +133,9 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 
 		btnAdd = (ImageButton) findViewById(R.id.ibtn_add_library);
 		btnAdd.setOnClickListener(this);
+		
+		btnSettings= (ImageButton) findViewById(R.id.presentation_settings);
+		btnSettings.setOnClickListener(this);
 		
 		sideSelector = (SideSelector) findViewById(R.id.library_side_selector);
 		sideSelector.setListView(library);
@@ -415,6 +418,10 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			dialog = builder.create();
 			dialog.show();
 			*/
+			break;
+		case R.id.presentation_settings:
+			Intent intent2 = new Intent(this, ActiveRules.class);
+			this.startActivity(intent2);
 			break;
 
 		default:

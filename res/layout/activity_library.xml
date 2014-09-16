@@ -6,34 +6,49 @@
     android:id="@+id/library_container"
     android:orientation="vertical">
     
-    
     <RelativeLayout 
         android:id="@+id/lib_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:textSize="26sp"
-            android:layout_centerHorizontal="true"
-            android:text="@string/title_activity_library"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/LightGrey"
+        android:layout_alignParentTop="true">
         
         <ImageButton 
-            android:id="@+id/ibtn_add_library"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:src="@drawable/image_selector_add_to_library"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/library_add"/>
+	        android:id="@+id/ibtn_add_library"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        style="?android:attr/buttonBarButtonStyle"
+	        android:src="@drawable/image_selector_add_to_library"
+	        android:contentDescription="@string/content_descr_btn_lib"
+	        android:background="@android:color/transparent"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginTop="10dp"/>
         
-    </RelativeLayout>
+        <ImageButton 
+	        android:id="@+id/presentation_settings"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        style="?android:attr/buttonBarButtonStyle"
+	        android:src="@drawable/image_selector_presentation_rules"
+	        android:contentDescription="@string/content_descr_btn_search"
+	        android:background="@android:color/transparent"
+	        android:layout_toRightOf="@id/ibtn_add_library"
+	        android:layout_marginTop="10dp"/>
+    
+        
+        <TextView 
+	        android:id="@+id/library_header"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_toRightOf="@id/presentation_settings"
+	        android:layout_alignParentRight="true"
+	        android:gravity="center_horizontal"
+	        android:textSize="40sp"
+            android:text="@string/title_activity_library"/>
+        
+	</RelativeLayout>
+   
     
     <RelativeLayout 
         android:layout_width="match_parent"

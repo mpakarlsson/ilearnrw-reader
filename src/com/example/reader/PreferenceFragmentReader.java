@@ -114,20 +114,6 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 				return true;
 			}
 		});
-		
-		Preference presentationRules = (Preference) findPreference("pref_presentation_rules");
-		presentationRules.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
-				
-				Intent i = new Intent();
-				i.putExtra("showGUI", prefs.getBoolean("showGUI", false));
-				getActivity().setResult(Activity.RESULT_OK, i);
-				getActivity().finish();
-				return true;
-			}
-		}); 
 	}	
 	
 	@Override
