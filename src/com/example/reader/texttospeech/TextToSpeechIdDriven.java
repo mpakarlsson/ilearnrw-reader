@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
@@ -20,6 +21,7 @@ public class TextToSpeechIdDriven extends TextToSpeechBase {
 	private final TTSReadingCallback cbReading;
 	
 	private int position;
+	private int startedPosition;
 	
 	private final String SENTENCE_TAG;
 	
@@ -33,20 +35,22 @@ public class TextToSpeechIdDriven extends TextToSpeechBase {
 		
 		SENTENCE_TAG = sentTag;
 		
-		final Context _c = context;
+		final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 		if(Build.VERSION.SDK_INT >= 15){
 			tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
 				@Override
 				public void onStart(String utteranceId) {
+					
+					startedPosition = position;
 					if(!utteranceId.equals("rehighlight"))
 						cbReading.OnStartedReading();
 					
 					if(utteranceId.equals("speakWithId")){
 						cbHighlight.OnHighlight(position);
-						PreferenceManager.getDefaultSharedPreferences(_c).edit().putInt(SENTENCE_TAG, position).commit();
+						sp.edit().putInt(SENTENCE_TAG, position).commit();
 					} else if(utteranceId.equals("lastSpeakWithId")){
 						cbHighlight.OnHighlight(position);
-						PreferenceManager.getDefaultSharedPreferences(_c).edit().putInt(SENTENCE_TAG, 0).commit();
+						sp.edit().putInt(SENTENCE_TAG, 0).commit();
 					}
 				}
 				
@@ -55,16 +59,26 @@ public class TextToSpeechIdDriven extends TextToSpeechBase {
 				
 				@Override
 				public void onDone(String utteranceId) {
+					boolean isStepping = sp.getBoolean("readerStepping", false);
+					if(isStepping){
+						sp.edit().putBoolean("readerStepping", false).commit();
+						return;
+					}
+					
+					if(startedPosition != position){
+						return;
+					}
+					
 					if(utteranceId.equals("speakWithId")){
 						cbHighlight.OnRemoveHighlight(position, true);
 					}else if(utteranceId.equals("lastSpeakWithId")){
 						cbHighlight.OnRemoveHighlight(position, false);
 						cbReading.OnFinishedReading();
 					} else if(utteranceId.equals("rehighlight")){
-						cbHighlight.OnHighlight(PreferenceManager.getDefaultSharedPreferences(_c).getInt(SENTENCE_TAG, 0));
+						cbHighlight.OnHighlight(sp.getInt(SENTENCE_TAG, 0));
 						cbReading.OnFinishedReading();
 					}
-				}
+ 				}
 			});
 		} else {
 			// TODO: Should we handle devices older than VER: 4.0.3 - 4.0.4 

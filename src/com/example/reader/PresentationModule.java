@@ -7,7 +7,6 @@ import ilearnrw.user.problems.ProblemDefinition;
 import ilearnrw.user.problems.ProblemDefinitionIndex;
 import ilearnrw.user.problems.ProblemDescription;
 import ilearnrw.user.profile.UserProfile;
-import ilearnrw.utils.LanguageCode;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -14,7 +14,6 @@ import java.util.Locale;
 import java.util.Set;
 
 import com.example.reader.ActiveRules;
-import com.example.reader.PresentationModule;
 import com.example.reader.R;
 import com.example.reader.ReaderActivity;
 import com.example.reader.utils.FileHelper;

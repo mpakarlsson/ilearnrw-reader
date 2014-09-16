@@ -10,7 +10,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Locale;
 
 import com.example.reader.popups.RenameActivity;
 import com.example.reader.types.LibraryAdapter;
@@ -32,16 +31,13 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -430,7 +426,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		
 		if(item.getName().endsWith(".txt") || item.getName().endsWith(".html")){
 			String clean = FileHelper.readFromFile(libItems.first());
-			String json = FileHelper.readFromFile(libItems.second());
+			//String json = FileHelper.readFromFile(libItems.second());
 			Intent intent = new Intent(this, ReaderActivity.class);
 			intent.putExtra("html", clean);
 			intent.putExtra("cleanHtml", clean);
