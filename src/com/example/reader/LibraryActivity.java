@@ -433,11 +433,11 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		
 		if(item.getName().endsWith(".txt") || item.getName().endsWith(".html")){
 			String clean = FileHelper.readFromFile(libItems.first());
-			//String json = FileHelper.readFromFile(libItems.second());
+			String json = FileHelper.readFromFile(libItems.second());
 			Intent intent = new Intent(this, ReaderActivity.class);
 			intent.putExtra("html", clean);
 			intent.putExtra("cleanHtml", clean);
-			intent.putExtra("json", libItems.second());
+			intent.putExtra("json", json);
 			intent.putExtra("title", libItems.first().getName());
 			intent.putExtra("trickyWords", (ArrayList<Word>) profile.getUserProblems().getTrickyWords());
 			this.startActivity(intent);
