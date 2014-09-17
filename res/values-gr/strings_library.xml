@@ -8,16 +8,16 @@
     <string name="library_add">Προσθήκη κειμένου στην βιβλιοθήκη</string>
     <string name="library_location">Βιβλιοθήκη</string>
     
-    <string name="annotation_succeeded">Text processing succeeded</string>
-    <string name="annotation_failed">Text processing failed</string>
-    <string name="annotation_aborted">Text processing aborted</string>
-    <string name="annotation_started">Text processing started</string>
+    <string name="annotation_succeeded">Επιτυχής επεξεργασία κειμένου</string>
+    <string name="annotation_failed">Αποτυχία στην επεξεργασία κειμένου</string>
+    <string name="annotation_aborted">Η επεξεργασία κειμένου διακόπηκε</string>
+    <string name="annotation_started">Η επεξεργασία κειμένου ξεκίνησε</string>
     
     <string name="dialog_remove_item_confirmation">Θέλετε να διαγραφεί το κείμενο \u0020</string>
     <string name="dialog_copy_item_confirmation">Θέλετε να αντιγραφεί το αρχείο στην συσκευή σας; </string>
     <string name="dialog_title_add_to_device">Προσθήκη στην συσκευή από </string>
-    <string name="dialog_annotation_title">Text processing</string>
-    <string name="dialog_annotation_message">Processing text. Please wait&#8230;</string>
+    <string name="dialog_annotation_title">Επεξεργασία Κειμένου</string>
+    <string name="dialog_annotation_message">Γίνεται επεξεργασία. Παρακαλώ περιμένετε&#8230;</string>
     <string name="dialog_json_title">JavaScript Object Notation file - JSON</string>
     <string name="dialog_json_message">This file contains information about a .txt or .html with the same name</string>
     <string name="dialog_logout_title">Αποσύνδεση</string>

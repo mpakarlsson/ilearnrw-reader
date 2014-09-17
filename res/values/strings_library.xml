@@ -36,7 +36,7 @@
     
     <string name="library_open">Open file</string>
     <string name="library_rules">Open rules</string>
-    <string name="library_open_coloured">Annotation</string>
+    <string name="library_open_coloured">Open with Annotation</string>
     <string-array name="library_context_menu">
         <item>Edit</item>
         <item>Delete</item>

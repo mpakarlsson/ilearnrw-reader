@@ -11,7 +11,7 @@
     <string name="problem_1">Colour the <font fgcolor="#ffff0000">problem</font>atic part of word</string>
     <string name="problem_2">Colour the <font fgcolor="#ffff0000">whole</font> word</string>
     <string name="problem_3">Highlight the <font bgcolor="#ffff0000">problem</font>atic part of word</string>
-    <string name="problem_4">Highlight the <font fgcolor="#ffff0000">whole</font> word</string>
+    <string name="problem_4">Highlight the <font bgcolor="#ffff0000">whole</font> word</string>
     
     <!-- messages -->
     <string name="dont_edit">You can only edit rules that are not enabled</string>
