@@ -273,6 +273,7 @@ public class ReaderActivity
 			reader_mode = ReaderMode.Listen;
 			mode = reader_mode.getValue();
 			spEditor.putInt("readerMode", mode).commit();
+			rlHighlightSpeed.setVisibility(View.GONE);
 			Toast.makeText(this, "No reader mode set. Listen mode is selected", Toast.LENGTH_LONG).show();
 		} else {
 			switch(mode){
@@ -283,10 +284,6 @@ public class ReaderActivity
 			case 1:
 				reader_mode = ReaderMode.Guidance;
 				rlHighlightSpeed.setVisibility(View.VISIBLE);
-				break;
-			default:
-				reader_mode = ReaderMode.Listen;
-				rlHighlightSpeed.setVisibility(View.GONE);
 				break;
 			}
 		}
@@ -349,10 +346,14 @@ public class ReaderActivity
 				case 0:
 					reader_mode = ReaderMode.Listen;
 					rlHighlightSpeed.setVisibility(View.GONE);
+					highlight(sentenceIds.get(currSentPos));
+					removeHighlight(wordIds.get(currWordPos));
 					break;
 				case 1:
 					reader_mode = ReaderMode.Guidance;
 					rlHighlightSpeed.setVisibility(View.VISIBLE);
+					highlight(wordIds.get(currWordPos));
+					removeHighlight(sentenceIds.get(currSentPos));
 					break;
 				}
 				spEditor.putInt("readerMode", mode).commit();
@@ -1064,7 +1065,7 @@ public class ReaderActivity
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					if(isHighlighting)
+					if(isHighlighting && reader_mode==ReaderMode.Listen)
 						highlight(current);	
 				}
 			});
@@ -1083,7 +1084,7 @@ public class ReaderActivity
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					if(isHighlighting)
+					if(isHighlighting && reader_mode==ReaderMode.Guidance)
 						highlight(current);
 				}
 			});
