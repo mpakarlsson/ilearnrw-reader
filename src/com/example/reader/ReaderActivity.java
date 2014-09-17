@@ -346,12 +346,14 @@ public class ReaderActivity
 				case 0:
 					reader_mode = ReaderMode.Listen;
 					rlHighlightSpeed.setVisibility(View.GONE);
+					currSentPos = sp.getInt(CURR_SENT, 0);
 					highlight(sentenceIds.get(currSentPos));
 					removeHighlight(wordIds.get(currWordPos));
 					break;
 				case 1:
 					reader_mode = ReaderMode.Guidance;
 					rlHighlightSpeed.setVisibility(View.VISIBLE);
+					currWordPos = sp.getInt(CURR_WORD, 0);
 					highlight(wordIds.get(currWordPos));
 					removeHighlight(sentenceIds.get(currSentPos));
 					break;
@@ -545,6 +547,8 @@ public class ReaderActivity
 			if(isSpeaking)
 				setPlayStatus(ReaderStatus.Enabled, false);
 			
+			reader.loadUrl("javascript:updateCurrentPosition('"+sentenceIds.get(currSentPos)+"', 0);");
+			
 			if(reader_status == ReaderStatus.Enabled)
 				speakFromSentence(current);
 		} else if(reader_mode == ReaderMode.Guidance){
@@ -572,6 +576,7 @@ public class ReaderActivity
 				highlight(current);
 			}
 			
+			reader.loadUrl("javascript:updateCurrentPosition('"+wordIds.get(currWordPos)+"', 1);");
 			if(reader_status == ReaderStatus.Enabled)
 				resetGuidance();
 		}
@@ -920,10 +925,23 @@ public class ReaderActivity
 							"part = part.substring(lastIndex);" +
 							"body = body.substring(body.indexOf(this.id));" +
 							"body = part + body;" +
-							"ReaderInterface.clickWord(body, this.id);" +
+							"ReaderInterface.clickWord(body, this.id);" + 
 						"};" +
 					"}" +
 					"ReaderInterface.getWords(result);" +
+				"}";
+		
+		String updatePosition = 
+				"function updateCurrentPosition(id, checkParent){" +
+					"var node =  document.getElementById(id);" +
+					"var other = '';" +
+					"if(checkParent==1) {" +
+						"other = node.parentNode.id;" +
+					"} else {" +
+						"other = node.childNodes[0].id;" +
+					"}" +
+					"ReaderInterface.updateCurrentPosition(other, checkParent);" +
+					
 				"}";
 		
 		String speakSentence = 
@@ -987,6 +1005,7 @@ public class ReaderActivity
 				getSentences +
 				getWords +
 				speakSentence +
+				updatePosition +
 				showToast + 
 				longClick +
 				stopScripts +
@@ -1168,8 +1187,7 @@ public class ReaderActivity
 					
 					spEditor.putBoolean("readerStepping", false).commit();
 					
-					
-					
+
 					String curr = sentenceIds.get(currSentPos);
 					removeHighlight(curr);
 					
@@ -1193,6 +1211,7 @@ public class ReaderActivity
 						isHighlighting = false;
 					}
 					spEditor.putBoolean("highlighting", isHighlighting).commit();
+					reader.loadUrl("javascript:updateCurrentPosition('"+sentenceIds.get(currSentPos)+"', 0);");
 				}
 			});
 		}
@@ -1233,13 +1252,37 @@ public class ReaderActivity
 					}
 					
 					spEditor.putBoolean("highlighting", isHighlighting).commit();
+					
+					reader.loadUrl("javascript:updateCurrentPosition('"+wordIds.get(currWordPos)+"', 1);");
 				}
 			});
 			
 		}
-		
-	}
+	
+		@JavascriptInterface
+		public void updateCurrentPosition(String other, int isParent){
+			switch (isParent) {
+			case 0:
+				for(int i=0; i<wordIds.size(); i++){
+					if(currWordPos != i && wordIds.get(i).equals(other)){
+						spEditor.putInt(CURR_WORD, i).commit();
+						break;
+					}
+				}
+				
+				break;
 
+			case 1:
+				for(int i=0; i<sentenceIds.size(); i++){
+					if(currSentPos != i && sentenceIds.get(i).equals(other)){
+						spEditor.putInt(CURR_SENT, i).commit();
+						break;
+					}
+				}
+				break;
+			}
+		}
+	}
 
 	@Override
 	public void OnHighlight(int id) {
@@ -1264,6 +1307,7 @@ public class ReaderActivity
 				if(next==++currSentPos){
 					spEditor.putInt(CURR_SENT, next).commit();
 					currSentPos = next;
+					reader.loadUrl("javascript:updateCurrentPosition('"+sentenceIds.get(currSentPos)+"', 0);");
 					speakFromSentence(sentenceIds.get(next));
 				}
 			}
@@ -1325,6 +1369,8 @@ public class ReaderActivity
 				current	= sentenceIds.get(currSentPos);
 				spEditor.putInt(CURR_SENT, currSentPos).commit();
 				
+				reader.loadUrl("javascript:updateCurrentPosition('"+sentenceIds.get(currSentPos)+"', 0);");
+				
 			} else if(reader_mode == ReaderMode.Guidance){
 				if(currWordPos==wordIds.size()-1){
 					ibtnPlay.callOnClick();
@@ -1333,6 +1379,7 @@ public class ReaderActivity
 				prev 	= wordIds.get(currWordPos++);
 				current	= wordIds.get(currWordPos);
 				spEditor.putInt(CURR_WORD, currWordPos).commit();
+				reader.loadUrl("javascript:updateCurrentPosition('"+wordIds.get(currWordPos)+"', 1);");
 			}
 			
 			removeHighlight(prev);
