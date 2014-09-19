@@ -45,33 +45,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:text="@android:string/ok"
-        style="?android:attr/buttonBarButtonStyle"/>
-        
-    <RelativeLayout 
-        android:id="@+id/layout_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacer_10"
-        android:layout_above="@id/btn_word_ok"
-        style="?android:attr/buttonBarStyle">
-        
-        <Button
-            android:id="@+id/btn_add_tricky_word"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/add_tricky_word"
-            android:layout_centerInParent="true"
-            style="?android:attr/buttonBarButtonStyle"/>
-    </RelativeLayout>
-    
-    
+        style="?android:attr/buttonBarButtonStyle"/>    
         
     <ListView 
         android:id="@+id/lv_word_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/line_divider"
-        android:layout_above="@id/layout_bar"/>
+        android:layout_above="@id/btn_word_ok"/>
     
     
     
