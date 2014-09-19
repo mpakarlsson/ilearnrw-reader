@@ -46,7 +46,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	private static ImageButton btnAdd, btnSettings;
 	//private static ListView library;
 	private static GridView library;
-	private SideSelector sideSelector;
+	//private SideSelector sideSelector;
 	private static ArrayList<File> libraryFiles;
 	private ArrayList<LibraryItem> files;
 	
@@ -133,8 +133,8 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		btnSettings= (ImageButton) findViewById(R.id.presentation_settings);
 		btnSettings.setOnClickListener(this);
 		
-		sideSelector = (SideSelector) findViewById(R.id.library_side_selector);
-		sideSelector.setListView(library);
+		//sideSelector = (SideSelector) findViewById(R.id.library_side_selector);
+		//sideSelector.setListView(library);
 	}
 
 	@Override
@@ -462,12 +462,12 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	
 	private void updateListView(){
 		adapter.notifyDataSetChanged();
-		sideSelector.setListView(library);
+		//sideSelector.setListView(library);
 
-		if(sideSelector.getNumSections() == 0)
-			sideSelector.setVisibility(View.GONE);
-		else
-			sideSelector.setVisibility(View.VISIBLE);
+		//if(sideSelector.getNumSections() == 0)
+		//	sideSelector.setVisibility(View.GONE);
+		//else
+		//	sideSelector.setVisibility(View.VISIBLE);
 	}
 	
 	private void sortValues(){
