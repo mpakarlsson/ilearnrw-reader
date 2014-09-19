@@ -133,7 +133,7 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 						String html = fireTxModule(clean, json);
 						intent.putExtra("html", html);
 						intent.putExtra("cleanHtml", clean);
-						intent.putExtra("json", libItems.second());
+						intent.putExtra("json", json);
 						intent.putExtra("title", libItems.first().getName());
 						intent.putExtra("trickyWords", (ArrayList<Word>) profile.getUserProblems().getTrickyWords());
 						getContext().startActivity(intent);
