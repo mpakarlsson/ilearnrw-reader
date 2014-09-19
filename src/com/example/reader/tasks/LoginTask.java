@@ -71,7 +71,7 @@ public class
 	@Override
 	protected TokenResult doInBackground(String... params) {
 		username = params[0];
-		HttpResponse response = HttpHelper.get("http://api.ilearnrw.eu/ilearnrw/user/auth?username="+username+"&pass="+params[1]);
+		HttpResponse response = HttpHelper.get("https://ssl.ilearnrw.eu/ilearnrw/user/auth?username="+username+"&pass="+params[1]);
 		
 		ArrayList<String> data = HttpHelper.handleResponse(response);
 		

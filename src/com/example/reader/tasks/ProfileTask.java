@@ -58,7 +58,7 @@ public class ProfileTask extends AsyncTask<String, Void, String>{
 	
 	@Override
 	protected String doInBackground(String... params) {
-		HttpResponse response = HttpHelper.get("http://api.ilearnrw.eu/ilearnrw/profile?userId=" + params[0] + "&token=" + params[1]);
+		HttpResponse response = HttpHelper.get("https://ssl.ilearnrw.eu/ilearnrw/profile?userId=" + params[0] + "&token=" + params[1]);
 		ArrayList<String> data = HttpHelper.handleResponse(response);
 		
 		if(data.size()==1){

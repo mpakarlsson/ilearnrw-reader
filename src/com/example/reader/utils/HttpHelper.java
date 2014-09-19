@@ -127,7 +127,7 @@ public class HttpHelper {
 		if(refreshToken.isEmpty())
 			return false;
 		
-		HttpResponse refreshResponse = HttpHelper.get("http://api.ilearnrw.eu/ilearnrw/user/newtokens?refresh="+refreshToken);
+		HttpResponse refreshResponse = HttpHelper.get("https://ssl.ilearnrw.eu/ilearnrw/user/newtokens?refresh="+refreshToken);
 		ArrayList<String> refreshData = HttpHelper.handleResponse(refreshResponse);
 		
 		if(refreshData == null)

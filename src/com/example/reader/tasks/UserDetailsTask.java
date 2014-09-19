@@ -73,7 +73,7 @@ public class
 	
 	@Override
 	protected UserDetailResult doInBackground(String... params) {
-		HttpResponse response = HttpHelper.get("http://api.ilearnrw.eu/ilearnrw/user/details/"+ params[0] +"?token=" + params[1]);
+		HttpResponse response = HttpHelper.get("https://ssl.ilearnrw.eu/ilearnrw/user/details/"+ params[0] +"?token=" + params[1]);
 		ArrayList<String> data = HttpHelper.handleResponse(response);
 		
 		if(data.size()==1){
