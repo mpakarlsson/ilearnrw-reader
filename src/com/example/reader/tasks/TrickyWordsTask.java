@@ -72,9 +72,9 @@ public class TrickyWordsTask
 	protected Boolean doInBackground(String... params) {
 		HttpResponse response = null;
 		if(isAdding)
-			response = HttpHelper.get("http://api.ilearnrw.eu/ilearnrw/profile/trickywords/add?userId=" + params[0] + "&word=" + params[1] + "&token=" + params[2]);
+			response = HttpHelper.get("https://ssl.ilearnrw.eu/ilearnrw/profile/trickywords/add?userId=" + params[0] + "&word=" + params[1] + "&token=" + params[2]);
 		else 
-			response = HttpHelper.get("http://api.ilearnrw.eu/ilearnrw/profile/trickywords/delete?userId=" + params[0] + "&word=" + params[1] + "&token=" + params[2]);
+			response = HttpHelper.get("https://ssl.ilearnrw.eu/ilearnrw/profile/trickywords/delete?userId=" + params[0] + "&word=" + params[1] + "&token=" + params[2]);
 
 		ArrayList<String> data = HttpHelper.handleResponse(response);
 		
