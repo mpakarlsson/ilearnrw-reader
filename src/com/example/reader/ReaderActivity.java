@@ -1307,7 +1307,13 @@ public class ReaderActivity
 				if(next==++currSentPos){
 					spEditor.putInt(CURR_SENT, next).commit();
 					currSentPos = next;
-					reader.loadUrl("javascript:updateCurrentPosition('"+sentenceIds.get(currSentPos)+"', 0);");
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							reader.loadUrl("javascript:updateCurrentPosition('"+sentenceIds.get(currSentPos)+"', 0);");
+						}
+					});
+					
 					speakFromSentence(sentenceIds.get(next));
 				}
 			}
@@ -1369,7 +1375,11 @@ public class ReaderActivity
 				current	= sentenceIds.get(currSentPos);
 				spEditor.putInt(CURR_SENT, currSentPos).commit();
 				
-				reader.loadUrl("javascript:updateCurrentPosition('"+sentenceIds.get(currSentPos)+"', 0);");
+				runOnUiThread(new Runnable() {
+					public void run() {
+						reader.loadUrl("javascript:updateCurrentPosition('"+sentenceIds.get(currSentPos)+"', 0);");
+					}
+				});
 				
 			} else if(reader_mode == ReaderMode.Guidance){
 				if(currWordPos==wordIds.size()-1){
@@ -1379,7 +1389,12 @@ public class ReaderActivity
 				prev 	= wordIds.get(currWordPos++);
 				current	= wordIds.get(currWordPos);
 				spEditor.putInt(CURR_WORD, currWordPos).commit();
-				reader.loadUrl("javascript:updateCurrentPosition('"+wordIds.get(currWordPos)+"', 1);");
+				runOnUiThread(new Runnable() {
+					public void run() {
+						reader.loadUrl("javascript:updateCurrentPosition('"+wordIds.get(currWordPos)+"', 1);");
+					}
+				});
+				
 			}
 			
 			removeHighlight(prev);
