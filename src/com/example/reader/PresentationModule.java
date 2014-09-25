@@ -95,6 +95,8 @@ public class PresentationModule
 	private UserProfile profile;
 	private TextAnnotationModule txModule;
 	
+	ArrayAdapter<String> problemAdapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -239,7 +241,7 @@ public class PresentationModule
 		spCategories.setAdapter(categoryAdapter);
 		spCategories.setSelection(currentCategoryPos);
 		
-		ArrayAdapter<String> problemAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, problems, true);
+		problemAdapter = new BasicListAdapter(this, R.layout.textview_item_multiline, problems, true);
 		problemAdapter.notifyDataSetChanged();
 		spProblems.setAdapter(problemAdapter);
 		spProblems.setSelection(currentProblemPos);
@@ -421,6 +423,7 @@ public class PresentationModule
 			updateColor(currentCategoryPos, 0);
 			updateRule(currentCategoryPos, 0);
 			updateEnabled(currentCategoryPos, 0);
+			problemAdapter.notifyDataSetChanged();
 			break;
 			
 		case R.id.problems:
