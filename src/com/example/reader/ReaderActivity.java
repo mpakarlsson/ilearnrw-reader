@@ -433,7 +433,11 @@ public class ReaderActivity
 			break;
 			
 		case R.id.ibtn_mode_reader:
-			setPlayStatus(ReaderStatus.Disabled, false);
+			
+			if(reader_status == ReaderStatus.Enabled)
+				setPlayStatus(ReaderStatus.Disabled, true);
+			else if(reader_status == ReaderStatus.Disabled)
+				setPlayStatus(ReaderStatus.Disabled, false);
 			highlightHandler.removeCallbacks(highlightRunnable);
 			
 			if(reader_mode == ReaderMode.Listen)
