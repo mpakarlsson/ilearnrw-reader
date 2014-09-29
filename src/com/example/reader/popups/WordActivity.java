@@ -128,7 +128,8 @@ public class WordActivity
 			} else{
 				if(currSpan!=null)
 					spans.add(currSpan);
-				currSpan = new SpannableString(strWord + " - Problem(" + datas.get(i-1) + "," + datas.get(i) + ") " + datas.get(i-2) + "\n");
+				//currSpan = new SpannableString(strWord + " - Problem(" + datas.get(i-1) + "," + datas.get(i) + ") " + datas.get(i-2) + "\n");
+				currSpan = new SpannableString(strWord + " - " + datas.get(i-2) + "\n");
 				currSpan.setSpan(new BackgroundColorSpan(Color.YELLOW), start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 			}
 		}
