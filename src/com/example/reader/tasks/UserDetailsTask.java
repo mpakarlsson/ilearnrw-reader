@@ -20,6 +20,7 @@ import com.example.reader.R;
 import com.example.reader.interfaces.OnHttpListener;
 import com.example.reader.interfaces.OnProfileFetched;
 import com.example.reader.results.UserDetailResult;
+import com.example.reader.types.SystemTags;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.HttpHelper;
 import com.google.gson.Gson;
@@ -35,6 +36,7 @@ public class
 	private Context context;
 	private String TAG, fault;
 	private SharedPreferences sp;
+	private String username;
 	
 	public UserDetailsTask(Context context, String tag){
 		this.context 		= context;
@@ -73,7 +75,8 @@ public class
 	
 	@Override
 	protected UserDetailResult doInBackground(String... params) {
-		HttpResponse response = HttpHelper.get("https://ssl.ilearnrw.eu/ilearnrw/user/details/"+ params[0] +"?token=" + params[1]);
+		username = params[0];
+		HttpResponse response = HttpHelper.get("https://ssl.ilearnrw.eu/ilearnrw/user/details/"+ username +"?token=" + params[1]);
 		ArrayList<String> data = HttpHelper.handleResponse(response);
 		
 		if(data.size()==1){
@@ -117,6 +120,8 @@ public class
 
 	@Override
 	public void onProfileFetched(String profile) {
+		
+		new LogTask(context, SystemTags.APP_SESSION_START).run(username, "User: " + username + ", has started the application.");
 		sp.edit().putString("json_profile", profile).commit();
 		
 		Intent i2 = new Intent(context, LibraryActivity.class);
