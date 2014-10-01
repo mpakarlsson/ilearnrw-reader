@@ -88,6 +88,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     	
 	}
     
+    
     /*
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {

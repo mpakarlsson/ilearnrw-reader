@@ -121,7 +121,7 @@ public class
 	@Override
 	public void onProfileFetched(String profile) {
 		
-		new LogTask(context, SystemTags.APP_SESSION_START).run(username, "User: " + username + ", has started the application.");
+		new LogTask(SystemTags.APP_SESSION_START).run(username, "Logged in: " + username + ".");
 		sp.edit().putString("json_profile", profile).commit();
 		
 		Intent i2 = new Intent(context, LibraryActivity.class);
