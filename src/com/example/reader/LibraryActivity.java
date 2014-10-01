@@ -82,37 +82,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		boolean hiddenFiles = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("showAll", false);
 		libraryFiles = (ArrayList<File>) FileHelper.getFileList(libDir, hiddenFiles);
 		
-		// Copies the files from 'res/raw' into the 'Library' folder, used for testing, remove when we got valid text files
-		if(libraryFiles.isEmpty()){
-			Field[] fields=R.raw.class.getFields();
-		    for(int count=0; count < fields.length; count++){
-		        Log.i("Raw Asset: ", fields[count].getName());
-		    
-		        try {
-					int resourceID=fields[count].getInt(fields[count]);
-					InputStream is = getResources().openRawResource(resourceID);
-					String name = fields[count].getName();
-					
-					if(name.startsWith("_j_"))
-						name = name.substring(3) + ".json";
-					else if(name.startsWith("_t_"))
-						name = name.substring(3) + ".txt";
-					
-					File f = new File(libDir, name);
-					FileHelper.saveFile(is, f);
-					is.close();
-		        } catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-		    }
-		    
-		    libraryFiles = (ArrayList<File>) FileHelper.getFileList(libDir, hiddenFiles);
-		}
-		
 		files = new ArrayList<LibraryItem>();
 		for(File f : libraryFiles){
 			files.add(new LibraryItem(f.getName(), f));
