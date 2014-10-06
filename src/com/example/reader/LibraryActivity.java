@@ -385,7 +385,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			*/
 			break;
 		case R.id.presentation_settings:
-			Intent intent2 = new Intent(this, ActiveRules.class);
+			Intent intent2 = new Intent(this, GroupsActivity.class);
 			this.startActivity(intent2);
 			break;
 

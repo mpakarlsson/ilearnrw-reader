@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="advanced_rules">All Highlights (Advanced)</string>
+    <string name="typical_highlights">Typical Highlights</string>
+    <string name="personal_recomendations">Personal Recomendations</string>
+    <string name="highlight_settings">Highlight Settings</string>
+    <string name="text_rules">Text Rules</string>
+    
+</resources>

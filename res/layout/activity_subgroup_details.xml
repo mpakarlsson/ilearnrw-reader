@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/presentation_module_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:layout_margin="@dimen/spacer_8">  
+
+    <TextView
+        android:id="@+id/group_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp" />
+    <TextView
+        android:id="@+id/subgroup_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp" 
+        android:text="@string/highlight_settings" />
+
+    <RadioGroup
+        android:id="@+id/pm_rules"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:id="@+id/subgroup_rule1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/problem_1" />
+
+        <RadioButton
+            android:id="@+id/subgroup_rule2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/problem_2" />
+
+        <RadioButton
+            android:id="@+id/subgroup_rule3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/problem_3" />
+        
+        <RadioButton
+            android:id="@+id/subgroup_rule4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/problem_4" />
+    </RadioGroup>
+
+    <LinearLayout 
+		android:id="@+id/subgroup_color_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_marginTop="@dimen/spacer_8">
+        
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/choose_color" />
+
+    	<ImageView
+	        android:id="@+id/subgroup_color"
+	        android:layout_width="48dp"
+	        android:layout_height="24dp" 
+	        android:contentDescription="@string/empty"
+	        android:layout_marginLeft="@dimen/spacer_8"/>
+    </LinearLayout>
+	    
+	<TextView
+		android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:textSize="24sp" 
+	    android:text="@string/text_rules" />
+	
+	<ListView
+		android:id="@android:id/list"
+        android:layout_height="0dip"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+		android:drawSelectorOnTop="false"/>
+
+	<LinearLayout 
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_marginTop="@dimen/spacer_8"
+		android:gravity="center">
+	    
+	    <Button
+	        android:id="@+id/subgroup_btn_cancel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@android:string/cancel"
+	        android:layout_marginRight="@dimen/spacer_8"
+	        style="@android:attr/buttonBarButtonStyle" />	
+	
+	    <Button
+	        android:id="@+id/subgroup_btn_ok"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@android:string/ok"
+	        android:layout_marginLeft="@dimen/spacer_8" 
+	        style="@android:attr/buttonBarButtonStyle"/>
+    	
+	</LinearLayout>
+	
+</LinearLayout>

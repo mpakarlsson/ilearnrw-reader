@@ -1,26 +1,17 @@
 package com.example.reader;
 
-import ilearnrw.annotation.UserBasedAnnotatedWordsSet;
-import ilearnrw.textadaptation.TextAnnotationModule;
-import ilearnrw.textclassification.Word;
 import ilearnrw.user.problems.ProblemDefinition;
 import ilearnrw.user.problems.ProblemDefinitionIndex;
 import ilearnrw.user.problems.ProblemDescription;
 import ilearnrw.user.profile.UserProfile;
-import ilearnrw.utils.LanguageCode;
 
-import java.io.File;
 import java.util.ArrayList;
 
-import com.example.reader.tasks.ProfileTask;
-import com.example.reader.types.BasicListAdapter;
 import com.example.reader.utils.AppLocales;
-import com.example.reader.utils.FileHelper;
 import com.google.gson.Gson;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;

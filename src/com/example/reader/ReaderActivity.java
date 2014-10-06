@@ -1165,7 +1165,6 @@ public class ReaderActivity
 							values.add(info.getStart());
 							values.add(info.getEnd());
 							
-							datas.add(info.getMatchedPart());
 							datas.add(Integer.toString(problem.getCategory()));
 							datas.add(Integer.toString(problem.getIndex()));
 						}

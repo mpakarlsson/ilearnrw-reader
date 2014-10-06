@@ -44,6 +44,16 @@
             android:theme="@style/NoActionBar">
         </activity>
         <activity
+            android:name="com.example.reader.GroupsActivity"
+            android:label="@string/title_activity_active_rules"
+            android:theme="@style/NoActionBar">
+        </activity>
+        <activity
+            android:name="com.example.reader.SubgroupDetails"
+            android:label="@string/title_activity_active_rules"
+            android:theme="@style/NoActionBar">
+        </activity>
+        <activity
             android:name="com.example.reader.ReaderActivity"
             android:label="@string/title_activity_reader" 
             android:configChanges="orientation|screenSize"
