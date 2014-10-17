@@ -1,839 +1,840 @@
 {
-   "groups":[
-      {
-         "subgroups":[
+  "groups": [
+    {
+      "groupTitle": "Φωνήματα: Σύμφωνα", 
+      "subgroups": [
+        {
+          "items": [
             {
-               "items":[
-                  {
-                     "category":0,
-                     "index":0,
-                     "defaultColourHEX":"3CB371"
-                  },
-                  {
-                     "category":0,
-                     "index":1,
-                     "defaultColourHEX":"3CB371"
-                  },
-                  {
-                     "category":0,
-                     "index":2,
-                     "defaultColourHEX":"3CB371"
-                  }
-               ],
-               "subgroupTitle":"subgroup0"
-            },
+              "category": 0, 
+              "defaultColourHEX": "3CB371", 
+              "index": 0
+            }, 
             {
-               "items":[
-                  {
-                     "category":0,
-                     "index":3,
-                     "defaultColourHEX":"20B2AA"
-                  },
-                  {
-                     "category":0,
-                     "index":4,
-                     "defaultColourHEX":"20B2AA"
-                  }
-               ],
-               "subgroupTitle":"subgroup0"
-            },
+              "category": 0, 
+              "defaultColourHEX": "3CB371", 
+              "index": 1
+            }, 
             {
-               "items":[
-                  {
-                     "category":0,
-                     "index":5,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":0,
-                     "index":6,
-                     "defaultColourHEX":"696969"
-                  }
-               ],
-               "subgroupTitle":"subgroup1"
-            },
-            {
-               "items":[
-                  {
-                     "category":0,
-                     "index":7,
-                     "defaultColourHEX":"8A2BE2"
-                  },
-                  {
-                     "category":0,
-                     "index":8,
-                     "defaultColourHEX":"8A2BE2"
-                  },
-                  {
-                     "category":0,
-                     "index":9,
-                     "defaultColourHEX":"8A2BE2"
-                  }
-               ],
-               "subgroupTitle":"subgroup2"
-            },
-            {
-               "items":[
-                  {
-                     "category":0,
-                     "index":10,
-                     "defaultColourHEX":"DC143C"
-                  },
-                  {
-                     "category":0,
-                     "index":11,
-                     "defaultColourHEX":"DC143C"
-                  }
-               ],
-               "subgroupTitle":"subgroup3"
+              "category": 0, 
+              "defaultColourHEX": "3CB371", 
+              "index": 2
             }
-         ],
-         "groupTitle":"group0"
-      },
-      {
-         "subgroups":[
+          ], 
+          "subgroupTitle": "κλειστά"
+        }, 
+        {
+          "items": [
             {
-               "items":[
-                  {
-                     "category":1,
-                     "index":0,
-                     "defaultColourHEX":"20B2AA"
-                  },
-                  {
-                     "category":1,
-                     "index":1,
-                     "defaultColourHEX":"20B2AA"
-                  }
-               ],
-               "subgroupTitle":"subgroup4"
-            },
+              "category": 0, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 3
+            }, 
             {
-               "items":[
-                  {
-                     "category":1,
-                     "index":2,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":1,
-                     "index":3,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":1,
-                     "index":4,
-                     "defaultColourHEX":"696969"
-                  }
-               ],
-               "subgroupTitle":"subgroup0"
+              "category": 0, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 4
             }
-         ],
-         "groupTitle":"group1"
-      },
-      {
-         "subgroups":[
+          ], 
+          "subgroupTitle": "τριβόμενα"
+        }, 
+        {
+          "items": [
             {
-               "items":[
-                  {
-                     "category":2,
-                     "index":0,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":2,
-                     "index":1,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":2,
-                     "index":2,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":2,
-                     "index":3,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":2,
-                     "index":4,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":2,
-                     "index":5,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":2,
-                     "index":6,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":2,
-                     "index":7,
-                     "defaultColourHEX":"696969"
-                  }
-               ],
-               "subgroupTitle":"subgroup1"
+              "category": 0, 
+              "defaultColourHEX": "696969", 
+              "index": 5
+            }, 
+            {
+              "category": 0, 
+              "defaultColourHEX": "696969", 
+              "index": 6
             }
-         ],
-         "groupTitle":"group2"
-      },
-      {
-         "subgroups":[
+          ], 
+          "subgroupTitle": "συριστικά, υγρά"
+        }, 
+        {
+          "items": [
             {
-               "items":[
-                  {
-                     "category":3,
-                     "index":0,
-                     "defaultColourHEX":"8A2BE2"
-                  },
-                  {
-                     "category":3,
-                     "index":1,
-                     "defaultColourHEX":"8A2BE2"
-                  },
-                  {
-                     "category":3,
-                     "index":2,
-                     "defaultColourHEX":"8A2BE2"
-                  },
-                  {
-                     "category":3,
-                     "index":3,
-                     "defaultColourHEX":"8A2BE2"
-                  },
-                  {
-                     "category":3,
-                     "index":4,
-                     "defaultColourHEX":"8A2BE2"
-                  }
-               ],
-               "subgroupTitle":"subgroup0"
-            },
+              "category": 0, 
+              "defaultColourHEX": "8A2BE2", 
+              "index": 7
+            }, 
             {
-               "items":[
-                  {
-                     "category":3,
-                     "index":5,
-                     "defaultColourHEX":"DC143C"
-                  },
-                  {
-                     "category":3,
-                     "index":6,
-                     "defaultColourHEX":"DC143C"
-                  },
-                  {
-                     "category":3,
-                     "index":7,
-                     "defaultColourHEX":"DC143C"
-                  },
-                  {
-                     "category":3,
-                     "index":8,
-                     "defaultColourHEX":"DC143C"
-                  },
-                  {
-                     "category":3,
-                     "index":9,
-                     "defaultColourHEX":"DC143C"
-                  }
-               ],
-               "subgroupTitle":"subgroup0"
-            },
+              "category": 0, 
+              "defaultColourHEX": "8A2BE2", 
+              "index": 8
+            }, 
             {
-               "items":[
-                  {
-                     "category":3,
-                     "index":10,
-                     "defaultColourHEX":"B8860B"
-                  },
-                  {
-                     "category":3,
-                     "index":11,
-                     "defaultColourHEX":"B8860B"
-                  },
-                  {
-                     "category":3,
-                     "index":12,
-                     "defaultColourHEX":"B8860B"
-                  },
-                  {
-                     "category":3,
-                     "index":13,
-                     "defaultColourHEX":"B8860B"
-                  },
-                  {
-                     "category":3,
-                     "index":14,
-                     "defaultColourHEX":"B8860B"
-                  }
-               ],
-               "subgroupTitle":"subgroup1"
-            },
-            {
-               "items":[
-                  {
-                     "category":3,
-                     "index":15,
-                     "defaultColourHEX":"800000"
-                  },
-                  {
-                     "category":3,
-                     "index":16,
-                     "defaultColourHEX":"800000"
-                  },
-                  {
-                     "category":3,
-                     "index":17,
-                     "defaultColourHEX":"800000"
-                  },
-                  {
-                     "category":3,
-                     "index":18,
-                     "defaultColourHEX":"800000"
-                  },
-                  {
-                     "category":3,
-                     "index":19,
-                     "defaultColourHEX":"800000"
-                  }
-               ],
-               "subgroupTitle":"subgroup2"
-            },
-            {
-               "items":[
-                  {
-                     "category":3,
-                     "index":20,
-                     "defaultColourHEX":"FFD700"
-                  },
-                  {
-                     "category":3,
-                     "index":21,
-                     "defaultColourHEX":"FFD700"
-                  }
-               ],
-               "subgroupTitle":"subgroup3"
-            },
-            {
-               "items":[
-                  {
-                     "category":3,
-                     "index":22,
-                     "defaultColourHEX":"3CB371"
-                  },
-                  {
-                     "category":3,
-                     "index":23,
-                     "defaultColourHEX":"3CB371"
-                  },
-                  {
-                     "category":3,
-                     "index":24,
-                     "defaultColourHEX":"3CB371"
-                  },
-                  {
-                     "category":3,
-                     "index":25,
-                     "defaultColourHEX":"3CB371"
-                  }
-               ],
-               "subgroupTitle":"subgroup4"
+              "category": 0, 
+              "defaultColourHEX": "8A2BE2", 
+              "index": 9
             }
-         ],
-         "groupTitle":"group3"
-      },
-      {
-         "subgroups":[
+          ], 
+          "subgroupTitle": "συμπλέγματα: κλειστά-συριστικά"
+        }, 
+        {
+          "items": [
             {
-               "items":[
-                  {
-                     "category":4,
-                     "index":0,
-                     "defaultColourHEX":"DC143C"
-                  },
-                  {
-                     "category":4,
-                     "index":1,
-                     "defaultColourHEX":"DC143C"
-                  },
-                  {
-                     "category":4,
-                     "index":2,
-                     "defaultColourHEX":"DC143C"
-                  },
-                  {
-                     "category":4,
-                     "index":3,
-                     "defaultColourHEX":"DC143C"
-                  }
-               ],
-               "subgroupTitle":"subgroup5"
-            },
+              "category": 0, 
+              "defaultColourHEX": "DC143C", 
+              "index": 10
+            }, 
             {
-               "items":[
-                  {
-                     "category":4,
-                     "index":4,
-                     "defaultColourHEX":"B8860B"
-                  },
-                  {
-                     "category":4,
-                     "index":5,
-                     "defaultColourHEX":"B8860B"
-                  }
-               ],
-               "subgroupTitle":"subgroup0"
-            },
-            {
-               "items":[
-                  {
-                     "category":4,
-                     "index":6,
-                     "defaultColourHEX":"800000"
-                  },
-                  {
-                     "category":4,
-                     "index":7,
-                     "defaultColourHEX":"800000"
-                  },
-                  {
-                     "category":4,
-                     "index":8,
-                     "defaultColourHEX":"800000"
-                  }
-               ],
-               "subgroupTitle":"subgroup1"
-            },
-            {
-               "items":[
-                  {
-                     "category":4,
-                     "index":9,
-                     "defaultColourHEX":"FFD700"
-                  },
-                  {
-                     "category":4,
-                     "index":10,
-                     "defaultColourHEX":"FFD700"
-                  }
-               ],
-               "subgroupTitle":"subgroup2"
-            },
-            {
-               "items":[
-                  {
-                     "category":4,
-                     "index":11,
-                     "defaultColourHEX":"3CB371"
-                  },
-                  {
-                     "category":4,
-                     "index":12,
-                     "defaultColourHEX":"3CB371"
-                  }
-               ],
-               "subgroupTitle":"subgroup3"
-            },
-            {
-               "items":[
-                  {
-                     "category":4,
-                     "index":13,
-                     "defaultColourHEX":"20B2AA"
-                  },
-                  {
-                     "category":4,
-                     "index":14,
-                     "defaultColourHEX":"20B2AA"
-                  },
-                  {
-                     "category":4,
-                     "index":15,
-                     "defaultColourHEX":"20B2AA"
-                  }
-               ],
-               "subgroupTitle":"subgroup4"
-            },
-            {
-               "items":[
-                  {
-                     "category":4,
-                     "index":16,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":4,
-                     "index":17,
-                     "defaultColourHEX":"696969"
-                  }
-               ],
-               "subgroupTitle":"subgroup5"
-            },
-            {
-               "items":[
-                  {
-                     "category":4,
-                     "index":18,
-                     "defaultColourHEX":"8A2BE2"
-                  },
-                  {
-                     "category":4,
-                     "index":19,
-                     "defaultColourHEX":"8A2BE2"
-                  }
-               ],
-               "subgroupTitle":"subgroup6"
+              "category": 0, 
+              "defaultColourHEX": "DC143C", 
+              "index": 11
             }
-         ],
-         "groupTitle":"group4"
-      },
-      {
-         "subgroups":[
+          ], 
+          "subgroupTitle": "συμπλέγματα: τριβόμενα-υγρά"
+        }
+      ]
+    }, 
+    {
+      "groupTitle": "Φωνήματα: Φωνήεντα", 
+      "subgroups": [
+        {
+          "items": [
             {
-               "items":[
-                  {
-                     "category":5,
-                     "index":0,
-                     "defaultColourHEX":"B8860B"
-                  },
-                  {
-                     "category":5,
-                     "index":1,
-                     "defaultColourHEX":"B8860B"
-                  }
-               ],
-               "subgroupTitle":"subgroup7"
-            },
+              "category": 1, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 0
+            }, 
             {
-               "items":[
-                  {
-                     "category":5,
-                     "index":2,
-                     "defaultColourHEX":"800000"
-                  },
-                  {
-                     "category":5,
-                     "index":3,
-                     "defaultColourHEX":"800000"
-                  }
-               ],
-               "subgroupTitle":"subgroup0"
-            },
-            {
-               "items":[
-                  {
-                     "category":5,
-                     "index":4,
-                     "defaultColourHEX":"FFD700"
-                  },
-                  {
-                     "category":5,
-                     "index":5,
-                     "defaultColourHEX":"FFD700"
-                  }
-               ],
-               "subgroupTitle":"subgroup1"
+              "category": 1, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 1
             }
-         ],
-         "groupTitle":"group5"
-      },
-      {
-         "subgroups":[
+          ], 
+          "subgroupTitle": "διαλυτικά, άτονα"
+        }, 
+        {
+          "items": [
             {
-               "items":[
-                  {
-                     "category":6,
-                     "index":0,
-                     "defaultColourHEX":"800000"
-                  },
-                  {
-                     "category":6,
-                     "index":1,
-                     "defaultColourHEX":"800000"
-                  }
-               ],
-               "subgroupTitle":"subgroup2"
-            },
+              "category": 1, 
+              "defaultColourHEX": "696969", 
+              "index": 2
+            }, 
             {
-               "items":[
-                  {
-                     "category":6,
-                     "index":2,
-                     "defaultColourHEX":"FFD700"
-                  },
-                  {
-                     "category":6,
-                     "index":3,
-                     "defaultColourHEX":"FFD700"
-                  }
-               ],
-               "subgroupTitle":"subgroup0"
-            },
+              "category": 1, 
+              "defaultColourHEX": "696969", 
+              "index": 3
+            }, 
             {
-               "items":[
-                  {
-                     "category":6,
-                     "index":4,
-                     "defaultColourHEX":"3CB371"
-                  },
-                  {
-                     "category":6,
-                     "index":5,
-                     "defaultColourHEX":"3CB371"
-                  },
-                  {
-                     "category":6,
-                     "index":6,
-                     "defaultColourHEX":"3CB371"
-                  },
-                  {
-                     "category":6,
-                     "index":7,
-                     "defaultColourHEX":"3CB371"
-                  }
-               ],
-               "subgroupTitle":"subgroup1"
-            },
-            {
-               "items":[
-                  {
-                     "category":6,
-                     "index":8,
-                     "defaultColourHEX":"20B2AA"
-                  },
-                  {
-                     "category":6,
-                     "index":9,
-                     "defaultColourHEX":"20B2AA"
-                  }
-               ],
-               "subgroupTitle":"subgroup2"
-            },
-            {
-               "items":[
-                  {
-                     "category":6,
-                     "index":10,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":6,
-                     "index":11,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":6,
-                     "index":12,
-                     "defaultColourHEX":"696969"
-                  }
-               ],
-               "subgroupTitle":"subgroup3"
+              "category": 1, 
+              "defaultColourHEX": "696969", 
+              "index": 4
             }
-         ],
-         "groupTitle":"group6"
-      },
-      {
-         "subgroups":[
+          ], 
+          "subgroupTitle": "διαλυτικά, τονισμένα"
+        }
+      ]
+    }, 
+    {
+      "groupTitle": "Οπτική Ομοίτητα", 
+      "subgroups": [
+        {
+          "items": [
             {
-               "items":[
-                  {
-                     "category":7,
-                     "index":0,
-                     "defaultColourHEX":"FFD700"
-                  },
-                  {
-                     "category":7,
-                     "index":1,
-                     "defaultColourHEX":"FFD700"
-                  },
-                  {
-                     "category":7,
-                     "index":2,
-                     "defaultColourHEX":"FFD700"
-                  }
-               ],
-               "subgroupTitle":"subgroup4"
-            },
+              "category": 2, 
+              "defaultColourHEX": "696969", 
+              "index": 0
+            }, 
             {
-               "items":[
-                  {
-                     "category":7,
-                     "index":3,
-                     "defaultColourHEX":"3CB371"
-                  },
-                  {
-                     "category":7,
-                     "index":4,
-                     "defaultColourHEX":"3CB371"
-                  },
-                  {
-                     "category":7,
-                     "index":5,
-                     "defaultColourHEX":"3CB371"
-                  }
-               ],
-               "subgroupTitle":"subgroup0"
-            },
+              "category": 2, 
+              "defaultColourHEX": "696969", 
+              "index": 1
+            }, 
             {
-               "items":[
-                  {
-                     "category":7,
-                     "index":6,
-                     "defaultColourHEX":"20B2AA"
-                  },
-                  {
-                     "category":7,
-                     "index":7,
-                     "defaultColourHEX":"20B2AA"
-                  },
-                  {
-                     "category":7,
-                     "index":8,
-                     "defaultColourHEX":"20B2AA"
-                  },
-                  {
-                     "category":7,
-                     "index":9,
-                     "defaultColourHEX":"20B2AA"
-                  }
-               ],
-               "subgroupTitle":"subgroup1"
-            },
+              "category": 2, 
+              "defaultColourHEX": "696969", 
+              "index": 2
+            }, 
             {
-               "items":[
-                  {
-                     "category":7,
-                     "index":10,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":7,
-                     "index":11,
-                     "defaultColourHEX":"696969"
-                  }
-               ],
-               "subgroupTitle":"subgroup2"
-            },
+              "category": 2, 
+              "defaultColourHEX": "696969", 
+              "index": 3
+            }, 
             {
-               "items":[
-                  {
-                     "category":7,
-                     "index":12,
-                     "defaultColourHEX":"8A2BE2"
-                  },
-                  {
-                     "category":7,
-                     "index":13,
-                     "defaultColourHEX":"8A2BE2"
-                  }
-               ],
-               "subgroupTitle":"subgroup3"
-            },
+              "category": 2, 
+              "defaultColourHEX": "696969", 
+              "index": 4
+            }, 
             {
-               "items":[
-                  {
-                     "category":7,
-                     "index":14,
-                     "defaultColourHEX":"DC143C"
-                  },
-                  {
-                     "category":7,
-                     "index":15,
-                     "defaultColourHEX":"DC143C"
-                  }
-               ],
-               "subgroupTitle":"subgroup4"
-            },
+              "category": 2, 
+              "defaultColourHEX": "696969", 
+              "index": 5
+            }, 
             {
-               "items":[
-                  {
-                     "category":7,
-                     "index":16,
-                     "defaultColourHEX":"B8860B"
-                  }
-               ],
-               "subgroupTitle":"subgroup5"
+              "category": 2, 
+              "defaultColourHEX": "696969", 
+              "index": 6
+            }, 
+            {
+              "category": 2, 
+              "defaultColourHEX": "696969", 
+              "index": 7
             }
-         ],
-         "groupTitle":"group7"
-      },
-      {
-         "subgroups":[
+          ], 
+          "subgroupTitle": "γράμματα και αριθμοί που μοιάζουν μεταξύ τους"
+        }
+      ]
+    }, 
+    {
+      "groupTitle": "Αντιστοίχιση Γραφήματος-Φωνήματος", 
+      "subgroups": [
+        {
+          "items": [
             {
-               "items":[
-                  {
-                     "category":8,
-                     "index":0,
-                     "defaultColourHEX":"3CB371"
-                  },
-                  {
-                     "category":8,
-                     "index":1,
-                     "defaultColourHEX":"3CB371"
-                  }
-               ],
-               "subgroupTitle":"subgroup6"
-            },
+              "category": 3, 
+              "defaultColourHEX": "8A2BE2", 
+              "index": 0
+            }, 
             {
-               "items":[
-                  {
-                     "category":8,
-                     "index":2,
-                     "defaultColourHEX":"20B2AA"
-                  },
-                  {
-                     "category":8,
-                     "index":3,
-                     "defaultColourHEX":"20B2AA"
-                  },
-                  {
-                     "category":8,
-                     "index":4,
-                     "defaultColourHEX":"20B2AA"
-                  },
-                  {
-                     "category":8,
-                     "index":5,
-                     "defaultColourHEX":"20B2AA"
-                  }
-               ],
-               "subgroupTitle":"subgroup0"
-            },
+              "category": 3, 
+              "defaultColourHEX": "8A2BE2", 
+              "index": 1
+            }, 
             {
-               "items":[
-                  {
-                     "category":8,
-                     "index":6,
-                     "defaultColourHEX":"696969"
-                  },
-                  {
-                     "category":8,
-                     "index":7,
-                     "defaultColourHEX":"696969"
-                  }
-               ],
-               "subgroupTitle":"subgroup1"
-            },
+              "category": 3, 
+              "defaultColourHEX": "8A2BE2", 
+              "index": 2
+            }, 
             {
-               "items":[
-                  {
-                     "category":8,
-                     "index":8,
-                     "defaultColourHEX":"8A2BE2"
-                  },
-                  {
-                     "category":8,
-                     "index":9,
-                     "defaultColourHEX":"8A2BE2"
-                  }
-               ],
-               "subgroupTitle":"subgroup2"
+              "category": 3, 
+              "defaultColourHEX": "8A2BE2", 
+              "index": 3
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "8A2BE2", 
+              "index": 4
             }
-         ],
-         "groupTitle":"group8"
-      }
-   ]
+          ], 
+          "subgroupTitle": "2-σύλλαβες, σε αρχική θέση"
+        }, 
+        {
+          "items": [
+            {
+              "category": 3, 
+              "defaultColourHEX": "DC143C", 
+              "index": 5
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "DC143C", 
+              "index": 6
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "DC143C", 
+              "index": 7
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "DC143C", 
+              "index": 8
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "DC143C", 
+              "index": 9
+            }
+          ], 
+          "subgroupTitle": "3-σύλλαβες, σε αρχική θέση"
+        }, 
+        {
+          "items": [
+            {
+              "category": 3, 
+              "defaultColourHEX": "B8860B", 
+              "index": 10
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "B8860B", 
+              "index": 11
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "B8860B", 
+              "index": 12
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "B8860B", 
+              "index": 13
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "B8860B", 
+              "index": 14
+            }
+          ], 
+          "subgroupTitle": "2-σύλλαβες, σε μέση θέση"
+        }, 
+        {
+          "items": [
+            {
+              "category": 3, 
+              "defaultColourHEX": "800000", 
+              "index": 15
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "800000", 
+              "index": 16
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "800000", 
+              "index": 17
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "800000", 
+              "index": 18
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "800000", 
+              "index": 19
+            }
+          ], 
+          "subgroupTitle": "3-σύλλαβες, σε μέση θέση"
+        }, 
+        {
+          "items": [
+            {
+              "category": 3, 
+              "defaultColourHEX": "FFD700", 
+              "index": 20
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "FFD700", 
+              "index": 21
+            }
+          ], 
+          "subgroupTitle": "το -υ- ως σύμφωνο"
+        }, 
+        {
+          "items": [
+            {
+              "category": 3, 
+              "defaultColourHEX": "3CB371", 
+              "index": 22
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "3CB371", 
+              "index": 23
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "3CB371", 
+              "index": 24
+            }, 
+            {
+              "category": 3, 
+              "defaultColourHEX": "3CB371", 
+              "index": 25
+            }
+          ], 
+          "subgroupTitle": "το -υ- ως φωνήεν με διαλυτικά"
+        }
+      ]
+    }, 
+    {
+      "groupTitle": "Συλλαβισμός", 
+      "subgroups": [
+        {
+          "items": [
+            {
+              "category": 4, 
+              "defaultColourHEX": "DC143C", 
+              "index": 0
+            }, 
+            {
+              "category": 4, 
+              "defaultColourHEX": "DC143C", 
+              "index": 1
+            }, 
+            {
+              "category": 4, 
+              "defaultColourHEX": "DC143C", 
+              "index": 2
+            }, 
+            {
+              "category": 4, 
+              "defaultColourHEX": "DC143C", 
+              "index": 3
+            }
+          ], 
+          "subgroupTitle": "ανοιχτές συλλαβές"
+        }, 
+        {
+          "items": [
+            {
+              "category": 4, 
+              "defaultColourHEX": "B8860B", 
+              "index": 4
+            }, 
+            {
+              "category": 4, 
+              "defaultColourHEX": "B8860B", 
+              "index": 5
+            }
+          ], 
+          "subgroupTitle": "κλειστές συλλαβές"
+        }, 
+        {
+          "items": [
+            {
+              "category": 4, 
+              "defaultColourHEX": "800000", 
+              "index": 6
+            }, 
+            {
+              "category": 4, 
+              "defaultColourHEX": "800000", 
+              "index": 7
+            }, 
+            {
+              "category": 4, 
+              "defaultColourHEX": "800000", 
+              "index": 8
+            }
+          ], 
+          "subgroupTitle": "συμπλέγματα 2 συμφώνων"
+        }, 
+        {
+          "items": [
+            {
+              "category": 4, 
+              "defaultColourHEX": "FFD700", 
+              "index": 9
+            }, 
+            {
+              "category": 4, 
+              "defaultColourHEX": "FFD700", 
+              "index": 10
+            }
+          ], 
+          "subgroupTitle": "συμπλέγματα 3 συμφώνων"
+        }, 
+        {
+          "items": [
+            {
+              "category": 4, 
+              "defaultColourHEX": "3CB371", 
+              "index": 11
+            }, 
+            {
+              "category": 4, 
+              "defaultColourHEX": "3CB371", 
+              "index": 12
+            }
+          ], 
+          "subgroupTitle": "φωνήεντα"
+        }, 
+        {
+          "items": [
+            {
+              "category": 4, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 13
+            }, 
+            {
+              "category": 4, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 14
+            }, 
+            {
+              "category": 4, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 15
+            }
+          ], 
+          "subgroupTitle": "φωνήεντα-δίφθογγοι"
+        }, 
+        {
+          "items": [
+            {
+              "category": 4, 
+              "defaultColourHEX": "696969", 
+              "index": 16
+            }, 
+            {
+              "category": 4, 
+              "defaultColourHEX": "696969", 
+              "index": 17
+            }
+          ], 
+          "subgroupTitle": "φωνήεντα με διαλυτικά"
+        }, 
+        {
+          "items": [
+            {
+              "category": 4, 
+              "defaultColourHEX": "8A2BE2", 
+              "index": 18
+            }, 
+            {
+              "category": 4, 
+              "defaultColourHEX": "8A2BE2", 
+              "index": 19
+            }
+          ], 
+          "subgroupTitle": "το -υ- ως σύμφωνο"
+        }
+      ]
+    }, 
+    {
+      "groupTitle": "Προθήματα", 
+      "subgroups": [
+        {
+          "items": [
+            {
+              "category": 5, 
+              "defaultColourHEX": "B8860B", 
+              "index": 0
+            }, 
+            {
+              "category": 5, 
+              "defaultColourHEX": "B8860B", 
+              "index": 1
+            }
+          ], 
+          "subgroupTitle": "ουσιαστικά & επίθετα"
+        }, 
+        {
+          "items": [
+            {
+              "category": 5, 
+              "defaultColourHEX": "800000", 
+              "index": 2
+            }, 
+            {
+              "category": 5, 
+              "defaultColourHEX": "800000", 
+              "index": 3
+            }
+          ], 
+          "subgroupTitle": "ρήματα, λεξικά προθήματα"
+        }, 
+        {
+          "items": [
+            {
+              "category": 5, 
+              "defaultColourHEX": "FFD700", 
+              "index": 4
+            }, 
+            {
+              "category": 5, 
+              "defaultColourHEX": "FFD700", 
+              "index": 5
+            }
+          ], 
+          "subgroupTitle": "ρήματα & λεξικά προθήματα ρημάτων"
+        }
+      ]
+    }, 
+    {
+      "groupTitle": "Παραγωγικά Επιθήματα", 
+      "subgroups": [
+        {
+          "items": [
+            {
+              "category": 6, 
+              "defaultColourHEX": "800000", 
+              "index": 0
+            }, 
+            {
+              "category": 6, 
+              "defaultColourHEX": "800000", 
+              "index": 1
+            }
+          ], 
+          "subgroupTitle": "ουσιαστικά-επίθετα"
+        }, 
+        {
+          "items": [
+            {
+              "category": 6, 
+              "defaultColourHEX": "FFD700", 
+              "index": 2
+            }, 
+            {
+              "category": 6, 
+              "defaultColourHEX": "FFD700", 
+              "index": 3
+            }
+          ], 
+          "subgroupTitle": "ουσιαστικά: επαγγέλματα/τοποθεσίες"
+        }, 
+        {
+          "items": [
+            {
+              "category": 6, 
+              "defaultColourHEX": "3CB371", 
+              "index": 4
+            }, 
+            {
+              "category": 6, 
+              "defaultColourHEX": "3CB371", 
+              "index": 5
+            }, 
+            {
+              "category": 6, 
+              "defaultColourHEX": "3CB371", 
+              "index": 6
+            }, 
+            {
+              "category": 6, 
+              "defaultColourHEX": "3CB371", 
+              "index": 7
+            }
+          ], 
+          "subgroupTitle": "ουσιαστικά: όργανα/χρώματα/δραστηριότητες"
+        }, 
+        {
+          "items": [
+            {
+              "category": 6, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 8
+            }, 
+            {
+              "category": 6, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 9
+            }
+          ], 
+          "subgroupTitle": "επίθετα"
+        }, 
+        {
+          "items": [
+            {
+              "category": 6, 
+              "defaultColourHEX": "696969", 
+              "index": 10
+            }, 
+            {
+              "category": 6, 
+              "defaultColourHEX": "696969", 
+              "index": 11
+            }, 
+            {
+              "category": 6, 
+              "defaultColourHEX": "696969", 
+              "index": 12
+            }
+          ], 
+          "subgroupTitle": "ρήματα"
+        }
+      ]
+    }, 
+    {
+      "groupTitle": "Κλιτικά/Γραμματικά Επιθήματα", 
+      "subgroups": [
+        {
+          "items": [
+            {
+              "category": 7, 
+              "defaultColourHEX": "FFD700", 
+              "index": 0
+            }, 
+            {
+              "category": 7, 
+              "defaultColourHEX": "FFD700", 
+              "index": 1
+            }, 
+            {
+              "category": 7, 
+              "defaultColourHEX": "FFD700", 
+              "index": 2
+            }
+          ], 
+          "subgroupTitle": "ουσιαστικά: συχνές κλιτικές τάξεις"
+        }, 
+        {
+          "items": [
+            {
+              "category": 7, 
+              "defaultColourHEX": "3CB371", 
+              "index": 3
+            }, 
+            {
+              "category": 7, 
+              "defaultColourHEX": "3CB371", 
+              "index": 4
+            }, 
+            {
+              "category": 7, 
+              "defaultColourHEX": "3CB371", 
+              "index": 5
+            }
+          ], 
+          "subgroupTitle": "ουσιαστικά: λιγότερο συχνές κλιτικές τάξεις"
+        }, 
+        {
+          "items": [
+            {
+              "category": 7, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 6
+            }, 
+            {
+              "category": 7, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 7
+            }, 
+            {
+              "category": 7, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 8
+            }, 
+            {
+              "category": 7, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 9
+            }
+          ], 
+          "subgroupTitle": "επίθετα: συχνές κλιτικές τάξεις"
+        }, 
+        {
+          "items": [
+            {
+              "category": 7, 
+              "defaultColourHEX": "696969", 
+              "index": 10
+            }, 
+            {
+              "category": 7, 
+              "defaultColourHEX": "696969", 
+              "index": 11
+            }
+          ], 
+          "subgroupTitle": "επίθετα: συχνές κλιτικές τάξεις"
+        }, 
+        {
+          "items": [
+            {
+              "category": 7, 
+              "defaultColourHEX": "8A2BE2", 
+              "index": 12
+            }, 
+            {
+              "category": 7, 
+              "defaultColourHEX": "8A2BE2", 
+              "index": 13
+            }
+          ], 
+          "subgroupTitle": "ρήματα: ενεργητικά"
+        }, 
+        {
+          "items": [
+            {
+              "category": 7, 
+              "defaultColourHEX": "DC143C", 
+              "index": 14
+            }, 
+            {
+              "category": 7, 
+              "defaultColourHEX": "DC143C", 
+              "index": 15
+            }
+          ], 
+          "subgroupTitle": "ρήματα: παθητικά"
+        }, 
+        {
+          "items": [
+            {
+              "category": 7, 
+              "defaultColourHEX": "B8860B", 
+              "index": 16
+            }
+          ], 
+          "subgroupTitle": "επιθετικές μετοχές"
+        }
+      ]
+    }, 
+    {
+      "groupTitle": "Γραμματικές/Λειτουργικές Λέξεις", 
+      "subgroups": [
+        {
+          "items": [
+            {
+              "category": 8, 
+              "defaultColourHEX": "3CB371", 
+              "index": 0
+            }, 
+            {
+              "category": 8, 
+              "defaultColourHEX": "3CB371", 
+              "index": 1
+            }
+          ], 
+          "subgroupTitle": "αόριστο άρθρο"
+        }, 
+        {
+          "items": [
+            {
+              "category": 8, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 2
+            }, 
+            {
+              "category": 8, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 3
+            }, 
+            {
+              "category": 8, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 4
+            }, 
+            {
+              "category": 8, 
+              "defaultColourHEX": "20B2AA", 
+              "index": 5
+            }
+          ], 
+          "subgroupTitle": "οριστικό άρθρο"
+        }, 
+        {
+          "items": [
+            {
+              "category": 8, 
+              "defaultColourHEX": "696969", 
+              "index": 6
+            }, 
+            {
+              "category": 8, 
+              "defaultColourHEX": "696969", 
+              "index": 7
+            }
+          ], 
+          "subgroupTitle": "προθέσεις α': σε, με"
+        }, 
+        {
+          "items": [
+            {
+              "category": 8, 
+              "defaultColourHEX": "8A2BE2", 
+              "index": 8
+            }, 
+            {
+              "category": 8, 
+              "defaultColourHEX": "8A2BE2", 
+              "index": 9
+            }
+          ], 
+          "subgroupTitle": "προθέσεις β': για, από"
+        }
+      ]
+    }
+  ]
 }
+

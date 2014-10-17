@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="advanced_rules">Όλοι οι Κανόνες (Για προχωρημένους)</string>
+    <string name="typical_highlights">Βασικοί Κανόνες</string>
+    <string name="personal_recomendations">Προτάσεις για χρωματισμό κειμένου</string>
+    <string name="highlight_settings">Ρυθμίσεις Χρωματισμού</string>
+    <string name="text_rules">Κανόνες Κειμένου</string>
+    <string name="apply_to_all_text">Εφαρμογή σε όλα</string>
+    
+</resources>

@@ -52,32 +52,43 @@
             android:layout_height="wrap_content"
             android:text="@string/problem_4" />
     </RadioGroup>
-
-    <LinearLayout 
-		android:id="@+id/subgroup_color_layout"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		android:layout_marginTop="@dimen/spacer_8">
-        
-	    <TextView
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/choose_color" />
-
-    	<ImageView
-	        android:id="@+id/subgroup_color"
-	        android:layout_width="48dp"
-	        android:layout_height="24dp" 
-	        android:contentDescription="@string/empty"
-	        android:layout_marginLeft="@dimen/spacer_8"/>
-    </LinearLayout>
 	    
 	<TextView
 		android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:textSize="24sp" 
 	    android:text="@string/text_rules" />
+	
+	<LinearLayout
+		android:id="@+id/subgroup_apply_to_all"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+   		android:orientation="horizontal" >
+	
+        <ToggleButton
+            android:id="@+id/enable_all_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    	<ImageView
+	        android:id="@+id/subgroup_apply_color"
+	        android:layout_width="48dp"
+	        android:layout_height="40dp" 
+	        android:contentDescription="@string/empty"
+	        android:layout_marginLeft="@dimen/spacer_8"/>
+		
+		<TextView
+			android:id="@+id/label_problem_header"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="24sp"
+	        android:text="@string/apply_to_all_text" />
+	</LinearLayout>
+	
+	<View
+	    android:layout_width="fill_parent"
+	    android:layout_height="2dp"
+	    android:background="@android:color/darker_gray"/>
 	
 	<ListView
 		android:id="@android:id/list"

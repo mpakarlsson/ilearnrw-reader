@@ -6,5 +6,6 @@
     <string name="personal_recomendations">Personal Recomendations</string>
     <string name="highlight_settings">Highlight Settings</string>
     <string name="text_rules">Text Rules</string>
+    <string name="apply_to_all_text">Apply to all</string>
     
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_activity_reader">Reader</string>
+    <string name="title_activity_reader">Words Matter Reader</string>
     <string name="title_activity_search">Αναζήτηση</string>
     <string name="title_activity_mode">ModeActivity</string>
     <string name="title_activity_rename">Μετονομασία</string>

@@ -5,15 +5,13 @@ import ilearnrw.utils.LanguageCode;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TooManyListenersException;
 
 import com.example.reader.interfaces.ColorPickerListener;
 import com.example.reader.types.ColorPickerDialog;
-import com.example.reader.types.PresentationRulesAdapter;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.groups.AnnotationItem;
-import com.example.reader.utils.groups.Group;
-import com.example.reader.utils.groups.ProblemGroups;
-import com.example.reader.utils.groups.ProblemGroupsFactory;
+import com.example.reader.utils.groups.GroupedRulesFacade;
 import com.google.gson.Gson;
 
 import android.app.ListActivity;
@@ -28,23 +26,21 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ToggleButton;
 
 public class SubgroupDetails extends ListActivity implements OnClickListener {
 	private UserProfile profile;
 	private SharedPreferences sp;
 
 	private ImageView colorBox;
-	private LinearLayout colorLayout;
+	private Gson gson;
 	private SubgroupProblemsAdapter listAdapter;
 	private ArrayList<AnnotationItem> subgroupProblems;
-	private Gson gson;
-	private ArrayList<Group> groups;
+	private GroupedRulesFacade groupedRules;
 	private int groupId, subgroupId;
 	private int currentCategoryPos, currentProblemPos, defaultColour;
-	private PresentationRulesAdapter presentationRules;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,42 +69,35 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 			profile = gson.fromJson(jsonProfile, UserProfile.class);
 		}
 		
-		ProblemGroups pg = null;
 		try {
-			pg = new ProblemGroupsFactory().getLanguageGroups(profile.getLanguage(), 
+			groupedRules = new GroupedRulesFacade(profile, sp.getInt("id", 0), sp, 
 					getAssets().open(profile.getLanguage() == LanguageCode.EN?"uk.json":"gr.json"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		groups = pg.getGroupedProblems();
+		//groups = pg.getGroupedProblems();
         TextView itemView = (TextView)findViewById(R.id.group_label);
-        itemView.setText(groups.get(groupId).getGroupTitle());
+        itemView.setText(groupedRules.getGroupedProblems().get(groupId).getGroupTitle());
         TextView itemView2 = (TextView)findViewById(R.id.subgroup_label);
-        itemView2.setText(groups.get(groupId).getSubgroups().get(subgroupId).getSubgroupTitle());
-        currentCategoryPos = groups.get(groupId).getSubgroups().get(subgroupId).getItems().get(0).getCategory();
-        currentProblemPos = groups.get(groupId).getSubgroups().get(subgroupId).getItems().get(0).getIndex();
-        String colourString = groups.get(groupId).getSubgroups().get(subgroupId).getItems().get(0).getDefaultColourHEX();
-		colorBox = (ImageView) findViewById(R.id.subgroup_color);
+        itemView2.setText(groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getSubgroupTitle());
+        currentCategoryPos = groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getItems().get(0).getCategory();
+        currentProblemPos = groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getItems().get(0).getIndex();
+        String colourString = groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getItems().get(0).getDefaultColourHEX();
+		colorBox = (ImageView) findViewById(R.id.subgroup_apply_color);
 		defaultColour = Integer.parseInt(colourString, 16)+0xFF000000;
 		colorBox.setBackgroundColor(defaultColour);
+		colorBox.setOnClickListener(this);
 		
-		Button t = (Button)findViewById(R.id.subgroup_btn_ok);
-		t.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				presentationRules.saveModule();
-				Toast.makeText(getApplicationContext(), "text", Toast.LENGTH_LONG).show();
-				
-			}
-		});
+		ToggleButton rb = (ToggleButton)findViewById(R.id.enable_all_radio);
+		rb.setOnClickListener(this);
+
+		Button ok = (Button)findViewById(R.id.subgroup_btn_ok);
+		ok.setOnClickListener(this);
 		
-		colorLayout = (LinearLayout) findViewById(R.id.subgroup_color_layout);
-		
-		colorLayout.setOnClickListener(this);
-		
-		presentationRules = new PresentationRulesAdapter(profile, sp.getInt("id", 0), sp);
-		subgroupProblems = groups.get(groupId).getSubgroups().get(subgroupId).getItems();
+		Button cancel = (Button)findViewById(R.id.subgroup_btn_cancel);
+		cancel.setOnClickListener(this);
+
+		subgroupProblems = groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getItems();
 		listAdapter = new SubgroupProblemsAdapter(this, R.layout.row_subgroup_details, subgroupProblems);
 		setListAdapter(listAdapter);
 	}
@@ -116,27 +105,42 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()){
-			
-		case R.id.subgroup_color_layout:
-			int color = sp.getInt(sp.getInt("id", 0)+"pm_color_" + currentCategoryPos + "_" + currentProblemPos, defaultColour);
-			ColorPickerDialog dialog = new ColorPickerDialog(this, color, new ColorPickerListener() {
-				@Override
-				public void onOk(ColorPickerDialog dialog, int color) {
-					//sp.edit().putInt("pm_color_" + currentCategoryPos + "_" + currentProblemPos, color).commit();
-					//updateColor(currentCategoryPos, currentProblemPos);
-					defaultColour = color;
-					colorBox.setBackgroundColor(defaultColour);
-					for (AnnotationItem ai : groups.get(groupId).getSubgroups().get(subgroupId).getItems()){
-						ai.setDefaultColour(Integer.toHexString(defaultColour).substring(2));
-					}
-					listAdapter.notifyDataSetChanged();
+		
+	case R.id.subgroup_apply_color:
+		int color = sp.getInt(sp.getInt("id", 0)+"pm_color_" + currentCategoryPos + "_" + currentProblemPos, defaultColour);
+		ColorPickerDialog dialog = new ColorPickerDialog(this, color, new ColorPickerListener() {
+			@Override
+			public void onOk(ColorPickerDialog dialog, int color) {
+				//sp.edit().putInt("pm_color_" + currentCategoryPos + "_" + currentProblemPos, color).commit();
+				//updateColor(currentCategoryPos, currentProblemPos);
+				defaultColour = color;
+				colorBox.setBackgroundColor(defaultColour);
+				for (AnnotationItem ai : groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getItems()){
+					ai.setDefaultColour(Integer.toHexString(defaultColour).substring(2));
+					groupedRules.setColour(groupId, subgroupId, defaultColour);
 				}
-				
-				@Override
-				public void onCancel(ColorPickerDialog dialog) {}
-			});
-			dialog.show();
-			break;
+				listAdapter.notifyDataSetChanged();
+			}
+			
+			@Override
+			public void onCancel(ColorPickerDialog dialog) {}
+		});
+		dialog.show();
+		break;
+		
+	case R.id.enable_all_radio:
+		groupedRules.enableAll(groupId, subgroupId);
+		listAdapter.notifyDataSetChanged();
+		break;
+		
+	case R.id.subgroup_btn_ok:
+		groupedRules.getPresentationRulesAdapter().saveModule();
+		onBackPressed();
+		break;
+		
+	case R.id.subgroup_btn_cancel:
+		onBackPressed();
+		break;
 		
 		}
 	};
@@ -162,15 +166,17 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 	        if (item!= null) {
 	            TextView itemView = (TextView) view.findViewById(R.id.label_problem_description);
 	            ImageView activeColorView = (ImageView) view.findViewById(R.id.subgrgoup_active_color);
+	            final ToggleButton isEnabled = (ToggleButton) view.findViewById(R.id.enable_radio);
 
 	            if (itemView != null) {
 	                itemView.setText(profile.getUserProblems().getProblemDescription(item.getCategory(), item.getIndex()).getHumanReadableDescription());
-	                if (presentationRules.getActivated(item.getCategory(), item.getIndex())){
-	                	activeColorView.setBackgroundColor(presentationRules.getHighlightingColor(
+	                if (groupedRules.getPresentationRulesAdapter().getActivated(item.getCategory(), item.getIndex())){
+	                	activeColorView.setBackgroundColor(groupedRules.getPresentationRulesAdapter().getHighlightingColor(
 	                			item.getCategory(), item.getIndex()));
 	                }
 	                else
 	                	activeColorView.setBackgroundColor(Integer.parseInt(item.getDefaultColourHEX(), 16)+0xFF000000);
+	                isEnabled.setChecked(groupedRules.getPresentationRulesAdapter().getActivated(item.getCategory(), item.getIndex()));
 	            }
 	            activeColorView.setOnClickListener(new OnClickListener() {
 					
@@ -180,8 +186,8 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 							@Override
 							public void onOk(ColorPickerDialog dialog, int color) {
 								item.setDefaultColour(Integer.toHexString(color).substring(2));
-								presentationRules.setHighlightingColor(item.getCategory(), item.getIndex(), color);
-								presentationRules.setActivated(item.getCategory(), item.getIndex(), true);
+								groupedRules.getPresentationRulesAdapter().
+									setHighlightingColor(item.getCategory(), item.getIndex(), color);
 								listAdapter.notifyDataSetChanged();
 							}							
 							@Override
@@ -189,6 +195,16 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 						});
 						dialog.show();
 						
+					}
+				});
+	            isEnabled.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View arg0) {
+						groupedRules.getPresentationRulesAdapter().setHighlightingColor(item.getCategory(), item.getIndex(), 
+								Integer.parseInt(item.getDefaultColourHEX(), 16)+0xFF000000);
+						groupedRules.getPresentationRulesAdapter().setActivated(item.getCategory(), item.getIndex(), 
+								isEnabled.isChecked());						
 					}
 				});
 	         }

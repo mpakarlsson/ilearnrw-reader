@@ -1,10 +1,8 @@
 package com.example.reader.types;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.example.reader.R;
 import com.example.reader.utils.groups.Group;
+import com.example.reader.utils.groups.GroupedRulesFacade;
 import com.example.reader.utils.groups.Subgroup;
 
 import android.content.Context;
@@ -18,21 +16,17 @@ import android.widget.TextView;
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
  
     private Context context;
-    private List<Group> groups; // header titles
-    // child data in format of header title, child title
-    private HashMap<Group, List<Subgroup>> groupSubrgroups;
+	private GroupedRulesFacade groupedRules;
  
-    public ExpandableListAdapter(Context context, List<Group> listDataHeader,
-            HashMap<Group, List<Subgroup>> listChildData) {
+    public ExpandableListAdapter(Context context, GroupedRulesFacade groupedRules) {
         this.context = context;
-        this.groups = listDataHeader;
-        this.groupSubrgroups = listChildData;
+        this.groupedRules = groupedRules;
     }
  
     @Override
     public Object getChild(int groupPosition, int childPosititon) {
-        return this.groupSubrgroups.get(this.groups.get(groupPosition))
-                .get(childPosititon);
+        return this.groupedRules.getGroupedProblems().get(groupPosition).
+        		getSubgroups().get(childPosititon);
     }
  
     @Override
@@ -54,25 +48,26 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
  
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.lblListItem);
+        
+        String str = " ["+groupedRules.getSubgroupEnabledItems(groupPosition, childPosition)+"]";
  
-        txtListChild.setText(childText);
+        txtListChild.setText(childText+str);
         return convertView;
     }
  
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this.groupSubrgroups.get(this.groups.get(groupPosition))
-                .size();
+        return this.groupedRules.getGroupedProblems().get(groupPosition).getSubgroups().size();
     }
  
     @Override
     public Object getGroup(int groupPosition) {
-        return this.groups.get(groupPosition);
+        return this.groupedRules.getGroupedProblems().get(groupPosition);
     }
  
     @Override
     public int getGroupCount() {
-        return this.groups.size();
+    	return this.groupedRules.getGroupedProblems().size();
     }
  
     @Override
@@ -92,8 +87,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
  
         TextView lblListHeader = (TextView) convertView
                 .findViewById(R.id.lblListHeader);
-        lblListHeader.setTypeface(null, Typeface.BOLD);
-        lblListHeader.setText(headerTitle);
+        String str = " ("+groupedRules.getGroupEnabledItems(groupPosition)+")";
+        if (groupedRules.getGroupEnabledItems(groupPosition)>0){
+        	lblListHeader.setTypeface(null, Typeface.BOLD);
+        }
+        lblListHeader.setText(headerTitle+str);
  
         return convertView;
     }
@@ -107,4 +105,5 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+    
 }

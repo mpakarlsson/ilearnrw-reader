@@ -5,15 +5,11 @@ import ilearnrw.utils.LanguageCode;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import com.example.reader.types.ExpandableListAdapter;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.groups.Group;
-import com.example.reader.utils.groups.ProblemGroups;
-import com.example.reader.utils.groups.ProblemGroupsFactory;
-import com.example.reader.utils.groups.Subgroup;
+import com.example.reader.utils.groups.GroupedRulesFacade;
 import com.google.gson.Gson;
 
 import android.os.Bundle;
@@ -36,17 +32,12 @@ public class GroupsActivity extends Activity {
 	private SharedPreferences sp;
 	
 	private Gson gson;
-	private ArrayList<Group> groups;
+	private GroupedRulesFacade groupedRules;
 	
 	private UserProfile profile;
 	////
-	ExpandableListAdapter listAdapter;
-    ExpandableListView expListView;
-    List<Group> listDataHeader;
-    HashMap<Group, List<Subgroup>> listDataChild;
-	////
-	
-	
+	private ExpandableListAdapter listAdapter;
+	private ExpandableListView expListView;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,27 +75,8 @@ public class GroupsActivity extends Activity {
 			}
 		});        
         
-		ProblemGroups pg = null;
-		try {
-			pg = new ProblemGroupsFactory().getLanguageGroups(profile.getLanguage(), 
-					getAssets().open(profile.getLanguage() == LanguageCode.EN?"uk.json":"gr.json"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		groups = pg.getGroupedProblems();
-		//listAdapter = new GroupListAdapter(this, R.layout.row_groups, groups);
-		//setListAdapter(listAdapter);
-		
-        // get the listview
-        expListView = (ExpandableListView) findViewById(R.id.lvExp);
- 
-        // preparing list data
-        prepareListData();
- 
-        listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
- 
-        // setting list adapter
-        expListView.setAdapter(listAdapter);
+        initModules();
+        
         expListView.setOnChildClickListener(new OnChildClickListener() {			
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,
@@ -119,8 +91,27 @@ public class GroupsActivity extends Activity {
 		});
 	}
 	
+	private void initModules(){
+        try {
+			groupedRules = new GroupedRulesFacade(profile, sp.getInt("id", 0), sp, 
+					getAssets().open(profile.getLanguage() == LanguageCode.EN?"uk.json":"gr.json"));
+			// get the listview
+	        expListView = (ExpandableListView) findViewById(R.id.lvExp);
+	  
+	        listAdapter = new ExpandableListAdapter(this, groupedRules);
+	 
+	        // setting list adapter
+	        expListView.setAdapter(listAdapter);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void onResume(){
 		super.onResume();
+		initModules();
+		listAdapter.notifyDataSetChanged();
+		
 	}
 	
 	private void initProfile(String jsonProfile){
@@ -154,14 +145,5 @@ public class GroupsActivity extends Activity {
 	        return view;
 	    }
 	}
-    private void prepareListData() {
-        listDataHeader = new ArrayList<Group>();
-        listDataChild = new HashMap<Group, List<Subgroup>>();
- 
-        for (Group g : groups){
-            listDataHeader.add(g);
-            listDataChild.put(g, g.getSubgroups());
-        }
-    }
 
 }
