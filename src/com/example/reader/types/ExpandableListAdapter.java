@@ -1,6 +1,7 @@
 package com.example.reader.types;
 
 import com.example.reader.R;
+import com.example.reader.R.string;
 import com.example.reader.utils.groups.Group;
 import com.example.reader.utils.groups.GroupedRulesFacade;
 import com.example.reader.utils.groups.Subgroup;
@@ -45,13 +46,24 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.subgroup_child, null);
         }
- 
+
         TextView txtListChild = (TextView) convertView
-                .findViewById(R.id.lblListItem);
-        
-        String str = " ["+groupedRules.getSubgroupEnabledItems(groupPosition, childPosition)+"]";
- 
-        txtListChild.setText(childText+str);
+                .findViewById(R.id.subgroup_label);        
+        int active = groupedRules.getSubgroupEnabledItems(groupPosition, childPosition);
+        if (active>0)
+        	txtListChild.setText(childText+" *("+active+")");
+        else
+        	txtListChild.setText(childText);
+
+        TextView sublabel = (TextView) convertView
+                .findViewById(R.id.subgroub_sublabel);
+        if (active == 0)
+        	sublabel.setText(context.getResources().getString(R.string.no_rules_activated));
+        else if (active == 1)
+           	sublabel.setText(active+" "+context.getResources().getString(R.string.activated_rule));
+        else 
+           	sublabel.setText(active+" "+context.getResources().getString(R.string.activated_rules));
+
         return convertView;
     }
  
@@ -86,12 +98,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
  
         TextView lblListHeader = (TextView) convertView
-                .findViewById(R.id.lblListHeader);
-        String str = " ("+groupedRules.getGroupEnabledItems(groupPosition)+")";
-        if (groupedRules.getGroupEnabledItems(groupPosition)>0){
-        	lblListHeader.setTypeface(null, Typeface.BOLD);
-        }
-        lblListHeader.setText(headerTitle+str);
+                .findViewById(R.id.group_label);
+        if (groupedRules.getGroupEnabledItems(groupPosition)>0)
+        	lblListHeader.setText(headerTitle+" *("+groupedRules.getGroupEnabledItems(groupPosition)+")");
+        else 
+        	lblListHeader.setText(headerTitle);
+ 
+        TextView sublabel = (TextView) convertView
+                .findViewById(R.id.groub_sublabel);
+        String str = groupedRules.getGroupedProblems().get(groupPosition).getSubgroups().size()+" ";
+        sublabel.setText(str+context.getResources().getString(R.string.sublists));
  
         return convertView;
     }

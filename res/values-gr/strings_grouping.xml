@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="title_activity_grouping">Επιλογές Χρωματισμού</string>
     <string name="advanced_rules">Όλοι οι Κανόνες (Για προχωρημένους)</string>
     <string name="typical_highlights">Βασικοί Κανόνες</string>
     <string name="personal_recomendations">Προτάσεις για χρωματισμό κειμένου</string>
     <string name="highlight_settings">Ρυθμίσεις Χρωματισμού</string>
+    <string name="presentation_settings">Ρυθμίσεις Παρουσίασης</string>
     <string name="text_rules">Κανόνες Κειμένου</string>
     <string name="apply_to_all_text">Εφαρμογή σε όλα</string>
     <string name="error_on_rules_number">Οι ενεργοί κανόνες δεν πρέπει να ξεπερνούν τους 5!</string>
+    <string name="no_suggestions">Δεν υπάρχουν προτάσεις</string>
+    <string name="sublists">υποκατηγορίες</string>
+    <string name="activated_rules">ενεργοί κανόνες</string>
+    <string name="activated_rule">ενεργός κανόνας</string>
+    <string name="no_rules_activated">Δεν περιέχει ενεργούς κανόνες</string>
+    <string name="how_to_highlight">Πώς να χρωματίσω;</string>
+    <string name="what_to_highlight">Τι να χρωματίσω;</string>
+    <string name="background_colour">Χρώμα πίσω από την λέξη</string>
+    <string name="text_colour">Χρώμα κειμένου</string>
+    <string name="part_of_word">Μέρος της λέξης</string>
+    <string name="whole_word">Όλη την λέξη</string>
     
 </resources>

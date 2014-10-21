@@ -4,29 +4,22 @@ import ilearnrw.user.profile.UserProfile;
 import ilearnrw.utils.LanguageCode;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import com.example.reader.types.ExpandableListAdapter;
 import com.example.reader.utils.AppLocales;
-import com.example.reader.utils.groups.Group;
 import com.example.reader.utils.groups.GroupedRulesFacade;
 import com.google.gson.Gson;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.TextView;
 
 public class GroupsActivity extends Activity {
 	private SharedPreferences sp;
@@ -115,7 +108,7 @@ public class GroupsActivity extends Activity {
 		final int p[][] = groupedRules.getSuggestedSubgroups();
 		if (p != null && p.length >0){
 			x.setText(groupedRules.getProblemGroups().getGroupedProblems().get(p[0][0]).getGroupTitle()+
-					"\n"+groupedRules.getProblemGroups().getGroupedProblems().get(p[0][0]).
+					" / "+groupedRules.getProblemGroups().getGroupedProblems().get(p[0][0]).
 					getSubgroups().get(p[0][1]).getSubgroupTitle());
 			x.setOnClickListener(new OnClickListener() {				
 				@Override
@@ -130,7 +123,7 @@ public class GroupsActivity extends Activity {
 		}
 		if (p != null && p.length >1){
 			y.setText(groupedRules.getProblemGroups().getGroupedProblems().get(p[1][0]).getGroupTitle()+
-					"\n"+groupedRules.getProblemGroups().getGroupedProblems().get(p[1][0]).
+					" / "+groupedRules.getProblemGroups().getGroupedProblems().get(p[1][0]).
 					getSubgroups().get(p[1][1]).getSubgroupTitle());
 			y.setOnClickListener(new OnClickListener() {				
 				@Override
@@ -155,33 +148,4 @@ public class GroupsActivity extends Activity {
 	private void initProfile(String jsonProfile){
 		profile = gson.fromJson(jsonProfile, UserProfile.class);				
 	}
-	
-	public class GroupListAdapter extends ArrayAdapter<Group> {
-
-	    private Context context;
-
-	    public GroupListAdapter(Context context, int textViewResourceId, ArrayList<Group> items) {
-	        super(context, textViewResourceId, items);
-	        this.context = context;
-	    }
-
-	    public View getView(int position, View convertView, ViewGroup parent) {
-	        View view = convertView;
-	        if (view == null) {
-	            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	            view = inflater.inflate(R.layout.row_groups, null);
-	        }
-
-	        final Group item = getItem(position);
-	        if (item!= null) {				
-	            TextView itemView = (TextView) view.findViewById(R.id.group_label);
-	            if (itemView != null) {
-	                itemView.setText(item.getGroupTitle());
-	            }
-	         }
-
-	        return view;
-	    }
-	}
-
 }

@@ -2,7 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
 	android:layout_width="fill_parent" 
-	android:layout_height="fill_parent" >
+	android:layout_height="fill_parent"
+	android:background="#ddd" >
+    
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/NeutralRed">
+        
+        <TextView 
+	        android:id="@+id/groups_view_header"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center_horizontal"
+	        android:layout_centerHorizontal="true"
+	        android:textSize="40sp"
+            android:text="@string/title_activity_grouping"/>
+        
+	</RelativeLayout>
 	
 	<LinearLayout 
 		android:id="@+id/personal_recomendations_block"
@@ -15,17 +33,28 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 	        android:textSize="24sp"
+     		android:paddingLeft="20dp"
 			android:text="@string/personal_recomendations" />
 		<Button
 			android:id="@+id/personal_recomendations_one"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
-			android:text="@string/advanced_rules" />
+       		android:gravity="center_vertical|left"
+	        android:background="#ccc"
+     		android:paddingLeft="20dp"
+			android:text="@string/no_suggestions" />
+		<View
+		    android:layout_width="fill_parent"
+		    android:layout_height="1dp"
+		    android:background="@android:color/darker_gray"/>
 		<Button
 			android:id="@+id/personal_recomendations_two"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
-			android:text="@string/advanced_rules" />
+       		android:gravity="center_vertical|left"
+	        android:background="#ccc"
+     		android:paddingLeft="20dp"
+			android:text="@string/no_suggestions" />
 	
 	</LinearLayout>
 	
@@ -38,6 +67,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
         android:textSize="24sp"
+     	android:paddingLeft="20dp"
 		android:text="@string/typical_highlights" />
 
 	<ExpandableListView
@@ -54,8 +84,10 @@
 		android:gravity="center">	
 		<Button
 			android:id="@+id/show_advanced"
-		    android:layout_width="wrap_content"
+		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
+       		android:gravity="center"
+	        android:background="#ccc"
 			android:text="@string/advanced_rules" />
 	
 	</LinearLayout>

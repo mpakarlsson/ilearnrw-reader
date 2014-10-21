@@ -98,7 +98,7 @@ public class GroupedRulesFacade {
 		int ps = presentationRulesAdapter.getPresentationStyle(a.getCategory(), a.getIndex());
 		for (AnnotationItem ai : g.getSubgroups().get(subgroup).getItems()){
 			if (presentationRulesAdapter.getPresentationStyle(ai.getCategory(), ai.getIndex()) != ps)
-				return 1;
+				return 3;
 		}
 		return ps;
 	}

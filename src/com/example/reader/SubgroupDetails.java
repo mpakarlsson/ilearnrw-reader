@@ -44,7 +44,7 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 	private int groupId, subgroupId;
 	private int currentCategoryPos, currentProblemPos, defaultColour;
 	private RadioGroup rulesGroup;
-	private RadioButton rbtnRule1, rbtnRule2, rbtnRule3, rbtnRule4;
+	private RadioButton rbtnHow1, rbtnHow2, rbtnWhat1, rbtnWhat2;
 	private ToggleButton rb;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +81,9 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 			e.printStackTrace();
 		}
 		//groups = pg.getGroupedProblems();
-        TextView itemView = (TextView)findViewById(R.id.group_label);
-        itemView.setText(groupedRules.getGroupedProblems().get(groupId).getGroupTitle());
-        TextView itemView2 = (TextView)findViewById(R.id.subgroup_label);
-        itemView2.setText(groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getSubgroupTitle());
+        TextView groupSubgroupTitle = (TextView)findViewById(R.id.group_subgroup_title);
+        groupSubgroupTitle.setText(groupedRules.getGroupedProblems().get(groupId).getGroupTitle()+
+        		" / "+groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getSubgroupTitle());
         currentCategoryPos = groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getItems().get(0).getCategory();
         currentProblemPos = groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getItems().get(0).getIndex();
         String colourString = groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getItems().get(0).getDefaultColourHEX();
@@ -105,10 +104,10 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		cancel.setOnClickListener(this);
 
 		rulesGroup 	= (RadioGroup) findViewById(R.id.subgroup_rules);
-		rbtnRule1 	= (RadioButton) findViewById(R.id.subgroup_rule1);
-		rbtnRule2 	= (RadioButton) findViewById(R.id.subgroup_rule2);
-		rbtnRule3 	= (RadioButton) findViewById(R.id.subgroup_rule3);
-		rbtnRule4 	= (RadioButton) findViewById(R.id.subgroup_rule4);
+		rbtnHow1 	= (RadioButton) findViewById(R.id.subgroup_option_how_highlight1);
+		rbtnHow2 	= (RadioButton) findViewById(R.id.subgroup_option_how_highlight2);
+		rbtnWhat1 	= (RadioButton) findViewById(R.id.subgroup_option_what_highlight1);
+		rbtnWhat2 	= (RadioButton) findViewById(R.id.subgroup_option_what_highlight2);
 		updateRule();
 		subgroupProblems = groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getItems();
 		listAdapter = new SubgroupProblemsAdapter(this, R.layout.row_subgroup_details, subgroupProblems);
@@ -116,11 +115,11 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 	}
 	
 	private int currentRule(){
-		if (rbtnRule1.isChecked())
+		if (rbtnHow2.isChecked() && rbtnWhat1.isChecked())
 			return 1;
-		if (rbtnRule2.isChecked())
+		if (rbtnHow2.isChecked() && rbtnWhat2.isChecked())
 			return 2;
-		if (rbtnRule3.isChecked())
+		if (rbtnHow1.isChecked() && rbtnWhat1.isChecked())
 			return 3;
 		return 4;
 	}
@@ -129,16 +128,20 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		int rule = groupedRules.getPresentationStyle(groupId, subgroupId);
 		switch(rule){
 		case 1:
-			rbtnRule1.setChecked(true);
+			rbtnHow2.setChecked(true);
+			rbtnWhat1.setChecked(true);
 			break;
 		case 2:
-			rbtnRule2.setChecked(true);
+			rbtnHow2.setChecked(true);
+			rbtnWhat2.setChecked(true);
 			break;
 		case 3:
-			rbtnRule3.setChecked(true);
+			rbtnHow1.setChecked(true);
+			rbtnWhat1.setChecked(true);
 			break;
 		case 4:
-			rbtnRule4.setChecked(true);
+			rbtnHow1.setChecked(true);
+			rbtnWhat2.setChecked(true);
 			break;
 		}
 	}
