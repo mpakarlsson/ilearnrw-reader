@@ -40,6 +40,14 @@ public class PresentationRulesAdapter {
 		}
 	}
 	
+	public PresentationRulesModule getPresentationRules() {
+		return presentationRules;
+	}
+
+	public void setPresentationRules(PresentationRulesModule presentationRules) {
+		this.presentationRules = presentationRules;
+	}
+
 	public boolean getActivated(int i, int j){
 		return presentationRules.getActivated(i, j);
 	}

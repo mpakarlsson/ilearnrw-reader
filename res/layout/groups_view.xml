@@ -3,6 +3,37 @@
 	android:orientation="vertical"
 	android:layout_width="fill_parent" 
 	android:layout_height="fill_parent" >
+	
+	<LinearLayout 
+		android:id="@+id/personal_recomendations_block"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:layout_marginTop="@dimen/spacer_8"
+		android:gravity="center">	
+		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+	        android:textSize="24sp"
+			android:text="@string/personal_recomendations" />
+		<Button
+			android:id="@+id/personal_recomendations_one"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+			android:text="@string/advanced_rules" />
+		<Button
+			android:id="@+id/personal_recomendations_two"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+			android:text="@string/advanced_rules" />
+	
+	</LinearLayout>
+	
+	<View
+	    android:layout_width="fill_parent"
+	    android:layout_height="2dp"
+	    android:background="@android:color/darker_gray"/>
+	
 	<TextView
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"

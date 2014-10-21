@@ -7,5 +7,6 @@
     <string name="highlight_settings">Ρυθμίσεις Χρωματισμού</string>
     <string name="text_rules">Κανόνες Κειμένου</string>
     <string name="apply_to_all_text">Εφαρμογή σε όλα</string>
+    <string name="error_on_rules_number">Οι ενεργοί κανόνες δεν πρέπει να ξεπερνούν τους 5!</string>
     
 </resources>

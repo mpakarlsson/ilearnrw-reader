@@ -23,7 +23,7 @@
         android:text="@string/highlight_settings" />
 
     <RadioGroup
-        android:id="@+id/pm_rules"
+        android:id="@+id/subgroup_rules"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
@@ -73,7 +73,7 @@
     	<ImageView
 	        android:id="@+id/subgroup_apply_color"
 	        android:layout_width="48dp"
-	        android:layout_height="40dp" 
+	        android:layout_height="50dp" 
 	        android:contentDescription="@string/empty"
 	        android:layout_marginLeft="@dimen/spacer_8"/>
 		
@@ -84,6 +84,11 @@
 			android:textSize="24sp"
 	        android:text="@string/apply_to_all_text" />
 	</LinearLayout>
+	
+	<View
+	    android:layout_width="fill_parent"
+	    android:layout_height="2dp"
+	    android:background="@android:color/darker_gray"/>
 	
 	<View
 	    android:layout_width="fill_parent"

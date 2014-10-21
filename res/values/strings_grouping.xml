@@ -7,5 +7,6 @@
     <string name="highlight_settings">Highlight Settings</string>
     <string name="text_rules">Text Rules</string>
     <string name="apply_to_all_text">Apply to all</string>
+    <string name="error_on_rules_number">The total number of active rules should be less than 5!</string>
     
 </resources>

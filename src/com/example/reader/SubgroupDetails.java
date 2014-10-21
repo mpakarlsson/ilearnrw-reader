@@ -27,7 +27,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class SubgroupDetails extends ListActivity implements OnClickListener {
@@ -41,6 +43,9 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 	private GroupedRulesFacade groupedRules;
 	private int groupId, subgroupId;
 	private int currentCategoryPos, currentProblemPos, defaultColour;
+	private RadioGroup rulesGroup;
+	private RadioButton rbtnRule1, rbtnRule2, rbtnRule3, rbtnRule4;
+	private ToggleButton rb;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -88,8 +93,10 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		colorBox.setBackgroundColor(defaultColour);
 		colorBox.setOnClickListener(this);
 		
-		ToggleButton rb = (ToggleButton)findViewById(R.id.enable_all_radio);
+		rb = (ToggleButton)findViewById(R.id.enable_all_radio);
 		rb.setOnClickListener(this);
+		if (groupedRules.allEnabled(groupId, subgroupId))
+			rb.setChecked(true);
 
 		Button ok = (Button)findViewById(R.id.subgroup_btn_ok);
 		ok.setOnClickListener(this);
@@ -97,9 +104,43 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		Button cancel = (Button)findViewById(R.id.subgroup_btn_cancel);
 		cancel.setOnClickListener(this);
 
+		rulesGroup 	= (RadioGroup) findViewById(R.id.subgroup_rules);
+		rbtnRule1 	= (RadioButton) findViewById(R.id.subgroup_rule1);
+		rbtnRule2 	= (RadioButton) findViewById(R.id.subgroup_rule2);
+		rbtnRule3 	= (RadioButton) findViewById(R.id.subgroup_rule3);
+		rbtnRule4 	= (RadioButton) findViewById(R.id.subgroup_rule4);
+		updateRule();
 		subgroupProblems = groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getItems();
 		listAdapter = new SubgroupProblemsAdapter(this, R.layout.row_subgroup_details, subgroupProblems);
 		setListAdapter(listAdapter);
+	}
+	
+	private int currentRule(){
+		if (rbtnRule1.isChecked())
+			return 1;
+		if (rbtnRule2.isChecked())
+			return 2;
+		if (rbtnRule3.isChecked())
+			return 3;
+		return 4;
+	}
+	
+	private void updateRule(){
+		int rule = groupedRules.getPresentationStyle(groupId, subgroupId);
+		switch(rule){
+		case 1:
+			rbtnRule1.setChecked(true);
+			break;
+		case 2:
+			rbtnRule2.setChecked(true);
+			break;
+		case 3:
+			rbtnRule3.setChecked(true);
+			break;
+		case 4:
+			rbtnRule4.setChecked(true);
+			break;
+		}
 	}
 	
 	@Override
@@ -129,13 +170,23 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		break;
 		
 	case R.id.enable_all_radio:
-		groupedRules.enableAll(groupId, subgroupId);
+		if (!groupedRules.allEnabled(groupId, subgroupId)){
+			groupedRules.enableAll(groupId, subgroupId);
+		}
+		else 
+			groupedRules.disableAll(groupId, subgroupId);
 		listAdapter.notifyDataSetChanged();
 		break;
 		
 	case R.id.subgroup_btn_ok:
-		groupedRules.getPresentationRulesAdapter().saveModule();
-		onBackPressed();
+		if (groupedRules.getTotalNumberOfActiveRules()<6){
+			groupedRules.setPresentationStyle(groupId, subgroupId,currentRule());
+			groupedRules.getPresentationRulesAdapter().saveModule();
+			onBackPressed();
+		}
+		else {
+			Toast.makeText(getApplicationContext(), R.string.error_on_rules_number, Toast.LENGTH_LONG).show();
+		}
 		break;
 		
 	case R.id.subgroup_btn_cancel:
@@ -204,7 +255,11 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 						groupedRules.getPresentationRulesAdapter().setHighlightingColor(item.getCategory(), item.getIndex(), 
 								Integer.parseInt(item.getDefaultColourHEX(), 16)+0xFF000000);
 						groupedRules.getPresentationRulesAdapter().setActivated(item.getCategory(), item.getIndex(), 
-								isEnabled.isChecked());						
+								isEnabled.isChecked());		
+						if (groupedRules.allEnabled(groupId, subgroupId))
+							rb.setChecked(true);
+						else 
+							rb.setChecked(false);
 					}
 				});
 	         }

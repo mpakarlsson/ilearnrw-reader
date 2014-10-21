@@ -76,6 +76,10 @@ public class GroupsActivity extends Activity {
 		});        
         
         initModules();
+
+		Button suggestion1 = (Button)findViewById(R.id.personal_recomendations_one);
+		Button suggestion2 = (Button)findViewById(R.id.personal_recomendations_two);
+		initSuggestionButtons(suggestion1, suggestion2);
         
         expListView.setOnChildClickListener(new OnChildClickListener() {			
 			@Override
@@ -104,6 +108,40 @@ public class GroupsActivity extends Activity {
 	        expListView.setAdapter(listAdapter);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void initSuggestionButtons(Button x, Button y){
+		final int p[][] = groupedRules.getSuggestedSubgroups();
+		if (p != null && p.length >0){
+			x.setText(groupedRules.getProblemGroups().getGroupedProblems().get(p[0][0]).getGroupTitle()+
+					"\n"+groupedRules.getProblemGroups().getGroupedProblems().get(p[0][0]).
+					getSubgroups().get(p[0][1]).getSubgroupTitle());
+			x.setOnClickListener(new OnClickListener() {				
+				@Override
+				public void onClick(View arg0) {
+					Intent intent = new Intent(GroupsActivity.this, SubgroupDetails.class);
+					intent.putExtra("groupId", p[0][0]);
+					intent.putExtra("subgroupId", p[0][1]);
+					intent.putExtra("showGUI", true);
+					startActivity(intent);
+				}
+			});
+		}
+		if (p != null && p.length >1){
+			y.setText(groupedRules.getProblemGroups().getGroupedProblems().get(p[1][0]).getGroupTitle()+
+					"\n"+groupedRules.getProblemGroups().getGroupedProblems().get(p[1][0]).
+					getSubgroups().get(p[1][1]).getSubgroupTitle());
+			y.setOnClickListener(new OnClickListener() {				
+				@Override
+				public void onClick(View arg0) {
+					Intent intent = new Intent(GroupsActivity.this, SubgroupDetails.class);
+					intent.putExtra("groupId", p[1][0]);
+					intent.putExtra("subgroupId", p[1][1]);
+					intent.putExtra("showGUI", true);
+					startActivity(intent);
+				}
+			});
 		}
 	}
 	
