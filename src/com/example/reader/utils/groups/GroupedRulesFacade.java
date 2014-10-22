@@ -94,13 +94,15 @@ public class GroupedRulesFacade {
 	
 	public int getPresentationStyle(int group, int subgroup){
 		Group g = problemGroups.getGroupedProblems().get(group);
-		AnnotationItem a = g.getSubgroups().get(subgroup).getItems().get(0);
-		int ps = presentationRulesAdapter.getPresentationStyle(a.getCategory(), a.getIndex());
+		int ps = -1;
 		for (AnnotationItem ai : g.getSubgroups().get(subgroup).getItems()){
-			if (presentationRulesAdapter.getPresentationStyle(ai.getCategory(), ai.getIndex()) != ps)
-				return 3;
+			if (presentationRulesAdapter.getActivated(ai.getCategory(), ai.getIndex()) && ps == -1)
+				ps = presentationRulesAdapter.getPresentationStyle(ai.getCategory(), ai.getIndex());
+			else if (presentationRulesAdapter.getActivated(ai.getCategory(), ai.getIndex()) && 
+					presentationRulesAdapter.getPresentationStyle(ai.getCategory(), ai.getIndex()) != ps)
+				return 1;
 		}
-		return ps;
+		return ps == -1 ? 1 : ps;
 	}
 	
 	private int getSubgroupTopScore(Subgroup subgroup){

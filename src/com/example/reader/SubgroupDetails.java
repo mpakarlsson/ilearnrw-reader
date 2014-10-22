@@ -228,8 +228,11 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 	                	activeColorView.setBackgroundColor(groupedRules.getPresentationRulesAdapter().getHighlightingColor(
 	                			item.getCategory(), item.getIndex()));
 	                }
-	                else
+	                else{
+	                	groupedRules.getPresentationRulesAdapter().setHighlightingColor(item.getCategory(), item.getIndex(), 
+	                			Integer.parseInt(item.getDefaultColourHEX(), 16)+0xFF000000);
 	                	activeColorView.setBackgroundColor(Integer.parseInt(item.getDefaultColourHEX(), 16)+0xFF000000);
+	                }
 	                isEnabled.setChecked(groupedRules.getPresentationRulesAdapter().getActivated(item.getCategory(), item.getIndex()));
 	            }
 	            activeColorView.setOnClickListener(new OnClickListener() {
