@@ -5,7 +5,6 @@ import ilearnrw.utils.LanguageCode;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.TooManyListenersException;
 
 import com.example.reader.interfaces.ColorPickerListener;
 import com.example.reader.types.ColorPickerDialog;
@@ -23,11 +22,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListPopupWindow;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -43,14 +44,22 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 	private GroupedRulesFacade groupedRules;
 	private int groupId, subgroupId;
 	private int currentCategoryPos, currentProblemPos, defaultColour;
-	private RadioGroup rulesGroup;
 	private RadioButton rbtnHow1, rbtnHow2, rbtnWhat1, rbtnWhat2;
 	private ToggleButton rb;
+	
+	private ColorListPopupWindow listPopupWindow;
+	ArrayList<String> colours = new ArrayList<String>();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_subgroup_details);
 		Bundle groupExtras = getIntent().getExtras();
+		
+		colours.add("3CB371"); colours.add("ADD8E6");
+		colours.add("C0C0C0"); colours.add("CCFB5D");
+		colours.add("FFF380"); colours.add("F9966B");
+		colours.add("E9CFEC"); colours.add("FFD700");
 
 		groupId = groupExtras.getInt("groupId");
 		subgroupId = groupExtras.getInt("subgroupId");
@@ -90,7 +99,8 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		colorBox = (ImageView) findViewById(R.id.subgroup_apply_color);
 		defaultColour = Integer.parseInt(colourString, 16)+0xFF000000;
 		colorBox.setBackgroundColor(defaultColour);
-		colorBox.setOnClickListener(this);
+		
+		//colorBox.setOnClickListener(this);
 		
 		rb = (ToggleButton)findViewById(R.id.enable_all_radio);
 		rb.setOnClickListener(this);
@@ -103,7 +113,6 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		Button cancel = (Button)findViewById(R.id.subgroup_btn_cancel);
 		cancel.setOnClickListener(this);
 
-		rulesGroup 	= (RadioGroup) findViewById(R.id.subgroup_rules);
 		rbtnHow1 	= (RadioButton) findViewById(R.id.subgroup_option_how_highlight1);
 		rbtnHow2 	= (RadioButton) findViewById(R.id.subgroup_option_how_highlight2);
 		rbtnWhat1 	= (RadioButton) findViewById(R.id.subgroup_option_what_highlight1);
@@ -112,6 +121,44 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		subgroupProblems = groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getItems();
 		listAdapter = new SubgroupProblemsAdapter(this, R.layout.row_subgroup_details, subgroupProblems);
 		setListAdapter(listAdapter);
+		
+		listPopupWindow = new ColorListPopupWindow(SubgroupDetails.this);
+
+		listPopupWindow.setAdapter(new ColorListAdapter(this,
+				R.layout.color_presents_row, colours));
+	    listPopupWindow.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				listPopupWindow.dismiss();
+				if (listPopupWindow.getParentListPosition()<0){
+					defaultColour = Integer.parseInt(colours.get(arg2), 16)+0xFF000000;
+					listPopupWindow.getAnchorView().setBackgroundColor(defaultColour);
+					for (AnnotationItem ai : groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getItems()){
+						ai.setDefaultColour(Integer.toHexString(defaultColour).substring(2));
+						groupedRules.setColour(groupId, subgroupId, defaultColour);
+					}
+				}
+				else{
+					AnnotationItem ai = groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).
+							getItems().get(listPopupWindow.getParentListPosition());
+					ai.setDefaultColour(colours.get(arg2));
+					groupedRules.getPresentationRulesAdapter().setHighlightingColor(ai.getCategory(), ai.getIndex(), Integer.parseInt(colours.get(arg2), 16)+0xFF000000);
+				}
+				listAdapter.notifyDataSetChanged();
+			}
+		});
+	    		
+		colorBox.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+	        	listPopupWindow.setParentListPosition(-1);
+	        	listPopupWindow.setAnchorView(colorBox);
+	        	listPopupWindow.setModal(true);
+	        	listPopupWindow.setWidth(70);
+	            //listPopupWindow.setHorizontalOffset(colorBox.getWidth());
+	            listPopupWindow.show();
+			}
+		});
 	}
 	
 	private int currentRule(){
@@ -182,7 +229,9 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		break;
 		
 	case R.id.subgroup_btn_ok:
-		if (groupedRules.getTotalNumberOfActiveRules()<6){
+		if (groupedRules.getTotalNumberOfActiveRules()<90){
+			if (groupedRules.getTotalNumberOfActiveColours() > 5)
+				Toast.makeText(getApplicationContext(), R.string.warning_on_colours_number, Toast.LENGTH_LONG).show();
 			groupedRules.setPresentationStyle(groupId, subgroupId,currentRule());
 			groupedRules.getPresentationRulesAdapter().saveModule();
 			onBackPressed();
@@ -198,7 +247,6 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		
 		}
 	};
-	
 	
 	public class SubgroupProblemsAdapter extends ArrayAdapter<AnnotationItem> {
 
@@ -219,7 +267,8 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 	        final AnnotationItem item = getItem(position);
 	        if (item!= null) {
 	            TextView itemView = (TextView) view.findViewById(R.id.label_problem_description);
-	            ImageView activeColorView = (ImageView) view.findViewById(R.id.subgrgoup_active_color);
+	            final int listPosition = position;
+	            final ImageView activeColorView = (ImageView) view.findViewById(R.id.subgrgoup_active_color);
 	            final ToggleButton isEnabled = (ToggleButton) view.findViewById(R.id.enable_radio);
 
 	            if (itemView != null) {
@@ -239,19 +288,12 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 					
 					@Override
 					public void onClick(View arg0) {
-						ColorPickerDialog dialog = new ColorPickerDialog(context, (Integer.parseInt(item.getDefaultColourHEX(), 16)+0xFF000000), new ColorPickerListener() {
-							@Override
-							public void onOk(ColorPickerDialog dialog, int color) {
-								item.setDefaultColour(Integer.toHexString(color).substring(2));
-								groupedRules.getPresentationRulesAdapter().
-									setHighlightingColor(item.getCategory(), item.getIndex(), color);
-								listAdapter.notifyDataSetChanged();
-							}							
-							@Override
-							public void onCancel(ColorPickerDialog dialog) {}
-						});
-						dialog.show();
-						
+			        	listPopupWindow.setParentListPosition(listPosition);
+			        	listPopupWindow.setAnchorView(activeColorView);
+			        	listPopupWindow.setModal(true);
+			        	listPopupWindow.setWidth(70);
+			            //listPopupWindow.setHorizontalOffset(colorBox.getWidth());
+			            listPopupWindow.show();
 					}
 				});
 	            isEnabled.setOnClickListener(new OnClickListener() {
@@ -273,4 +315,40 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 	        return view;
 	    }
 	}
+	
+	class ColorListPopupWindow extends ListPopupWindow{
+		private int parentListPosition;
+		public ColorListPopupWindow(Context context) {
+			super(context);
+			this.parentListPosition = -1;
+		}
+		public int getParentListPosition() {
+			return parentListPosition;
+		}
+		public void setParentListPosition(int parentListPosition) {
+			this.parentListPosition = parentListPosition;
+		}
+	}
+	
+	public class ColorListAdapter extends ArrayAdapter<String> {
+	    private Context context;
+
+	    public ColorListAdapter(Context context, int textViewResourceId, ArrayList<String> items) {
+	        super(context, textViewResourceId, items);
+	        this.context = context;
+	    }
+
+	    public View getView(int position, View convertView, ViewGroup parent) {
+	        View view = convertView;
+	        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	        view = inflater.inflate(R.layout.color_presents_row, null);
+
+	        final String item = getItem(position);
+
+			defaultColour = Integer.parseInt(item, 16)+0xFF000000;
+			view.setBackgroundColor(defaultColour);
+	        return view;
+	    }
+	}
+	
 }

@@ -79,14 +79,49 @@
 	<LinearLayout 
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:orientation="horizontal"
+		android:orientation="vertical"
 		android:layout_marginTop="@dimen/spacer_8"
 		android:gravity="center">	
+	
+		<View
+		    android:layout_width="fill_parent"
+		    android:layout_height="2dp"
+		    android:background="@android:color/darker_gray"/>
+		
+		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+	        android:textSize="24sp"
+	     	android:paddingLeft="20dp"
+			android:text="@string/clear" />
+		
+		<Button
+			android:id="@+id/clear_rules"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+       		android:gravity="center_vertical|left"
+     		android:paddingLeft="20dp"
+	        android:background="#ccc"
+			android:text="@string/clear_rules" />
+	
+		<View
+		    android:layout_width="fill_parent"
+		    android:layout_height="2dp"
+		    android:background="@android:color/darker_gray"/>
+		
+		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+	        android:textSize="24sp"
+	     	android:paddingLeft="20dp"
+			android:text="@string/advanced" />
+			
 		<Button
 			android:id="@+id/show_advanced"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
-       		android:gravity="center"
+       		android:gravity="center_vertical|left"
+     		android:paddingLeft="20dp"
 	        android:background="#ccc"
 			android:text="@string/advanced_rules" />
 	

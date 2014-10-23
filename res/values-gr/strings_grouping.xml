@@ -2,14 +2,21 @@
 <resources>
 
     <string name="title_activity_grouping">Επιλογές Χρωματισμού</string>
-    <string name="advanced_rules">Όλοι οι Κανόνες (Για προχωρημένους)</string>
+    <string name="advanced">Για προχωρημένους</string>
+    <string name="advanced_rules">Όλοι οι Κανόνες</string>
+    <string name="clear_all_question">Θέλετε να απενεργοποιηθούν όλοι οι κανόνες;</string>
+    <string name="yes">Ναι</string>
+    <string name="no">´Οχι</string>
+    <string name="clear">Καθαρισμός</string>
+    <string name="clear_rules">Καθαρισμός κανόνων</string>
     <string name="typical_highlights">Βασικοί Κανόνες</string>
     <string name="personal_recomendations">Προτάσεις για χρωματισμό κειμένου</string>
     <string name="highlight_settings">Ρυθμίσεις Χρωματισμού</string>
     <string name="presentation_settings">Ρυθμίσεις Παρουσίασης</string>
     <string name="text_rules">Κανόνες Κειμένου</string>
     <string name="apply_to_all_text">Εφαρμογή σε όλα</string>
-    <string name="error_on_rules_number">Οι ενεργοί κανόνες δεν πρέπει να ξεπερνούν τους 5!</string>
+    <string name="warning_on_colours_number">Προσοχή! Έχουν επιλεγεί περισσότερα από 5 χρώματα. Αυτό μπορεί να σας δυσκολέψει στο διάβασμα.</string>
+    <string name="error_on_rules_number">Οι ενεργοί κανόνες δεν πρέπει να ξεπερνούν τους 90!</string>
     <string name="no_suggestions">Δεν υπάρχουν προτάσεις</string>
     <string name="sublists">υποκατηγορίες</string>
     <string name="activated_rules">ενεργοί κανόνες</string>

@@ -2,14 +2,21 @@
 <resources>
 
     <string name="title_activity_grouping">Choose what to Highlight</string>
-    <string name="advanced_rules">All Highlights (Advanced)</string>
+    <string name="advanced">Advanced</string>
+    <string name="advanced_rules">All Highlights</string>
+    <string name="clear_all_question">Are you sure?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="clear">Clear All</string>
+    <string name="clear_rules">Clear Highlighting Rules</string>
     <string name="typical_highlights">Typical Highlights</string>
     <string name="personal_recomendations">Personal Recomendations</string>
     <string name="highlight_settings">Highlight Settings</string>
     <string name="presentation_settings">Presentation Settings</string>
     <string name="text_rules">Text Rules</string>
     <string name="apply_to_all_text">Apply to all</string>
-    <string name="error_on_rules_number">The total number of active rules should be less than 5!</string>
+    <string name="warning_on_colours_number">Warning! You are using more than 5 colours. This can be confusing and colours may repeat.</string>
+    <string name="error_on_rules_number">The total number of active rules should be less than 90!</string>
     <string name="no_suggestions">No Suggestions</string>
     <string name="sublists">sublists</string>
     <string name="activated_rules">active rules</string>

@@ -27,12 +27,12 @@
           "items": [
             {
               "category": 0, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 3
             }, 
             {
               "category": 0, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 4
             }
           ], 
@@ -42,12 +42,12 @@
           "items": [
             {
               "category": 0, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 5
             }, 
             {
               "category": 0, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 6
             }
           ], 
@@ -57,17 +57,17 @@
           "items": [
             {
               "category": 0, 
-              "defaultColourHEX": "8A2BE2", 
+              "defaultColourHEX": "CCFB5D", 
               "index": 7
             }, 
             {
               "category": 0, 
-              "defaultColourHEX": "8A2BE2", 
+              "defaultColourHEX": "CCFB5D", 
               "index": 8
             }, 
             {
               "category": 0, 
-              "defaultColourHEX": "8A2BE2", 
+              "defaultColourHEX": "CCFB5D", 
               "index": 9
             }
           ], 
@@ -77,12 +77,12 @@
           "items": [
             {
               "category": 0, 
-              "defaultColourHEX": "DC143C", 
+              "defaultColourHEX": "FFF380", 
               "index": 10
             }, 
             {
               "category": 0, 
-              "defaultColourHEX": "DC143C", 
+              "defaultColourHEX": "FFF380", 
               "index": 11
             }
           ], 
@@ -97,12 +97,12 @@
           "items": [
             {
               "category": 1, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 0
             }, 
             {
               "category": 1, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 1
             }
           ], 
@@ -112,17 +112,17 @@
           "items": [
             {
               "category": 1, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 2
             }, 
             {
               "category": 1, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 3
             }, 
             {
               "category": 1, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 4
             }
           ], 
@@ -137,42 +137,42 @@
           "items": [
             {
               "category": 2, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 0
             }, 
             {
               "category": 2, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 1
             }, 
             {
               "category": 2, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 2
             }, 
             {
               "category": 2, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 3
             }, 
             {
               "category": 2, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 4
             }, 
             {
               "category": 2, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 5
             }, 
             {
               "category": 2, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 6
             }, 
             {
               "category": 2, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 7
             }
           ], 
@@ -187,27 +187,27 @@
           "items": [
             {
               "category": 3, 
-              "defaultColourHEX": "8A2BE2", 
+              "defaultColourHEX": "CCFB5D", 
               "index": 0
             }, 
             {
               "category": 3, 
-              "defaultColourHEX": "8A2BE2", 
+              "defaultColourHEX": "CCFB5D", 
               "index": 1
             }, 
             {
               "category": 3, 
-              "defaultColourHEX": "8A2BE2", 
+              "defaultColourHEX": "CCFB5D", 
               "index": 2
             }, 
             {
               "category": 3, 
-              "defaultColourHEX": "8A2BE2", 
+              "defaultColourHEX": "CCFB5D", 
               "index": 3
             }, 
             {
               "category": 3, 
-              "defaultColourHEX": "8A2BE2", 
+              "defaultColourHEX": "CCFB5D", 
               "index": 4
             }
           ], 
@@ -217,27 +217,27 @@
           "items": [
             {
               "category": 3, 
-              "defaultColourHEX": "DC143C", 
+              "defaultColourHEX": "FFF380", 
               "index": 5
             }, 
             {
               "category": 3, 
-              "defaultColourHEX": "DC143C", 
+              "defaultColourHEX": "FFF380", 
               "index": 6
             }, 
             {
               "category": 3, 
-              "defaultColourHEX": "DC143C", 
+              "defaultColourHEX": "FFF380", 
               "index": 7
             }, 
             {
               "category": 3, 
-              "defaultColourHEX": "DC143C", 
+              "defaultColourHEX": "FFF380", 
               "index": 8
             }, 
             {
               "category": 3, 
-              "defaultColourHEX": "DC143C", 
+              "defaultColourHEX": "FFF380", 
               "index": 9
             }
           ], 
@@ -352,22 +352,22 @@
           "items": [
             {
               "category": 4, 
-              "defaultColourHEX": "DC143C", 
+              "defaultColourHEX": "FFF380", 
               "index": 0
             }, 
             {
               "category": 4, 
-              "defaultColourHEX": "DC143C", 
+              "defaultColourHEX": "FFF380", 
               "index": 1
             }, 
             {
               "category": 4, 
-              "defaultColourHEX": "DC143C", 
+              "defaultColourHEX": "FFF380", 
               "index": 2
             }, 
             {
               "category": 4, 
-              "defaultColourHEX": "DC143C", 
+              "defaultColourHEX": "FFF380", 
               "index": 3
             }
           ], 
@@ -442,17 +442,17 @@
           "items": [
             {
               "category": 4, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 13
             }, 
             {
               "category": 4, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 14
             }, 
             {
               "category": 4, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 15
             }
           ], 
@@ -462,12 +462,12 @@
           "items": [
             {
               "category": 4, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 16
             }, 
             {
               "category": 4, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 17
             }
           ], 
@@ -477,12 +477,12 @@
           "items": [
             {
               "category": 4, 
-              "defaultColourHEX": "8A2BE2", 
+              "defaultColourHEX": "CCFB5D", 
               "index": 18
             }, 
             {
               "category": 4, 
-              "defaultColourHEX": "8A2BE2", 
+              "defaultColourHEX": "CCFB5D", 
               "index": 19
             }
           ], 
@@ -602,12 +602,12 @@
           "items": [
             {
               "category": 6, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 8
             }, 
             {
               "category": 6, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 9
             }
           ], 
@@ -617,17 +617,17 @@
           "items": [
             {
               "category": 6, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 10
             }, 
             {
               "category": 6, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 11
             }, 
             {
               "category": 6, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 12
             }
           ], 
@@ -682,22 +682,22 @@
           "items": [
             {
               "category": 7, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 6
             }, 
             {
               "category": 7, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 7
             }, 
             {
               "category": 7, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 8
             }, 
             {
               "category": 7, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 9
             }
           ], 
@@ -707,12 +707,12 @@
           "items": [
             {
               "category": 7, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 10
             }, 
             {
               "category": 7, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 11
             }
           ], 
@@ -722,12 +722,12 @@
           "items": [
             {
               "category": 7, 
-              "defaultColourHEX": "8A2BE2", 
+              "defaultColourHEX": "CCFB5D", 
               "index": 12
             }, 
             {
               "category": 7, 
-              "defaultColourHEX": "8A2BE2", 
+              "defaultColourHEX": "CCFB5D", 
               "index": 13
             }
           ], 
@@ -737,12 +737,12 @@
           "items": [
             {
               "category": 7, 
-              "defaultColourHEX": "DC143C", 
+              "defaultColourHEX": "FFF380", 
               "index": 14
             }, 
             {
               "category": 7, 
-              "defaultColourHEX": "DC143C", 
+              "defaultColourHEX": "FFF380", 
               "index": 15
             }
           ], 
@@ -782,22 +782,22 @@
           "items": [
             {
               "category": 8, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 2
             }, 
             {
               "category": 8, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 3
             }, 
             {
               "category": 8, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 4
             }, 
             {
               "category": 8, 
-              "defaultColourHEX": "20B2AA", 
+              "defaultColourHEX": "ADD8E6", 
               "index": 5
             }
           ], 
@@ -807,12 +807,12 @@
           "items": [
             {
               "category": 8, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 6
             }, 
             {
               "category": 8, 
-              "defaultColourHEX": "696969", 
+              "defaultColourHEX": "C0C0C0", 
               "index": 7
             }
           ], 
@@ -822,12 +822,12 @@
           "items": [
             {
               "category": 8, 
-              "defaultColourHEX": "8A2BE2", 
+              "defaultColourHEX": "CCFB5D", 
               "index": 8
             }, 
             {
               "category": 8, 
-              "defaultColourHEX": "8A2BE2", 
+              "defaultColourHEX": "CCFB5D", 
               "index": 9
             }
           ], 

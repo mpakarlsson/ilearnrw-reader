@@ -180,6 +180,18 @@ public class GroupedRulesFacade {
 		}
 		return cnt;
 	}
+	
+	public int getTotalNumberOfActiveColours(){
+		Rule rules[][] = presentationRulesAdapter.getPresentationRules().getRulesTable();
+		ArrayList<Integer> colours = new ArrayList<Integer>();
+		for (int i=0; i<rules.length; i++){
+			for (int j=0;j<rules[i].length; j++){
+				if (rules[i][j].getActivated() && !colours.contains(rules[i][j].getHighlightingColor()))
+					colours.add(rules[i][j].getHighlightingColor());
+			}
+		}
+		return colours.size();
+	}
 
 	public ArrayList<Group> getGroupedProblems() {
 		return problemGroups.getGroupedProblems();
