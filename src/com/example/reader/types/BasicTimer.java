@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import android.os.Environment;
@@ -14,48 +16,42 @@ import android.os.Environment;
 public class BasicTimer {
 
 	long start, end, elapsedTime;
-	boolean isStarted;
 	
-	
-	String root, filename;
+	String root, filename, sectionName, timestamp;
 	File timerDir, file;
 	public BasicTimer(String filename){
-		
-		isStarted = false;
-		
-		//long start = System.nanoTime(); 
-		// method()
-		//long end = System.nanoTime(); 
-		//long elapsedTime = end - start;
-		//TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
-		
 		root = Environment.getExternalStorageDirectory().toString();
 		timerDir = new File(root + "/ilearn_timer");
 		timerDir.mkdirs();
 	
-		this.filename = filename;
+		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date()); 
+		String[] parts = filename.split("\\.");
+		
+		this.filename = parts[0] + "_" + currentDate + "." + parts[1];
 	}
 	
-	public void start(){
-		if(isStarted){
-			stop();
-		}
-		
-		isStarted = true;
+	public void start(String sectionName){	
+		Date ts = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss");
+		timestamp = sdf.format(ts);		
+		this.sectionName = sectionName;
 		start = System.nanoTime();
 	}
 	
-	public void stop(){
-		end = System.nanoTime();
-		isStarted = false;
-		
+	public void stop(boolean manualSave){
+		end = System.nanoTime();		
 		elapsedTime = end - start;
 		
-		ArrayList<Long> out = new ArrayList<Long>(Arrays.asList(start, end, elapsedTime));
-		saveFile(out, true);
+		if(!manualSave)
+			saveFile(new ArrayList<Long>(Arrays.asList(start, end, elapsedTime)), true);
+		
 	}
 	
-	public void saveFile(ArrayList<Long> out, boolean isAppending){
+	public void save(boolean append){
+		saveFile(new ArrayList<Long>(Arrays.asList(start, end, elapsedTime)), append);
+	}
+	
+	private void saveFile(ArrayList<Long> out, boolean isAppending){
 		file = new File(timerDir, filename);
 		
 		if(!isAppending)
@@ -65,14 +61,16 @@ public class BasicTimer {
 		BufferedWriter writer =  null;
 		try {
 			writer= new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, isAppending), "UTF-8"));
+			writer.write("--- Start:"+sectionName+"(" + timestamp + ") ---\n");
 			for(int i=0; i<out.size(); i++){
 				Long value = out.get(i);
 
-				if(value%3==0)
-					writer.write(TimeUnit.SECONDS.convert(value, TimeUnit.NANOSECONDS)+"\n");
+				if((i+1)%3==0)
+					writer.write(TimeUnit.MILLISECONDS.convert(value, TimeUnit.NANOSECONDS)+"ms\n");
 				else
 					writer.write(value+"\n");
 			}
+			writer.write("---\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
