@@ -1,6 +1,5 @@
 package com.example.reader;
 
-import ilearnrw.annotation.UserBasedAnnotatedWordsSet;
 import ilearnrw.textadaptation.TextAnnotationModule;
 import ilearnrw.textclassification.Word;
 import ilearnrw.user.problems.ProblemDefinition;
@@ -17,11 +16,11 @@ import com.example.reader.interfaces.OnProfileFetched;
 import com.example.reader.tasks.ProfileTask;
 import com.example.reader.types.ColorPickerDialog;
 import com.example.reader.types.BasicListAdapter;
-import com.example.reader.types.ProfileUser;
+import com.example.reader.types.singleton.AnnotatedWordsSet;
+import com.example.reader.types.singleton.ProfileUser;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.HttpHelper;
-import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -268,7 +267,7 @@ public class PresentationModule
 		}
 
 		txModule.setInputHTMLFile(html);
-		txModule.setJSonObject(new Gson().fromJson(json, UserBasedAnnotatedWordsSet.class));
+		txModule.setJSonObject(AnnotatedWordsSet.getInstance(this.getApplicationContext(), json).getUserBasedAnnotatedWordsSet());
 		
 		txModule.annotateText();
 		return txModule.getAnnotatedHTMLFile();

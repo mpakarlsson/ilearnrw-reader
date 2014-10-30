@@ -1,4 +1,4 @@
-package com.example.reader.types;
+package com.example.reader.types.singleton;
 
 import android.content.Context;
 import android.content.SharedPreferences;

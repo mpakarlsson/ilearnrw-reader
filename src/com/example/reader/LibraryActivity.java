@@ -12,7 +12,7 @@ import com.example.reader.popups.RenameActivity;
 import com.example.reader.types.LibraryAdapter;
 import com.example.reader.types.LibraryItem;
 import com.example.reader.types.Pair;
-import com.example.reader.types.ProfileUser;
+import com.example.reader.types.singleton.ProfileUser;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.Helper;

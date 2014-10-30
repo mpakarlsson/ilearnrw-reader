@@ -1,6 +1,5 @@
 package com.example.reader.types;
 
-import ilearnrw.annotation.UserBasedAnnotatedWordsSet;
 import ilearnrw.textadaptation.TextAnnotationModule;
 import ilearnrw.textclassification.Word;
 import ilearnrw.user.profile.UserProfile;
@@ -14,8 +13,9 @@ import java.util.Set;
 
 import com.example.reader.R;
 import com.example.reader.ReaderActivity;
+import com.example.reader.types.singleton.AnnotatedWordsSet;
+import com.example.reader.types.singleton.ProfileUser;
 import com.example.reader.utils.FileHelper;
-import com.google.gson.Gson;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -244,7 +244,7 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 
 		
 		txModule.setInputHTMLFile(html);
-		txModule.setJSonObject(new Gson().fromJson(json, UserBasedAnnotatedWordsSet.class));
+		txModule.setJSonObject(AnnotatedWordsSet.getInstance(getContext().getApplicationContext(), json).getUserBasedAnnotatedWordsSet());
 		
 		txModule.annotateText();
 		return txModule.getAnnotatedHTMLFile();

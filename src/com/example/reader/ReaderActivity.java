@@ -19,9 +19,9 @@ import com.example.reader.popups.SearchActivity;
 import com.example.reader.popups.WordActivity;
 import com.example.reader.texttospeech.TextToSpeechIdDriven;
 import com.example.reader.types.Pair;
+import com.example.reader.types.singleton.AnnotatedWordsSet;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.Helper;
-import com.google.gson.Gson;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -183,7 +183,7 @@ public class ReaderActivity
 		cleanHtml			= libBundle.getString("cleanHtml");
 		bundleJSON			= libBundle.getString("json");
 		libraryTitle		= libBundle.getString("title");
-		annotationData		= new Gson().fromJson(bundleJSON, UserBasedAnnotatedWordsSet.class);
+		annotationData		= AnnotatedWordsSet.getInstance(this.getApplicationContext(), bundleJSON).getUserBasedAnnotatedWordsSet();
 		trickyWords			= (ArrayList<Word>) libBundle.get("trickyWords");
 		
 		spEditor 	= sp.edit();

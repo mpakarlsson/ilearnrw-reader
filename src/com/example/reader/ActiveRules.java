@@ -7,7 +7,7 @@ import ilearnrw.user.profile.UserProfile;
 
 import java.util.ArrayList;
 
-import com.example.reader.types.ProfileUser;
+import com.example.reader.types.singleton.ProfileUser;
 import com.example.reader.utils.AppLocales;
 
 import android.os.Bundle;

@@ -6,7 +6,7 @@ import ilearnrw.utils.LanguageCode;
 import java.io.IOException;
 
 import com.example.reader.types.ExpandableListAdapter;
-import com.example.reader.types.ProfileUser;
+import com.example.reader.types.singleton.ProfileUser;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.groups.GroupedRulesFacade;
 import com.google.gson.Gson;

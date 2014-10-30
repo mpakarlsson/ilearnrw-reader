@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import com.example.reader.interfaces.ColorPickerListener;
 import com.example.reader.types.ColorPickerDialog;
-import com.example.reader.types.ProfileUser;
+import com.example.reader.types.singleton.ProfileUser;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.groups.AnnotationItem;
 import com.example.reader.utils.groups.GroupedRulesFacade;
