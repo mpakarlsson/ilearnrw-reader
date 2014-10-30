@@ -1,6 +1,7 @@
 package com.example.reader.popups;
 
 import ilearnrw.textclassification.Word;
+import ilearnrw.user.profile.UserProfile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import com.example.reader.ReaderActivity;
 import com.example.reader.interfaces.OnTextToSpeechComplete;
 import com.example.reader.texttospeech.TextToSpeechBase;
 import com.example.reader.types.WordPopupAdapter;
+import com.example.reader.types.singleton.ProfileUser;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -124,7 +126,12 @@ public class WordActivity
 				if(currSpan!=null)
 					spans.add(currSpan);
 				//currSpan = new SpannableString(strWord + " - Problem(" + datas.get(i-1) + "," + datas.get(i) + ") " + datas.get(i-2) + "\n");
-				currSpan = new SpannableString(strWord + "\n");
+				
+				int category = Integer.valueOf(datas.get(i-1));
+				int index = Integer.valueOf(datas.get(i));
+				
+				UserProfile p = ProfileUser.getInstance(this.getApplicationContext()).getProfile();
+				currSpan = new SpannableString(strWord + " - " + p.getUserProblems().getProblemDescription(category, index).getHumanReadableDescription() + "\n");
 				currSpan.setSpan(new BackgroundColorSpan(Color.YELLOW), start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 			}
 		}
