@@ -32,7 +32,6 @@ public class ColorSquare extends View {
 		super(context, attrs, defStyle);
 	}
 
-
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
@@ -59,5 +58,4 @@ public class ColorSquare extends View {
 		updateColor=true;
 		this.invalidate();
 	}
-	
 }

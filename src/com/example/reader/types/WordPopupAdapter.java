@@ -85,19 +85,16 @@ public class WordPopupAdapter extends ArrayAdapter<String>{
 			this.textSize = textSize;
 	}
 
-
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		return setupView(position, convertView, parent, colorRows);
 	}
-
 
 	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		return setupView(position, convertView, parent, colorRows);
 	}
 
-	
 	private View setupView(int position, View convertView, ViewGroup parent, boolean isColoring){
 		View view = convertView;
 		

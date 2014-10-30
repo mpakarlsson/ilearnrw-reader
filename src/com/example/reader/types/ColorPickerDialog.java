@@ -18,8 +18,6 @@ import com.example.reader.R;
 import com.example.reader.interfaces.ColorPickerListener;
 
 public class ColorPickerDialog  {
-
-	
 	public final AlertDialog dialog;
 	public final ColorPickerListener listener;
 	public final ColorSquare main;
@@ -226,7 +224,6 @@ public class ColorPickerDialog  {
 		target.setLayoutParams(params);
 	}
 	
-	
 	private int getColor(){
 		final int argb = Color.HSVToColor(currentColorHSV);
 		return alpha << 24 | (argb & 0x00ffffff);
@@ -281,5 +278,4 @@ public class ColorPickerDialog  {
 				);
 		alphaOverlay.setBackground(gd);
 	}
-	
 }

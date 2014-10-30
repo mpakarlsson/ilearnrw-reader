@@ -41,9 +41,6 @@ public class ColorPickerPreferenceWidget extends View{
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		
 		canvas.drawRect(strokeWidth, strokeWidth, rectSize, rectSize , paint);
 	}
-
-	
 }

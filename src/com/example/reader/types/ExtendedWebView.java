@@ -50,7 +50,6 @@ public class ExtendedWebView extends WebView  {
         return super.startActionModeForChild(this, actionModeCallback);
 	}
 
-	
 	private class CustomActionModeCallback implements ActionMode.Callback {
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -84,7 +83,6 @@ public class ExtendedWebView extends WebView  {
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			//clearFocus();
-			
 			if(selectActionModeCallback != null)
 				selectActionModeCallback.onDestroyActionMode(mode);
 			
@@ -107,7 +105,5 @@ public class ExtendedWebView extends WebView  {
 	public boolean onTouchEvent(MotionEvent event) {
 		detector.onTouchEvent(event);
 		return super.onTouchEvent(event);
-	}	
-	
-	
+	}
 }

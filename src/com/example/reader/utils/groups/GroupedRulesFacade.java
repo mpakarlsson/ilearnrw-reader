@@ -7,11 +7,8 @@ import android.content.SharedPreferences;
 
 import com.example.reader.types.PresentationRulesAdapter;
 
-import ilearnrw.textadaptation.PresentationRulesModule;
 import ilearnrw.textadaptation.Rule;
 import ilearnrw.user.problems.ProblemDefinition;
-import ilearnrw.user.problems.ProblemDefinitionIndex;
-import ilearnrw.user.problems.ProblemDescription;
 import ilearnrw.user.profile.UserProfile;
 
 public class GroupedRulesFacade {

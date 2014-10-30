@@ -22,8 +22,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.Toast;
-
 public class GroupsActivity extends Activity {
 	private SharedPreferences sp;
 	

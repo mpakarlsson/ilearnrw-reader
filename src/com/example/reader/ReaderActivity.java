@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 
-import com.example.reader.R.color;
 import com.example.reader.interfaces.OnTextToSpeechComplete;
 import com.example.reader.interfaces.TTSHighlightCallback;
 import com.example.reader.interfaces.TTSReadingCallback;

@@ -3,6 +3,7 @@ package com.example.reader.types;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Locale;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -46,7 +47,6 @@ public class LogEntry implements Serializable {
 		this.timestamp = timestamp;
 	}
 	
-
 	/**
 	 * We need the default constructor in order to serialize FROM json to this
 	 * object.
@@ -114,7 +114,7 @@ public class LogEntry implements Serializable {
 		if (tag == null)
 			return tag;
 		
-		return tag.toUpperCase();
+		return tag.toUpperCase(Locale.getDefault());
 	}
 
 	public String getValue() {
@@ -169,5 +169,4 @@ public class LogEntry implements Serializable {
 				+ ", duration=" + duration + ", level=" + level + ", mode="
 				+ mode + "]";
 	}
-
 }

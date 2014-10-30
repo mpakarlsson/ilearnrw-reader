@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.SectionIndexer;
 
 public class SideSelector extends View {
@@ -53,10 +52,8 @@ public class SideSelector extends View {
 		for(int i=0; i<sectionsArr.length; i++){
 			sections[i] = sectionsArr[i].toString();
 		}
-		
 		this.invalidate();
 	}
-	
 	
 	public boolean onTouchEvent(MotionEvent event){
 		super.onTouchEvent(event);

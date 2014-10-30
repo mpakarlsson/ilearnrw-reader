@@ -3,7 +3,6 @@ package com.example.reader.types;
 import ilearnrw.annotation.UserBasedAnnotatedWordsSet;
 import ilearnrw.textadaptation.TextAnnotationModule;
 import ilearnrw.textclassification.Word;
-import ilearnrw.user.problems.ProblemDefinitionIndex;
 import ilearnrw.user.profile.UserProfile;
 
 import java.io.File;
@@ -13,7 +12,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
 
-import com.example.reader.ActiveRules;
 import com.example.reader.R;
 import com.example.reader.ReaderActivity;
 import com.example.reader.utils.FileHelper;
@@ -78,7 +76,7 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 		ArrayList<String> sectionList = new ArrayList<String>(sectionLetters);
 		Collections.sort(sectionList);
 		sections = new String[sectionList.size()];
-		sectionList.toArray(sections);/**/
+		sectionList.toArray(sections);
 	}
 
 	@Override
@@ -91,7 +89,6 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 		
 		final LibraryItem item = objects.get(position);
 		if(item != null){
-			
 			final Pair<File> libItems = FileHelper.getFilesFromLibrary(getContext(), item.getName());
 			
 			TextView tv_item = (TextView) v.findViewById(R.id.library_item);

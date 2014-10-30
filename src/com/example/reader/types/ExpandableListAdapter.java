@@ -1,13 +1,11 @@
 package com.example.reader.types;
 
 import com.example.reader.R;
-import com.example.reader.R.string;
 import com.example.reader.utils.groups.Group;
 import com.example.reader.utils.groups.GroupedRulesFacade;
 import com.example.reader.utils.groups.Subgroup;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,5 +119,4 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
-    
 }

@@ -1,7 +1,5 @@
 package com.example.reader.utils;
 
-import ilearnrw.utils.LanguageCode;
-
 import java.util.Locale;
 
 import android.content.Context;

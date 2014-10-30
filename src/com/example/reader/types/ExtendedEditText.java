@@ -35,9 +35,4 @@ public class ExtendedEditText extends EditText {
 	    }
 	    return super.dispatchKeyEventPreIme(event);
 	}
-
-	
-
-	
-	
 }

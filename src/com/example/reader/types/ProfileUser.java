@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import ilearnrw.user.profile.UserProfile;
 
 public class ProfileUser{
-
 	
 	private static ProfileUser profile;
 	private static UserProfile profileData;
@@ -43,5 +42,4 @@ public class ProfileUser{
 	public UserProfile getProfile(){
 		return profileData;
 	}
-	
 }

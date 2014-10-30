@@ -69,9 +69,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		textValueIdentifier		= getAttributeStringValue(attrs, applicationns, "textValues", "");
 		
 		mIsStatusNumber	= Boolean.parseBoolean(getAttributeStringValue(attrs, applicationns, "statusNumber", "false"));
-		
-		
-		
+
 		try {
 			String newInterval = attrs.getAttributeValue(applicationns, "interval");
 			if(newInterval != null)
@@ -81,7 +79,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		}
 		
 	}
-	
+
 	private String getAttributeStringValue(AttributeSet attrs, String namespace, String name, String defaultValue){
 		
 		final String STR = "@string/";
@@ -95,7 +93,6 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 			final int id = res.getIdentifier(context.getPackageName() + ":" + value.substring(1), null, null);
 			value = context.getString(id);
 		}
-		
 		return value;
 	}	
 	
@@ -109,8 +106,6 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		return view;
 	}
 	
-	
-
 	@Override
 	protected void onBindView(View view) {
 		super.onBindView(view);
@@ -140,7 +135,6 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		} catch (Exception e) {
 			Log.e(TAG, "Error updating seekbar preference", e);
 		}
-		
 	}
 
 	@Override
@@ -161,10 +155,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		}
 		
 		mCurrent = newValue;
-		
 		updateStatusText();
-		
-		
 	}
 
 	private void updateStatusText(){
@@ -194,7 +185,6 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 					mStatusText.setText("Slower");
 				else if(diff>=1.0)
 					mStatusText.setText("Turtle");
-				
 			}			
 		}
 	}
@@ -249,11 +239,4 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 			mSeekBar.setEnabled(!disableDependent);
 		}
 	}
-	
-	
-	
-	
-	
-	
-
 }

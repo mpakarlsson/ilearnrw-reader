@@ -40,7 +40,6 @@ public class LogBasicExclusionStrategy implements ExclusionStrategy {
     				 return true;
     		 }
     	 }
-    	 
     	 return false;
      }
 }

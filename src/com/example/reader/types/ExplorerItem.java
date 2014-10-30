@@ -30,5 +30,4 @@ public class ExplorerItem {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
 }

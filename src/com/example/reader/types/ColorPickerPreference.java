@@ -12,7 +12,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class ColorPickerPreference extends Preference {
-	
 	//private static final String androidns = "http://schemas.android.com/apk/res/android";
 	//private static final String applicationns = "http://schemas.android.com/apk/res/com.example.reader";
 	
@@ -38,7 +37,6 @@ public class ColorPickerPreference extends Preference {
 	private void initPreference(Context context, AttributeSet attrs){
 		if(attrs != null)
 			setValuesFromXml(context, attrs);
-		
 		
 		setWidgetLayoutResource(R.layout.widget_preference_color_picker);
 		
@@ -147,7 +145,6 @@ public class ColorPickerPreference extends Preference {
 			public SavedState[] newArray(int size) {
 				return new SavedState[size];
 			}
-		};
-		
+		};	
 	}
 }
