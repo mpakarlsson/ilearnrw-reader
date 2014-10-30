@@ -1,7 +1,7 @@
 package com.example.reader.tasks;
 
+
 import java.util.ArrayList;
-import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 
