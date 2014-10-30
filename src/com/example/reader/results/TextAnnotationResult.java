@@ -11,12 +11,9 @@ public class TextAnnotationResult {
 	@SerializedName("html")
 	public String html;
 	
-	
 	@SerializedName("wordSet")
 	public UserBasedAnnotatedWordsSet wordSet;
 	
-	
 	@SerializedName("trickyWordsList")
 	public List<String> trickyWordsList;
-	
 }

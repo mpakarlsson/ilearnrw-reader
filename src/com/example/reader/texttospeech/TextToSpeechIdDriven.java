@@ -80,12 +80,7 @@ public class TextToSpeechIdDriven extends TextToSpeechBase {
 					}
  				}
 			});
-		} else {
-			// TODO: Should we handle devices older than VER: 4.0.3 - 4.0.4 
-			// Then we need to handle the speaking differently
-			//tts.setOnUtteranceCompletedListener(listener)
 		}
-		
 	}
 	
 	public void speak(String text, int position, boolean isFinal){
@@ -108,5 +103,4 @@ public class TextToSpeechIdDriven extends TextToSpeechBase {
 		params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "rehighlight");
 		tts.speak("", TextToSpeech.QUEUE_FLUSH, params);
 	}
-
 }

@@ -9,5 +9,4 @@ public class TokenResult {
 	
 	@SerializedName("refresh")
 	public String refreshToken;
-	
 }

@@ -26,7 +26,6 @@ public class SearchActivity extends Activity implements OnClickListener, OnEdito
 	public static ExtendedEditText search;
 	public static ImageButton ibtnSearch;
 	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,7 +55,6 @@ public class SearchActivity extends Activity implements OnClickListener, OnEdito
 		getWindowManager().updateViewLayout(v, wmlp);
 		
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-	
 	}
 
 	@Override
@@ -89,7 +87,6 @@ public class SearchActivity extends Activity implements OnClickListener, OnEdito
 			hideKeyboard();
 			return true;
 		}
-		
 		return false;
 	}
 
@@ -97,9 +94,4 @@ public class SearchActivity extends Activity implements OnClickListener, OnEdito
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(ibtnSearch.getWindowToken(), 0);
 	}
-	
-
-	
-	
-	
 }

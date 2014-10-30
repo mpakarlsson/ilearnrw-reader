@@ -45,8 +45,6 @@ public class TextToSpeechBase implements OnInitListener{
 		
 		Bundle bundle = data.getExtras();
 		
-		// These are available 'languages' not 'voices' and any third party app can do changes to these. 
-		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		chosenVoice = prefs.getString("ttsLanguage", Locale.US.toString());
 		
@@ -59,7 +57,6 @@ public class TextToSpeechBase implements OnInitListener{
 	
 	@Override
 	public void onInit(int status) {
-		
 		if(status == TextToSpeech.SUCCESS) {
 			int result = TextToSpeech.LANG_MISSING_DATA;
 			String language = "", country = "";
@@ -91,7 +88,6 @@ public class TextToSpeechBase implements OnInitListener{
 		listener.onTextToSpeechInitialized();
 	}
 	
-	
 	public void speak(String text){
 		if(text==null || text.isEmpty()){
 			Toast.makeText(context, "TTS: Speak: No data to speak", Toast.LENGTH_LONG).show();
@@ -110,7 +106,6 @@ public class TextToSpeechBase implements OnInitListener{
 			tts.setPitch(pitch);
 			return true;
 		}
-		
 		return false;
 	}
 
@@ -119,7 +114,6 @@ public class TextToSpeechBase implements OnInitListener{
 			tts.setSpeechRate(speechRate);
 			return true;
 		}
-		
 		return false;
 	}
 	
@@ -141,5 +135,4 @@ public class TextToSpeechBase implements OnInitListener{
 	public ArrayList<String> getTTSVoices(){
 		return ttsVoices;
 	}
-	
 }

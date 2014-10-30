@@ -1,6 +1,5 @@
 package com.example.reader.tasks;
 
-
 import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
@@ -108,10 +107,7 @@ public class
 			sp.edit().commit();
 
 			AppLocales.setLocales(context, result.language);
-			
-			
 			new ProfileTask(context, this, this).run(Integer.toString(result.id), sp.getString("authToken", ""));
-
 		} else {
 			Log.e(TAG, context.getString(R.string.login_failed_fetching) + " : " + fault);
 			Toast.makeText(context, context.getString(R.string.login_failed_fetching), Toast.LENGTH_SHORT).show();
@@ -120,7 +116,6 @@ public class
 
 	@Override
 	public void onProfileFetched(String profile) {
-		
 		new LogTask(SystemTags.APP_SESSION_START).run(username, "Logged in: " + username + ".");
 		sp.edit().putString("json_profile", profile).commit();
 		

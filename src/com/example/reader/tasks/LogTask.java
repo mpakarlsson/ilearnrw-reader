@@ -1,12 +1,8 @@
 package com.example.reader.tasks;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 
-import org.apache.http.HttpResponse;
-
-import com.example.reader.R;
 import com.example.reader.types.LogBasicExclusionStrategy;
 import com.example.reader.types.LogEntry;
 import com.example.reader.utils.HttpHelper;
@@ -73,8 +69,6 @@ public class LogTask
 		String data = json;
 		
 		HttpHelper.post("https://ssl.ilearnrw.eu/ilearnrw/logs", data);
-		//ArrayList<String> handledData = HttpHelper.handleResponse(response);
 		return "";
 	}
-	
 };

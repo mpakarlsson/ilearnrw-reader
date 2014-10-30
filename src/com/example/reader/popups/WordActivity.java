@@ -46,10 +46,7 @@ public class WordActivity
 	private SharedPreferences sp;
 	
 	private ArrayList<Word> trickyWords;
-	private Word currentWord;
 	private String strWord;
-	private int currentIndex;
-	
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -86,8 +83,6 @@ public class WordActivity
 		if(id==-1 || token.isEmpty()) {
 			throw new IllegalArgumentException("Missing id or token");
 		}
-		
-		setWord(strWord);
 		
 		ivSpeak.setOnClickListener(new OnClickListener() {
 			@Override
@@ -144,7 +139,6 @@ public class WordActivity
 		list.setAdapter(adapter);
 	}
 
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch(requestCode){
@@ -165,7 +159,6 @@ public class WordActivity
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 	}
 
-
 	@Override
 	public void onTextToSpeechInitialized() {
 		ivSpeak.setEnabled(true);
@@ -176,22 +169,4 @@ public class WordActivity
 		tts.destroy();
 		super.onDestroy();
 	}
-
-	private void setWord(String word){
-		currentWord 	= null;
-		currentIndex 	= -1;		
-		
-		for(int i=0; i<trickyWords.size(); i++){
-			Word w = trickyWords.get(i);
-			if(w==null)
-				continue;
-			
-			if(w.getWord().equals(word)){
-				currentWord 	= w;
-				currentIndex 	= i;
-				break;
-			}
-		}
-		
-	}	
 }

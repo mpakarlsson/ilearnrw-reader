@@ -18,7 +18,6 @@ import com.example.reader.results.TokenResult;
 import com.example.reader.utils.HttpHelper;
 import com.google.gson.Gson;
 
-
 public class 
 		LoginTask 
 	extends 
@@ -72,7 +71,6 @@ public class
 	protected TokenResult doInBackground(String... params) {
 		username = params[0];
 		HttpResponse response = HttpHelper.get("https://ssl.ilearnrw.eu/ilearnrw/user/auth?username="+username+"&pass="+params[1]);
-		
 		ArrayList<String> data = HttpHelper.handleResponse(response);
 		
 		if(data.size()==1){

@@ -64,8 +64,7 @@ public class AddToLibraryTask extends AsyncTask<String, Void, Pair<String>>{
 		wakeLock.acquire();
 		this.execute(params);
 	}
-	 
-	
+
 	@Override
 	protected void onPreExecute() {
 		dialog = new ProgressDialog(context);
@@ -99,7 +98,6 @@ public class AddToLibraryTask extends AsyncTask<String, Void, Pair<String>>{
 
 	@Override
 	protected Pair<String> doInBackground(String... params) {
-		
 		filename = params[4];
 		HttpResponse response = HttpHelper.post("https://ssl.ilearnrw.eu/ilearnrw/text/annotate?userId=" + params[1] + "&lc=" + params[2]+ "&token=" + params[3], params[0]);
 		ArrayList<String> data = HttpHelper.handleResponse(response);
@@ -116,12 +114,9 @@ public class AddToLibraryTask extends AsyncTask<String, Void, Pair<String>>{
 			}
 
 			return new Pair<String>(fault, null);
-		} else {
-			
+		} else
 			return new Pair<String>(data.get(0), data.get(1));
-		}
 	}
-	
 	
 	@Override
 	protected void onPostExecute(Pair<String> results) {
@@ -160,5 +155,4 @@ public class AddToLibraryTask extends AsyncTask<String, Void, Pair<String>>{
 			Toast.makeText(context, results.first() + " " + context.getString(R.string.annotation_failed), Toast.LENGTH_SHORT).show();
 		}
 	}
-	
 };

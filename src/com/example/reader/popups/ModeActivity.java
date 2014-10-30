@@ -44,8 +44,6 @@ public class ModeActivity extends Activity {
 		default:
 			break;
 		}
-		
-		
 	}
 
 	@Override
@@ -61,7 +59,6 @@ public class ModeActivity extends Activity {
 		
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 	}
-	
 
 	public void onRadioButtonClicked(View view) {
 		Intent intent=new Intent();
@@ -79,6 +76,4 @@ public class ModeActivity extends Activity {
 	    setResult(RESULT_OK, intent);
 	    finish();
 	}
-	
-	
 }
