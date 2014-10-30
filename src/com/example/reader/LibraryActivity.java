@@ -12,6 +12,7 @@ import com.example.reader.popups.RenameActivity;
 import com.example.reader.types.LibraryAdapter;
 import com.example.reader.types.LibraryItem;
 import com.example.reader.types.Pair;
+import com.example.reader.types.ProfileUser;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.Helper;
@@ -420,8 +421,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	}
 	
 	private void initProfile(String jsonProfile){
-		Gson gson = new Gson();
-		profile = gson.fromJson(jsonProfile, UserProfile.class);	
+		profile = ProfileUser.getInstance(this.getApplicationContext()).getProfile();
 	}
 	
 	private void updateListView(){

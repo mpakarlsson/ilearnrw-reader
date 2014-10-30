@@ -6,6 +6,7 @@ import ilearnrw.utils.LanguageCode;
 import java.io.IOException;
 
 import com.example.reader.types.ExpandableListAdapter;
+import com.example.reader.types.ProfileUser;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.groups.GroupedRulesFacade;
 import com.google.gson.Gson;
@@ -155,7 +156,7 @@ public class GroupsActivity extends Activity {
 	}
 	
 	private void initProfile(String jsonProfile){
-		profile = gson.fromJson(jsonProfile, UserProfile.class);				
+		profile = ProfileUser.getInstance(this.getApplicationContext()).getProfile();		
 	}
 	
 	public void confirmQuestion() {

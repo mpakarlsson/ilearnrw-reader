@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 import com.example.reader.interfaces.ColorPickerListener;
 import com.example.reader.types.ColorPickerDialog;
+import com.example.reader.types.ProfileUser;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.groups.AnnotationItem;
 import com.example.reader.utils.groups.GroupedRulesFacade;
-import com.google.gson.Gson;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -38,7 +38,6 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 	private SharedPreferences sp;
 
 	private ImageView colorBox;
-	private Gson gson;
 	private SubgroupProblemsAdapter listAdapter;
 	private ArrayList<AnnotationItem> subgroupProblems;
 	private GroupedRulesFacade groupedRules;
@@ -67,8 +66,6 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		AppLocales.setLocales(getApplicationContext(), sp.getString("language", "en"));
-				
-		gson = new Gson();
 
 		int id = sp.getInt("id",-1);
 		String token = sp.getString("authToken", "");		
@@ -80,7 +77,7 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		String jsonProfile = sp.getString("json_profile", "");
 		
 		if(!jsonProfile.isEmpty()){
-			profile = gson.fromJson(jsonProfile, UserProfile.class);
+			profile = ProfileUser.getInstance(this.getApplicationContext()).getProfile();
 		}
 		
 		try {

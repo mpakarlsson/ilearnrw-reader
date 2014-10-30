@@ -17,6 +17,7 @@ import com.example.reader.interfaces.OnProfileFetched;
 import com.example.reader.tasks.ProfileTask;
 import com.example.reader.types.ColorPickerDialog;
 import com.example.reader.types.BasicListAdapter;
+import com.example.reader.types.ProfileUser;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.HttpHelper;
@@ -66,8 +67,6 @@ public class PresentationModule
 	private String name = "";
 	private Boolean showGUI = false;
 	
-	private Gson gson;
-	
 	private ArrayList<Word> trickyWords;
 	
 	private SharedPreferences sp;
@@ -114,7 +113,6 @@ public class PresentationModule
 		name 			= bundle.getString("title", "");
 		showGUI 		= bundle.getBoolean("showGUI", false);
 		trickyWords		= new ArrayList<Word>();
-		gson			= new Gson();
 		
 		if(loadFiles){
 			fileHtml 		= (File)bundle.get("file");
@@ -211,7 +209,7 @@ public class PresentationModule
 	}
 	
 	private void initProfile(String jsonProfile){
-		profile = gson.fromJson(jsonProfile, UserProfile.class);
+		profile = ProfileUser.getInstance(this.getApplicationContext()).getProfile();
 		trickyWords = (ArrayList<Word>) profile.getUserProblems().getTrickyWords();		
 		
 		
@@ -246,7 +244,6 @@ public class PresentationModule
 		
 	}
 	private String fireTxModule(String html, String json){
-		Gson gson = new Gson();
 		if (txModule==null)
 			txModule = new TextAnnotationModule(html);
 		
@@ -271,7 +268,7 @@ public class PresentationModule
 		}
 
 		txModule.setInputHTMLFile(html);
-		txModule.setJSonObject(gson.fromJson(json, UserBasedAnnotatedWordsSet.class));
+		txModule.setJSonObject(new Gson().fromJson(json, UserBasedAnnotatedWordsSet.class));
 		
 		txModule.annotateText();
 		return txModule.getAnnotatedHTMLFile();

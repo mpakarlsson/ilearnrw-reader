@@ -215,12 +215,10 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 	}
 	
 	private void initProfile(String jsonProfile){
-		Gson gson = new Gson();
-		profile = gson.fromJson(jsonProfile, UserProfile.class);	
+		profile = ProfileUser.getInstance(getContext().getApplicationContext()).getProfile();	
 	}
 	
 	private String fireTxModule(String html, String json){
-		Gson gson = new Gson();
 		if (txModule==null)
 			txModule = new TextAnnotationModule(html);
 		
@@ -244,8 +242,9 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 			}
 		}
 
+		
 		txModule.setInputHTMLFile(html);
-		txModule.setJSonObject(gson.fromJson(json, UserBasedAnnotatedWordsSet.class));
+		txModule.setJSonObject(new Gson().fromJson(json, UserBasedAnnotatedWordsSet.class));
 		
 		txModule.annotateText();
 		return txModule.getAnnotatedHTMLFile();

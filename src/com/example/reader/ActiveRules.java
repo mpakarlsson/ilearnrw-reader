@@ -7,8 +7,8 @@ import ilearnrw.user.profile.UserProfile;
 
 import java.util.ArrayList;
 
+import com.example.reader.types.ProfileUser;
 import com.example.reader.utils.AppLocales;
-import com.google.gson.Gson;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -32,7 +32,6 @@ public class ActiveRules extends ListActivity {
 	private TextView selection;
 	private SharedPreferences sp;
 	
-	private Gson gson;
 	private ArrayList<Problem> activeProblems;
 	
 	private ProblemDefinition[] definitions;
@@ -52,8 +51,6 @@ public class ActiveRules extends ListActivity {
 		
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 		AppLocales.setLocales(getApplicationContext(), sp.getString("language", "en"));
-				
-		gson			= new Gson();
 		
 		activeProblems 	= new ArrayList<Problem>();
 		listAdapter = new ProblemDescriptionAdapter(this, R.layout.row_active_rules, activeProblems);
@@ -99,7 +96,7 @@ public class ActiveRules extends ListActivity {
 	}
 	
 	private void initProfile(String jsonProfile){
-		profile = gson.fromJson(jsonProfile, UserProfile.class);
+		profile = ProfileUser.getInstance(this.getApplicationContext()).getProfile();
 		
 		ProblemDefinitionIndex index = profile.getUserProblems().getProblems();
 		
