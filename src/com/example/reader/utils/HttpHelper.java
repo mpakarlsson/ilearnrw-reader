@@ -14,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
 
+import com.example.reader.R;
 import com.example.reader.results.TokenResult;
 import com.google.gson.Gson;
 
@@ -122,7 +123,7 @@ public class HttpHelper {
 	
 	public static boolean refreshTokens(Context context){
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		String refreshToken = preferences.getString("refreshToken", "");
+		String refreshToken = preferences.getString(context.getString(R.string.sp_refreshToken), "");
 		
 		if(refreshToken.isEmpty())
 			return false;
@@ -137,8 +138,8 @@ public class HttpHelper {
 			try {
 				TokenResult lr = new Gson().fromJson(refreshData.get(1), TokenResult.class);
 				SharedPreferences.Editor editor = preferences.edit();
-	    		editor.putString("authToken", lr.authToken);
-	    		editor.putString("refreshToken", lr.refreshToken);
+	    		editor.putString(context.getString(R.string.sp_authToken), lr.authToken);
+	    		editor.putString(context.getString(R.string.sp_refreshToken), lr.refreshToken);
 	    		editor.commit();
 	    		return true;
 			} catch (Exception e) {
@@ -151,5 +152,4 @@ public class HttpHelper {
 		
 		return false;
 	}
-	
 }

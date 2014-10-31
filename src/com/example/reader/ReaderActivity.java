@@ -175,7 +175,7 @@ public class ReaderActivity
 		
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
-		AppLocales.setLocales(getApplicationContext(), sp.getString("language", "en"));
+		AppLocales.setLocales(getApplicationContext(), sp.getString(getString(R.string.sp_user_language), "en"));
 		
 		Bundle libBundle 	= getIntent().getExtras();
 		
@@ -264,15 +264,15 @@ public class ReaderActivity
 		touchedId = "w0";
 		currSentPos 	= sp.getInt(CURR_SENT, 0);
 		currWordPos		= sp.getInt(CURR_WORD, 0);
-		isHighlighting 	=  sp.getBoolean("highlighting", true);
+		isHighlighting 	=  sp.getBoolean(getString(R.string.sp_highlighting), true);
 
 		highlightParts = new HashMap<String, Pair<String>>();
 		
-		int mode = sp.getInt("readerMode", -1);
+		int mode = sp.getInt(getString(R.string.sp_reader_mode), -1);
 		if(mode==-1){
 			reader_mode = ReaderMode.Listen;
 			mode = reader_mode.getValue();
-			spEditor.putInt("readerMode", mode).commit();
+			spEditor.putInt(getString(R.string.sp_reader_mode), mode).commit();
 			rlHighlightSpeed.setVisibility(View.GONE);
 			Toast.makeText(this, "No reader mode set. Listen mode is selected", Toast.LENGTH_LONG).show();
 		} else {
@@ -358,7 +358,7 @@ public class ReaderActivity
 					removeHighlight(sentenceIds.get(currSentPos));
 					break;
 				}
-				spEditor.putInt("readerMode", mode).commit();
+				spEditor.putInt(getString(R.string.sp_reader_mode), mode).commit();
 			}
 		}
 			break;
@@ -517,7 +517,7 @@ public class ReaderActivity
 		int direction = forward ? -1 : 1;
 		
 		if(reader_mode == ReaderMode.Listen){
-			spEditor.putBoolean("readerStepping", true).commit();
+			spEditor.putBoolean(getString(R.string.sp_tts_reader_is_stepping), true).commit();
 			tts.stop();
 			
 			if(isSpeaking){
@@ -1189,7 +1189,7 @@ public class ReaderActivity
 				public void run() {
 					removeSearches();
 					
-					spEditor.putBoolean("readerStepping", false).commit();
+					spEditor.putBoolean(getString(R.string.sp_tts_reader_is_stepping), false).commit();
 					
 
 					String curr = sentenceIds.get(currSentPos);
@@ -1255,7 +1255,7 @@ public class ReaderActivity
 						isHighlighting = false;
 					}
 					
-					spEditor.putBoolean("highlighting", isHighlighting).commit();
+					spEditor.putBoolean(getString(R.string.sp_highlighting), isHighlighting).commit();
 					
 					reader.loadUrl("javascript:updateCurrentPosition('"+wordIds.get(currWordPos)+"', 1);");
 				}

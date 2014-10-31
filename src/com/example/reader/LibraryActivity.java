@@ -16,7 +16,6 @@ import com.example.reader.types.singleton.ProfileUser;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.FileHelper;
 import com.example.reader.utils.Helper;
-import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -65,9 +64,9 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		setContentView(R.layout.activity_library);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		AppLocales.setLocales(getApplicationContext(), preferences.getString("language", "en"));
+		AppLocales.setLocales(getApplicationContext(), preferences.getString(getString(R.string.sp_user_language), "en"));
 		
-		String jsonProfile = preferences.getString("json_profile", "");
+		String jsonProfile = preferences.getString(getString(R.string.sp_user_profile_json), "");
 		
 		if(!jsonProfile.isEmpty()){
 			initProfile(jsonProfile);
@@ -75,7 +74,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		
 		libDir = getDir(getString(R.string.library_location), MODE_PRIVATE);
 		
-		boolean hiddenFiles = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("showAll", false);
+		boolean hiddenFiles = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.sp_show_all), false);
 		libraryFiles = (ArrayList<File>) FileHelper.getFileList(libDir, hiddenFiles);
 		
 		files = new ArrayList<LibraryItem>();
@@ -180,7 +179,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						
 						preferences.edit().remove(name).commit();
 						
-						if(preferences.getBoolean("showAll", false)){
+						if(preferences.getBoolean(getString(R.string.sp_show_all), false)){
 							for(int i=files.size()-1; i>=0; i--){
 								LibraryItem libItem = files.get(i);
 								Pair<String> fName = Helper.splitFileName(libItem.getName());
@@ -245,7 +244,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 					files.add(new LibraryItem(name, f));
 					exists = true;
 				}
-				boolean a = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("showAll", false);
+				boolean a = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.sp_show_all), false);
 				if(json!=null && a){
 					files.add(new LibraryItem(json.getName(), json));
 					exists = true;
@@ -295,7 +294,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						e.printStackTrace();
 					}
 				}
-				libraryFiles = (ArrayList<File>) FileHelper.getFileList(libDir, PreferenceManager.getDefaultSharedPreferences(this).getBoolean("showAll", false));
+				libraryFiles = (ArrayList<File>) FileHelper.getFileList(libDir, PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.sp_show_all), false));
 				files.clear();
 				for(File file : libraryFiles){
 					files.add(new LibraryItem(file.getName(), file));
@@ -405,6 +404,13 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			intent.putExtra("json", json);
 			intent.putExtra("title", libItems.first().getName());
 			intent.putExtra("trickyWords", (ArrayList<Word>) profile.getUserProblems().getTrickyWords());
+			
+			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+			
+			//TODO - latest book to change reloading of UBAWS
+			if(!sp.contains(getString(R.string.sp_latest_book)))
+				sp.edit().putString(getString(R.string.sp_latest_book), libItems.first().getName());
+			
 			this.startActivity(intent);
 		} else if(item.getName().endsWith(".json")){
 			new AlertDialog.Builder(this)

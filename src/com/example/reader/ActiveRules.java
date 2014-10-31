@@ -50,21 +50,21 @@ public class ActiveRules extends ListActivity {
 		setContentView(R.layout.active_rules_list);
 		
         sp = PreferenceManager.getDefaultSharedPreferences(this);
-		AppLocales.setLocales(getApplicationContext(), sp.getString("language", "en"));
+		AppLocales.setLocales(getApplicationContext(), sp.getString(getString(R.string.sp_user_language), "en"));
 		
 		activeProblems 	= new ArrayList<Problem>();
 		listAdapter = new ProblemDescriptionAdapter(this, R.layout.row_active_rules, activeProblems);
 		setListAdapter(listAdapter);
 
-		int id = sp.getInt("id",-1);
-		String token = sp.getString("authToken", "");		
+		int id = sp.getInt(getString(R.string.sp_user_id),-1);
+		String token = sp.getString(getString(R.string.sp_authToken), "");		
 		
 		if(id==-1 || token.isEmpty()) {
 			//finished(); // If you don't have an id something is terribly wrong
 			throw new IllegalArgumentException("Missing id or token");
 		}
 				
-		String jsonProfile = sp.getString("json_profile", "");
+		String jsonProfile = sp.getString(getString(R.string.sp_user_profile_json), "");
 		
 		if(!jsonProfile.isEmpty()){
 			initProfile(jsonProfile);
@@ -149,7 +149,7 @@ public class ActiveRules extends ListActivity {
 			            alert.setMessage(getResources().getString(R.string.deactivate_rule));
 			            alert.setPositiveButton(R.string.confirm_btn_text, new DialogInterface.OnClickListener() {
 			            	public void onClick(DialogInterface dialog, int id) {
-			            		sp.edit().putBoolean(sp.getInt("id", 0)+"pm_enabled_" + item.category + "_" + item.index, false).commit();
+			            		sp.edit().putBoolean(sp.getInt(getString(R.string.sp_user_id), 0)+"pm_enabled_" + item.category + "_" + item.index, false).commit();
 			            		updateData();
 			       			}
 			            });
@@ -166,7 +166,7 @@ public class ActiveRules extends ListActivity {
 	            if (itemView != null) {
 	                itemView.setText(String.format(getResources().getString(R.string.active_problem_description)+" %s", item.description));
 	                String rule = getResources().getString(R.string.problem_1);
-	                switch (sp.getInt(sp.getInt("id", 0)+"pm_rule_"+item.category+"_"+item.index, DEFAULT_RULE)){
+	                switch (sp.getInt(sp.getInt(getString(R.string.sp_user_id), 0)+"pm_rule_"+item.category+"_"+item.index, DEFAULT_RULE)){
 	                case 1:
 	                	rule = getResources().getString(R.string.problem_1);
 	                	break;
@@ -182,7 +182,7 @@ public class ActiveRules extends ListActivity {
 	                	
 	                }
 	                activeRuleView.setText(getResources().getString(R.string.active_problem_rule)+" "+rule);
-	                activeColorView.setBackgroundColor(sp.getInt(sp.getInt("id", 0)+"pm_color_"+item.category+"_"+item.index, DEFAULT_COLOR));
+	                activeColorView.setBackgroundColor(sp.getInt(sp.getInt(getString(R.string.sp_user_id), 0)+"pm_color_"+item.category+"_"+item.index, DEFAULT_COLOR));
 	            }
 	         }
 
@@ -194,9 +194,10 @@ public class ActiveRules extends ListActivity {
 		activeProblems.clear();
 		for (int i = 0; i < definitions.length; i++){
 			for (int j = 0; j < descriptions[i].length; j++){
-				int color 			= sp.getInt(sp.getInt("id", 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
-				int rule 			= sp.getInt(sp.getInt("id", 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
-				boolean isChecked 	= sp.getBoolean(sp.getInt("id", 0)+"pm_enabled_"+i+"_"+j, false);
+				String id = getString(R.string.sp_user_id);
+				int color 			= sp.getInt(sp.getInt(id, 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
+				int rule 			= sp.getInt(sp.getInt(id, 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
+				boolean isChecked 	= sp.getBoolean(sp.getInt(id, 0)+"pm_enabled_"+i+"_"+j, false);
 				if (isChecked){
 					String text = "";
 					for (int k=0; k<descriptions[i][j].getDescriptions().length; k++)

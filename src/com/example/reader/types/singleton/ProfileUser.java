@@ -3,6 +3,8 @@ package com.example.reader.types.singleton;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import com.example.reader.R;
 import com.google.gson.Gson;
 
 import ilearnrw.user.profile.UserProfile;
@@ -28,7 +30,7 @@ public class ProfileUser{
 		if(sp == null)
 			sp = PreferenceManager.getDefaultSharedPreferences(context);
 		
-		json = sp.getString("json_profile", "");
+		json = sp.getString(c.getString(R.string.sp_user_profile_json), "");
 		
 		if(json.isEmpty())
 			return null;
@@ -41,5 +43,13 @@ public class ProfileUser{
 	
 	public UserProfile getProfile(){
 		return profileData;
+	}
+	
+	public void nullProfile(){
+		profile = null;
+		profileData = null;
+		json = null;
+		context = null;
+		sp = null;
 	}
 }

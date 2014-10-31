@@ -15,10 +15,8 @@ import com.example.reader.types.singleton.ProfileUser;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -44,8 +42,6 @@ public class WordActivity
 	private ListView list;
 	private Button btnOk;
 	private TextToSpeechBase tts;
-	
-	private SharedPreferences sp;
 	
 	private ArrayList<Word> trickyWords;
 	private String strWord;
@@ -78,13 +74,6 @@ public class WordActivity
 		ArrayList<Integer> problems = b.getIntegerArrayList("problems");
 		ArrayList<String> datas		= b.getStringArrayList("data");
 		trickyWords					= (ArrayList<Word>) b.get("trickyWords");
-		
-		sp = PreferenceManager.getDefaultSharedPreferences(this);
-		final int id = sp.getInt("id",-1);
-		final String token = sp.getString("authToken", "");
-		if(id==-1 || token.isEmpty()) {
-			throw new IllegalArgumentException("Missing id or token");
-		}
 		
 		ivSpeak.setOnClickListener(new OnClickListener() {
 			@Override

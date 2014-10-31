@@ -11,6 +11,7 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.widget.Toast;
 
+import com.example.reader.R;
 import com.example.reader.interfaces.OnTextToSpeechComplete;
 import com.example.reader.interfaces.TTSHighlightCallback;
 import com.example.reader.interfaces.TTSReadingCallback;
@@ -25,7 +26,7 @@ public class TextToSpeechIdDriven extends TextToSpeechBase {
 	
 	private final String SENTENCE_TAG;
 	
-	public TextToSpeechIdDriven(Context context, OnTextToSpeechComplete listener, String sentTag,
+	public TextToSpeechIdDriven(final Context context, OnTextToSpeechComplete listener, String sentTag,
 			TTSHighlightCallback highlight, TTSReadingCallback reading,
 			int requestCode, int resultCode, Intent data) {
 		super(context, listener, requestCode, resultCode, data);
@@ -59,9 +60,9 @@ public class TextToSpeechIdDriven extends TextToSpeechBase {
 				
 				@Override
 				public void onDone(String utteranceId) {
-					boolean isStepping = sp.getBoolean("readerStepping", false);
+					boolean isStepping = sp.getBoolean(context.getString(R.string.sp_tts_reader_is_stepping), false);
 					if(isStepping){
-						sp.edit().putBoolean("readerStepping", false).commit();
+						sp.edit().putBoolean(context.getString(R.string.sp_tts_reader_is_stepping), false).commit();
 						return;
 					}
 					

@@ -43,6 +43,8 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 	private TextAnnotationModule txModule;
 
 	private SharedPreferences sp;
+	
+	private Context context;
 
 	private final int DEFAULT_COLOR = 0xffff0000;
 	private final int DEFAULT_RULE	= 3;
@@ -50,10 +52,11 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 	public LibraryAdapter(Context context, int textViewResourceId, ArrayList<LibraryItem> objects){
 		super(context, textViewResourceId, objects);
 		this.objects = objects;
+		this.context = context;
 
         sp = PreferenceManager.getDefaultSharedPreferences(getContext());
         
-        String jsonProfile = sp.getString("json_profile", "");
+        String jsonProfile = sp.getString(context.getString(R.string.sp_user_profile_json), "");
 		
 		if(!jsonProfile.isEmpty()){
 			initProfile(jsonProfile);
@@ -230,9 +233,10 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 			int problemSize = profile.getUserProblems().getRowLength(i);
 			for (int j = 0; j < problemSize; j++)
 			{
-				int color 			= sp.getInt(sp.getInt("id", 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
-				int rule 			= sp.getInt(sp.getInt("id", 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
-				boolean isChecked 	= sp.getBoolean(sp.getInt("id", 0)+"pm_enabled_"+i+"_"+j, false);
+				String id = context.getString(R.string.sp_user_id);
+				int color 			= sp.getInt(sp.getInt(id, 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
+				int rule 			= sp.getInt(sp.getInt(id, 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
+				boolean isChecked 	= sp.getBoolean(sp.getInt(id, 0)+"pm_enabled_"+i+"_"+j, false);
 				
 				txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
 				
@@ -242,7 +246,6 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 			}
 		}
 
-		
 		txModule.setInputHTMLFile(html);
 		txModule.setJSonObject(AnnotatedWordsSet.getInstance(getContext().getApplicationContext(), json).getUserBasedAnnotatedWordsSet());
 		

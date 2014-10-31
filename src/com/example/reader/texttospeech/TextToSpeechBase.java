@@ -3,6 +3,7 @@ package com.example.reader.texttospeech;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import com.example.reader.R;
 import com.example.reader.ReaderActivity;
 import com.example.reader.interfaces.OnTextToSpeechComplete;
 
@@ -46,7 +47,7 @@ public class TextToSpeechBase implements OnInitListener{
 		Bundle bundle = data.getExtras();
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		chosenVoice = prefs.getString("ttsLanguage", Locale.US.toString());
+		chosenVoice = prefs.getString(context.getString(R.string.sp_tts_language), Locale.US.toString());
 		
 		ArrayList<String> availableVoices = bundle.getStringArrayList(TextToSpeech.Engine.EXTRA_AVAILABLE_VOICES);
 	

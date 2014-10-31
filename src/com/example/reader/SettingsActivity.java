@@ -18,7 +18,7 @@ public class SettingsActivity
 		super.onCreate(savedInstanceState);	
 		
         sp = PreferenceManager.getDefaultSharedPreferences(this);
-		AppLocales.setLocales(getApplicationContext(), sp.getString("language", "en"));
+		AppLocales.setLocales(getApplicationContext(), sp.getString(getString(R.string.sp_user_language), "en"));
 		
 		String setting = getIntent().getExtras().getString("setting", "");
 		if(setting.equals("reader")){

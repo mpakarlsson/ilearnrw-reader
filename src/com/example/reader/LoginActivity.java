@@ -1,6 +1,8 @@
 package com.example.reader;
 
 import com.example.reader.tasks.LoginTask;
+import com.example.reader.types.singleton.AnnotatedWordsSet;
+import com.example.reader.types.singleton.ProfileUser;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,11 +39,10 @@ public class LoginActivity extends Activity implements OnClickListener {
         etPassword 		= (EditText) findViewById(R.id.login_password);
         
         chkRM = (CheckBox) findViewById(R.id.chk_remember_me);
-        
-        final boolean isRemember = preferences.getBoolean("rememberMe", false);
-        String username = preferences.getString("username", "");
-        String password = preferences.getString("password", "");     
-        
+
+        final boolean isRemember = preferences.getBoolean(getString(R.string.sp_user_remember_me), false);
+        String username = preferences.getString(getString(R.string.sp_user_name), "");
+        String password = preferences.getString(getString(R.string.sp_user_password), "");     
         
         chkRM.setChecked(isRemember);
         etUsername.setText(username);
@@ -59,11 +60,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 					etUsername.setText("");
 					etPassword.setText("");
 					SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
-					editor.remove("username");
-					editor.remove("password");
-					editor.remove("rememberMe");
-					editor.remove("authToken");
-					editor.remove("refreshToken");
+					editor.remove(getString(R.string.sp_user_name));
+					editor.remove(getString(R.string.sp_user_password));
+					editor.remove(getString(R.string.sp_user_remember_me));
+					editor.remove(getString(R.string.sp_authToken));
+					editor.remove(getString(R.string.sp_refreshToken));
 					editor.commit();
 				}	
 			}
@@ -74,10 +75,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 	protected void onResume() {
     	super.onResume();
 		
-    	boolean isRemember = preferences.getBoolean("rememberMe", false);
-        String username = preferences.getString("username", "");
-        String password = preferences.getString("password", "");
-        isLoggedIn = preferences.getBoolean("isLoggedIn", false);
+    	boolean isRemember = preferences.getBoolean(getString(R.string.sp_user_remember_me), false);
+        String username = preferences.getString(getString(R.string.sp_user_name), "");
+        String password = preferences.getString(getString(R.string.sp_user_password), "");
+        isLoggedIn = preferences.getBoolean(getString(R.string.sp_user_is_logged_in), false);
         updateButtons();
         
         
@@ -116,18 +117,16 @@ public class LoginActivity extends Activity implements OnClickListener {
 			
 			final SharedPreferences.Editor editor = preferences.edit();			
 			if(chkRM.isChecked()){
-				editor.putBoolean("rememberMe", true);
-				editor.putString("username", username);
-				editor.putString("password", password);
+				editor.putBoolean(getString(R.string.sp_user_remember_me), true);
+				editor.putString(getString(R.string.sp_user_name), username);
+				editor.putString(getString(R.string.sp_user_password), password);
 			} else {
-				editor.putBoolean("rememberMe", false);
-				editor.putString("username", "");
-				editor.putString("password", "");
+				editor.putBoolean(getString(R.string.sp_user_remember_me), false);
+				editor.putString(getString(R.string.sp_user_name), "");
+				editor.putString(getString(R.string.sp_user_password), "");
 			}
 
 			updateButtons();
-			isLoggedIn = true;
-			editor.putBoolean("isLoggedIn", isLoggedIn);
 			
 			editor.commit();
 
@@ -143,17 +142,19 @@ public class LoginActivity extends Activity implements OnClickListener {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					SharedPreferences.Editor edit= preferences.edit();
-					edit.remove("username");
-					edit.remove("password");
-					edit.remove("rememberMe");
-					edit.remove("authToken");
-					edit.remove("refreshToken");
+					edit.remove(getString(R.string.sp_user_name));
+					edit.remove(getString(R.string.sp_user_password));
+					edit.remove(getString(R.string.sp_user_remember_me));
+					edit.remove(getString(R.string.sp_authToken));
+					edit.remove(getString(R.string.sp_refreshToken));
 					
 					isLoggedIn = false;
 					updateButtons();
-					edit.putBoolean("isLoggedIn", isLoggedIn);
-					
+					edit.putBoolean(getString(R.string.sp_user_is_logged_in), isLoggedIn);
 					edit.commit();
+					
+					ProfileUser.getInstance(getApplicationContext()).nullProfile();
+					AnnotatedWordsSet.getInstance(getApplicationContext(), "").nullAnnotatedWordsSet();
 					
 					etUsername.getText().clear();
 					etPassword.getText().clear();

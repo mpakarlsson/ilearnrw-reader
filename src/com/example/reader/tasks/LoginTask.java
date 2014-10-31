@@ -91,8 +91,8 @@ public class
 		if(result != null){
 			SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 			
-    		editor.putString("authToken", result.authToken);
-    		editor.putString("refreshToken", result.refreshToken);
+    		editor.putString(context.getString(R.string.sp_authToken), result.authToken);
+    		editor.putString(context.getString(R.string.sp_refreshToken), result.refreshToken);
     		editor.commit();
 			
     		new UserDetailsTask(context, TAG).run(username, result.authToken);

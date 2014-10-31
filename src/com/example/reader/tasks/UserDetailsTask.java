@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -97,17 +98,13 @@ public class
 		if(result != null){
 			Toast.makeText(context, context.getString(R.string.login_succeeded), Toast.LENGTH_SHORT).show();
 			
-			SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-			editor.putInt("id", result.id);
-			editor.putString("language", result.language);
-			editor.commit();
-			
-			sp.edit().putInt("id", result.id);
-			sp.edit().putString("language", result.language);
-			sp.edit().commit();
+			SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+			edit.putInt(context.getString(R.string.sp_user_id), result.id);
+			edit.putString(context.getString(R.string.sp_user_language), result.language);
+			edit.commit();
 
 			AppLocales.setLocales(context, result.language);
-			new ProfileTask(context, this, this).run(Integer.toString(result.id), sp.getString("authToken", ""));
+			new ProfileTask(context, this, this).run(Integer.toString(result.id), sp.getString(context.getString(R.string.sp_authToken), ""));
 		} else {
 			Log.e(TAG, context.getString(R.string.login_failed_fetching) + " : " + fault);
 			Toast.makeText(context, context.getString(R.string.login_failed_fetching), Toast.LENGTH_SHORT).show();
@@ -117,8 +114,8 @@ public class
 	@Override
 	public void onProfileFetched(String profile) {
 		new LogTask(SystemTags.APP_SESSION_START).run(username, "Logged in: " + username + ".");
-		sp.edit().putString("json_profile", profile).commit();
-		
+		sp.edit().putString(context.getString(R.string.sp_user_profile_json), profile).commit();
+		sp.edit().putBoolean(context.getString(R.string.sp_user_is_logged_in), true).commit();
 		Intent i2 = new Intent(context, LibraryActivity.class);
 		context.startActivity(i2);
 	}
@@ -127,7 +124,7 @@ public class
 	public void onTokenExpired(String... params) {
 		// Token should not be expired here, if it is then something is wrong with its lifetime
 		if(HttpHelper.refreshTokens(context)){
-			final String newToken = PreferenceManager.getDefaultSharedPreferences(context).getString("authToken", "");
+			final String newToken = sp.getString(context.getString(R.string.sp_authToken), "");
 			new ProfileTask(context, this, this).run(params[0], newToken);
 			
 			Log.d(TAG, context.getString(R.string.token_error_retry));

@@ -99,7 +99,7 @@ public class PresentationModule
 	
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
-		AppLocales.setLocales(getApplicationContext(), sp.getString("language", "en"));
+		AppLocales.setLocales(getApplicationContext(), sp.getString(getString(R.string.sp_user_language), "en"));
 		
 		TAG = getClass().getName();
 		
@@ -131,9 +131,9 @@ public class PresentationModule
 		
 		setContentView(R.layout.activity_presentation_module);
 
-		sp.edit().putBoolean("showGUI", showGUI).commit();
-		int id = sp.getInt("id",-1);
-		String token = sp.getString("authToken", "");		
+		sp.edit().putBoolean(getString(R.string.sp_show_gui), showGUI).commit();
+		int id = sp.getInt(getString(R.string.sp_user_id),-1);
+		String token = sp.getString(getString(R.string.sp_authToken), "");		
 		
 		if(id==-1 || token.isEmpty()) {
 			finished(); // If you don't have an id something is terribly wrong
@@ -186,8 +186,8 @@ public class PresentationModule
 		
 		rulesGroup.setOnCheckedChangeListener(this);
 		
-		String userId = Integer.toString(sp.getInt("id", 0));
-		String token = sp.getString("authToken", "");
+		String userId = Integer.toString(sp.getInt(getString(R.string.sp_user_id), 0));
+		String token = sp.getString(getString(R.string.sp_authToken), "");
 		
 		currentCategoryPos 	= category;
 		currentProblemPos 	= index;
@@ -198,7 +198,7 @@ public class PresentationModule
 		spCategories.setOnItemSelectedListener(this);
 		spProblems.setOnItemSelectedListener(this);
 		
-		String jsonProfile = sp.getString("json_profile", "");
+		String jsonProfile = sp.getString(getString(R.string.sp_user_profile_json), "");
 		
 		if(jsonProfile.isEmpty())
 			new ProfileTask(this, this, this).run(userId, token);
@@ -254,9 +254,10 @@ public class PresentationModule
 			int problemSize = profile.getUserProblems().getRowLength(i);
 			for (int j = 0; j < problemSize; j++)
 			{
-				int color 			= sp.getInt(sp.getInt("id", 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
-				int rule 			= sp.getInt(sp.getInt("id", 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
-				boolean isChecked 	= sp.getBoolean(sp.getInt("id", 0)+"pm_enabled_"+i+"_"+j, false);
+				String _id = getString(R.string.sp_user_id);
+				int color 			= sp.getInt(sp.getInt(_id, 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
+				int rule 			= sp.getInt(sp.getInt(_id, 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
+				boolean isChecked 	= sp.getBoolean(sp.getInt(_id, 0)+"pm_enabled_"+i+"_"+j, false);
 				
 				txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
 				
@@ -332,9 +333,10 @@ public class PresentationModule
 				sp.edit().putInt("pm_color_" + pi.cat + "_" + pi.idx, pi.color).commit();
 				sp.edit().putInt("pm_rule_"+pi.cat+"_"+pi.idx, pi.rule).commit();
 			}*/
-			sp.edit().putBoolean(sp.getInt("id", 0)+"pm_enabled_" + currentCategoryPos + "_" + currentProblemPos, true).commit();
-			sp.edit().putInt(sp.getInt("id", 0)+"pm_color_" + currentCategoryPos + "_" + currentProblemPos, currentColor).commit();
-			sp.edit().putInt(sp.getInt("id", 0)+"pm_rule_"+currentCategoryPos+"_"+currentProblemPos, currentRule).commit();
+			String _id = getString(R.string.sp_user_id);
+			sp.edit().putBoolean(sp.getInt(_id, 0)+"pm_enabled_" + currentCategoryPos + "_" + currentProblemPos, true).commit();
+			sp.edit().putInt(sp.getInt(_id, 0)+"pm_color_" + currentCategoryPos + "_" + currentProblemPos, currentColor).commit();
+			sp.edit().putInt(sp.getInt(_id, 0)+"pm_rule_"+currentCategoryPos+"_"+currentProblemPos, currentRule).commit();
 			onBackPressed();
 			break;
 			
@@ -343,7 +345,8 @@ public class PresentationModule
 			break;
 			
 		case R.id.pm_color_layout:
-			int color = sp.getInt(sp.getInt("id", 0)+"pm_color_" + currentCategoryPos + "_" + currentProblemPos, DEFAULT_COLOR);
+			String _id2 = getString(R.string.sp_user_id);
+			int color = sp.getInt(sp.getInt(_id2, 0)+"pm_color_" + currentCategoryPos + "_" + currentProblemPos, DEFAULT_COLOR);
 			ColorPickerDialog dialog = new ColorPickerDialog(this, color, new ColorPickerListener() {
 				@Override
 				public void onOk(ColorPickerDialog dialog, int color) {
@@ -357,7 +360,7 @@ public class PresentationModule
 				public void onCancel(ColorPickerDialog dialog) {}
 			});
 
-			if (editMode || !sp.getBoolean(sp.getInt("id", 0)+"pm_enabled_"+currentCategoryPos+"_"+currentProblemPos, false)){
+			if (editMode || !sp.getBoolean(sp.getInt(_id2, 0)+"pm_enabled_"+currentCategoryPos+"_"+currentProblemPos, false)){
 				dialog.show();
 			}
 			else {
@@ -371,7 +374,7 @@ public class PresentationModule
 	
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
-		if (!editMode && sp.getBoolean(sp.getInt("id", 0)+"pm_enabled_"+currentCategoryPos+"_"+currentProblemPos, false)){
+		if (!editMode && sp.getBoolean(sp.getInt(getString(R.string.sp_user_id), 0)+"pm_enabled_"+currentCategoryPos+"_"+currentProblemPos, false)){
 			updateRule(currentCategoryPos, currentProblemPos);
 			Toast toast = Toast.makeText(getApplicationContext(), R.string.dont_edit, Toast.LENGTH_SHORT);
 			toast.show();
@@ -455,12 +458,12 @@ public class PresentationModule
 	}
 
 	private void updateColor(int category, int problem){
-		currentColor = sp.getInt(sp.getInt("id", 0)+"pm_color_"+category+"_"+problem, DEFAULT_COLOR);
+		currentColor = sp.getInt(sp.getInt(getString(R.string.sp_user_id), 0)+"pm_color_"+category+"_"+problem, DEFAULT_COLOR);
 		colorBox.setBackgroundColor(currentColor);
 	}
 	
 	private void updateRule(int category, int problem){
-		currentRule = sp.getInt(sp.getInt("id", 0)+"pm_rule_"+category+"_"+problem, DEFAULT_RULE);
+		currentRule = sp.getInt(sp.getInt(getString(R.string.sp_user_id), 0)+"pm_rule_"+category+"_"+problem, DEFAULT_RULE);
 		switch(currentRule){
 		case 1:
 			rbtnRule1.setChecked(true);
@@ -480,7 +483,7 @@ public class PresentationModule
 	private void updateEnabled(int category, int problem){
 		//boolean isChecked = sp.getBoolean("pm_enabled_"+category+"_"+problem, false);
 		TextView enabledLabel = (TextView) findViewById(R.id.pm__enabled_label);
-		if (sp.getBoolean(sp.getInt("id", 0)+"pm_enabled_"+category+"_"+problem, false))
+		if (sp.getBoolean(sp.getInt(getString(R.string.sp_user_id), 0)+"pm_enabled_"+category+"_"+problem, false))
 			enabledLabel.setText(R.string.rule_enabled);
 		else
 			enabledLabel.setText(R.string.rule_disabled);
@@ -515,7 +518,7 @@ public class PresentationModule
 	@Override
 	public void onTokenExpired(final String... params) {
 		if(HttpHelper.refreshTokens(this)){
-			final String newToken = sp.getString("authToken", "");
+			final String newToken = sp.getString(getString(R.string.sp_authToken), "");
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {

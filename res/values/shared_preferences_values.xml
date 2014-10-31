@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    
+    <!-- Library activity -->
+    <string name="sp_latest_book">sp_latest_book</string>
+    
+    <!-- Login task -->
+    <string name="sp_authToken">sp_authToken</string>
+    <string name="sp_refreshToken">sp_refreshToken</string>
+    
+    <!-- User details task -->
+    <string name="sp_user_id">sp_user_id</string>
+    <string name="sp_user_language">sp_user_language</string>
+    
+    
+    <string name="sp_user_profile_json">sp_user_profile_json</string>
+    
+    <string name="sp_tts_language">sp_tts_language</string>
+    <string name="sp_tts_reader_is_stepping">sp_tts_reader_is_stepping</string>
+    
+    <string name="sp_show_all">sp_show_all</string>
+    
+    <string name="sp_user_remember_me">sp_user_remember_me</string>
+    <string name="sp_user_name">sp_user_name</string>
+    <string name="sp_user_password">sp_user_password</string>
+    <string name="sp_user_is_logged_in">sp_user_is_logged_in</string>
+    
+    <string name="sp_show_gui">sp_show_gui</string>
+    
+    <string name="sp_reader_mode">sp_reader_mode</string>
+    <string name="sp_highlighting">sp_highlighting</string>
+    
+</resources>

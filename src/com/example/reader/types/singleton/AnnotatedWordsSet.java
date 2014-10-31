@@ -11,6 +11,7 @@ public class AnnotatedWordsSet {
 	private static UserBasedAnnotatedWordsSet ubaws;
 	private static String json;
 	private static Context context;
+	private static String bookName;
 	
 	private AnnotatedWordsSet(){
 	}
@@ -35,5 +36,16 @@ public class AnnotatedWordsSet {
 	
 	public UserBasedAnnotatedWordsSet getUserBasedAnnotatedWordsSet(){
 		return ubaws;
-	}	
+	}
+	
+	public void setBookName(String name){
+		bookName = name;
+	}
+	
+	public void nullAnnotatedWordsSet(){
+		aws = null;
+		ubaws = null;
+		json = null;
+		context = null;
+	}
 }

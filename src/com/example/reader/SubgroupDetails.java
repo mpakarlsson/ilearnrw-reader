@@ -65,23 +65,23 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		
 		
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
-		AppLocales.setLocales(getApplicationContext(), sp.getString("language", "en"));
+		AppLocales.setLocales(getApplicationContext(), sp.getString(getString(R.string.sp_user_language), "en"));
 
-		int id = sp.getInt("id",-1);
-		String token = sp.getString("authToken", "");		
+		int id = sp.getInt(getString(R.string.sp_user_id),-1);
+		String token = sp.getString(getString(R.string.sp_authToken), "");		
 		
 		if(id==-1 || token.isEmpty()) {
 			throw new IllegalArgumentException("Missing id or token");
 		}
 				
-		String jsonProfile = sp.getString("json_profile", "");
+		String jsonProfile = sp.getString(getString(R.string.sp_user_profile_json), "");
 		
 		if(!jsonProfile.isEmpty()){
 			profile = ProfileUser.getInstance(this.getApplicationContext()).getProfile();
 		}
 		
 		try {
-			groupedRules = new GroupedRulesFacade(profile, sp.getInt("id", 0), sp, 
+			groupedRules = new GroupedRulesFacade(profile, sp.getInt(getString(R.string.sp_user_id), 0), sp, 
 					getAssets().open(profile.getLanguage() == LanguageCode.EN?"uk.json":"gr.json"));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -195,7 +195,7 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		switch(v.getId()){
 		
 	case R.id.subgroup_apply_color:
-		int color = sp.getInt(sp.getInt("id", 0)+"pm_color_" + currentCategoryPos + "_" + currentProblemPos, defaultColour);
+		int color = sp.getInt(sp.getInt(getString(R.string.sp_user_id), 0)+"pm_color_" + currentCategoryPos + "_" + currentProblemPos, defaultColour);
 		ColorPickerDialog dialog = new ColorPickerDialog(this, color, new ColorPickerListener() {
 			@Override
 			public void onOk(ColorPickerDialog dialog, int color) {

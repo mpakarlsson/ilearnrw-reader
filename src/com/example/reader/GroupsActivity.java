@@ -41,19 +41,19 @@ public class GroupsActivity extends Activity {
 		setContentView(R.layout.groups_view);
 		
         sp = PreferenceManager.getDefaultSharedPreferences(this);
-		AppLocales.setLocales(getApplicationContext(), sp.getString("language", "en"));
+		AppLocales.setLocales(getApplicationContext(), sp.getString(getString(R.string.sp_user_language), "en"));
 				
 		gson = new Gson();
 
-		int id = sp.getInt("id",-1);
-		String token = sp.getString("authToken", "");		
+		int id = sp.getInt(getString(R.string.sp_user_id),-1);
+		String token = sp.getString(getString(R.string.sp_authToken), "");		
 		
 		if(id==-1 || token.isEmpty()) {
 			//finished(); // If you don't have an id something is terribly wrong
 			throw new IllegalArgumentException("Missing id or token");
 		}
 				
-		String jsonProfile = sp.getString("json_profile", "");
+		String jsonProfile = sp.getString(getString(R.string.sp_user_profile_json), "");
 		
 		if(!jsonProfile.isEmpty()){
 			initProfile(jsonProfile);
@@ -100,7 +100,7 @@ public class GroupsActivity extends Activity {
 	
 	private void initModules(){
         try {
-			groupedRules = new GroupedRulesFacade(profile, sp.getInt("id", 0), sp, 
+			groupedRules = new GroupedRulesFacade(profile, sp.getInt(getString(R.string.sp_user_id), 0), sp, 
 					getAssets().open(profile.getLanguage() == LanguageCode.EN?"uk.json":"gr.json"));
 			// get the listview
 	        expListView = (ExpandableListView) findViewById(R.id.lvExp);

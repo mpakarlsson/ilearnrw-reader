@@ -61,7 +61,7 @@ public class AddToLibraryExplorerActivity
 		setContentView(R.layout.activity_add_to_library_explorer);
 		
         sp = PreferenceManager.getDefaultSharedPreferences(this);
-		AppLocales.setLocales(getApplicationContext(), sp.getString("language", "en"));
+		AppLocales.setLocales(getApplicationContext(), sp.getString(getString(R.string.sp_user_language), "en"));
 		
 		TAG = getClass().getName();
 		
@@ -187,13 +187,13 @@ public class AddToLibraryExplorerActivity
 			try {
 				final FileInputStream fis = new FileInputStream(file);
 				final File localDir = getDir(getString(R.string.library_location), MODE_PRIVATE);
-				boolean hiddenFiles = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("showAll", false);
+				boolean hiddenFiles = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.sp_show_all), false);
 				ArrayList<File> files = (ArrayList<File>) FileHelper.getFileList(localDir, hiddenFiles);
 				
 				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-				final String lang 	= preferences.getString("language", "");
-				final int id 		= preferences.getInt("id", -1);
-				final String token 	= preferences.getString("authToken", "");
+				final String lang 	= preferences.getString(getString(R.string.sp_user_language), "");
+				final int id 		= preferences.getInt(getString(R.string.sp_user_id), -1);
+				final String token 	= preferences.getString(getString(R.string.sp_authToken), "");
 				
 				for(File f : files){
 					if(f.getName().equals(file.getName())){
@@ -226,7 +226,7 @@ public class AddToLibraryExplorerActivity
 	@Override
 	public void onTokenExpired(final String... params) {
 		if(HttpHelper.refreshTokens(this)){
-			final String newToken = PreferenceManager.getDefaultSharedPreferences(this).getString("authToken", "");
+			final String newToken = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.sp_authToken), "");
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {

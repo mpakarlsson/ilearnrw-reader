@@ -10,7 +10,7 @@ public class ReaderApplication extends Application{
 	public void onCreate() {
 		super.onCreate();
 	
-		PreferenceManager.getDefaultSharedPreferences(this).edit().remove("isLoggedIn").commit();
+		PreferenceManager.getDefaultSharedPreferences(this).edit().remove(getString(R.string.sp_user_is_logged_in)).commit();
 	}
 	
 	
