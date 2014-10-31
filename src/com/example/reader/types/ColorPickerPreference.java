@@ -135,6 +135,7 @@ public class ColorPickerPreference extends Preference {
 			dest.writeInt(value);
 		}
 		
+		@SuppressWarnings("unused")
 		public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
 			@Override
 			public SavedState createFromParcel(Parcel source) {

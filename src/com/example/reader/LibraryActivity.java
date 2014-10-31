@@ -12,6 +12,7 @@ import com.example.reader.popups.RenameActivity;
 import com.example.reader.types.LibraryAdapter;
 import com.example.reader.types.LibraryItem;
 import com.example.reader.types.Pair;
+import com.example.reader.types.singleton.AnnotatedWordsSet;
 import com.example.reader.types.singleton.ProfileUser;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.FileHelper;
@@ -404,6 +405,8 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			intent.putExtra("json", json);
 			intent.putExtra("title", libItems.first().getName());
 			intent.putExtra("trickyWords", (ArrayList<Word>) profile.getUserProblems().getTrickyWords());
+			
+			AnnotatedWordsSet.getInstance(this.getApplicationContext()).initUserBasedAnnotatedWordsSet(json, libItems.first().getName());
 			
 			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 			

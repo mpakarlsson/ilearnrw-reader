@@ -9,7 +9,6 @@ import com.example.reader.types.ExpandableListAdapter;
 import com.example.reader.types.singleton.ProfileUser;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.groups.GroupedRulesFacade;
-import com.google.gson.Gson;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -26,7 +25,6 @@ import android.widget.ExpandableListView.OnChildClickListener;
 public class GroupsActivity extends Activity {
 	private SharedPreferences sp;
 	
-	private Gson gson;
 	private GroupedRulesFacade groupedRules;
 	
 	private UserProfile profile;
@@ -42,8 +40,6 @@ public class GroupsActivity extends Activity {
 		
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 		AppLocales.setLocales(getApplicationContext(), sp.getString(getString(R.string.sp_user_language), "en"));
-				
-		gson = new Gson();
 
 		int id = sp.getInt(getString(R.string.sp_user_id),-1);
 		String token = sp.getString(getString(R.string.sp_authToken), "");		

@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import android.os.Environment;
@@ -24,7 +25,7 @@ public class BasicTimer {
 		timerDir = new File(root + "/ilearn_timer");
 		timerDir.mkdirs();
 	
-		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date()); 
+		String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date()); 
 		String[] parts = filename.split("\\.");
 		
 		this.filename = parts[0] + "_" + currentDate + "." + parts[1];
@@ -32,7 +33,7 @@ public class BasicTimer {
 	
 	public void start(String sectionName){	
 		Date ts = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss", Locale.getDefault());
 		timestamp = sdf.format(ts);		
 		this.sectionName = sectionName;
 		start = System.nanoTime();

@@ -87,7 +87,7 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 		View v = convertView;
 		if(v == null){
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = inflater.inflate(R.layout.row_library, null);
+			v = inflater.inflate(R.layout.row_library, parent, false);
 		}
 		
 		final LibraryItem item = objects.get(position);
@@ -108,6 +108,9 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 						Intent intent = new Intent(getContext(), ReaderActivity.class);
 						String html = FileHelper.readFromFile(libItems.first());
 						String json = FileHelper.readFromFile(libItems.second());
+						
+						AnnotatedWordsSet.getInstance(context.getApplicationContext()).initUserBasedAnnotatedWordsSet(json, libItems.first().getName());
+						
 						intent.putExtra("html", html);
 						intent.putExtra("cleanHtml", html);
 						intent.putExtra("json", json);
@@ -130,6 +133,9 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 						Intent intent = new Intent(getContext(), ReaderActivity.class);
 						String clean = FileHelper.readFromFile(libItems.first());
 						String json = FileHelper.readFromFile(libItems.second());
+						
+						AnnotatedWordsSet.getInstance(context.getApplicationContext()).initUserBasedAnnotatedWordsSet(json, libItems.first().getName());
+
 						String html = fireTxModule(clean, json);
 						intent.putExtra("html", html);
 						intent.putExtra("cleanHtml", clean);
@@ -247,7 +253,7 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 		}
 
 		txModule.setInputHTMLFile(html);
-		txModule.setJSonObject(AnnotatedWordsSet.getInstance(getContext().getApplicationContext(), json).getUserBasedAnnotatedWordsSet());
+		txModule.setJSonObject(AnnotatedWordsSet.getInstance(getContext().getApplicationContext()).getUserBasedAnnotatedWordsSet());
 		
 		txModule.annotateText();
 		return txModule.getAnnotatedHTMLFile();

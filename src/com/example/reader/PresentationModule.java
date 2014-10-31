@@ -1,6 +1,5 @@
 package com.example.reader;
 
-import ilearnrw.textadaptation.TextAnnotationModule;
 import ilearnrw.textclassification.Word;
 import ilearnrw.user.problems.ProblemDefinition;
 import ilearnrw.user.problems.ProblemDefinitionIndex;
@@ -16,7 +15,6 @@ import com.example.reader.interfaces.OnProfileFetched;
 import com.example.reader.tasks.ProfileTask;
 import com.example.reader.types.ColorPickerDialog;
 import com.example.reader.types.BasicListAdapter;
-import com.example.reader.types.singleton.AnnotatedWordsSet;
 import com.example.reader.types.singleton.ProfileUser;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.FileHelper;
@@ -89,7 +87,6 @@ public class PresentationModule
 	private boolean editMode; // or add new rule mode
 	
 	private UserProfile profile;
-	private TextAnnotationModule txModule;
 	
 	ArrayAdapter<String> problemAdapter;
 	
@@ -241,37 +238,6 @@ public class PresentationModule
 		spProblems.setAdapter(problemAdapter);
 		spProblems.setSelection(currentProblemPos);
 		
-	}
-	private String fireTxModule(String html, String json){
-		if (txModule==null)
-			txModule = new TextAnnotationModule(html);
-		
-		if (txModule.getPresentationRulesModule() == null)
-			txModule.initializePresentationModule(profile);
-
-		for (int i = 0; i < profile.getUserProblems().getNumerOfRows(); i++)
-		{
-			int problemSize = profile.getUserProblems().getRowLength(i);
-			for (int j = 0; j < problemSize; j++)
-			{
-				String _id = getString(R.string.sp_user_id);
-				int color 			= sp.getInt(sp.getInt(_id, 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
-				int rule 			= sp.getInt(sp.getInt(_id, 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
-				boolean isChecked 	= sp.getBoolean(sp.getInt(_id, 0)+"pm_enabled_"+i+"_"+j, false);
-				
-				txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
-				
-				txModule.getPresentationRulesModule().setTextColor(i, j, color);
-				txModule.getPresentationRulesModule().setHighlightingColor(i, j, color);
-				txModule.getPresentationRulesModule().setActivated(i, j, isChecked);
-			}
-		}
-
-		txModule.setInputHTMLFile(html);
-		txModule.setJSonObject(AnnotatedWordsSet.getInstance(this.getApplicationContext(), json).getUserBasedAnnotatedWordsSet());
-		
-		txModule.annotateText();
-		return txModule.getAnnotatedHTMLFile();
 	}
 	
 	/*private String getTitle(int category){

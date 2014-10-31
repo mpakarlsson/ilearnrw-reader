@@ -1,7 +1,6 @@
 package com.example.reader;
 
 import com.example.reader.tasks.LoginTask;
-import com.example.reader.types.singleton.AnnotatedWordsSet;
 import com.example.reader.types.singleton.ProfileUser;
 
 import android.app.Activity;
@@ -154,7 +153,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 					edit.commit();
 					
 					ProfileUser.getInstance(getApplicationContext()).nullProfile();
-					AnnotatedWordsSet.getInstance(getApplicationContext(), "").nullAnnotatedWordsSet();
 					
 					etUsername.getText().clear();
 					etPassword.getText().clear();

@@ -42,7 +42,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.subgroup_child, null);
+            convertView = infalInflater.inflate(R.layout.subgroup_child, parent, false);
         }
 
         TextView txtListChild = (TextView) convertView
@@ -92,7 +92,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.list_subgroup, null);
+            convertView = infalInflater.inflate(R.layout.list_subgroup, parent, false);
         }
  
         TextView lblListHeader = (TextView) convertView

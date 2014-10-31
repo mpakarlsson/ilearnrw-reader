@@ -183,7 +183,7 @@ public class ReaderActivity
 		cleanHtml			= libBundle.getString("cleanHtml");
 		bundleJSON			= libBundle.getString("json");
 		libraryTitle		= libBundle.getString("title");
-		annotationData		= AnnotatedWordsSet.getInstance(this.getApplicationContext(), bundleJSON).getUserBasedAnnotatedWordsSet();
+		annotationData		= AnnotatedWordsSet.getInstance(this.getApplicationContext()).getUserBasedAnnotatedWordsSet();
 		trickyWords			= (ArrayList<Word>) libBundle.get("trickyWords");
 		
 		spEditor 	= sp.edit();
