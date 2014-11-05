@@ -1,7 +1,11 @@
 package com.example.reader.utils;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
 
 import com.example.reader.types.Pair;
 
@@ -74,5 +78,22 @@ public class Helper {
 		color = Color.HSVToColor(colors);
 		return color;
 	}
+	
+	public static void logBundle(Bundle bundle){
+		for (String key : bundle.keySet()) {
+		    Object value = bundle.get(key);
+		    Log.d("BUNDLE", String.format("%s %s (%s)", key,  
+		        value.toString(), value.getClass().getName()));
+		}
+	}
+	
+	public static boolean isPackageInstalled(PackageManager pm, String packageName) {
+        try {
+            pm.getPackageInfo(packageName, 0);
+        } catch (NameNotFoundException e) {
+            return false;
+        }
+        return true;
+}
 	
 }

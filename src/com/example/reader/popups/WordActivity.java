@@ -7,9 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.example.reader.R;
-import com.example.reader.ReaderActivity;
-import com.example.reader.interfaces.OnTextToSpeechComplete;
-import com.example.reader.texttospeech.TextToSpeechBase;
+import com.example.reader.texttospeech.TextToSpeechReader;
 import com.example.reader.types.WordPopupAdapter;
 import com.example.reader.types.singleton.ProfileUser;
 
@@ -17,7 +15,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -33,15 +30,12 @@ import android.widget.TextView;
 
 public class WordActivity 
 	extends 
-		Activity 
-	implements
-		OnTextToSpeechComplete {
+		Activity  {
 	
 	private TextView tvTitle;
 	private ImageView ivSpeak;
 	private ListView list;
 	private Button btnOk;
-	private TextToSpeechBase tts;
 	
 	private ArrayList<Word> trickyWords;
 	private String strWord;
@@ -52,12 +46,7 @@ public class WordActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialog_activity_word);
 		
-		Intent checkTTSIntent = new Intent(); 
-		checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-		startActivityForResult(checkTTSIntent, ReaderActivity.FLAG_CHECK_TTS);
-		
 		Bundle b = getIntent().getExtras();
-		
 		tvTitle 			= (TextView) findViewById(R.id.tv_word_title);
 		ivSpeak 			= (ImageView) findViewById(R.id.iv_word_speak);
 		list 				= (ListView) findViewById(R.id.lv_word_info);
@@ -66,7 +55,6 @@ public class WordActivity
 		String def = getResources().getString(R.string.default_text);
 		strWord = b.getString("word", def);
 		tvTitle.setText(strWord);
-
 		
 		String wordInSyllables 	= b.getString("wordInSyllables", "-"+strWord+"-");
 		String stem 			= b.getString("stem", strWord);
@@ -78,10 +66,9 @@ public class WordActivity
 		ivSpeak.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				tts.speak(tvTitle.getText().toString());
+				TextToSpeechReader.getInstance(getApplicationContext()).speak(tvTitle.getText().toString());
 			}
 		});
-		ivSpeak.setEnabled(false);
 		
 		btnOk.setOnClickListener(new OnClickListener() {
 			@Override
@@ -136,33 +123,9 @@ public class WordActivity
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch(requestCode){
-		case ReaderActivity.FLAG_CHECK_TTS:
-			if(resultCode == RESULT_OK || resultCode == RESULT_FIRST_USER) {
-				tts = new TextToSpeechBase(this, this, requestCode, resultCode, data);
-			}
-			
-			break;
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	@Override
 	public void onAttachedToWindow() {
 		super.onAttachedToWindow();
 		
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-	}
-
-	@Override
-	public void onTextToSpeechInitialized() {
-		ivSpeak.setEnabled(true);
-	}
-
-	@Override
-	protected void onDestroy() {
-		tts.destroy();
-		super.onDestroy();
 	}
 }

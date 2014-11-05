@@ -17,7 +17,8 @@ import com.example.reader.interfaces.TTSReadingCallback;
 import com.example.reader.popups.ModeActivity;
 import com.example.reader.popups.SearchActivity;
 import com.example.reader.popups.WordActivity;
-import com.example.reader.texttospeech.TextToSpeechIdDriven;
+import com.example.reader.texttospeech.TextToSpeechReader;
+import com.example.reader.texttospeech.TextToSpeechUtils;
 import com.example.reader.types.Pair;
 import com.example.reader.types.singleton.AnnotatedWordsSet;
 import com.example.reader.utils.AppLocales;
@@ -35,7 +36,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,10 +71,6 @@ public class ReaderActivity
 	
 	private ReaderMode reader_mode;
 	private ReaderStatus reader_status;
-	
-	private TextToSpeechIdDriven tts;
-	private TTSHighlightCallback cbHighlight;
-	private TTSReadingCallback cbSpoken;
 
 	private HighlightRunnable highlightRunnable;
 	private Handler highlightHandler;
@@ -83,6 +79,8 @@ public class ReaderActivity
 	
 	private SharedPreferences sp;
 	private SharedPreferences.Editor spEditor;
+	
+	private TextToSpeechReader ttsReader;
 	
 	public String CURR_SENT;
 	public String CURR_WORD;
@@ -107,8 +105,8 @@ public class ReaderActivity
 	public final static int FLAG_SEARCH 			= 10000;
 	public final static int FLAG_MODE 				= 10001;
 	public final static int FLAG_REFRESH_WEBVIEW 	= 10002;
-	public final static int FLAG_CHECK_TTS 			= 10003;
 	public final static int FLAG_WORD_POPUP 		= 10004;
+	
 	
 	public static enum ReaderMode {
 		Listen("Listen", 0),
@@ -172,7 +170,6 @@ public class ReaderActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reader);
-		
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 		AppLocales.setLocales(getApplicationContext(), sp.getString(getString(R.string.sp_user_language), "en"));
@@ -239,14 +236,10 @@ public class ReaderActivity
 		
 		searchbar.setVisibility(RelativeLayout.GONE);
 		
-
-		Intent checkTTSIntent = new Intent(); 
-		checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-		startActivityForResult(checkTTSIntent, FLAG_CHECK_TTS);
-		
-		cbHighlight 	= this;
-		cbSpoken 		= this;
-		
+		//TextToSpeechUtils.checkLanguageData(this);
+	
+		ttsReader = TextToSpeechReader.getInstance(getApplicationContext());
+			
 		reader = (WebView) findViewById(R.id.webview_reader);
 		reader.setOnLongClickListener(this);
 		reader.setLongClickable(false);
@@ -289,26 +282,29 @@ public class ReaderActivity
 		}
 		
 		highlightRunnable	= new HighlightRunnable();
-		highlightHandler 	= new Handler();
-		
+		highlightHandler 	= new Handler();
+		ibtnPlay.setEnabled(true);
+		ibtnNext.setEnabled(true);
+		ibtnPrev.setEnabled(true);	
 
 		updateGUI();
 	}
 	
 	@Override
 	protected void onResume() {
+		TextToSpeechReader.getInstance(getApplicationContext()).activateIdDrive(this, this, this);
 		super.onResume();
 	}
 
 	@Override
 	protected void onPause() {
 		turnOffHandler();
+		TextToSpeechReader.getInstance(getApplicationContext()).deactivateIdDrive();
 		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
-		tts.destroy();
 		super.onDestroy();
 	}
 
@@ -316,11 +312,11 @@ public class ReaderActivity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {		
 		switch (requestCode) {
-		case FLAG_CHECK_TTS:
-			if(tts==null){
-				tts = new TextToSpeechIdDriven(ReaderActivity.this, this,  CURR_SENT, cbHighlight, cbSpoken, requestCode, resultCode, data);
-				setTTS();
-			}
+		case TextToSpeechUtils.FLAG_CHECK_TTS_DATA:
+			//if(tts==null){
+			//	tts = new TextToSpeechIdDriven(ReaderActivity.this, this,  CURR_SENT, cbHighlight, cbSpoken, requestCode, resultCode, data);
+			//	setTTS();
+			//}
 			break;
 		case FLAG_SEARCH:
 		{
@@ -433,16 +429,14 @@ public class ReaderActivity
 			break;
 			
 		case R.id.ibtn_mode_reader:
-			
 			if(reader_status == ReaderStatus.Enabled)
 				setPlayStatus(ReaderStatus.Disabled, true);
 			else if(reader_status == ReaderStatus.Disabled)
 				setPlayStatus(ReaderStatus.Disabled, false);
 			highlightHandler.removeCallbacks(highlightRunnable);
-			
-			if(reader_mode == ReaderMode.Listen)
-				tts.stop();
-				
+
+			if(reader_mode == ReaderMode.Listen)				ttsReader.stop();
+
 			Intent mode_intent = new Intent(this, ModeActivity.class);
 			mode_intent.putExtra("posX", ibtnMode.getX());
 			mode_intent.putExtra("posY", (bottom.getY()-ibtnMode.getHeight()));
@@ -457,8 +451,7 @@ public class ReaderActivity
 			if(reader_status == ReaderStatus.Enabled)
 				setPlayStatus(ReaderStatus.Disabled, true);
 			
-			if(tts.isSpeaking())
-				tts.stop();
+			if(ttsReader.isSpeaking())				ttsReader.stop();
 			
 			Intent i = new Intent(this, SettingsActivity.class);
 			i.putExtra("setting", "reader");
@@ -478,9 +471,7 @@ public class ReaderActivity
 					speakFromSentence(c);
 				} else {
 					setPlayStatus(ReaderStatus.Disabled, true);
-					spEditor.putInt(CURR_SENT, currSentPos).commit();
-					tts.stop();
-					tts.rehighlight();
+					spEditor.putInt(CURR_SENT, currSentPos).commit();					ttsReader.stop();					ttsReader.rehighlight();
 				}
 			} else if(reader_mode == ReaderMode.Guidance){
 				if(reader_status == ReaderStatus.Disabled){
@@ -491,7 +482,6 @@ public class ReaderActivity
 					highlightHandler.removeCallbacks(highlightRunnable);
 				}
 			}
-			
 			break;
 			
 		case R.id.ibtn_next_reader:
@@ -512,13 +502,12 @@ public class ReaderActivity
 	}
 	
 	private void stepReader(boolean forward){
-		boolean isSpeaking = tts.isSpeaking();
+		boolean isSpeaking =ttsReader.isSpeaking();
 		boolean doHighlight=true;
 		int direction = forward ? -1 : 1;
 		
 		if(reader_mode == ReaderMode.Listen){
-			spEditor.putBoolean(getString(R.string.sp_tts_reader_is_stepping), true).commit();
-			tts.stop();
+			spEditor.putBoolean(getString(R.string.sp_tts_reader_is_stepping), true).commit();			ttsReader.stop();
 			
 			if(isSpeaking){
 				setPlayStatus(ReaderStatus.Disabled, false);
@@ -755,15 +744,11 @@ public class ReaderActivity
 	private void setTTS(){		
 		int pitchRate 	= sp.getInt(getString(R.string.pref_pitch_title), 9);
 		int speechRate 	= sp.getInt(getString(R.string.pref_speech_rate_title), 9);
-		String language = "en_GB";
+
+		double pitch = ((pitchRate + 1.0) / 10.0);		ttsReader.setPitch((float)pitch);
+		double speech = ((speechRate + 1.0) / 10.0);		ttsReader.setSpeechRate((float)speech);
 		
-		double pitch = ((pitchRate + 1.0) / 10.0);
-		tts.setPitch((float)pitch);
-		double speech = ((speechRate + 1.0) / 10.0);
-		tts.setSpeechRate((float)speech);
-		
-		Locale loc = new Locale(language.substring(0, language.indexOf("_")), language.substring(language.indexOf("_")+1));
-		tts.setLanguage(loc);
+		//tts.setLanguage(Locale.UK);
 	}
 	
 	private void speakFromSentence(String id){
@@ -1030,8 +1015,10 @@ public class ReaderActivity
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
+			
 			reader.loadUrl("javascript:getSentences();");
 			reader.loadUrl("javascript:getWords();");
+			
 		}	
 	};
 	
@@ -1116,10 +1103,8 @@ public class ReaderActivity
 		
 		@JavascriptInterface
 		public void speakSentence(String text){
-			if(currSentPos==sentenceIds.size()-1)
-				tts.speak(text, currSentPos, true);
-			else
-				tts.speak(text, currSentPos, false);
+			if(currSentPos==sentenceIds.size()-1)				ttsReader.speak(text, currSentPos, true);
+			else				ttsReader.speak(text, currSentPos, false);
 		}
 		
 		@JavascriptInterface

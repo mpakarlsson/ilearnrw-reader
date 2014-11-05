@@ -1,7 +1,5 @@
 package com.example.reader.types;
 
-import java.util.ArrayList;
-
 import com.example.reader.R;
 
 import android.content.Context;
@@ -33,8 +31,8 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	private String mUnitsRight	= "";
 	private SeekBar mSeekBar;
 	private boolean mIsStatusNumber;
-	private ArrayList<String> mTextValues;
-	private String textValueIdentifier;
+	//private ArrayList<String> mTextValues;
+	//private String textValueIdentifier;
 	
 	private TextView mStatusText;
 	
@@ -66,7 +64,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		String units	= getAttributeStringValue(attrs, applicationns, "units", "");
 		mUnitsRight		= getAttributeStringValue(attrs, applicationns, "unitsRight", units);
 		
-		textValueIdentifier		= getAttributeStringValue(attrs, applicationns, "textValues", "");
+		//textValueIdentifier		= getAttributeStringValue(attrs, applicationns, "textValues", "");
 		
 		mIsStatusNumber	= Boolean.parseBoolean(getAttributeStringValue(attrs, applicationns, "statusNumber", "false"));
 

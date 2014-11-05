@@ -7,8 +7,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 
 import com.example.reader.popups.RenameActivity;
+import com.example.reader.texttospeech.TextToSpeechReader;
+import com.example.reader.types.BasicTimer;
 import com.example.reader.types.LibraryAdapter;
 import com.example.reader.types.LibraryItem;
 import com.example.reader.types.Pair;
@@ -63,6 +66,8 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_library);
+		
+		TextToSpeechReader.getInstance(getApplicationContext()).initializeTextToSpeech(Locale.UK);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		AppLocales.setLocales(getApplicationContext(), preferences.getString(getString(R.string.sp_user_language), "en"));
@@ -393,12 +398,18 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
+		
+		BasicTimer t = new BasicTimer("ReaderStartup.txt");
+		t.start("LibraryActivity ItemClick - getFilesFromLibrary");
+		
 		LibraryItem item = files.get(position);
 		Pair<File> libItems = FileHelper.getFilesFromLibrary(this, item.getName());
-		
+		t.stop(false);
+		 
 		if(item.getName().endsWith(".txt") || item.getName().endsWith(".html")){
 			String clean = FileHelper.readFromFile(libItems.first());
 			String json = FileHelper.readFromFile(libItems.second());
+			
 			Intent intent = new Intent(this, ReaderActivity.class);
 			intent.putExtra("html", clean);
 			intent.putExtra("cleanHtml", clean);
@@ -407,13 +418,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			intent.putExtra("trickyWords", (ArrayList<Word>) profile.getUserProblems().getTrickyWords());
 			
 			AnnotatedWordsSet.getInstance(this.getApplicationContext()).initUserBasedAnnotatedWordsSet(json, libItems.first().getName());
-			
-			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-			
-			//TODO - latest book to change reloading of UBAWS
-			if(!sp.contains(getString(R.string.sp_latest_book)))
-				sp.edit().putString(getString(R.string.sp_latest_book), libItems.first().getName());
-			
 			this.startActivity(intent);
 		} else if(item.getName().endsWith(".json")){
 			new AlertDialog.Builder(this)

@@ -118,7 +118,7 @@ public class ActiveRules extends ListActivity {
 	        View view = convertView;
 	        if (view == null) {
 	            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	            view = inflater.inflate(R.layout.row_active_rules, null);
+	            view = inflater.inflate(R.layout.row_active_rules, parent, false);
 	        }
 
 	        final Problem item = getItem(position);
@@ -195,8 +195,8 @@ public class ActiveRules extends ListActivity {
 		for (int i = 0; i < definitions.length; i++){
 			for (int j = 0; j < descriptions[i].length; j++){
 				String id = getString(R.string.sp_user_id);
-				int color 			= sp.getInt(sp.getInt(id, 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
-				int rule 			= sp.getInt(sp.getInt(id, 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
+				//int color 			= sp.getInt(sp.getInt(id, 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
+				//int rule 			= sp.getInt(sp.getInt(id, 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
 				boolean isChecked 	= sp.getBoolean(sp.getInt(id, 0)+"pm_enabled_"+i+"_"+j, false);
 				if (isChecked){
 					String text = "";
