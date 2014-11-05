@@ -234,5 +234,4 @@ public class FileHelper {
 		
 		return new Pair<File>(html, json);
 	}
-	
 }
