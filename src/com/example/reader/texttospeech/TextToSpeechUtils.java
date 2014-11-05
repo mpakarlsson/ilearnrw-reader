@@ -47,7 +47,7 @@ public class TextToSpeechUtils {
 		return supportedLocales;
 	}
 	
-	private static boolean isLanguageAvailable(Locale language, TextToSpeech tts){		
+	public static boolean isLanguageAvailable(Locale language, TextToSpeech tts){		
 		boolean available = false;
 		switch(tts.isLanguageAvailable(language))
 		{

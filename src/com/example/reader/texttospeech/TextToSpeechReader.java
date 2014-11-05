@@ -10,6 +10,7 @@ import com.example.reader.utils.Helper;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
@@ -60,10 +61,16 @@ public class TextToSpeechReader
 			@Override
 			public void run() {
 				if(status == TextToSpeech.SUCCESS){
+					
 					int result = TextToSpeech.LANG_MISSING_DATA;
 					result = tts.setLanguage(locale);
 					
 					if(result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
+						Intent installIntent = new Intent();
+						installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+						installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						context.startActivity(installIntent);
+						
 						Toast.makeText(context, "Initialization failed", Toast.LENGTH_SHORT).show();
 						Log.e("TTS", "TTS:onInit: Language not supported");
 					}
