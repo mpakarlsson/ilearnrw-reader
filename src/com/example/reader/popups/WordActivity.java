@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.example.reader.R;
+import com.example.reader.interfaces.OnTextToSpeechComplete;
 import com.example.reader.texttospeech.TextToSpeechReader;
 import com.example.reader.types.WordPopupAdapter;
 import com.example.reader.types.singleton.ProfileUser;
@@ -30,7 +31,9 @@ import android.widget.TextView;
 
 public class WordActivity 
 	extends 
-		Activity  {
+		Activity
+	implements
+		OnTextToSpeechComplete{
 	
 	private TextView tvTitle;
 	private ImageView ivSpeak;
@@ -40,11 +43,15 @@ public class WordActivity
 	private ArrayList<Word> trickyWords;
 	private String strWord;
 	
+	//private TextToSpeechReaderBase tts;
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialog_activity_word);
+		
+		//tts = new TextToSpeechReaderBase(this, this, Locale.UK);
 		
 		Bundle b = getIntent().getExtras();
 		tvTitle 			= (TextView) findViewById(R.id.tv_word_title);
@@ -69,6 +76,7 @@ public class WordActivity
 				TextToSpeechReader.getInstance(getApplicationContext()).speak(tvTitle.getText().toString());
 			}
 		});
+		ivSpeak.setEnabled(true);
 		
 		btnOk.setOnClickListener(new OnClickListener() {
 			@Override
@@ -128,4 +136,21 @@ public class WordActivity
 		
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 	}
+
+	@Override
+	public void onTextToSpeechInitialized() {
+		ivSpeak.setEnabled(true);
+	}
+
+	@Override
+	public void onTextToSpeechInstall() {
+	}
+
+	@Override
+	protected void onDestroy() {
+		//tts.destroy();
+		super.onDestroy();
+	}
+	
+	
 }

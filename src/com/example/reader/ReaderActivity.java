@@ -18,6 +18,7 @@ import com.example.reader.popups.ModeActivity;
 import com.example.reader.popups.SearchActivity;
 import com.example.reader.popups.WordActivity;
 import com.example.reader.texttospeech.TextToSpeechReader;
+import com.example.reader.texttospeech.TextToSpeechReaderId;
 import com.example.reader.texttospeech.TextToSpeechUtils;
 import com.example.reader.types.Pair;
 import com.example.reader.types.singleton.AnnotatedWordsSet;
@@ -239,6 +240,7 @@ public class ReaderActivity
 		//TextToSpeechUtils.checkLanguageData(this);
 	
 		ttsReader = TextToSpeechReader.getInstance(getApplicationContext());
+		//ttsReader = new TextToSpeechReaderId(this, this, Locale.UK, SENTENCE_TAG, this, this);
 			
 		reader = (WebView) findViewById(R.id.webview_reader);
 		reader.setOnLongClickListener(this);
@@ -292,19 +294,20 @@ public class ReaderActivity
 	
 	@Override
 	protected void onResume() {
-		TextToSpeechReader.getInstance(getApplicationContext()).activateIdDrive(this, this, this);
+		ttsReader.activateIdDrive(this, this, this);
 		super.onResume();
 	}
 
 	@Override
 	protected void onPause() {
 		turnOffHandler();
-		TextToSpeechReader.getInstance(getApplicationContext()).deactivateIdDrive();
+		ttsReader.deactivateIdDrive();
 		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
+		ttsReader.destroy();
 		super.onDestroy();
 	}
 
@@ -1121,6 +1124,7 @@ public class ReaderActivity
 			
 			_word = _word.replace("\n", "");
 			_word = _word.trim();
+			_word = Helper.removeSpans(new StringBuilder(_word)).toString();
 			
 			ArrayList<Integer> values = new ArrayList<Integer>();
 			ArrayList<String> datas = new ArrayList<String>();
@@ -1347,8 +1351,12 @@ public class ReaderActivity
 				ibtnNext.setEnabled(true);
 				ibtnPrev.setEnabled(true);
 			}
-		});
-		
+		});	
+	}
+	
+	@Override
+	public void onTextToSpeechInstall() {
+		onBackPressed();
 	}
 	
 	private class HighlightRunnable implements Runnable{

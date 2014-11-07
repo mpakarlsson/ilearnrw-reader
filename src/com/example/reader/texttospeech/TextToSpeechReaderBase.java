@@ -4,10 +4,10 @@ package com.example.reader.texttospeech;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import com.example.reader.LibraryActivity;
 import com.example.reader.interfaces.OnTextToSpeechComplete;
 import com.example.reader.utils.Helper;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,18 +16,21 @@ import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
 import android.widget.Toast;
 
-public class TextToSpeechBase implements OnInitListener{
+public class TextToSpeechReaderBase implements OnInitListener{
 
 	public static final int TTS_INSTALLED_CODE = TextToSpeechUtils.FLAG_CHECK_TTS_DATA;
 	
 	protected Context context;
 	protected TextToSpeech tts;	
+	protected Locale locale;
+	protected String primaryEnginePackage;
 	
 	protected OnTextToSpeechComplete listener;
 	
-	public TextToSpeechBase(final Context context, OnTextToSpeechComplete listener, int requestCode, int resultCode, Intent data){
+	public TextToSpeechReaderBase(final Context context, OnTextToSpeechComplete listener, Locale locale){
 		this.context 	= context;
 		this.listener	= listener;
+		this.locale		= locale;
 		
 		PackageManager pm 	= context.getPackageManager();
 		ArrayList<String> availableEngines = new ArrayList<String>();
@@ -46,26 +49,13 @@ public class TextToSpeechBase implements OnInitListener{
 		if(Helper.isPackageInstalled(pm, strSamsung))
 			availableEngines.add(strSamsung);
 		
-		if(requestCode == TTS_INSTALLED_CODE){
-			if(resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS){								
-				if(availableEngines.isEmpty())
-					tts = new TextToSpeech(context, this);
-				else 
-					tts = new TextToSpeech(context, this, availableEngines.get(0));
-			} else {
-				Intent installIntent = new Intent();
-				installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-				installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				installIntent.setPackage(availableEngines.get(0)/*replace with the package name of the target TTS engine*/);
-			 
-				try {
-			        Log.v("TTS", "Installing voice data: " + installIntent.toUri(0));
-			        context.startActivity(installIntent);
-			    } catch (ActivityNotFoundException ex) {
-			        Log.e("TTS", "Failed to install TTS data, no acitivty found for " + installIntent + ")");
-			    }
-			}
+		if(availableEngines.isEmpty())
+			tts = new TextToSpeech(context, this);
+		else {
+			primaryEnginePackage = availableEngines.get(0);
+			tts = new TextToSpeech(context, this, primaryEnginePackage);
 		}
+		
 	}
 	
 	@Override
@@ -73,9 +63,24 @@ public class TextToSpeechBase implements OnInitListener{
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				if(!TextToSpeechUtils.isLanguageAvailable(locale, tts)){
+					Intent installIntent = new Intent();
+					installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+					installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					if(primaryEnginePackage!=null)
+						installIntent.setPackage(primaryEnginePackage/*replace with the package name of the target TTS engine*/);
+					context.startActivity(installIntent);
+					
+					listener.onTextToSpeechInstall();
+					return;
+				}
+				
 				if(status == TextToSpeech.SUCCESS) {
 					int result = TextToSpeech.LANG_MISSING_DATA;
 					result = tts.setLanguage(Locale.UK);
+				
+					
+					
 					
 					if(result == TextToSpeech.LANG_MISSING_DATA ||
 							result == TextToSpeech.LANG_NOT_SUPPORTED) {
@@ -97,10 +102,8 @@ public class TextToSpeechBase implements OnInitListener{
 	}
 	
 	public void speak(String text){
-		if(text==null || text.isEmpty()){
-			Log.e("TTS", "TTS: Speak: No data to speak");
+		if(text==null || text.isEmpty())
 			return;
-		}
 		
 		tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
 	}

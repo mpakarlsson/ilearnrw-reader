@@ -94,6 +94,21 @@ public class Helper {
             return false;
         }
         return true;
-}
+	}
+	
+	public static StringBuilder removeSpans(StringBuilder builder){
+		int openIndex = builder.indexOf("<");
+		int closeIndex = builder.indexOf(">");
+		
+		if(openIndex == -1 || closeIndex == -1)
+			return builder;
+		
+		if(closeIndex <= openIndex)
+			return builder;
+		
+		builder = builder.delete(openIndex, closeIndex+1);
+		builder = removeSpans(builder);
+		return builder;
+	}
 	
 }
