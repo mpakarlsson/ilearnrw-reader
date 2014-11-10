@@ -144,5 +144,8 @@
  <color name="NeutralBlue">#91B2B4</color>
  <color name="NeutralGreen">#A4AD95</color>
  <color name="NeutralRed">#D9BFA9</color>
+
+ <color name="BackgroundDefaultOdd">#F8F6E9</color>
+ <color name="BackgroundDefaultEven">#E7E3D1</color>
  
 </resources>

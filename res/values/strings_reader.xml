@@ -36,9 +36,15 @@
 	
 	<string-array 
 	    name="word_information">
-	    <item>Stem:</item>
-	    <item>Syllables:</item>
-	    <item>Phoneme:</item>
-	    <item>Problems:</item>
+	    <item>Stem</item>
+	    <item>Syllables</item>
+	    <item>Phonics</item>
+	    <item>Sounds</item>
 	</string-array>
+	
+	<string name="wp_stem">Stem</string>
+	<string name="wp_syllables">Syllables</string>
+	<string name="wp_phonics">Details</string>
+	<string name="wp_sounds">Sounds</string>
+	
 </resources>

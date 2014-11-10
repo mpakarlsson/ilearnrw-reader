@@ -5,25 +5,26 @@ import ilearnrw.user.profile.UserProfile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 import com.example.reader.R;
 import com.example.reader.interfaces.OnTextToSpeechComplete;
 import com.example.reader.texttospeech.TextToSpeechReader;
-import com.example.reader.types.WordPopupAdapter;
+import com.example.reader.types.WordPopupDetailsAdapter;
 import com.example.reader.types.singleton.ProfileUser;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -37,13 +38,16 @@ public class WordActivity
 	
 	private TextView tvTitle;
 	private ImageView ivSpeak;
-	private ListView list;
 	private Button btnOk;
 	
 	private ArrayList<Word> trickyWords;
 	private String strWord;
 	
 	//private TextToSpeechReaderBase tts;
+	
+	private TextView tvStemTitle, tvStemInfo, tvSyllablesTitle, tvSyllablesInfo, tvSoundsTitle, tvSoundsInfo, tvPhonicsTitle;
+	private ListView lvPhonics;
+	private WordPopupDetailsAdapter detailsAdapter;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -56,19 +60,62 @@ public class WordActivity
 		Bundle b = getIntent().getExtras();
 		tvTitle 			= (TextView) findViewById(R.id.tv_word_title);
 		ivSpeak 			= (ImageView) findViewById(R.id.iv_word_speak);
-		list 				= (ListView) findViewById(R.id.lv_word_info);
+		
+		
+		tvStemTitle			= (TextView) findViewById(R.id.tv_wp_stem_title);
+		tvStemInfo			= (TextView) findViewById(R.id.tv_wp_stem_info);
+		
+		tvSyllablesTitle 	= (TextView) findViewById(R.id.tv_wp_syllables_title);
+		tvSyllablesInfo 	= (TextView) findViewById(R.id.tv_wp_syllables_info);
+		
+		tvSoundsTitle		= (TextView) findViewById(R.id.tv_wp_sounds_title);
+		tvSoundsInfo		= (TextView) findViewById(R.id.tv_wp_sounds_info);
+		
+		tvPhonicsTitle		= (TextView) findViewById(R.id.tv_wp_phonics_title);
+		lvPhonics			= (ListView) findViewById(R.id.lv_wp_phonics_info);
+		
 		btnOk				= (Button) findViewById(R.id.btn_word_ok);
 		
 		String def = getResources().getString(R.string.default_text);
 		strWord = b.getString("word", def);
 		tvTitle.setText(strWord);
 		
-		String wordInSyllables 	= b.getString("wordInSyllables", "-"+strWord+"-");
+		tvStemTitle.setText(getString(R.string.wp_stem));
+		tvSyllablesTitle.setText(getString(R.string.wp_syllables));
+		tvSoundsTitle.setText(getString(R.string.wp_sounds));
+		tvPhonicsTitle.setText(getString(R.string.wp_phonics));
+		
+		tvStemTitle.setTypeface(tvStemTitle.getTypeface(), Typeface.BOLD);
+		tvSyllablesTitle.setTypeface(tvSyllablesTitle.getTypeface(), Typeface.BOLD);
+		tvSoundsTitle.setTypeface(tvSoundsTitle.getTypeface(), Typeface.BOLD);
+		tvPhonicsTitle.setTypeface(tvPhonicsTitle.getTypeface(), Typeface.BOLD);
+		
+		
+		String wordInSyllables 	= b.getString("wordInSyllables", strWord.toLowerCase(Locale.getDefault()));
 		String stem 			= b.getString("stem", strWord);
 		String phoneme			= b.getString("phoneme", "-");
 		ArrayList<Integer> problems = b.getIntegerArrayList("problems");
 		ArrayList<String> datas		= b.getStringArrayList("data");
 		trickyWords					= (ArrayList<Word>) b.get("trickyWords");
+		
+		StringBuilder sb =  new StringBuilder(wordInSyllables);
+		
+		if(sb.charAt(0) == '-')
+			sb.deleteCharAt(0);
+		
+		if(sb.charAt(sb.length()-1) == '-')
+			sb.deleteCharAt(sb.length()-1);
+		
+		wordInSyllables = sb.toString().toLowerCase(Locale.getDefault());
+		
+		tvStemInfo.setText(stem);		
+		tvSyllablesInfo.setText(wordInSyllables);
+		
+		if(phoneme.isEmpty())
+			phoneme = "-";
+		
+		tvSoundsInfo.setText(phoneme);
+		
 		
 		ivSpeak.setOnClickListener(new OnClickListener() {
 			@Override
@@ -88,46 +135,48 @@ public class WordActivity
 			}
 		});
 		
-		ArrayList<String> objects 		= new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.word_information)));
-		ArrayList<Spannable> items		= new ArrayList<Spannable>();
-		items.add(new SpannableString(stem));
-		items.add(new SpannableString(wordInSyllables));
-		items.add(new SpannableString(phoneme));
-		
 		Spannable currSpan = null;
 		int pos=-1;
 		
 		ArrayList<Spannable> spans = new ArrayList<Spannable>();
+		int currentCategory = -1;
+		detailsAdapter = new WordPopupDetailsAdapter(this);
+		UserProfile p = ProfileUser.getInstance(this.getApplicationContext()).getProfile();
+		
 		for(int i=problems.size()-1; i>=0; i-=3){
 			int oldPos = pos;
 			pos 	= problems.get(i-2);
 			int start 	= problems.get(i-1);
 			int end 	= problems.get(i);
 			
+			int category = Integer.valueOf(datas.get(i-1));
+			int index = Integer.valueOf(datas.get(i));
+
+			String[] descriptions =  p.getUserProblems().getProblemDescription(category, index).getHumanReadableDescription().split("<>");
+			
 			if(pos==oldPos){
 				currSpan.setSpan(new BackgroundColorSpan(Color.YELLOW), start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-			} else{
+			} else {
 				if(currSpan!=null)
 					spans.add(currSpan);
 				//currSpan = new SpannableString(strWord + " - Problem(" + datas.get(i-1) + "," + datas.get(i) + ") " + datas.get(i-2) + "\n");
 				
-				int category = Integer.valueOf(datas.get(i-1));
-				int index = Integer.valueOf(datas.get(i));
 				
-				UserProfile p = ProfileUser.getInstance(this.getApplicationContext()).getProfile();
-				currSpan = new SpannableString(strWord + " - " + p.getUserProblems().getProblemDescription(category, index).getHumanReadableDescription() + "\n");
-				currSpan.setSpan(new BackgroundColorSpan(Color.YELLOW), start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+				if(category != currentCategory){
+					currentCategory = category;
+					detailsAdapter.addSectionHeader(new SpannableString(p.getUserProblems().getProblemDefinition(category).getUri()));
+				}
+				
+				
+				
+				currSpan = new SpannableString(strWord);
+				currSpan.setSpan(new BackgroundColorSpan(getResources().getColor(R.color.LightYellow)), start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+				
 			}
+			
+			detailsAdapter.addItem(currSpan, descriptions[0]);
 		}
-		spans.add(currSpan);
-
-		CharSequence seq = TextUtils.concat(spans.toArray(new Spannable[spans.size()]));
-		
-		Spannable span = seq == null ? new SpannableString("-") : new SpannableString(seq);
-		items.add(span);
-		
-		ArrayAdapter<String> adapter = new WordPopupAdapter(this, R.layout.row_word_popup, objects, items, true);
-		list.setAdapter(adapter);
+		lvPhonics.setAdapter(detailsAdapter);
 	}
 
 	@Override

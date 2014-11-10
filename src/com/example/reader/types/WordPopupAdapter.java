@@ -99,10 +99,10 @@ public class WordPopupAdapter extends ArrayAdapter<String>{
 		View view = convertView;
 		
 		if(view==null){
-			view 				= inflater.inflate(R.layout.row_word_popup, null);
+			view 				= inflater.inflate(R.layout.row_word_popup_item, null);
 			viewHolder 			= new ViewHolder();
-			viewHolder.title 	= (TextView) view.findViewById(R.id.tv_item_title);
-			viewHolder.data		= (TextView) view.findViewById(R.id.tv_item_info);
+			viewHolder.title 	= (TextView) view.findViewById(R.id.tv_wp_item_title);
+			viewHolder.data		= (TextView) view.findViewById(R.id.tv_wp_item_info);
 			viewHolder.title.setTextSize(textSize);
 			view.setTag(viewHolder);
 		}

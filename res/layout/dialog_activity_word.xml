@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="450dp"
     android:orientation="vertical"
     android:paddingLeft="@dimen/spacer_25"
     android:paddingRight="@dimen/spacer_25"
@@ -11,22 +11,22 @@
     <RelativeLayout 
         android:id="@+id/layout_title"
         android:layout_width="match_parent"
-        android:layout_height="30dp">
+        android:layout_height="50dp">
         
         <TextView 
 	        android:id="@+id/tv_word_title"
 	        android:layout_width="wrap_content"
 	        android:layout_height="match_parent"
 	        android:text="@string/default_text"
-	        android:textSize="@dimen/font_size_default_title"
+	        android:textSize="@dimen/font_size_default_title_extra_large"
 	        android:layout_alignParentLeft="true"
-	        android:gravity="center_vertical"/>
+	        android:gravity="center_vertical|center_horizontal"/>
 	    
         
         <ImageView
             android:id="@+id/iv_word_speak"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:scaleType="fitXY"
             android:contentDescription="@string/empty"
             android:layout_alignParentRight="true"
@@ -45,16 +45,98 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:text="@android:string/ok"
-        style="?android:attr/buttonBarButtonStyle"/>    
+        style="?android:attr/buttonBarButtonStyle"/>
         
-    <ListView 
-        android:id="@+id/lv_word_info"
+	<LinearLayout 
+	    android:id="@+id/ll_wp_stem"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_below="@id/line_divider"
-        android:layout_above="@id/btn_word_ok"/>
-    
-    
-    
-    
+        android:background="@color/BackgroundDefaultOdd">
+           
+        <TextView 
+            android:id="@+id/tv_wp_stem_title"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="3"
+	        android:text="@string/default_text"/>
+           
+		<TextView 
+		    android:id="@+id/tv_wp_stem_info"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="@string/default_text"/>
+	</LinearLayout>
+	
+	<LinearLayout 
+	    android:id="@+id/ll_wp_syllables"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/ll_wp_stem"
+        android:background="@color/BackgroundDefaultEven">
+           
+        <TextView 
+            android:id="@+id/tv_wp_syllables_title"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="3"
+	        android:text="@string/default_text"/>
+           
+		<TextView 
+		    android:id="@+id/tv_wp_syllables_info"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="@string/default_text"/>
+	</LinearLayout>
+	
+	<LinearLayout 
+	    android:id="@+id/ll_wp_sounds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/ll_wp_syllables"
+        android:background="@color/BackgroundDefaultOdd">
+           
+        <TextView 
+            android:id="@+id/tv_wp_sounds_title"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="3"
+	        android:text="@string/default_text"/>
+           
+		<TextView 
+		    android:id="@+id/tv_wp_sounds_info"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="@string/default_text"/>
+	</LinearLayout>
+	
+	<LinearLayout 
+	    android:id="@+id/ll_wp_phonics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/ll_wp_sounds"
+        android:layout_above="@id/btn_word_ok"
+        android:background="@color/BackgroundDefaultEven">
+           
+        <TextView 
+            android:id="@+id/tv_wp_phonics_title"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
+	        android:layout_weight="3"
+	        android:text="@string/default_text"/>
+           
+        <ListView 
+            android:id="@+id/lv_wp_phonics_info"
+        	android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"/>
+	</LinearLayout>
 </RelativeLayout>
