@@ -111,4 +111,15 @@ public class Helper {
 		return builder;
 	}
 	
+	public static StringBuilder removeSubstring(StringBuilder builder, String str){
+		int index = builder.indexOf(str);
+		
+		if(index == -1)
+			return builder;
+		
+		return builder = builder.delete(index, index+str.length());
+		
+		
+	}
+	
 }

@@ -23,8 +23,8 @@
     <string name="dialog_logout_title">Logout</string>
     <string name="dialog_logout_message">Do you wish to log out?</string>
     
-    <string name="copy_file_external_succeeded">Copy successful</string>
-    <string name="copy_file_external_failed">Copy failed</string>
+    <string name="copy_file_external_succeeded">Succeeded copying</string>
+    <string name="copy_file_external_failed">Failed copying</string>
     
     <string name="copy_confirm_start">Copy\u0020</string>
 	<string name="copy_confirm_end">\u0020to your library?</string>

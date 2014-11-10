@@ -258,12 +258,27 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					boolean result = FileHelper.copyFileToExternalStorage(clickItem.getFile(), clickItem.getName(), getString(R.string.external_storage_folder_name));
+					ArrayList<File> libFiles = (ArrayList<File>) FileHelper.getFileList(libDir, true);
+					String name = Helper.removeSubstring(new StringBuilder(clickItem.getName()), ".txt").toString();
+					boolean result = false;
 					
-					if(result)
-						Toast.makeText(getBaseContext(), getString(R.string.copy_file_external_succeeded), Toast.LENGTH_SHORT).show();
-					else
-						Toast.makeText(getBaseContext(), getString(R.string.copy_file_external_failed), Toast.LENGTH_SHORT).show();
+					for(File item : libFiles){
+						 
+						String n = item.getName();
+						if(n.endsWith(".json"))
+							n = Helper.removeSubstring(new StringBuilder(item.getName()), ".json").toString();
+						else if(n.endsWith(".txt"))
+							n = Helper.removeSubstring(new StringBuilder(item.getName()), ".txt").toString();
+						
+						if(n.equals(name)){
+							result = FileHelper.copyFileToExternalStorage(item, item.getName(), getString(R.string.external_storage_folder_name));
+							
+							if(result)
+								Toast.makeText(getBaseContext(), getString(R.string.copy_file_external_succeeded) + " " + item.getName(), Toast.LENGTH_SHORT).show();
+							else
+								Toast.makeText(getBaseContext(), getString(R.string.copy_file_external_failed) + " " + item.getName(), Toast.LENGTH_SHORT).show();
+						}
+					}
 				}
 			}).show();
 		}
