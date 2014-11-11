@@ -20,7 +20,8 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	private final String TAG = getClass().getName();
 	
 	private static final String androidns = "http://schemas.android.com/apk/res/android";
-	private static final String applicationns = "http://schemas.android.com/apk/res/com.example.reader";
+	//private static final String applicationns = "http://schemas.android.com/apk/res/com.example.reader";
+	private static final String applicationns = "http://schemas.android.com/apk/res-auto";
 	private int mDefault = 50;
 	
 	private int mMax		= 100;
@@ -31,31 +32,30 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	private String mUnitsRight	= "";
 	private SeekBar mSeekBar;
 	private boolean mIsStatusNumber;
-	//private ArrayList<String> mTextValues;
-	//private String textValueIdentifier;
 	
+	private CharSequence[] mTextValues;
 	private TextView mStatusText;
 	
 	public SeekBarPreference(Context context, AttributeSet attrs){
 		super(context, attrs);
-		initPreference(context, attrs);
+		initPreference(context, attrs, 0);
 	}
 	
 	public SeekBarPreference(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
-		initPreference(context, attrs);
+		initPreference(context, attrs, defStyle);
 	}
 	
-	private void initPreference(Context context, AttributeSet attrs){
-		setValuesFromXml(attrs);
+	private void initPreference(Context context, AttributeSet attrs, int defStyle){
+		setValuesFromXml(context, attrs);
 		mSeekBar = new SeekBar(context, attrs);
 		mSeekBar.setMax(mMax - mMin);
 		mSeekBar.setOnSeekBarChangeListener(this);
 		
-		setWidgetLayoutResource(R.layout.widget_preference_seekbar);
+		setWidgetLayoutResource(R.layout.widget_preference_seekbar);		
 	}
 	
-	private void setValuesFromXml(AttributeSet attrs){
+	private void setValuesFromXml(Context context, AttributeSet attrs){
 		mMax 		= attrs.getAttributeIntValue(androidns, "max", 100);
 		mDefault 	= attrs.getAttributeIntValue(androidns, "defaultValue", 50);
 		mMin 		= attrs.getAttributeIntValue(applicationns, "min", 0);
@@ -64,10 +64,18 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		String units	= getAttributeStringValue(attrs, applicationns, "units", "");
 		mUnitsRight		= getAttributeStringValue(attrs, applicationns, "unitsRight", units);
 		
-		//textValueIdentifier		= getAttributeStringValue(attrs, applicationns, "textValues", "");
-		
 		mIsStatusNumber	= Boolean.parseBoolean(getAttributeStringValue(attrs, applicationns, "statusNumber", "false"));
-
+		
+		TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.PreferenceSeekBar, 0, 0);		
+		try {
+			mTextValues = a.getTextArray(com.example.reader.R.styleable.PreferenceSeekBar_textValues);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			mTextValues = new CharSequence[] {"Default", "Slowest", "Slower", "Slow", "Fast", "Faster", "Fastest"};
+		} finally {
+			a.recycle();
+		}
+		
 		try {
 			String newInterval = attrs.getAttributeValue(applicationns, "interval");
 			if(newInterval != null)
@@ -163,26 +171,26 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 			double diff = 0.0;
 			
 			if(mCurrent == mDefault)
-				mStatusText.setText("Default");
+				mStatusText.setText(mTextValues[0]);
 			else if(mCurrent>mDefault){
 				diff = (double)(mCurrent-mDefault)/(double)mDefault;
 				
 				if(diff>=0.0 && diff<0.5)
-					mStatusText.setText("Fast");
+					mStatusText.setText(mTextValues[4]);
 				else if(diff>=0.5 && diff<1.0)
-					mStatusText.setText("Faster");
+					mStatusText.setText(mTextValues[5]);
 				else if(diff>=1.0)
-					mStatusText.setText("Rabbit");
+					mStatusText.setText(mTextValues[6]);
 			}
 			else {
 				diff = (double)(mDefault-mCurrent)/(double)mCurrent;
 				
 				if(diff>=0.0 && diff<0.5)
-					mStatusText.setText("Slow");
+					mStatusText.setText(mTextValues[3]);
 				else if(diff>=0.5 && diff<1.0)
-					mStatusText.setText("Slower");
+					mStatusText.setText(mTextValues[2]);
 				else if(diff>=1.0)
-					mStatusText.setText("Turtle");
+					mStatusText.setText(mTextValues[1]);
 			}			
 		}
 	}

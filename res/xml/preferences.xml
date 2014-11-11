@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen 
     xmlns:android="http://schemas.android.com/apk/res/android" 
-    xmlns:ns="http://schemas.android.com/apk/res/com.example.reader"
+    xmlns:ns="http://schemas.android.com/apk/res-auto"
     android:key="reader_prefs"
     android:title="@string/reader_prefs">
-    
+    <!-- xmlns:ns="http://schemas.android.com/apk/res/com.example.reader" -->
     
     <PreferenceCategory
         android:title="@string/pref_text_category_title"
@@ -19,8 +19,7 @@
 			ns:min="15"
 			ns:unitsLeft=""
 			ns:unitsRight="pt"
-			ns:statusNumber="true"
-			ns:textValues="@array/pref_font_values"/>
+			ns:statusNumber="true"/>
          
          <ListPreference 
             android:key="pref_font_face"
@@ -90,7 +89,8 @@
 			ns:min="4"
 			ns:unitsLeft=""
 			ns:unitsRight=""
-			ns:statusNumber="false"/>
+			ns:statusNumber="false"
+			ns:textValues="@array/pref_speech_rate_values"/>
         
         <com.example.reader.types.SeekBarPreference 
 		    android:key="pref_pitch"
@@ -101,7 +101,8 @@
 			ns:min="4"
 			ns:unitsLeft=""
 			ns:unitsRight=""
-			ns:statusNumber="false"/>
+			ns:statusNumber="false"
+			ns:textValues="@array/pref_pitch_values"/>
         
     </PreferenceCategory>
     
