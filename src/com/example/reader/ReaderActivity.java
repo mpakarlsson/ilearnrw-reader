@@ -2,9 +2,9 @@ package com.example.reader;
 
 import ilearnrw.annotation.UserBasedAnnotatedWord;
 import ilearnrw.annotation.UserBasedAnnotatedWordsSet;
-import ilearnrw.textclassification.SeverityOnWordProblemInfo;
 import ilearnrw.textclassification.StringMatchesInfo;
 import ilearnrw.textclassification.Word;
+import ilearnrw.textclassification.WordProblemInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +18,6 @@ import com.example.reader.popups.ModeActivity;
 import com.example.reader.popups.SearchActivity;
 import com.example.reader.popups.WordActivity;
 import com.example.reader.texttospeech.TextToSpeechReader;
-import com.example.reader.texttospeech.TextToSpeechReaderId;
 import com.example.reader.texttospeech.TextToSpeechUtils;
 import com.example.reader.types.Pair;
 import com.example.reader.types.singleton.AnnotatedWordsSet;
@@ -1139,9 +1138,9 @@ public class ReaderActivity
 					in.putExtra("wordInSyllables", word.getWordInToSyllables());
 					in.putExtra("trickyWords", trickyWords);
 					
-					ArrayList<SeverityOnWordProblemInfo> problems = word.getUserSeveritiesOnWordProblems();
+					ArrayList<WordProblemInfo> problems = word.getWordProblems();
 					for(int j=0; j<problems.size(); j++){
-						SeverityOnWordProblemInfo problem = problems.get(j);
+						WordProblemInfo problem = problems.get(j);
 						problem.getCategory();
 						problem.getIndex();
 						
