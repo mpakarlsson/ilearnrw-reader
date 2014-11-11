@@ -307,7 +307,7 @@ public class ReaderActivity
 
 	@Override
 	protected void onDestroy() {
-		ttsReader.destroy();
+		//ttsReader.destroy();
 		super.onDestroy();
 	}
 
