@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:ns="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical"
 	android:layout_width="fill_parent" 
 	android:layout_height="fill_parent"
 	android:background="#ddd" >
-    
+   
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,34 +29,55 @@
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
 		android:layout_marginTop="@dimen/spacer_8"
-		android:gravity="center">	
-		<TextView
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-	        android:textSize="24sp"
-     		android:paddingLeft="20dp"
-			android:text="@string/personal_recomendations" />
-		<Button
-			android:id="@+id/personal_recomendations_one"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-       		android:gravity="center_vertical|left"
-	        android:background="#ccc"
-     		android:paddingLeft="20dp"
-			android:text="@string/no_suggestions" />
-		<View
-		    android:layout_width="fill_parent"
-		    android:layout_height="1dp"
-		    android:background="@android:color/darker_gray"/>
-		<Button
-			android:id="@+id/personal_recomendations_two"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-       		android:gravity="center_vertical|left"
-	        android:background="#ccc"
-     		android:paddingLeft="20dp"
-			android:text="@string/no_suggestions" />
-	
+		android:gravity="center">
+		
+		<com.example.reader.types.ExpandableLayout
+	        android:id="@+id/expTest"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        ns:animationDuration="250"
+	        ns:collapsedHeight="1dip"
+	        ns:content="@+id/groups_view_recommendation_content_holder"
+	        ns:handle="@+id/groups_view_recommendation_handler">
+        
+			<TextView
+			    android:id="@id/groups_view_recommendation_handler"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+		        android:textSize="24sp"
+	     		android:paddingLeft="20dp"
+				android:text="@string/personal_recommendations" />
+			
+			<LinearLayout 
+			    android:id="@id/groups_view_recommendation_content_holder"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical">
+			    
+			    <Button
+					android:id="@+id/personal_recomendations_one"
+				    android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+		       		android:gravity="center_vertical|left"
+			        android:background="#ccc"
+		     		android:paddingLeft="20dp"
+					android:text="@string/no_suggestions" />
+				<View
+				    android:layout_width="fill_parent"
+				    android:layout_height="1dp"
+				    android:background="@android:color/darker_gray"/>
+				<Button
+					android:id="@+id/personal_recomendations_two"
+				    android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+		       		android:gravity="center_vertical|left"
+			        android:background="#ccc"
+		     		android:paddingLeft="20dp"
+					android:text="@string/no_suggestions" />
+			</LinearLayout>
+			
+		</com.example.reader.types.ExpandableLayout>
 	</LinearLayout>
 	
 	<View

@@ -8,6 +8,13 @@
 	    <attr name="textValues"		format="reference"/>
 	</declare-styleable>
 	
+	<declare-styleable name="ExpandableLayout">
+	    <attr name="handle"				format="reference"/>
+	    <attr name="content" 			format="reference"/>
+	    <attr name="collapsedHeight" 	format="dimension"/>
+	    <attr name="animationDuration"	format="integer"/>
+	</declare-styleable>
+	
 	<declare-styleable name="ColorPickerPreference">
 	    <attr name="supportsAlpha" format="boolean"/>
 	</declare-styleable>
