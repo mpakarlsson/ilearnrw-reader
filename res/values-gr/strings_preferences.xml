@@ -103,22 +103,22 @@
     
     
     <string-array name="pref_speech_rate_values">
-        <item>Default</item>
-        <item>Turtle</item>
+        <item>Normal</item>
+        <item>Slowest</item>
         <item>Slower</item>
         <item>Slow</item>
         <item>Fast</item>
         <item>Faster</item>
-        <item>Rabbit</item>
+        <item>Fastest</item>
     </string-array>
     
     <string-array name="pref_pitch_values">
-        <item>Default</item>
-        <item>Still</item>
-        <item>Slower</item>
-        <item>Slow</item>
-        <item>Fast</item>
-        <item>Faster</item>
-        <item>Lightning</item>
+        <item>Normal</item>
+        <item>Lowest</item>
+        <item>Lower</item>
+        <item>Low</item>
+        <item>High</item>
+        <item>Higher</item>
+        <item>Highest</item>
     </string-array>
 </resources>
