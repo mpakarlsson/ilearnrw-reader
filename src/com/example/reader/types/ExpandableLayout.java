@@ -5,7 +5,6 @@ import com.example.reader.R;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
@@ -41,6 +40,7 @@ public class ExpandableLayout extends LinearLayout{
 		collapsedHeight 	= (int) a.getDimension(R.styleable.ExpandableLayout_collapsedHeight, 0.0f);
 		animationDuration 	= (int) a.getInteger(R.styleable.ExpandableLayout_animationDuration, 500);
 		
+		expanded			= (boolean) a.getBoolean(R.styleable.ExpandableLayout_expanded, false);
 		int hId 			= a.getResourceId(R.styleable.ExpandableLayout_handle, 0);
 		if(hId == 0)
 			throw new IllegalArgumentException("The handle attribute is required and must refer to a valid child.");
@@ -67,6 +67,10 @@ public class ExpandableLayout extends LinearLayout{
 		this.animationDuration = animationDuration;
 	}
 
+	public boolean getExpanded(){
+		return expanded;
+	}
+	
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
@@ -90,13 +94,13 @@ public class ExpandableLayout extends LinearLayout{
 		content.measure(widthMeasureSpec, MeasureSpec.UNSPECIFIED);
 		contentHeight = content.getMeasuredHeight();
 		
+		/*
 		if(contentHeight < collapsedHeight){
 			handle.setVisibility(View.GONE);
-			Log.d("onMeasure", "Gone");
 		} else {
 			handle.setVisibility(View.VISIBLE);
-			
 		}
+		*/
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
 	
@@ -107,13 +111,9 @@ public class ExpandableLayout extends LinearLayout{
 			if(expanded){
 				a = new ExpandAnimation(contentHeight, collapsedHeight);
 				listener.onCollapse(handle, content);
-				Log.d("LayoutToggler", "start " + contentHeight + " end " + collapsedHeight);
-				Log.d("LayoutToggler", "Collapse");
 			} else {
 				a = new ExpandAnimation(collapsedHeight, contentHeight);
 				listener.onExpand(handle, content);
-				Log.d("LayoutToggler", "start " + collapsedHeight + " end " + contentHeight);
-				Log.d("LayoutToggler", "Expand");
 			}
 			a.setDuration(animationDuration);
 			content.startAnimation(a);

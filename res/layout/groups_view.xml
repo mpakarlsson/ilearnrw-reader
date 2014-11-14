@@ -16,13 +16,40 @@
 	        android:id="@+id/groups_view_header"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:gravity="center_horizontal"
-	        android:layout_centerHorizontal="true"
 	        android:textSize="40sp"
             android:text="@string/title_activity_grouping"/>
         
 	</RelativeLayout>
 	
+    <LinearLayout 
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_marginTop="@dimen/spacer_8">	
+		
+		<Button
+			android:id="@+id/clear_rules"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+       		android:layout_marginLeft="5dp"
+	        android:background="#ccc"
+			android:text="@string/clear_rules"
+			android:layout_weight="1"
+			style="?android:attr/buttonBarButtonStyle" />
+			
+		<Button
+			android:id="@+id/show_advanced"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+     		android:layout_marginLeft="5dp"
+     		android:layout_marginRight="5dp"
+	        android:background="#ccc"
+			android:text="@string/advanced_rules"
+			android:layout_weight="1"
+			style="?android:attr/buttonBarButtonStyle" />
+	
+	</LinearLayout>
+    
 	<LinearLayout 
 		android:id="@+id/personal_recomendations_block"
 		android:layout_width="match_parent"
@@ -31,8 +58,13 @@
 		android:layout_marginTop="@dimen/spacer_8"
 		android:gravity="center">
 		
+	    <View
+		    android:layout_width="fill_parent"
+		    android:layout_height="2dp"
+		    android:background="@android:color/darker_gray"/>
+		
 		<com.example.reader.types.ExpandableLayout
-	        android:id="@+id/expTest"
+	        android:id="@+id/expLayoutRecommendations"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
@@ -41,13 +73,26 @@
 	        ns:content="@+id/groups_view_recommendation_content_holder"
 	        ns:handle="@+id/groups_view_recommendation_handler">
         
-			<TextView
-			    android:id="@id/groups_view_recommendation_handler"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-		        android:textSize="24sp"
-	     		android:paddingLeft="20dp"
-				android:text="@string/personal_recommendations" />
+		    <RelativeLayout 
+		        android:id="@id/groups_view_recommendation_handler"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content">
+		        <TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+			        android:textSize="24sp"
+		     		android:paddingLeft="20dp"
+					android:text="@string/personal_recommendations" />
+		        <ImageButton 
+		            android:id="@+id/recommendationArrow"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:contentDescription="@string/empty"
+		            android:layout_alignParentRight="true"
+		            android:layout_centerVertical="true"
+		            android:background="@drawable/arrow_down"/>
+		    </RelativeLayout>
+			
 			
 			<LinearLayout 
 			    android:id="@id/groups_view_recommendation_content_holder"
@@ -62,7 +107,8 @@
 		       		android:gravity="center_vertical|left"
 			        android:background="#ccc"
 		     		android:paddingLeft="20dp"
-					android:text="@string/no_suggestions" />
+					android:text="@string/no_suggestions" 
+					style="?android:attr/buttonBarButtonStyle"/>
 				<View
 				    android:layout_width="fill_parent"
 				    android:layout_height="1dp"
@@ -74,7 +120,8 @@
 		       		android:gravity="center_vertical|left"
 			        android:background="#ccc"
 		     		android:paddingLeft="20dp"
-					android:text="@string/no_suggestions" />
+					android:text="@string/no_suggestions" 
+					style="?android:attr/buttonBarButtonStyle"/>
 			</LinearLayout>
 			
 		</com.example.reader.types.ExpandableLayout>
@@ -84,69 +131,19 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="2dp"
 	    android:background="@android:color/darker_gray"/>
-	
+
 	<TextView
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
         android:textSize="24sp"
      	android:paddingLeft="20dp"
 		android:text="@string/typical_highlights" />
-
+	    
 	<ExpandableListView
     	android:id="@+id/lvExp"
-        android:layout_height="0dp"
-        android:layout_width="match_parent"
-    	android:layout_weight="1" />
-	
-	<LinearLayout 
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		android:layout_marginTop="@dimen/spacer_8"
-		android:gravity="center">	
-	
-		<View
-		    android:layout_width="fill_parent"
-		    android:layout_height="2dp"
-		    android:background="@android:color/darker_gray"/>
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
 		
-		<TextView
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-	        android:textSize="24sp"
-	     	android:paddingLeft="20dp"
-			android:text="@string/clear" />
-		
-		<Button
-			android:id="@+id/clear_rules"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-       		android:gravity="center_vertical|left"
-     		android:paddingLeft="20dp"
-	        android:background="#ccc"
-			android:text="@string/clear_rules" />
 	
-		<View
-		    android:layout_width="fill_parent"
-		    android:layout_height="2dp"
-		    android:background="@android:color/darker_gray"/>
-		
-		<TextView
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-	        android:textSize="24sp"
-	     	android:paddingLeft="20dp"
-			android:text="@string/advanced" />
-			
-		<Button
-			android:id="@+id/show_advanced"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-       		android:gravity="center_vertical|left"
-     		android:paddingLeft="20dp"
-	        android:background="#ccc"
-			android:text="@string/advanced_rules" />
-	
-	</LinearLayout>
 
 </LinearLayout>

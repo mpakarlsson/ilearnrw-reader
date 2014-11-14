@@ -145,7 +145,7 @@ public class TextToSpeechReader
 			
 			if(Helper.isPackageInstalled(pm, strSamsung))
 				availableEngines.add(strSamsung);
-
+			
 			if(availableEngines.isEmpty())
 				tts = new TextToSpeech(context, this);
 			else 

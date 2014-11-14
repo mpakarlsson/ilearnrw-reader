@@ -5,7 +5,9 @@ import ilearnrw.utils.LanguageCode;
 
 import java.io.IOException;
 
+import com.example.reader.types.ExpandableLayout;
 import com.example.reader.types.ExpandableListAdapter;
+import com.example.reader.types.ExpandableLayout.OnExpandListener;
 import com.example.reader.types.singleton.ProfileUser;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.groups.GroupedRulesFacade;
@@ -22,7 +24,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
-public class GroupsActivity extends Activity {
+import android.widget.ImageButton;
+public class GroupsActivity 
+	extends 
+		Activity {
+	
 	private SharedPreferences sp;
 	
 	private GroupedRulesFacade groupedRules;
@@ -55,6 +61,8 @@ public class GroupsActivity extends Activity {
 			initProfile(jsonProfile);
 		}
 		
+		initModules();
+		
         Button showAdvanced = (Button) this.findViewById(R.id.show_advanced);
         showAdvanced.setOnClickListener(new OnClickListener() {
 			
@@ -74,8 +82,23 @@ public class GroupsActivity extends Activity {
 			}
 		});        
         
-        initModules();
+        
 
+        ExpandableLayout expLayoutRecommendations = (ExpandableLayout) findViewById(R.id.expLayoutRecommendations);
+        final ImageButton recommendationsImgBtn = (ImageButton) findViewById(R.id.recommendationArrow);
+        expLayoutRecommendations.setOnExpandListener(new OnExpandListener() {
+			
+			@Override
+			public void onExpand(View handle, View content) {
+				recommendationsImgBtn.setBackground(getResources().getDrawable(R.drawable.arrow_up));
+			}
+			
+			@Override
+			public void onCollapse(View handle, View content) {
+				recommendationsImgBtn.setBackground(getResources().getDrawable(R.drawable.arrow_down));
+			}
+		});
+        
 		Button suggestion1 = (Button)findViewById(R.id.personal_recomendations_one);
 		Button suggestion2 = (Button)findViewById(R.id.personal_recomendations_two);
 		initSuggestionButtons(suggestion1, suggestion2);
@@ -99,10 +122,10 @@ public class GroupsActivity extends Activity {
 			groupedRules = new GroupedRulesFacade(profile, sp.getInt(getString(R.string.sp_user_id), 0), sp, 
 					getAssets().open(profile.getLanguage() == LanguageCode.EN?"uk.json":"gr.json"));
 			// get the listview
-	        expListView = (ExpandableListView) findViewById(R.id.lvExp);
+ 	        expListView = (ExpandableListView) findViewById(R.id.lvExp);
 	  
 	        listAdapter = new ExpandableListAdapter(this, groupedRules);
-	 
+	        
 	        // setting list adapter
 	        expListView.setAdapter(listAdapter);
 		} catch (IOException e) {
@@ -146,7 +169,6 @@ public class GroupsActivity extends Activity {
 	
 	public void onResume(){
 		super.onResume();
-		initModules();
 		listAdapter.notifyDataSetChanged();
 		
 	}
@@ -173,7 +195,5 @@ public class GroupsActivity extends Activity {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(R.string.clear_all_question).setPositiveButton(R.string.yes, dialogClickListener)
 			.setNegativeButton(R.string.no, dialogClickListener).show();
-	}
-
-	
+	}	
 }

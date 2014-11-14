@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
  
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -47,20 +48,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.subgroup_label);        
-        int active = groupedRules.getSubgroupEnabledItems(groupPosition, childPosition);
-        if (active>0)
-        	txtListChild.setText(childText+" *("+active+")");
+        int count = groupedRules.getSubgroupEnabledItems(groupPosition, childPosition);
+        txtListChild.setText(childText);
+        
+        if(count>0)
+        	txtListChild.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.rules_active, 0);
+        
+        ImageView iv = (ImageView) convertView.findViewById(R.id.subgroup_image);
+        
+        if(count>0)
+        	iv.setImageResource(R.drawable.rules_active);
         else
-        	txtListChild.setText(childText);
-
-        TextView sublabel = (TextView) convertView
-                .findViewById(R.id.subgroub_sublabel);
-        if (active == 0)
-        	sublabel.setText(context.getResources().getString(R.string.no_rules_activated));
-        else if (active == 1)
-           	sublabel.setText(active+" "+context.getResources().getString(R.string.activated_rule));
-        else 
-           	sublabel.setText(active+" "+context.getResources().getString(R.string.activated_rules));
+        	iv.setImageResource(R.drawable.rules_inactive);
+        
 
         return convertView;
     }
@@ -97,16 +97,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
  
         TextView lblListHeader = (TextView) convertView
                 .findViewById(R.id.group_label);
-        if (groupedRules.getGroupEnabledItems(groupPosition)>0)
-        	lblListHeader.setText(headerTitle+" *("+groupedRules.getGroupEnabledItems(groupPosition)+")");
-        else 
-        	lblListHeader.setText(headerTitle);
- 
-        TextView sublabel = (TextView) convertView
-                .findViewById(R.id.groub_sublabel);
-        String str = groupedRules.getGroupedProblems().get(groupPosition).getSubgroups().size()+" ";
-        sublabel.setText(str+context.getResources().getString(R.string.sublists));
- 
+        int count = groupedRules.getGroupEnabledItems(groupPosition);
+        lblListHeader.setText(headerTitle);
+        
+        
+        ImageView iv = (ImageView) convertView.findViewById(R.id.group_image);
+        
+        if(count>0)
+        	iv.setImageResource(R.drawable.rules_active);
+        else
+        	iv.setImageResource(R.drawable.rules_inactive);
+        
         return convertView;
     }
  

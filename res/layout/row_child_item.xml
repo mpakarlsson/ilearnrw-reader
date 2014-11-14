@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="55dip"
-    android:orientation="horizontal" >
- 
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
     <TextView
-        android:id="@+id/subgroup_label"
+        android:id="@+id/row_child_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft" />
+        android:textSize="18sp"
+        android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"/>
     
     <ImageView
-        android:id="@+id/subgroup_image"
+        android:id="@+id/row_child_image"
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
         android:contentDescription="@string/empty"
         android:src="@drawable/rules_inactive"/>
     
+
 </LinearLayout>
