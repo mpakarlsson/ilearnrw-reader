@@ -4,6 +4,7 @@ import ilearnrw.user.profile.UserProfile;
 import ilearnrw.utils.LanguageCode;
 
 import java.io.IOException;
+import java.util.Set;
 
 import com.example.reader.types.ExpandableLayout;
 import com.example.reader.types.ExpandableListAdapter;
@@ -25,6 +26,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ImageButton;
+
 public class GroupsActivity 
 	extends 
 		Activity {
@@ -34,9 +36,11 @@ public class GroupsActivity
 	private GroupedRulesFacade groupedRules;
 	
 	private UserProfile profile;
-	////
+	
 	private ExpandableListAdapter listAdapter;
 	private ExpandableListView expListView;
+	
+	public final int GROUPS_EDIT_RULE = 20000;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -111,7 +115,7 @@ public class GroupsActivity
 				intent.putExtra("groupId", groupPosition);
 				intent.putExtra("subgroupId", childPosition);
 				intent.putExtra("showGUI", true);
-				startActivity(intent);
+				startActivityForResult(intent, GROUPS_EDIT_RULE);
 				return false;
 			}
 		});
@@ -146,7 +150,7 @@ public class GroupsActivity
 					intent.putExtra("groupId", p[0][0]);
 					intent.putExtra("subgroupId", p[0][1]);
 					intent.putExtra("showGUI", true);
-					startActivity(intent);
+					startActivityForResult(intent, GROUPS_EDIT_RULE);
 				}
 			});
 		}
@@ -161,18 +165,28 @@ public class GroupsActivity
 					intent.putExtra("groupId", p[1][0]);
 					intent.putExtra("subgroupId", p[1][1]);
 					intent.putExtra("showGUI", true);
-					startActivity(intent);
+					startActivityForResult(intent, GROUPS_EDIT_RULE);
 				}
 			});
 		}
 	}
 	
-	public void onResume(){
-		super.onResume();
-		listAdapter.notifyDataSetChanged();
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(requestCode == GROUPS_EDIT_RULE && resultCode == RESULT_OK){
+			Set<Integer> expanded = listAdapter.getExpandedGroupIds();
+			boolean updated = data.getExtras().getBoolean("updated");
+			if(updated){
+				initModules();
+				
+				for(Integer position : expanded)
+					expListView.expandGroup(position);
+			}
+		}
 		
+		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	private void initProfile(String jsonProfile){
 		profile = ProfileUser.getInstance(this.getApplicationContext()).getProfile();		
 	}

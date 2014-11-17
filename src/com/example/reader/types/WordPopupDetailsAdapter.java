@@ -6,9 +6,7 @@ import java.util.TreeSet;
 import com.example.reader.R;
 
 import android.content.Context;
-import android.text.Html;
 import android.text.Spannable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

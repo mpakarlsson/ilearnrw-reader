@@ -1,5 +1,8 @@
 package com.example.reader.types;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.example.reader.R;
 import com.example.reader.utils.groups.Group;
 import com.example.reader.utils.groups.GroupedRulesFacade;
@@ -13,14 +16,18 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
  
-public class ExpandableListAdapter extends BaseExpandableListAdapter {
+public class ExpandableListAdapter extends BaseExpandableListAdapter{
  
     private Context context;
 	private GroupedRulesFacade groupedRules;
+	private Set<Integer> expandedGroupIds;
  
     public ExpandableListAdapter(Context context, GroupedRulesFacade groupedRules) {
-        this.context = context;
-        this.groupedRules = groupedRules;
+        this.context 			= context;
+        this.groupedRules 		= groupedRules;
+        this.expandedGroupIds 	= new HashSet<Integer>();
+        
+        
     }
  
     @Override
@@ -81,6 +88,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public long getGroupId(int groupPosition) {
         return groupPosition;
     }
+    
+    public Set<Integer> getExpandedGroupIds(){
+    	return expandedGroupIds;
+    }
  
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded,
@@ -116,4 +127,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
+    
+    
+	@Override
+	public void onGroupCollapsed(int groupPosition) {
+		expandedGroupIds.remove(groupPosition);
+		super.onGroupCollapsed(groupPosition);
+	}
+
+	@Override
+	public void onGroupExpanded(int groupPosition) {
+		expandedGroupIds.add(groupPosition);
+		super.onGroupExpanded(groupPosition);
+	}
+
 }

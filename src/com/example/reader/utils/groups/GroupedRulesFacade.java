@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.example.reader.types.PresentationRulesAdapter;
 

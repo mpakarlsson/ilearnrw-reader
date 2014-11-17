@@ -18,7 +18,6 @@ import com.example.reader.popups.ModeActivity;
 import com.example.reader.popups.SearchActivity;
 import com.example.reader.popups.WordActivity;
 import com.example.reader.texttospeech.TextToSpeechReader;
-import com.example.reader.texttospeech.TextToSpeechReaderId;
 import com.example.reader.texttospeech.TextToSpeechUtils;
 import com.example.reader.types.Pair;
 import com.example.reader.types.singleton.AnnotatedWordsSet;

@@ -15,6 +15,7 @@ import com.example.reader.utils.groups.GroupedRulesFacade;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -231,7 +232,9 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 				Toast.makeText(getApplicationContext(), R.string.warning_on_colours_number, Toast.LENGTH_LONG).show();
 			groupedRules.setPresentationStyle(groupId, subgroupId,currentRule());
 			groupedRules.getPresentationRulesAdapter().saveModule();
-			onBackPressed();
+			
+		    setResult(RESULT_OK, new Intent().putExtra("updated", true));
+			finish();
 		}
 		else {
 			Toast.makeText(getApplicationContext(), R.string.error_on_rules_number, Toast.LENGTH_LONG).show();
@@ -239,7 +242,8 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		break;
 		
 	case R.id.subgroup_btn_cancel:
-		onBackPressed();
+		setResult(RESULT_CANCELED);
+		finish();
 		break;
 		
 		}
@@ -258,7 +262,7 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 	        View view = convertView;
 	        if (view == null) {
 	            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	            view = inflater.inflate(R.layout.row_subgroup_details, null);
+	            view = inflater.inflate(R.layout.row_subgroup_details, parent, false);
 	        }
 
 	        final AnnotationItem item = getItem(position);
@@ -300,7 +304,7 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 						groupedRules.getPresentationRulesAdapter().setHighlightingColor(item.getCategory(), item.getIndex(), 
 								Integer.parseInt(item.getDefaultColourHEX(), 16)+0xFF000000);
 						groupedRules.getPresentationRulesAdapter().setActivated(item.getCategory(), item.getIndex(), 
-								isEnabled.isChecked());		
+								isEnabled.isChecked());
 						if (groupedRules.allEnabled(groupId, subgroupId))
 							rb.setChecked(true);
 						else 
@@ -336,16 +340,28 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 	    }
 
 	    public View getView(int position, View convertView, ViewGroup parent) {
-	        View view = convertView;
-	        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	        view = inflater.inflate(R.layout.color_presents_row, null);
-
+	        ViewHolderColor holder = null;
+	    	
 	        final String item = getItem(position);
+	        
+	        if(convertView == null){
+	        	holder = new ViewHolderColor();
+	        	LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	        	convertView = inflater.inflate(R.layout.color_presents_row, parent, false); 
+	        	holder.color = Integer.parseInt(item, 16) + 0xFF000000;
+	        	convertView.setTag(holder);
+	        } else {
+	        	holder = (ViewHolderColor) convertView.getTag();
+	        }
 
-			defaultColour = Integer.parseInt(item, 16)+0xFF000000;
-			view.setBackgroundColor(defaultColour);
-	        return view;
+			convertView.setBackgroundColor(holder.color);
+	        return convertView;
 	    }
+	}
+	
+	
+	private static class ViewHolderColor{
+		int color;
 	}
 	
 }
