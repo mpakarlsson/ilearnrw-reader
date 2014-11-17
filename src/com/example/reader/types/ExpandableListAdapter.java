@@ -48,11 +48,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.subgroup_label);        
-        int count = groupedRules.getSubgroupEnabledItems(groupPosition, childPosition);
+        int count = groupedRules.getNumSubgroupEnabledItems(groupPosition, childPosition);
         txtListChild.setText(childText);
-        
-        if(count>0)
-        	txtListChild.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.rules_active, 0);
         
         ImageView iv = (ImageView) convertView.findViewById(R.id.subgroup_image);
         
@@ -99,7 +96,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 .findViewById(R.id.group_label);
         int count = groupedRules.getGroupEnabledItems(groupPosition);
         lblListHeader.setText(headerTitle);
-        
         
         ImageView iv = (ImageView) convertView.findViewById(R.id.group_image);
         

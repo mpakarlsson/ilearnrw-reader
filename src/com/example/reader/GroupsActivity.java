@@ -119,7 +119,7 @@ public class GroupsActivity
 	
 	private void initModules(){
         try {
-			groupedRules = new GroupedRulesFacade(profile, sp.getInt(getString(R.string.sp_user_id), 0), sp, 
+			groupedRules = new GroupedRulesFacade(this ,profile, sp.getInt(getString(R.string.sp_user_id), 0),
 					getAssets().open(profile.getLanguage() == LanguageCode.EN?"uk.json":"gr.json"));
 			// get the listview
  	        expListView = (ExpandableListView) findViewById(R.id.lvExp);

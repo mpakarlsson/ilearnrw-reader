@@ -81,7 +81,7 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		}
 		
 		try {
-			groupedRules = new GroupedRulesFacade(profile, sp.getInt(getString(R.string.sp_user_id), 0), sp, 
+			groupedRules = new GroupedRulesFacade(this, profile, sp.getInt(getString(R.string.sp_user_id), 0),
 					getAssets().open(profile.getLanguage() == LanguageCode.EN?"uk.json":"gr.json"));
 		} catch (IOException e) {
 			e.printStackTrace();

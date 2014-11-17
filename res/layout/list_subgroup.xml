@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="8dp"
-    android:background="#ccc">
+    android:background="#ccc"
+    android:gravity="center_vertical">
   
-	  <TextView android:id="@+id/group_label"
-	    android:textSize="18sp"
+	<TextView android:id="@+id/group_label"
+		android:textSize="18sp"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-        android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"/>
+        android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
+        android:layout_centerVertical="true"/>
 	  
-	  <ImageView
+	<ImageView
         android:id="@+id/group_image"
         android:layout_width="12dp"
         android:layout_height="12dp"
-        android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
+        android:layout_marginLeft="6dp"
         android:contentDescription="@string/empty"
-        android:src="@drawable/rules_inactive"/>
+        android:src="@drawable/rules_inactive"
+        android:layout_toRightOf="@id/group_label"
+        android:layout_centerVertical="true"/>
  
-</LinearLayout>
+</RelativeLayout>

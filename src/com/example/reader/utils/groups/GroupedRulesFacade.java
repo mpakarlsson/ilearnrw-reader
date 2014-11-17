@@ -3,6 +3,7 @@ package com.example.reader.utils.groups;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.reader.types.PresentationRulesAdapter;
@@ -12,24 +13,24 @@ import ilearnrw.user.problems.ProblemDefinition;
 import ilearnrw.user.profile.UserProfile;
 
 public class GroupedRulesFacade {
-	private ProblemGroups problemGroups;
+	private Groups problemGroups;
 	private PresentationRulesAdapter presentationRulesAdapter;
-	public GroupedRulesFacade(ProblemGroups problemGroups,
+	public GroupedRulesFacade(Groups problemGroups,
 			PresentationRulesAdapter presentationRulesAdapter) {
 		this.problemGroups = problemGroups;
 		this.presentationRulesAdapter = presentationRulesAdapter;
 	}
 
-	public GroupedRulesFacade(UserProfile profile, int userId, SharedPreferences preferences, InputStream is) {
+	public GroupedRulesFacade(Context context, UserProfile profile, int userId, InputStream is) {
 		problemGroups = new ProblemGroupsFactory().getLanguageGroups(profile.getLanguage(), is);
-		presentationRulesAdapter = new PresentationRulesAdapter(profile, userId, preferences);
+		presentationRulesAdapter = new PresentationRulesAdapter(context, profile, userId);
 	}
 
-	public ProblemGroups getProblemGroups() {
+	public Groups getProblemGroups() {
 		return problemGroups;
 	}
 
-	public void setProblemGroups(ProblemGroups problemGroups) {
+	public void setProblemGroups(Groups problemGroups) {
 		this.problemGroups = problemGroups;
 	}
 
@@ -42,61 +43,60 @@ public class GroupedRulesFacade {
 		this.presentationRulesAdapter = presentationRulesAdapter;
 	}
 	
-	public int getSubgroupEnabledItems(int group, int subgroup){
+	public int getNumSubgroupEnabledItems(int group, int subgroup){
 		int cnt = 0;
-		Group g = problemGroups.getGroupedProblems().get(group);
-		for (AnnotationItem ai : g.getSubgroups().get(subgroup).getItems()){
+		Subgroup sg = problemGroups.getGroupedProblems().get(group).getSubgroups().get(subgroup);
+		for (AnnotationItem ai : sg.getItems()){
 			cnt += presentationRulesAdapter.getActivated(ai.getCategory(), ai.getIndex())?1:0;
 		}
 		return cnt;
 	}
 	
 	public boolean allEnabled(int group, int subgroup){
-		int activated = 0, all = 0;
-		Group g = problemGroups.getGroupedProblems().get(group);
-		for (AnnotationItem ai : g.getSubgroups().get(subgroup).getItems()){
-			activated += presentationRulesAdapter.getActivated(ai.getCategory(), ai.getIndex())?1:0;
-			all++;
+		Subgroup sg = problemGroups.getGroupedProblems().get(group).getSubgroups().get(subgroup);
+		for (AnnotationItem ai : sg.getItems()){
+			if(!presentationRulesAdapter.getActivated(ai.getCategory(), ai.getIndex()))
+				return false;
 		}
-		return activated == all;
+		return true;
 	}
 	
 	public void enableAll(int group, int subgroup){
-		Group g = problemGroups.getGroupedProblems().get(group);
-		for (AnnotationItem ai : g.getSubgroups().get(subgroup).getItems()){
+		Subgroup sg = problemGroups.getGroupedProblems().get(group).getSubgroups().get(subgroup);
+		for (AnnotationItem ai : sg.getItems()){
 			presentationRulesAdapter.setActivated(ai.getCategory(), ai.getIndex(), true);
 		}
 	}
 	
 	public void disableAll(int group, int subgroup){
-		Group g = problemGroups.getGroupedProblems().get(group);
-		for (AnnotationItem ai : g.getSubgroups().get(subgroup).getItems()){
+		Subgroup sg = problemGroups.getGroupedProblems().get(group).getSubgroups().get(subgroup);
+		for (AnnotationItem ai : sg.getItems()){
 			presentationRulesAdapter.setActivated(ai.getCategory(), ai.getIndex(), false);
 		}
 	}
 	
 	public void setColour(int group, int subgroup, int colour){
-		Group g = problemGroups.getGroupedProblems().get(group);
-		for (AnnotationItem ai : g.getSubgroups().get(subgroup).getItems()){
+		Subgroup sg = problemGroups.getGroupedProblems().get(group).getSubgroups().get(subgroup);
+		for (AnnotationItem ai : sg.getItems()){
 			presentationRulesAdapter.setHighlightingColor(ai.getCategory(), ai.getIndex(), colour);
 		}
 	}
 	
 	public void setPresentationStyle(int group, int subgroup, int style){
-		Group g = problemGroups.getGroupedProblems().get(group);
-		for (AnnotationItem ai : g.getSubgroups().get(subgroup).getItems()){
+		Subgroup sg = problemGroups.getGroupedProblems().get(group).getSubgroups().get(subgroup);
+		for (AnnotationItem ai : sg.getItems()){
 			presentationRulesAdapter.setPresentationStyle(ai.getCategory(), ai.getIndex(), style);
 		}
 	}
 	
 	public int getPresentationStyle(int group, int subgroup){
-		Group g = problemGroups.getGroupedProblems().get(group);
+		Subgroup sg = problemGroups.getGroupedProblems().get(group).getSubgroups().get(subgroup);
 		int ps = -1;
-		for (AnnotationItem ai : g.getSubgroups().get(subgroup).getItems()){
-			if (presentationRulesAdapter.getActivated(ai.getCategory(), ai.getIndex()) && ps == -1)
+		for (AnnotationItem ai : sg.getItems()){
+			boolean activated = presentationRulesAdapter.getActivated(ai.getCategory(), ai.getIndex()); 
+			if (activated && ps == -1)
 				ps = presentationRulesAdapter.getPresentationStyle(ai.getCategory(), ai.getIndex());
-			else if (presentationRulesAdapter.getActivated(ai.getCategory(), ai.getIndex()) && 
-					presentationRulesAdapter.getPresentationStyle(ai.getCategory(), ai.getIndex()) != ps)
+			else if (activated && presentationRulesAdapter.getPresentationStyle(ai.getCategory(), ai.getIndex()) != ps)
 				return 1;
 		}
 		return ps == -1 ? 1 : ps;
@@ -129,8 +129,9 @@ public class GroupedRulesFacade {
 		double max1 = -1, max2 = -1;
 		int group1 = -1, subgroup1 = -1, group2 = -1, subgroup2 = -1;
 		for (int i=0; i<problemGroups.getGroupedProblems().size(); i++){
-			for (int j=0; j<problemGroups.getGroupedProblems().get(i).getSubgroups().size(); j++){
-				Subgroup s = problemGroups.getGroupedProblems().get(i).getSubgroups().get(j);
+			Group g =  problemGroups.getGroupedProblems().get(i);
+			for (int j=0; j<g.getSubgroups().size(); j++){
+				Subgroup s = g.getSubgroups().get(j);
 				double val = (double)getSubgroupScore(s)/getSubgroupTopScore(s);
 				if (val>max1){
 					max2 = max1;
@@ -161,7 +162,7 @@ public class GroupedRulesFacade {
 	public int getGroupEnabledItems(int group){
 		int cnt = 0;
 		for (int i=0; i<problemGroups.getGroupedProblems().get(group).getSubgroups().size(); i++){
-			cnt += getSubgroupEnabledItems(group, i);
+			cnt += getNumSubgroupEnabledItems(group, i);
 		}
 		return cnt;
 	}

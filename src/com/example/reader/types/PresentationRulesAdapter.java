@@ -1,6 +1,8 @@
 package com.example.reader.types;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import ilearnrw.textadaptation.PresentationRulesModule;
 import ilearnrw.user.profile.UserProfile;
 
@@ -13,10 +15,10 @@ public class PresentationRulesAdapter {
 	private final int DEFAULT_COLOR = 0xffff0000;
 	private final int DEFAULT_RULE	= 3;
 
-	public PresentationRulesAdapter(UserProfile profile, int userId, SharedPreferences preferences) {
+	public PresentationRulesAdapter(Context context, UserProfile profile, int userId) {
 		this.presentationRules = new PresentationRulesModule(profile);
 		this.userId = userId;
-		this.preferences = preferences;
+		this.preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		loadModule();
 	}
 	
@@ -31,13 +33,15 @@ public class PresentationRulesAdapter {
 	}
 	
 	public void saveModule(){
+		SharedPreferences.Editor edit = preferences.edit();
 		for (int i=0;i<presentationRules.getRulesTable().length; i++){
 			for (int j=0;j<presentationRules.getRulesTable()[i].length; j++){
-				preferences.edit().putBoolean(userId+"pm_enabled_" + i + "_" + j , presentationRules.getActivated(i, j)).commit();
-				preferences.edit().putInt(userId+"pm_color_" + i + "_" + j, presentationRules.getHighlightingColor(i, j)).commit();
-				preferences.edit().putInt(userId+"pm_rule_"+i+"_"+j, presentationRules.getPresentationRule(i, j)).commit();
+				edit.putBoolean(userId+"pm_enabled_" + i + "_" + j , presentationRules.getActivated(i, j));
+				edit.putInt(userId+"pm_color_" + i + "_" + j, presentationRules.getHighlightingColor(i, j));
+				edit.putInt(userId+"pm_rule_"+i+"_"+j, presentationRules.getPresentationRule(i, j));
         	}
 		}
+		edit.commit();
 	}
 	
 	public PresentationRulesModule getPresentationRules() {
