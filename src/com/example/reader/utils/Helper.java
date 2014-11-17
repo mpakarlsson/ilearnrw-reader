@@ -89,9 +89,13 @@ public class Helper {
 	}
 	
 	public static void logBundle(Bundle bundle){
+		if(bundle==null){
+			Log.e("Bundle", "The bundle is null");
+			return;
+		}
 		for (String key : bundle.keySet()) {
 		    Object value = bundle.get(key);
-		    Log.d("BUNDLE", String.format("%s %s (%s)", key,  
+		    Log.d("Bundle", String.format("%s %s (%s)", key,  
 		        value.toString(), value.getClass().getName()));
 		}
 	}

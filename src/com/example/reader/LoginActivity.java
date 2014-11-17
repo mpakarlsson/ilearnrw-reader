@@ -6,6 +6,7 @@ import com.example.reader.types.singleton.ProfileUser;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -15,12 +16,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LoginActivity extends Activity implements OnClickListener {
 
 	private final String TAG = getClass().getName();
 
-	public Button btnLogin, btnLogout;
+	public Button btnLogin, btnLogout, btnOffline;
 	public EditText etUsername, etPassword;
 	public CheckBox chkRM;
 	private SharedPreferences preferences;
@@ -34,6 +36,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         
         btnLogin 		= (Button) findViewById(R.id.login_button);
         btnLogout 		= (Button) findViewById(R.id.login_logout);
+        btnOffline		= (Button) findViewById(R.id.login_offline);
         etUsername 		= (EditText) findViewById(R.id.login_username);
         etPassword 		= (EditText) findViewById(R.id.login_password);
         
@@ -51,6 +54,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         
         btnLogin.setOnClickListener(this);
         btnLogout.setOnClickListener(this);
+        btnOffline.setOnClickListener(this);
         
         chkRM.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
@@ -159,6 +163,19 @@ public class LoginActivity extends Activity implements OnClickListener {
 				}
 			}).show();
 			
+			break;
+			
+		case R.id.login_offline:
+			ProfileUser p = ProfileUser.getInstance(getApplicationContext());
+			
+			if(p==null){
+				Toast.makeText(this, getString(R.string.login_offline_requires_profile), Toast.LENGTH_LONG).show();
+				break;
+			}
+			
+			Intent i = new Intent(this, LibraryActivity.class);
+			i.putExtra("offline_mode", true);
+			startActivity(i);
 			break;
 		default:
 			break;

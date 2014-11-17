@@ -72,13 +72,15 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	private final int DEFAULT_COLOR = 0xffff0000;
 	private final int DEFAULT_RULE	= 3;
 	
+	private boolean offlineMode = false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_library);
 		
-		TextToSpeechReader.getInstance(getApplicationContext()).initializeTextToSpeech(Locale.UK);
-
+		TextToSpeechReader.getInstance(getApplicationContext()).initializeTextToSpeech(Locale.UK);		
+		
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		AppLocales.setLocales(getApplicationContext(), preferences.getString(getString(R.string.sp_user_language), "en"));
 		
@@ -157,7 +159,18 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		else
 			btnRules.setImageResource(R.drawable.rules_inactive);
 		
+		offlineMode = false;
+		Intent intent =  getIntent();
 		
+		Bundle b = intent.getExtras();
+		
+		if(b!=null)
+			if(b.containsKey("offline_mode"))
+				offlineMode = b.getBoolean("offline_mode");
+		
+		if(offlineMode){
+			btnAdd.setVisibility(View.GONE);
+		}
 		//sideSelector = (SideSelector) findViewById(R.id.library_side_selector);
 		//sideSelector.setListView(library);
 	}
