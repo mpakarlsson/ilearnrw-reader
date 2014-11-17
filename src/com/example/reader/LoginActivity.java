@@ -129,6 +129,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 			
 			editor.commit();
 
+			
+			
 			new LoginTask(this, TAG).run(username, password);
 			break;
 		

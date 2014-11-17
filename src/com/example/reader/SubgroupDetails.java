@@ -8,8 +8,11 @@ import java.util.ArrayList;
 
 import com.example.reader.interfaces.ColorPickerListener;
 import com.example.reader.types.ColorPickerDialog;
+import com.example.reader.types.ExpandableLayout;
+import com.example.reader.types.ExpandableLayout.OnExpandListener;
 import com.example.reader.types.singleton.ProfileUser;
 import com.example.reader.utils.AppLocales;
+import com.example.reader.utils.Helper;
 import com.example.reader.utils.groups.AnnotationItem;
 import com.example.reader.utils.groups.GroupedRulesFacade;
 
@@ -17,8 +20,12 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +34,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.RadioButton;
@@ -115,6 +123,20 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 		rbtnHow2 	= (RadioButton) findViewById(R.id.subgroup_option_how_highlight2);
 		rbtnWhat1 	= (RadioButton) findViewById(R.id.subgroup_option_what_highlight1);
 		rbtnWhat2 	= (RadioButton) findViewById(R.id.subgroup_option_what_highlight2);
+		
+		Resources r = getResources();
+		CharSequence seq =  rbtnHow1.getText();
+		rbtnHow1.setText(Helper.colorString(seq, new BackgroundColorSpan(r.getColor(R.color.LightYellow)), 0, seq.length()));
+		seq = rbtnHow2.getText();
+		rbtnHow2.setText(Helper.colorString(seq, new ForegroundColorSpan(r.getColor(R.color.LightYellow)), 0, seq.length()));
+		seq = rbtnWhat1.getText();
+		int index = TextUtils.lastIndexOf(seq, ' ');
+		rbtnWhat1.setText(Helper.colorString(seq, new BackgroundColorSpan(r.getColor(R.color.LightYellow)), index+2, seq.length()));
+		seq = rbtnWhat2.getText();
+		index = TextUtils.lastIndexOf(seq, ' ');
+		rbtnWhat2.setText(Helper.colorString(seq, new BackgroundColorSpan(r.getColor(R.color.LightYellow)), index+1, seq.length()));
+		
+		
 		updateRule();
 		subgroupProblems = groupedRules.getGroupedProblems().get(groupId).getSubgroups().get(subgroupId).getItems();
 		listAdapter = new SubgroupProblemsAdapter(this, R.layout.row_subgroup_details, subgroupProblems);
@@ -157,6 +179,22 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 	            listPopupWindow.show();
 			}
 		});
+		
+		
+		ExpandableLayout expLayout = (ExpandableLayout) findViewById(R.id.expLayoutPresentationRules);
+		final ImageButton presentationRulesBtn = (ImageButton) findViewById(R.id.presentationRulesArrow);
+		expLayout.setOnExpandListener(new OnExpandListener() {
+			@Override
+			public void onExpand(View handle, View content) {
+				presentationRulesBtn.setBackground(getResources().getDrawable(R.drawable.arrow_up));
+			}
+			
+			@Override
+			public void onCollapse(View handle, View content) {
+				presentationRulesBtn.setBackground(getResources().getDrawable(R.drawable.arrow_down));
+			}
+		});
+		
 	}
 	
 	private int currentRule(){
@@ -273,7 +311,8 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 	            final ToggleButton isEnabled = (ToggleButton) view.findViewById(R.id.enable_radio);
 
 	            if (itemView != null) {
-	                itemView.setText(profile.getUserProblems().getProblemDescription(item.getCategory(), item.getIndex()).getHumanReadableDescription());
+	            	String[] descriptions = profile.getUserProblems().getProblemDescription(item.getCategory(), item.getIndex()).getHumanReadableDescription().split("<>");
+	                itemView.setText(descriptions[0]);
 	                if (groupedRules.getPresentationRulesAdapter().getActivated(item.getCategory(), item.getIndex())){
 	                	activeColorView.setBackgroundColor(groupedRules.getPresentationRulesAdapter().getHighlightingColor(
 	                			item.getCategory(), item.getIndex()));

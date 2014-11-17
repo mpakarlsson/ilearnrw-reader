@@ -87,14 +87,16 @@
 					android:layout_centerVertical="true"/>
 		        <ImageButton 
 		            android:id="@+id/recommendationArrow"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
+		            android:layout_width="36dp"
+		            android:layout_height="36dp"
 		            android:contentDescription="@string/empty"
 		            android:layout_alignParentRight="true"
 		            android:layout_centerVertical="true"
 		            android:background="@drawable/arrow_down"
 		            android:layout_marginTop="@dimen/spacer_4"
-		            android:layout_marginBottom="@dimen/spacer_4"/>
+		            android:layout_marginBottom="@dimen/spacer_4"
+		            android:scaleType="fitCenter"
+		            android:adjustViewBounds="true"/>
 		    </RelativeLayout>
 			
 			

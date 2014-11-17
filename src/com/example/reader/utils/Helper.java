@@ -5,6 +5,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.CharacterStyle;
 import android.util.Log;
 
 import com.example.reader.types.Pair;
@@ -77,6 +80,12 @@ public class Helper {
 		
 		color = Color.HSVToColor(colors);
 		return color;
+	}
+	
+	public static SpannableStringBuilder colorString(CharSequence cSeq, CharacterStyle style, int startPos, int endPos){
+		SpannableStringBuilder builder = new SpannableStringBuilder(cSeq);
+		builder.setSpan(style, startPos, endPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		return builder;
 	}
 	
 	public static void logBundle(Bundle bundle){
