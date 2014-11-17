@@ -1,5 +1,6 @@
 package com.example.reader;
 
+import ilearnrw.textadaptation.TextAnnotationModule;
 import ilearnrw.textclassification.Word;
 import ilearnrw.user.profile.UserProfile;
 
@@ -13,7 +14,6 @@ import java.util.Locale;
 
 import com.example.reader.popups.RenameActivity;
 import com.example.reader.texttospeech.TextToSpeechReader;
-import com.example.reader.types.BasicTimer;
 import com.example.reader.types.LibraryAdapter;
 import com.example.reader.types.LibraryItem;
 import com.example.reader.types.Pair;
@@ -46,7 +46,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class LibraryActivity extends Activity implements OnClickListener , OnItemClickListener{
 
-	private static ImageButton btnAdd, btnSettings;
+	private static ImageButton btnAdd, btnSettings, btnRules;
 	//private static ListView library;
 	private static GridView library;
 	//private SideSelector sideSelector;
@@ -65,6 +65,12 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	private LibraryAdapter adapter;
 	
 	private File libDir;
+	
+	private TextAnnotationModule txModule;
+	private boolean activateRules;
+	
+	private final int DEFAULT_COLOR = 0xffff0000;
+	private final int DEFAULT_RULE	= 3;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -138,8 +144,19 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		btnAdd = (ImageButton) findViewById(R.id.ibtn_add_library);
 		btnAdd.setOnClickListener(this);
 		
-		btnSettings= (ImageButton) findViewById(R.id.presentation_settings);
+		btnSettings = (ImageButton) findViewById(R.id.presentation_settings);
 		btnSettings.setOnClickListener(this);
+		
+		btnRules = (ImageButton) findViewById(R.id.ibtn_rules);
+		btnRules.setOnClickListener(this);
+		
+		
+		activateRules = preferences.getBoolean("activateRules", false);
+		if(activateRules)
+			btnRules.setImageResource(R.drawable.rules_active);
+		else
+			btnRules.setImageResource(R.drawable.rules_inactive);
+		
 		
 		//sideSelector = (SideSelector) findViewById(R.id.library_side_selector);
 		//sideSelector.setListView(library);
@@ -408,41 +425,22 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		case R.id.ibtn_add_library:
 			Intent intent = new Intent(getBaseContext(), AddToLibraryExplorerActivity.class);
 			startActivityForResult(intent, FLAG_ADD_TO_DEVICE);
-			
-			/*AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			LayoutInflater inflater = getLayoutInflater();
-			View convertView = (View) inflater.inflate(R.layout.dialog_add_to_device, null);
-			builder.setView(convertView);
-			builder.setTitle(getString(R.string.dialog_title_add_to_device));
-			final ListView lv = (ListView) convertView.findViewById(R.id.lv_add_to_device);
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.add_to_device_array));
-			lv.setAdapter(adapter);
-
-			lv.setOnItemClickListener(new OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-					String option = lv.getItemAtPosition(pos).toString();
-					option = option.toLowerCase(Locale.getDefault()).toString();
-					
-					Intent intent;
-					if(option.contains("device"))
-						intent = new Intent(getBaseContext(), AddToLibraryExplorerActivity.class);
-					else 
-						intent = new Intent(getBaseContext(), AddToLibraryORBActivity.class);
-					
-					startActivityForResult(intent, FLAG_ADD_TO_DEVICE);
-					dialog.cancel();
-				}
-			});
-			dialog = builder.create();
-			dialog.show();
-			*/
 			break;
 		case R.id.presentation_settings:
 			Intent intent2 = new Intent(this, GroupsActivity.class);
 			this.startActivity(intent2);
 			break;
 
+		case R.id.ibtn_rules:
+			activateRules = !activateRules;
+			
+			if(activateRules)
+				btnRules.setImageResource(R.drawable.rules_active);
+			else
+				btnRules.setImageResource(R.drawable.rules_inactive);
+			
+			preferences.edit().putBoolean("activateRules", activateRules).commit();
+			break;
 		default:
 			break;
 		}
@@ -451,26 +449,26 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		
-		BasicTimer t = new BasicTimer("ReaderStartup.txt");
-		t.start("LibraryActivity ItemClick - getFilesFromLibrary");
-		
 		LibraryItem item = files.get(position);
 		Pair<File> libItems = FileHelper.getFilesFromLibrary(this, item.getName());
-		t.stop(false);
 		 
 		if(item.getName().endsWith(".txt") || item.getName().endsWith(".html")){
 			String clean = FileHelper.readFromFile(libItems.first());
 			String json = FileHelper.readFromFile(libItems.second());
 			
 			Intent intent = new Intent(this, ReaderActivity.class);
-			intent.putExtra("html", clean);
+			AnnotatedWordsSet.getInstance(this.getApplicationContext()).initUserBasedAnnotatedWordsSet(json, libItems.first().getName());
+			
+			String html = clean;
+			if(activateRules)
+				html = fireTxModule(clean, json);
+			
+			intent.putExtra("html", html);
 			intent.putExtra("cleanHtml", clean);
 			intent.putExtra("json", json);
 			intent.putExtra("title", libItems.first().getName());
 			intent.putExtra("trickyWords", (ArrayList<Word>) profile.getUserProblems().getTrickyWords());
 			
-			AnnotatedWordsSet.getInstance(this.getApplicationContext()).initUserBasedAnnotatedWordsSet(json, libItems.first().getName());
 			this.startActivity(intent);
 		} else if(item.getName().endsWith(".json")){
 			new AlertDialog.Builder(this)
@@ -508,4 +506,38 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			}
 		});
 	}
+	
+	private String fireTxModule(String html, String json){
+		if (txModule==null)
+			txModule = new TextAnnotationModule(html);
+		
+		if (txModule.getPresentationRulesModule() == null)
+			txModule.initializePresentationModule(profile);
+
+		for (int i = 0; i < profile.getUserProblems().getNumerOfRows(); i++)
+		{
+			int problemSize = profile.getUserProblems().getRowLength(i);
+			for (int j = 0; j < problemSize; j++)
+			{
+				String id 			= getString(R.string.sp_user_id);
+				int color 			= preferences.getInt(preferences.getInt(id, 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
+				int rule 			= preferences.getInt(preferences.getInt(id, 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
+				boolean isChecked 	= preferences.getBoolean(preferences.getInt(id, 0)+"pm_enabled_"+i+"_"+j, false);
+				
+				txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
+				
+				txModule.getPresentationRulesModule().setTextColor(i, j, color);
+				txModule.getPresentationRulesModule().setHighlightingColor(i, j, color);
+				txModule.getPresentationRulesModule().setActivated(i, j, isChecked);
+			}
+		}
+
+		txModule.setInputHTMLFile(html);
+		txModule.setJSonObject(AnnotatedWordsSet.getInstance(getApplicationContext()).getUserBasedAnnotatedWordsSet());
+		
+		txModule.annotateText();
+		return txModule.getAnnotatedHTMLFile();
+	}
+	
+	
 }

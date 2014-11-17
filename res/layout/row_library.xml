@@ -10,28 +10,8 @@
         android:id="@+id/library_item"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_weight="2"
+        android:paddingLeft="@dimen/spacer_10"
         android:textSize="20sp"
-	/>
-    
-    <Button 
-        android:id="@+id/library_open_normal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        style="?android:attr/buttonStyleToggle"
-        android:text="@string/library_open"
-        android:textSize="20sp"
-        android:paddingRight="40dp"/>
-    
-    <Button 
-        android:id="@+id/library_open_coloured"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        style="?android:attr/buttonStyleToggle"
-        android:text="@string/library_open_coloured"
-        android:textSize="20sp"
-        android:paddingRight="40dp"/>
+        android:gravity="center_vertical"/>    
 
 </LinearLayout>

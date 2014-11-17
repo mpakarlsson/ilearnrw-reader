@@ -1,10 +1,5 @@
 package com.example.reader.types;
 
-import ilearnrw.textadaptation.TextAnnotationModule;
-import ilearnrw.textclassification.Word;
-import ilearnrw.user.profile.UserProfile;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,22 +7,12 @@ import java.util.Locale;
 import java.util.Set;
 
 import com.example.reader.R;
-import com.example.reader.ReaderActivity;
-import com.example.reader.types.singleton.AnnotatedWordsSet;
-import com.example.reader.types.singleton.ProfileUser;
-import com.example.reader.utils.FileHelper;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
@@ -38,29 +23,10 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 	private ArrayList<LibraryItem> objects;
 	private HashMap<String, Integer> alphaIndexer;
 	String[] sections;
-
-	private UserProfile profile;
-	private TextAnnotationModule txModule;
-
-	private SharedPreferences sp;
-	
-	private Context context;
-
-	private final int DEFAULT_COLOR = 0xffff0000;
-	private final int DEFAULT_RULE	= 3;
 	
 	public LibraryAdapter(Context context, int textViewResourceId, ArrayList<LibraryItem> objects){
 		super(context, textViewResourceId, objects);
 		this.objects = objects;
-		this.context = context;
-
-        sp = PreferenceManager.getDefaultSharedPreferences(getContext());
-        
-        String jsonProfile = sp.getString(context.getString(R.string.sp_user_profile_json), "");
-		
-		if(!jsonProfile.isEmpty()){
-			initProfile(jsonProfile);
-		}
 		
 		alphaIndexer = new HashMap<String, Integer>();
 		
@@ -92,65 +58,10 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 		
 		final LibraryItem item = objects.get(position);
 		if(item != null){
-			final Pair<File> libItems = FileHelper.getFilesFromLibrary(getContext(), item.getName());
 			
 			TextView tv_item = (TextView) v.findViewById(R.id.library_item);
-
-			Button openColoured = (Button) v.findViewById(R.id.library_open_coloured);
-			Button openNormal = (Button) v.findViewById(R.id.library_open_normal);
 			tv_item.setFocusable(false);
 			tv_item.setClickable(false);
-			
-			openNormal.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if(item.getName().endsWith(".txt") || item.getName().endsWith(".html")){
-						Intent intent = new Intent(getContext(), ReaderActivity.class);
-						String html = FileHelper.readFromFile(libItems.first());
-						String json = FileHelper.readFromFile(libItems.second());
-						
-						AnnotatedWordsSet.getInstance(context.getApplicationContext()).initUserBasedAnnotatedWordsSet(json, libItems.first().getName());
-						
-						intent.putExtra("html", html);
-						intent.putExtra("cleanHtml", html);
-						intent.putExtra("json", json);
-						intent.putExtra("title", libItems.first().getName());
-						intent.putExtra("trickyWords", (ArrayList<Word>) profile.getUserProblems().getTrickyWords());
-						getContext().startActivity(intent);
-					} else if(item.getName().endsWith(".json")){
-						jsonClicked();
-					}
-					else {
-						invalidClicked(item.getName());
-					}
-				}
-			});
-			
-			openColoured.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if(item.getName().endsWith(".txt") || item.getName().endsWith(".html")){
-						Intent intent = new Intent(getContext(), ReaderActivity.class);
-						String clean = FileHelper.readFromFile(libItems.first());
-						String json = FileHelper.readFromFile(libItems.second());
-						
-						AnnotatedWordsSet.getInstance(context.getApplicationContext()).initUserBasedAnnotatedWordsSet(json, libItems.first().getName());
-
-						String html = fireTxModule(clean, json);
-						intent.putExtra("html", html);
-						intent.putExtra("cleanHtml", clean);
-						intent.putExtra("json", json);
-						intent.putExtra("title", libItems.first().getName());
-						intent.putExtra("trickyWords", (ArrayList<Word>) profile.getUserProblems().getTrickyWords());
-						getContext().startActivity(intent);
-					} else if(item.getName().endsWith(".json")){
-						jsonClicked();
-					}
-					else {
-						invalidClicked(item.getName());
-					}
-				}
-			});
 			
 			if(tv_item != null){
 				String name = item.getName();
@@ -161,20 +72,6 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 			}
 		}
 		return v;
-	}
-
-	private void jsonClicked(){
-		new AlertDialog.Builder(getContext())
-		.setTitle(getContext().getString(R.string.dialog_json_title))
-		.setMessage(getContext().getString(R.string.dialog_json_message))
-		.setPositiveButton(android.R.string.ok, null).show();
-	}
-	
-	private void invalidClicked(String name){
-		new AlertDialog.Builder(getContext())
-		.setTitle(getContext().getString(R.string.folder_invalid))
-		.setMessage(getContext().getString(R.string.folder_open_failed) + name)
-		.setPositiveButton(android.R.string.ok, null).show();
 	}
 	
 	@Override
@@ -221,41 +118,5 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 	@Override
 	public Object[] getSections() {
 		return sections;
-	}
-	
-	private void initProfile(String jsonProfile){
-		profile = ProfileUser.getInstance(getContext().getApplicationContext()).getProfile();	
-	}
-	
-	private String fireTxModule(String html, String json){
-		if (txModule==null)
-			txModule = new TextAnnotationModule(html);
-		
-		if (txModule.getPresentationRulesModule() == null)
-			txModule.initializePresentationModule(profile);
-
-		for (int i = 0; i < profile.getUserProblems().getNumerOfRows(); i++)
-		{
-			int problemSize = profile.getUserProblems().getRowLength(i);
-			for (int j = 0; j < problemSize; j++)
-			{
-				String id = context.getString(R.string.sp_user_id);
-				int color 			= sp.getInt(sp.getInt(id, 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
-				int rule 			= sp.getInt(sp.getInt(id, 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
-				boolean isChecked 	= sp.getBoolean(sp.getInt(id, 0)+"pm_enabled_"+i+"_"+j, false);
-				
-				txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
-				
-				txModule.getPresentationRulesModule().setTextColor(i, j, color);
-				txModule.getPresentationRulesModule().setHighlightingColor(i, j, color);
-				txModule.getPresentationRulesModule().setActivated(i, j, isChecked);
-			}
-		}
-
-		txModule.setInputHTMLFile(html);
-		txModule.setJSonObject(AnnotatedWordsSet.getInstance(getContext().getApplicationContext()).getUserBasedAnnotatedWordsSet());
-		
-		txModule.annotateText();
-		return txModule.getAnnotatedHTMLFile();
 	}
 }
