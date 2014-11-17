@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="8dp"
-    android:background="#ccc"
+    android:background="#D0D0D0"
     android:gravity="center_vertical">
   
 	<TextView android:id="@+id/group_label"

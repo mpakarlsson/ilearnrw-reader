@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:ns="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical"
-	android:layout_width="fill_parent" 
-	android:layout_height="fill_parent"
+	android:layout_width="match_parent" 
+	android:layout_height="match_parent"
 	android:background="#ddd" >
    
     <RelativeLayout 
@@ -59,7 +59,7 @@
 		android:gravity="center">
 		
 	    <View
-		    android:layout_width="fill_parent"
+		    android:layout_width="match_parent"
 		    android:layout_height="2dp"
 		    android:background="@android:color/darker_gray"/>
 		
@@ -71,7 +71,8 @@
 	        ns:animationDuration="250"
 	        ns:collapsedHeight="1dip"
 	        ns:content="@+id/groups_view_recommendation_content_holder"
-	        ns:handle="@+id/groups_view_recommendation_handler">
+	        ns:handle="@+id/groups_view_recommendation_handler"
+	        android:background="#C3C3C3">
         
 		    <RelativeLayout 
 		        android:id="@id/groups_view_recommendation_handler"
@@ -82,7 +83,8 @@
 					android:layout_height="wrap_content"
 			        android:textSize="24sp"
 		     		android:paddingLeft="20dp"
-					android:text="@string/personal_recommendations" />
+					android:text="@string/personal_recommendations" 
+					android:layout_centerVertical="true"/>
 		        <ImageButton 
 		            android:id="@+id/recommendationArrow"
 		            android:layout_width="wrap_content"
@@ -90,7 +92,9 @@
 		            android:contentDescription="@string/empty"
 		            android:layout_alignParentRight="true"
 		            android:layout_centerVertical="true"
-		            android:background="@drawable/arrow_down"/>
+		            android:background="@drawable/arrow_down"
+		            android:layout_marginTop="@dimen/spacer_4"
+		            android:layout_marginBottom="@dimen/spacer_4"/>
 		    </RelativeLayout>
 			
 			
@@ -102,7 +106,7 @@
 			    
 			    <Button
 					android:id="@+id/personal_recomendations_one"
-				    android:layout_width="fill_parent"
+				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
 		       		android:gravity="center_vertical|left"
 			        android:background="#ccc"
@@ -110,12 +114,12 @@
 					android:text="@string/no_suggestions" 
 					style="?android:attr/buttonBarButtonStyle"/>
 				<View
-				    android:layout_width="fill_parent"
+				    android:layout_width="match_parent"
 				    android:layout_height="1dp"
 				    android:background="@android:color/darker_gray"/>
 				<Button
 					android:id="@+id/personal_recomendations_two"
-				    android:layout_width="fill_parent"
+				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
 		       		android:gravity="center_vertical|left"
 			        android:background="#ccc"
@@ -128,21 +132,34 @@
 	</LinearLayout>
 	
 	<View
-	    android:layout_width="fill_parent"
+	    android:layout_width="match_parent"
 	    android:layout_height="2dp"
 	    android:background="@android:color/darker_gray"/>
 
-	<TextView
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-        android:textSize="24sp"
-     	android:paddingLeft="20dp"
-		android:text="@string/typical_highlights" />
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	    
+	    <TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+	        android:textSize="24sp"
+	     	android:paddingLeft="20dp"
+			android:text="@string/typical_highlights"
+			android:background="#C3C3C3" 
+			android:layout_centerVertical="true"/>
+	    
+	</RelativeLayout>
 	    
 	<ExpandableListView
     	android:id="@+id/lvExp"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"/>
+	
+	<View
+	    android:layout_width="match_parent"
+	    android:layout_height="2dp"
+	    android:background="@android:color/darker_gray"/>
 		
 	
 
