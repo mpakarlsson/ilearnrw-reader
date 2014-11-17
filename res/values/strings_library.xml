@@ -38,9 +38,9 @@
     <string name="library_rules">Open rules</string>
     <string name="library_open_coloured">Open with Annotation</string>
     <string-array name="library_context_menu">
-        <item>Edit</item>
-        <item>Delete</item>
-        <item>Copy</item>
+        <item>Change book name</item>
+        <item>Remove book</item>
+        <item>Copy book</item>
     </string-array>
     
     <string-array name="add_to_device_array">

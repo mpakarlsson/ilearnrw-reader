@@ -6,7 +6,6 @@ import com.example.reader.types.singleton.ProfileUser;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -127,13 +126,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}
 
 			updateButtons();
-			
 			editor.commit();
-
-			Intent i = new Intent(this, LibraryActivity.class);
-			startActivity(i);
 			
-			//new LoginTask(this, TAG).run(username, password);
+			new LoginTask(this, TAG).run(username, password);
 			break;
 		
 		case R.id.login_logout:

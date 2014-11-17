@@ -217,7 +217,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		String listItemName = clickItem.getName();
 		
 		
-		if(menuItemName.equals("Edit") || menuItemName.equals("Επεξεργασία")){
+		if(menuItemName.equals("Change book name") || menuItemName.equals("Επεξεργασία")){
 			if(listItemName.endsWith(".json")){
 				Toast.makeText(this, "You can't change name of a JSON file", Toast.LENGTH_SHORT).show();
 				return true;
@@ -227,7 +227,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			i.putExtra("name", listItemName);
 			startActivityForResult(i, FLAG_UPDATE_FILE_NAME);
 			
-		} else if(menuItemName.equals("Delete") || menuItemName.equals("Διαγραφή")){
+		} else if(menuItemName.equals("Remove book") || menuItemName.equals("Διαγραφή")){
 			new AlertDialog.Builder(this)
 				.setTitle(getString(R.string.dialog_remove_item_confirmation) + listItemName)
 				.setNegativeButton(getString(android.R.string.no), null)
@@ -268,7 +268,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						updateListView();
 					}
 				}).show();			
-		} else if(menuItemName.equals("Copy") || menuItemName.equals("Αντιγραφή")){			
+		} else if(menuItemName.equals("Copy book") || menuItemName.equals("Αντιγραφή")){			
 			new AlertDialog.Builder(this)
 			.setTitle(getString(R.string.dialog_copy_item_confirmation))
 			.setNegativeButton(getString(android.R.string.no), null)

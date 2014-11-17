@@ -23,7 +23,8 @@
 	        android:contentDescription="@string/content_descr_btn_lib"
 	        android:background="@android:color/transparent"
 	        android:layout_alignParentLeft="true"
-	        android:layout_marginTop="10dp"/>
+	        android:layout_marginTop="10dp"
+	        android:layout_centerVertical="true"/>
         
         <ImageButton 
 	        android:id="@+id/presentation_settings"
@@ -34,7 +35,8 @@
 	        android:contentDescription="@string/content_descr_btn_search"
 	        android:background="@android:color/transparent"
 	        android:layout_toRightOf="@id/ibtn_add_library"
-	        android:layout_marginTop="10dp"/>
+	        android:layout_marginTop="10dp"
+	        android:layout_centerVertical="true"/>
         
         <ImageButton
             android:id="@+id/ibtn_rules"
@@ -45,7 +47,8 @@
             android:contentDescription="@string/content_descr_btn_rules"
             android:background="@android:color/transparent"
             android:layout_toRightOf="@id/presentation_settings"
-            android:layout_marginTop="10dp"/>    
+            android:layout_marginTop="10dp"
+            android:layout_centerVertical="true"/>    
         
         <TextView 
 	        android:id="@+id/library_header"
