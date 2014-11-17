@@ -1,8 +1,5 @@
 package com.example.reader;
 
-import ilearnrw.textadaptation.TextAnnotationModule;
-import ilearnrw.textclassification.Word;
-import ilearnrw.user.profile.UserProfile;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,11 +10,11 @@ import java.util.Comparator;
 import java.util.Locale;
 
 import com.example.reader.popups.RenameActivity;
+import com.example.reader.tasks.OpenBookTask;
 import com.example.reader.texttospeech.TextToSpeechReader;
 import com.example.reader.types.LibraryAdapter;
 import com.example.reader.types.LibraryItem;
 import com.example.reader.types.Pair;
-import com.example.reader.types.singleton.AnnotatedWordsSet;
 import com.example.reader.types.singleton.ProfileUser;
 import com.example.reader.utils.AppLocales;
 import com.example.reader.utils.FileHelper;
@@ -55,8 +52,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	
 	private AlertDialog dialog;
 	private SharedPreferences preferences;
-
-	private UserProfile profile;
 	
 	public static final int FLAG_ADD_TO_DEVICE = 10000;
 	public static final int FLAG_UPDATE_FILE_NAME = 10001;
@@ -66,11 +61,9 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	
 	private File libDir;
 	
-	private TextAnnotationModule txModule;
 	private boolean activateRules;
 	
-	private final int DEFAULT_COLOR = 0xffff0000;
-	private final int DEFAULT_RULE	= 3;
+	
 	
 	private boolean offlineMode = false;
 	
@@ -466,23 +459,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		Pair<File> libItems = FileHelper.getFilesFromLibrary(this, item.getName());
 		 
 		if(item.getName().endsWith(".txt") || item.getName().endsWith(".html")){
-			String clean = FileHelper.readFromFile(libItems.first());
-			String json = FileHelper.readFromFile(libItems.second());
-			
-			Intent intent = new Intent(this, ReaderActivity.class);
-			AnnotatedWordsSet.getInstance(this.getApplicationContext()).initUserBasedAnnotatedWordsSet(json, libItems.first().getName());
-			
-			String html = clean;
-			if(activateRules)
-				html = fireTxModule(clean, json);
-			
-			intent.putExtra("html", html);
-			intent.putExtra("cleanHtml", clean);
-			intent.putExtra("json", json);
-			intent.putExtra("title", libItems.first().getName());
-			intent.putExtra("trickyWords", (ArrayList<Word>) profile.getUserProblems().getTrickyWords());
-			
-			this.startActivity(intent);
+			new OpenBookTask(this, libItems, activateRules).run();
 		} else if(item.getName().endsWith(".json")){
 			new AlertDialog.Builder(this)
 			.setTitle(getString(R.string.dialog_json_title))
@@ -498,7 +475,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	}
 	
 	private void initProfile(String jsonProfile){
-		profile = ProfileUser.getInstance(this.getApplicationContext()).getProfile();
+		ProfileUser.getInstance(this.getApplicationContext()).getProfile();
 	}
 	
 	private void updateListView(){
@@ -518,39 +495,5 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				return lhs.getName().compareToIgnoreCase(rhs.getName());
 			}
 		});
-	}
-	
-	private String fireTxModule(String html, String json){
-		if (txModule==null)
-			txModule = new TextAnnotationModule(html);
-		
-		if (txModule.getPresentationRulesModule() == null)
-			txModule.initializePresentationModule(profile);
-
-		for (int i = 0; i < profile.getUserProblems().getNumerOfRows(); i++)
-		{
-			int problemSize = profile.getUserProblems().getRowLength(i);
-			for (int j = 0; j < problemSize; j++)
-			{
-				String id 			= getString(R.string.sp_user_id);
-				int color 			= preferences.getInt(preferences.getInt(id, 0)+"pm_color_"+i+"_"+j, DEFAULT_COLOR);
-				int rule 			= preferences.getInt(preferences.getInt(id, 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
-				boolean isChecked 	= preferences.getBoolean(preferences.getInt(id, 0)+"pm_enabled_"+i+"_"+j, false);
-				
-				txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
-				
-				txModule.getPresentationRulesModule().setTextColor(i, j, color);
-				txModule.getPresentationRulesModule().setHighlightingColor(i, j, color);
-				txModule.getPresentationRulesModule().setActivated(i, j, isChecked);
-			}
-		}
-
-		txModule.setInputHTMLFile(html);
-		txModule.setJSonObject(AnnotatedWordsSet.getInstance(getApplicationContext()).getUserBasedAnnotatedWordsSet());
-		
-		txModule.annotateText();
-		return txModule.getAnnotatedHTMLFile();
-	}
-	
-	
+	}	
 }

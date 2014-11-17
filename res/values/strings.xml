@@ -23,6 +23,8 @@
     <string name="dialog_log_title">Logging</string>
     <string name="dialog_log_summary">Logging value. Please wait&#8230;</string>
     <string name="dialog_log_failed">Failed to log value.</string>
+    
+    <string name="dialog_open_book_summary">Opening book. Please wait&#8230;</string>
 	
     <!-- Activity titles -->
     <string name="title_presentation_module">Presentation Settings</string>
