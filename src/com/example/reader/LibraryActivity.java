@@ -43,7 +43,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class LibraryActivity extends Activity implements OnClickListener , OnItemClickListener{
 
-	private static ImageButton btnAdd, btnSettings, btnRules;
+	private static ImageButton btnAdd, btnSettings, btnRules, btnLogout;
 	//private static ListView library;
 	private static GridView library;
 	//private SideSelector sideSelector;
@@ -145,6 +145,9 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		btnRules = (ImageButton) findViewById(R.id.ibtn_rules);
 		btnRules.setOnClickListener(this);
 		
+		btnLogout = (ImageButton) findViewById(R.id.ibtn_logout);
+		btnLogout.setOnClickListener(this);
+		
 		
 		activateRules = preferences.getBoolean("activateRules", false);
 		if(activateRules)
@@ -244,7 +247,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 					
 						String name = "current_" + fileName.first()+ "_" + fileName.second().substring(1);
 						
-						preferences.edit().remove(name).commit();
+						preferences.edit().remove(name).apply();
 						
 						if(preferences.getBoolean(getString(R.string.sp_show_all), false)){
 							for(int i=files.size()-1; i>=0; i--){
@@ -422,7 +425,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
+		btnLogout.callOnClick();
 	}
 
 	@Override
@@ -444,8 +447,35 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				btnRules.setImageResource(R.drawable.rules_active);
 			else
 				btnRules.setImageResource(R.drawable.rules_inactive);
+
+				preferences.edit().putBoolean("activateRules", activateRules).apply();
+
+			break;
+		case R.id.ibtn_logout:
+			if(offlineMode){
+				Intent i = new Intent(LibraryActivity.this, LoginActivity.class);
+				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				startActivity(i);
+			} else {
+				new AlertDialog.Builder(this)
+				.setTitle(getString(R.string.dialog_logout_title))
+				.setMessage(getString(R.string.dialog_logout_message))
+				.setNegativeButton(android.R.string.no, null)
+				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						SharedPreferences.Editor edit= preferences.edit();
+						edit.remove(getString(R.string.sp_authToken));
+						edit.remove(getString(R.string.sp_refreshToken));
+						edit.apply();
+						
+						Intent i = new Intent(LibraryActivity.this, LoginActivity.class);
+						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						startActivity(i);
+					}
+				}).show();
+			}
 			
-			preferences.edit().putBoolean("activateRules", activateRules).commit();
 			break;
 		default:
 			break;

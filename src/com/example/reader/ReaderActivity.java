@@ -266,7 +266,7 @@ public class ReaderActivity
 		if(mode==-1){
 			reader_mode = ReaderMode.Listen;
 			mode = reader_mode.getValue();
-			spEditor.putInt(getString(R.string.sp_reader_mode), mode).commit();
+			spEditor.putInt(getString(R.string.sp_reader_mode), mode).apply();
 			rlHighlightSpeed.setVisibility(View.GONE);
 			Toast.makeText(this, "No reader mode set. Listen mode is selected", Toast.LENGTH_LONG).show();
 		} else {
@@ -356,7 +356,7 @@ public class ReaderActivity
 					removeHighlight(sentenceIds.get(currSentPos));
 					break;
 				}
-				spEditor.putInt(getString(R.string.sp_reader_mode), mode).commit();
+				spEditor.putInt(getString(R.string.sp_reader_mode), mode).apply();
 			}
 		}
 			break;
@@ -473,7 +473,7 @@ public class ReaderActivity
 					speakFromSentence(c);
 				} else {
 					setPlayStatus(ReaderStatus.Disabled, true);
-					spEditor.putInt(CURR_SENT, currSentPos).commit();					ttsReader.stop();					ttsReader.rehighlight();
+					spEditor.putInt(CURR_SENT, currSentPos).apply();					ttsReader.stop();					ttsReader.rehighlight();
 				}
 			} else if(reader_mode == ReaderMode.Guidance){
 				if(reader_status == ReaderStatus.Disabled){
@@ -509,7 +509,7 @@ public class ReaderActivity
 		int direction = forward ? -1 : 1;
 		
 		if(reader_mode == ReaderMode.Listen){
-			spEditor.putBoolean(getString(R.string.sp_tts_reader_is_stepping), true).commit();			ttsReader.stop();
+			spEditor.putBoolean(getString(R.string.sp_tts_reader_is_stepping), true).apply();			ttsReader.stop();
 			
 			if(isSpeaking){
 				setPlayStatus(ReaderStatus.Disabled, false);
@@ -537,7 +537,7 @@ public class ReaderActivity
 				highlight(current);
 			}
 			
-			spEditor.putInt(CURR_SENT, currSentPos).commit();
+			spEditor.putInt(CURR_SENT, currSentPos).apply();
 			
 			if(isSpeaking)
 				setPlayStatus(ReaderStatus.Enabled, false);
@@ -564,7 +564,7 @@ public class ReaderActivity
 			String current = wordIds.get(currWordPos);
 			String other = wordIds.get(currWordPos+direction);
 			
-			spEditor.putInt(CURR_WORD, currWordPos).commit();
+			spEditor.putInt(CURR_WORD, currWordPos).apply();
 			
 			if(doHighlight){
 				removeHighlight(other);
@@ -615,7 +615,7 @@ public class ReaderActivity
 		case R.id.seekbar_highLight_speed:
 			int flipValue = seekBar.getMax() - seekBar.getProgress();
 			highlightSpeed =  (flipValue * 0.1);
-			spEditor.putLong(getString(R.string.pref_highlighter_speed), Double.doubleToRawLongBits(highlightSpeed)).commit();
+			spEditor.putLong(getString(R.string.pref_highlighter_speed), Double.doubleToRawLongBits(highlightSpeed)).apply();
 			
 			highlightSpeed += 0.5;
 			
@@ -1177,7 +1177,7 @@ public class ReaderActivity
 				public void run() {
 					removeSearches();
 					
-					spEditor.putBoolean(getString(R.string.sp_tts_reader_is_stepping), false).commit();
+					spEditor.putBoolean(getString(R.string.sp_tts_reader_is_stepping), false).apply();
 					
 
 					String curr = sentenceIds.get(currSentPos);
@@ -1192,17 +1192,17 @@ public class ReaderActivity
 					
 					if(!isHighlighting || !curr.equals(id)){						
 						highlight(id);
-						spEditor.putInt(CURR_SENT, currSentPos).commit();
+						spEditor.putInt(CURR_SENT, currSentPos).apply();
 						isHighlighting = true;
 						
 						if(reader_status == ReaderStatus.Enabled)
 							speakFromSentence(id);
 						
 					} else {
-						spEditor.putInt(CURR_SENT, currSentPos).commit();
+						spEditor.putInt(CURR_SENT, currSentPos).apply();
 						isHighlighting = false;
 					}
-					spEditor.putBoolean("highlighting", isHighlighting).commit();
+					spEditor.putBoolean("highlighting", isHighlighting).apply();
 					reader.loadUrl("javascript:updateCurrentPosition('"+sentenceIds.get(currSentPos)+"', 0);");
 				}
 			});
@@ -1230,7 +1230,7 @@ public class ReaderActivity
 					
 					if(!isHighlighting || !curr.equals(id)){						
 						highlight(id);
-						spEditor.putInt(CURR_WORD, currWordPos).commit();
+						spEditor.putInt(CURR_WORD, currWordPos);
 						isHighlighting = true;
 						
 						if(reader_status == ReaderStatus.Enabled){
@@ -1239,11 +1239,12 @@ public class ReaderActivity
 								highlightHandler.postDelayed(highlightRunnable, millis);							
 						}
 					} else {
-						spEditor.putInt(CURR_WORD, currWordPos).commit();
+						spEditor.putInt(CURR_WORD, currWordPos);
 						isHighlighting = false;
 					}
 					
-					spEditor.putBoolean(getString(R.string.sp_highlighting), isHighlighting).commit();
+					spEditor.putBoolean(getString(R.string.sp_highlighting), isHighlighting);
+					spEditor.apply();
 					
 					reader.loadUrl("javascript:updateCurrentPosition('"+wordIds.get(currWordPos)+"', 1);");
 				}
@@ -1257,7 +1258,7 @@ public class ReaderActivity
 			case 0:
 				for(int i=0; i<wordIds.size(); i++){
 					if(currWordPos != i && wordIds.get(i).equals(other)){
-						spEditor.putInt(CURR_WORD, i).commit();
+						spEditor.putInt(CURR_WORD, i).apply();
 						break;
 					}
 				}
@@ -1267,7 +1268,7 @@ public class ReaderActivity
 			case 1:
 				for(int i=0; i<sentenceIds.size(); i++){
 					if(currSentPos != i && sentenceIds.get(i).equals(other)){
-						spEditor.putInt(CURR_SENT, i).commit();
+						spEditor.putInt(CURR_SENT, i).apply();
 						break;
 					}
 				}
@@ -1297,7 +1298,7 @@ public class ReaderActivity
 				int next = ++id;
 				
 				if(next==++currSentPos){
-					spEditor.putInt(CURR_SENT, next).commit();
+					spEditor.putInt(CURR_SENT, next).apply();
 					currSentPos = next;
 					runOnUiThread(new Runnable() {
 						@Override
@@ -1369,7 +1370,7 @@ public class ReaderActivity
 				}
 				prev 	= sentenceIds.get(currSentPos++);
 				current	= sentenceIds.get(currSentPos);
-				spEditor.putInt(CURR_SENT, currSentPos).commit();
+				spEditor.putInt(CURR_SENT, currSentPos).apply();
 				
 				runOnUiThread(new Runnable() {
 					public void run() {
@@ -1384,7 +1385,7 @@ public class ReaderActivity
 				}
 				prev 	= wordIds.get(currWordPos++);
 				current	= wordIds.get(currWordPos);
-				spEditor.putInt(CURR_WORD, currWordPos).commit();
+				spEditor.putInt(CURR_WORD, currWordPos).apply();
 				runOnUiThread(new Runnable() {
 					public void run() {
 						reader.loadUrl("javascript:updateCurrentPosition('"+wordIds.get(currWordPos)+"', 1);");

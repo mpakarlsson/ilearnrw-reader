@@ -41,7 +41,7 @@ public class PresentationRulesAdapter {
 				edit.putInt(userId+"pm_rule_"+i+"_"+j, presentationRules.getPresentationRule(i, j));
         	}
 		}
-		edit.commit();
+		edit.apply();
 	}
 	
 	public PresentationRulesModule getPresentationRules() {

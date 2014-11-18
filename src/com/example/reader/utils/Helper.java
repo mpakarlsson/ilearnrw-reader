@@ -132,5 +132,4 @@ public class Helper {
 		
 		return builder = builder.delete(index, index+str.length());
 	}
-	
 }

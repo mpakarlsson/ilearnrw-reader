@@ -140,7 +140,7 @@ public class HttpHelper {
 				SharedPreferences.Editor editor = preferences.edit();
 	    		editor.putString(context.getString(R.string.sp_authToken), lr.authToken);
 	    		editor.putString(context.getString(R.string.sp_refreshToken), lr.refreshToken);
-	    		editor.commit();
+	    		editor.apply();
 	    		return true;
 			} catch (Exception e) {
 				e.printStackTrace();

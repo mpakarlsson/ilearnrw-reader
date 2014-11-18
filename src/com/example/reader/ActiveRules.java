@@ -149,7 +149,7 @@ public class ActiveRules extends ListActivity {
 			            alert.setMessage(getResources().getString(R.string.deactivate_rule));
 			            alert.setPositiveButton(R.string.confirm_btn_text, new DialogInterface.OnClickListener() {
 			            	public void onClick(DialogInterface dialog, int id) {
-			            		sp.edit().putBoolean(sp.getInt(getString(R.string.sp_user_id), 0)+"pm_enabled_" + item.category + "_" + item.index, false).commit();
+			            		sp.edit().putBoolean(sp.getInt(getString(R.string.sp_user_id), 0)+"pm_enabled_" + item.category + "_" + item.index, false).apply();
 			            		updateData();
 			       			}
 			            });

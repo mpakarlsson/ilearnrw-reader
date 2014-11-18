@@ -93,10 +93,10 @@ public class TextToSpeechReader
 				
 				if(utteranceId.equals("speakWithId")){
 					cbHighlight.OnHighlight(position);
-					sp.edit().putInt(SENTENCE_TAG, position).commit();
+					sp.edit().putInt(SENTENCE_TAG, position).apply();
 				} else if(utteranceId.equals("lastSpeakWithId")){
 					cbHighlight.OnHighlight(position);
-					sp.edit().putInt(SENTENCE_TAG, 0).commit();
+					sp.edit().putInt(SENTENCE_TAG, 0).apply();
 				}
 			}
 			
@@ -107,7 +107,7 @@ public class TextToSpeechReader
 			public void onDone(String utteranceId) {
 				boolean isStepping = sp.getBoolean(context.getString(R.string.sp_tts_reader_is_stepping), false);
 				if(isStepping){
-					sp.edit().putBoolean(context.getString(R.string.sp_tts_reader_is_stepping), false).commit();
+					sp.edit().putBoolean(context.getString(R.string.sp_tts_reader_is_stepping), false).apply();
 					return;
 				}
 				

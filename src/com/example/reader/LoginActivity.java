@@ -4,8 +4,6 @@ import com.example.reader.tasks.LoginTask;
 import com.example.reader.types.singleton.ProfileUser;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,11 +20,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	private final String TAG = getClass().getName();
 
-	public Button btnLogin, btnLogout, btnOffline;
+	public Button btnLogin, btnOffline;
 	public EditText etUsername, etPassword;
 	public CheckBox chkRM;
 	private SharedPreferences preferences;
-	private boolean isLoggedIn;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +32,6 @@ public class LoginActivity extends Activity implements OnClickListener {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         
         btnLogin 		= (Button) findViewById(R.id.login_button);
-        btnLogout 		= (Button) findViewById(R.id.login_logout);
         btnOffline		= (Button) findViewById(R.id.login_offline);
         etUsername 		= (EditText) findViewById(R.id.login_username);
         etPassword 		= (EditText) findViewById(R.id.login_password);
@@ -53,7 +49,6 @@ public class LoginActivity extends Activity implements OnClickListener {
         etPassword.setSelection(password.length());
         
         btnLogin.setOnClickListener(this);
-        btnLogout.setOnClickListener(this);
         btnOffline.setOnClickListener(this);
         
         chkRM.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -68,7 +63,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 					editor.remove(getString(R.string.sp_user_remember_me));
 					editor.remove(getString(R.string.sp_authToken));
 					editor.remove(getString(R.string.sp_refreshToken));
-					editor.commit();
+					editor.apply();
 				}	
 			}
 		});
@@ -81,9 +76,6 @@ public class LoginActivity extends Activity implements OnClickListener {
     	boolean isRemember = preferences.getBoolean(getString(R.string.sp_user_remember_me), false);
         String username = preferences.getString(getString(R.string.sp_user_name), "");
         String password = preferences.getString(getString(R.string.sp_user_password), "");
-        isLoggedIn = preferences.getBoolean(getString(R.string.sp_user_is_logged_in), false);
-        updateButtons();
-        
         
         chkRM.setChecked(isRemember);
         etUsername.setText(username);
@@ -129,40 +121,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 				editor.putString(getString(R.string.sp_user_password), "");
 			}
 
-			updateButtons();
-			editor.commit();
+			editor.apply();
 			
 			new LoginTask(this, TAG).run(username, password);
-			break;
-		
-		case R.id.login_logout:
-			new AlertDialog.Builder(this)
-			.setTitle(getString(R.string.dialog_logout_title))
-			.setMessage(getString(R.string.dialog_logout_message))
-			.setNegativeButton(android.R.string.no, null)
-			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					SharedPreferences.Editor edit= preferences.edit();
-					edit.remove(getString(R.string.sp_user_name));
-					edit.remove(getString(R.string.sp_user_password));
-					edit.remove(getString(R.string.sp_user_remember_me));
-					edit.remove(getString(R.string.sp_authToken));
-					edit.remove(getString(R.string.sp_refreshToken));
-					
-					isLoggedIn = false;
-					updateButtons();
-					edit.putBoolean(getString(R.string.sp_user_is_logged_in), isLoggedIn);
-					edit.commit();
-					
-					ProfileUser.getInstance(getApplicationContext()).nullProfile();
-					
-					etUsername.getText().clear();
-					etPassword.getText().clear();
-					chkRM.setChecked(false);
-				}
-			}).show();
-			
 			break;
 			
 		case R.id.login_offline:
@@ -180,12 +141,5 @@ public class LoginActivity extends Activity implements OnClickListener {
 		default:
 			break;
 		}
-	}
-	
-	private void updateButtons(){		
-		if(isLoggedIn)
-        	btnLogout.setVisibility(View.VISIBLE);
-        else
-        	btnLogout.setVisibility(View.GONE);
 	}
 }

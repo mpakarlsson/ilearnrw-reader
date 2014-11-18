@@ -93,7 +93,7 @@ public class
 			
     		editor.putString(context.getString(R.string.sp_authToken), result.authToken);
     		editor.putString(context.getString(R.string.sp_refreshToken), result.refreshToken);
-    		editor.commit();
+    		editor.apply();
 			
     		new UserDetailsTask(context, TAG).run(username, result.authToken);
     		

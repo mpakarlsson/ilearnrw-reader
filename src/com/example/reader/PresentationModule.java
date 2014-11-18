@@ -127,7 +127,7 @@ public class PresentationModule
 		
 		setContentView(R.layout.activity_presentation_module);
 
-		sp.edit().putBoolean(getString(R.string.sp_show_gui), showGUI).commit();
+		sp.edit().putBoolean(getString(R.string.sp_show_gui), showGUI).apply();
 		int id = sp.getInt(getString(R.string.sp_user_id),-1);
 		String token = sp.getString(getString(R.string.sp_authToken), "");		
 		
@@ -299,9 +299,11 @@ public class PresentationModule
 				sp.edit().putInt("pm_rule_"+pi.cat+"_"+pi.idx, pi.rule).commit();
 			}*/
 			String _id = getString(R.string.sp_user_id);
-			sp.edit().putBoolean(sp.getInt(_id, 0)+"pm_enabled_" + currentCategoryPos + "_" + currentProblemPos, true).commit();
-			sp.edit().putInt(sp.getInt(_id, 0)+"pm_color_" + currentCategoryPos + "_" + currentProblemPos, currentColor).commit();
-			sp.edit().putInt(sp.getInt(_id, 0)+"pm_rule_"+currentCategoryPos+"_"+currentProblemPos, currentRule).commit();
+			SharedPreferences.Editor edit = sp.edit();
+			edit.putBoolean(sp.getInt(_id, 0)+"pm_enabled_" + currentCategoryPos + "_" + currentProblemPos, true);
+			edit.putInt(sp.getInt(_id, 0)+"pm_color_" + currentCategoryPos + "_" + currentProblemPos, currentColor);
+			edit.putInt(sp.getInt(_id, 0)+"pm_rule_"+currentCategoryPos+"_"+currentProblemPos, currentRule);
+			edit.apply();
 			onBackPressed();
 			break;
 			

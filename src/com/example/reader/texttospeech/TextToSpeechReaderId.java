@@ -41,10 +41,10 @@ public class TextToSpeechReaderId extends TextToSpeechReaderBase {
 				
 				if(utteranceId.equals("speakWithId")){
 					cbHighlight.OnHighlight(position);
-					sp.edit().putInt(sentenceTag, position).commit();
+					sp.edit().putInt(sentenceTag, position).apply();
 				} else if(utteranceId.equals("lastSpeakWithId")){
 					cbHighlight.OnHighlight(position);
-					sp.edit().putInt(sentenceTag, 0).commit();
+					sp.edit().putInt(sentenceTag, 0).apply();
 				}
 			}
 			
@@ -55,7 +55,7 @@ public class TextToSpeechReaderId extends TextToSpeechReaderBase {
 			public void onDone(String utteranceId) {
 				boolean isStepping = sp.getBoolean(context.getString(R.string.sp_tts_reader_is_stepping), false);
 				if(isStepping){
-					sp.edit().putBoolean(context.getString(R.string.sp_tts_reader_is_stepping), false).commit();
+					sp.edit().putBoolean(context.getString(R.string.sp_tts_reader_is_stepping), false).apply();
 					return;
 				}
 				

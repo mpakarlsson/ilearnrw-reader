@@ -100,7 +100,7 @@ public class
 			SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
 			edit.putInt(context.getString(R.string.sp_user_id), result.id);
 			edit.putString(context.getString(R.string.sp_user_language), result.language);
-			edit.commit();
+			edit.apply();
 
 			AppLocales.setLocales(context, result.language);
 			new ProfileTask(context, this, this).run(Integer.toString(result.id), sp.getString(context.getString(R.string.sp_authToken), ""));
@@ -113,8 +113,10 @@ public class
 	@Override
 	public void onProfileFetched(String profile) {
 		new LogTask(SystemTags.APP_SESSION_START).run(username, "Logged in: " + username + ".");
-		sp.edit().putString(context.getString(R.string.sp_user_profile_json), profile).commit();
-		sp.edit().putBoolean(context.getString(R.string.sp_user_is_logged_in), true).commit();
+		SharedPreferences.Editor edit = sp.edit();
+		edit.putString(context.getString(R.string.sp_user_profile_json), profile);
+		edit.putBoolean(context.getString(R.string.sp_user_is_logged_in), true);
+		edit.apply();
 		Intent i2 = new Intent(context, LibraryActivity.class);
 		context.startActivity(i2);
 	}
