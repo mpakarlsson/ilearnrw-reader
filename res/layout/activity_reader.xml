@@ -23,7 +23,8 @@
 	        android:background="@android:color/transparent"
 	        android:contentDescription="@string/content_descr_btn_lib"
 	        android:layout_alignParentLeft="true"
-	        android:layout_marginTop="10dp"/>
+	        android:layout_marginTop="10dp"
+	        android:layout_centerVertical="true"/>
         
         <ImageButton 
 	        android:id="@+id/ibtn_search_reader"
@@ -34,7 +35,8 @@
 	        android:contentDescription="@string/content_descr_btn_search"
 	        android:background="@android:color/transparent"
 	        android:layout_toRightOf="@id/ibtn_lib_reader"
-	        android:layout_marginTop="10dp"/>
+	        android:layout_marginTop="10dp"
+	        android:layout_centerVertical="true"/>
         
         <RelativeLayout
 	        android:id="@+id/search_buttons_layout"
@@ -43,7 +45,8 @@
 	        android:background="@color/LightGrey"
 	        android:gravity="center_vertical"
 	        android:layout_toRightOf="@id/ibtn_search_reader"
-	        android:layout_margin="10dp">
+	        android:layout_margin="10dp"
+	        android:layout_centerVertical="true">
         
 	        <ImageButton
 	            android:id="@+id/ibtn_search_back"
@@ -139,7 +142,8 @@
 	        android:background="@android:color/transparent"
 	        android:layout_alignParentLeft="true"
 	        android:layout_marginTop="10dp"
-	        android:layout_marginBottom="5dp"/>
+	        android:layout_marginBottom="5dp"
+	        android:layout_centerVertical="true"/>
 	    
 		<ImageButton 
 	        android:id="@+id/ibtn_settings_reader"
@@ -151,14 +155,16 @@
 	        android:background="@android:color/transparent"
 	        android:layout_alignParentRight="true"
 	        android:layout_marginTop="10dp"
-	        android:layout_marginBottom="5dp"/>
+	        android:layout_marginBottom="5dp"
+	        android:layout_centerVertical="true"/>
 		
 			    
 		<LinearLayout 
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_toRightOf="@id/ibtn_mode_reader"
-	        android:layout_toLeftOf="@id/ibtn_settings_reader" >
+	        android:layout_toLeftOf="@id/ibtn_settings_reader"
+	        android:layout_centerVertical="true" >
 	        
 	        <ImageButton 
 		        android:id="@+id/ibtn_prev_reader"
