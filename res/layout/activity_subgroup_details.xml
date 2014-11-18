@@ -210,23 +210,34 @@
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
 		android:layout_marginTop="@dimen/spacer_8"
-		android:gravity="center">
+		android:gravity="center"
+		android:weightSum="10">
 	    
 	    <Button
 	        android:id="@+id/subgroup_btn_cancel"
-	        android:layout_width="wrap_content"
+	        android:layout_width="0dp"
 	        android:layout_height="wrap_content"
 	        android:text="@android:string/cancel"
 	        android:layout_marginRight="@dimen/spacer_8"
-	        style="@android:attr/buttonBarButtonStyle" />	
+	        style="?android:attr/buttonBarButtonStyle"
+	        android:textSize="18sp"
+	        android:layout_marginLeft="@dimen/spacer_10"
+	        android:layout_weight="4" />
+	    
+	    <View android:layout_height="match_parent"
+			android:layout_width="1dp"
+		    android:background="#90909090"/>
 	
 	    <Button
 	        android:id="@+id/subgroup_btn_ok"
-	        android:layout_width="wrap_content"
+	        android:layout_width="0dp"
 	        android:layout_height="wrap_content"
 	        android:text="@android:string/ok"
 	        android:layout_marginLeft="@dimen/spacer_8" 
-	        style="@android:attr/buttonBarButtonStyle"/>
+	        style="?android:attr/buttonBarButtonStyle"
+	        android:textSize="18sp"
+	        android:layout_marginRight="@dimen/spacer_10"
+	        android:layout_weight="4"/>
     	
 	</LinearLayout>
 	

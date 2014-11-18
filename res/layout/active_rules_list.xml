@@ -8,13 +8,16 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
         android:textSize="24sp" />
-		
+	
 	<Button
 		android:id="@+id/add_active_rule"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 		android:text="@string/add_btn_text"
-	/>
+		android:background="#E3E3E3"
+		style="?android:attr/buttonBarButtonStyle"
+		android:layout_marginLeft="@dimen/spacer_8"
+		android:layout_marginRight="@dimen/spacer_8"/>
         
 	<ListView
 		android:id="@android:id/list"

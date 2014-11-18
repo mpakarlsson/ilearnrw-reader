@@ -93,7 +93,6 @@ public class PresentationModule
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 		AppLocales.setLocales(getApplicationContext(), sp.getString(getString(R.string.sp_user_language), "en"));

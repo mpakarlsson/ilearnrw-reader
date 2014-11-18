@@ -4,7 +4,7 @@
 	android:orientation="vertical"
 	android:layout_width="match_parent" 
 	android:layout_height="match_parent"
-	android:background="#ddd" >
+	android:background="#EAEAEA" >
    
     <RelativeLayout 
         android:layout_width="match_parent"
@@ -25,25 +25,28 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
-		android:layout_marginTop="@dimen/spacer_8">	
+		android:layout_marginTop="@dimen/spacer_8"
+		android:gravity="center_vertical">	
 		
 		<Button
 			android:id="@+id/clear_rules"
-		    android:layout_width="wrap_content"
+		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
        		android:layout_marginLeft="5dp"
-	        android:background="#ccc"
 			android:text="@string/clear_rules"
 			android:layout_weight="1"
 			style="?android:attr/buttonBarButtonStyle" />
+		
+		<View android:layout_height="match_parent"
+			android:layout_width="1dp"
+		    android:background="#90909090"/>
 			
 		<Button
 			android:id="@+id/show_advanced"
-		    android:layout_width="wrap_content"
+		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
      		android:layout_marginLeft="5dp"
      		android:layout_marginRight="5dp"
-	        android:background="#ccc"
 			android:text="@string/advanced_rules"
 			android:layout_weight="1"
 			style="?android:attr/buttonBarButtonStyle" />
@@ -68,7 +71,7 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
-	        ns:animationDuration="250"
+	        ns:animationDuration="200"
 	        ns:collapsedHeight="1dip"
 	        ns:content="@+id/groups_view_recommendation_content_holder"
 	        ns:handle="@+id/groups_view_recommendation_handler"

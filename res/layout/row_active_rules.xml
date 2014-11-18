@@ -31,23 +31,30 @@
 	    android:layout_marginLeft="@dimen/spacer_8"/>
 	
 	<LinearLayout android:id="@+id/layoutButtons"
-        android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1.0" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="10"
+        android:gravity="center_horizontal">
 
+	    <Button
+            android:id="@+id/delete_active_rule"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="@string/empty" 
+            style="?android:attr/buttonBarButtonStyle"/>
+	    
+		<View android:layout_height="match_parent"
+			android:layout_width="1dp"
+		    android:background="#90909090"/>
+	    
         <Button
             android:id="@+id/edit_active_rule"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_weight=".50"
-            android:text="" />
-
-        <Button
-            android:id="@+id/delete_active_rule"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight=".50"
-            android:text="" />
+            android:layout_weight="4"
+            android:text="@string/empty"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 	
 </LinearLayout>
