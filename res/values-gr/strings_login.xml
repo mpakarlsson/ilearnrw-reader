@@ -6,10 +6,12 @@
     <string name="login_password_hint">Εισάγετε τον κωδικό χρήστη</string>
     <string name="login">Σύνδεση</string>
     <string name="logout">Αποσύνδεση</string>
+    <string name="login_offline">Start in offline mode</string>
     
     <string name="login_succeeded">Σύνδεση επιτυχής</string>
     <string name="login_failed">Αποτυχία σύνδεσης</string>
     <string name="login_failed_fetching">Αποτυχία σύνδεσης, αποτυχία ανάκτησης δεδομένων του χρήστη</string>
+    <string name="login_offline_requires_profile">Offline mode requires you to login once</string>
     
     <string name="dialog_login_title">Σύνδεση</string>
     <string name="dialog_login_message">Σύνδεση σε εξέλιξη, παρακαλώ περιμένετε&#8230;</string>

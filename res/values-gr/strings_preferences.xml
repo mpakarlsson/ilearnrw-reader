@@ -8,7 +8,6 @@
     <string name="pref_text_category_title">Κείμενο</string>
    	<string name="pref_presentation_rules_category_title">Κανόνες Παρουσίασης</string>
    	<string name="pref_reset_category_title">Επαναφορά</string>
-   	<string name="pref_apply_category_title">Εφαρμογή</string>
    	
     <string name="pref_highlighter_speed">pref_highlighter_speed</string>
     

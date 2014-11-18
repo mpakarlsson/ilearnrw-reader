@@ -14,10 +14,11 @@
 	<string name="content_descr_btn_previous">Προηγούμενη πρόταση</string>
 	<string name="content_descr_btn_search">Αναζήτηση</string>
 	<string name="content_descr_btn_settings">Ρυθμίσεις</string>
+	<string name="content_descr_btn_rules">Annotations</string>
+	<string name="content_descr_btn_logout">Logout</string>
 	
 	<string name="mode_listen">Άκουσε</string>
 	<string name="mode_highlight">Καθοδήγηση</string>
-	<string name="mode_chunking">Chunking</string>
 	
 	<string name="reader_highlight_speed_title">Ταχύτητα</string>
 	
@@ -42,4 +43,9 @@
 	    <item>Phoneme:</item>
 	    <item>Δυσκολίες:</item>
 	</string-array>
+	
+	<string name="wp_stem">Stem</string>
+	<string name="wp_syllables">Syllables</string>
+	<string name="wp_phonics">Details</string>
+	<string name="wp_sounds">Sounds</string>
 </resources>

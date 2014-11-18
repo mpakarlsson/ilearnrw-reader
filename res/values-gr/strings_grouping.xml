@@ -10,7 +10,7 @@
     <string name="clear">Καθαρισμός</string>
     <string name="clear_rules">Καθαρισμός κανόνων</string>
     <string name="typical_highlights">Βασικοί Κανόνες</string>
-    <string name="personal_recomendations">Προτάσεις για χρωματισμό κειμένου</string>
+    <string name="personal_recommendations">Προτάσεις για χρωματισμό κειμένου</string>
     <string name="highlight_settings">Ρυθμίσεις Χρωματισμού</string>
     <string name="presentation_settings">Ρυθμίσεις Παρουσίασης</string>
     <string name="text_rules">Κανόνες Κειμένου</string>
