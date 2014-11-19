@@ -36,6 +36,7 @@
         <activity
             android:name="com.ilearnrw.reader.LibraryActivity"
             android:label="@string/title_activity_library"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/NoActionBar">
         </activity>
         <activity
