@@ -49,7 +49,7 @@
              android:title="Margins"
              android:dialogTitle="Margins"
              android:summary="Adjust text margins"
-             android:defaultValue="0"
+             android:defaultValue="5"
              android:entries="@array/pref_margin"
              android:entryValues="@array/pref_margin_values"/>
          

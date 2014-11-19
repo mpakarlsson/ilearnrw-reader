@@ -87,10 +87,10 @@
     </string-array>
     
     <string-array name="pref_margin">
-        <item>No margin</item>
-        <item>Cozy</item>
-        <item>Comfy</item>
-        <item>Roomy</item>
+        <item>None</item>
+        <item>Narrow</item>
+        <item>Medium</item>
+        <item>Wide</item>
     </string-array>
 
     <string-array name="pref_margin_values">

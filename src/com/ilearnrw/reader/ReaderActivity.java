@@ -960,7 +960,7 @@ public class ReaderActivity
 		int fSize				= sp.getInt(getString(R.string.pref_font_size_title), 20);
 		String fontSize;
 		String letterSpacing 	= sp.getString(getString(R.string.pref_letter_spacing_title), "0");
-		String margin 			= sp.getString(getString(R.string.pref_margin_title), "0");
+		String margin 			= sp.getString(getString(R.string.pref_margin_title), "5");
 		String fontFamily 		= sp.getString(getString(R.string.pref_font_face_title), "default");
 		
 		lineHeight 				= lineHeight.equals("0") ? "line-height: normal;" : "line-height: " + lineHeight + "%;";
