@@ -20,7 +20,7 @@
       </head>
       <body>
 
-        <p id = p0><sen id = s0><w id = w0>The</w> <w id = w1>texts</w> <w id = w2>in</w> <w id = w3>this</w> <w id = w4>collection</w> <w id = w5>were</w> <w id = w6>written</w> <w id = w7>by</w> <w id = w8>Jenny</w> <w id = w9>Molyneux</w>-<w id = w10>Berry</w> <w id = w11>and</w> <w id = w12>are</w> <w id = w13>copyright</w> <w id = w14>of</w> <w id = w15>Dyslexia</w> <w id = w16>Action</w>. </sen><sen id = s1><w id = w17>They</w> <w id = w18>were</w> <w id = w19>first</w> <w id = w20>published</w> <w id = w21>as</w> <w id = w22>the</w> <w id = w23>Fact</w> <w id = w24>File</w> <w id = w25>by</w> <w id = w26>Dyslexia</w> <w id = w27>Institute</w> <w id = w28>in</w> <w id = w29>2003</w>.</sen></p>
+        <p id = p0><sen id = s0><w id = w0>The</w> <w id = w1>texts</w> <w id = w2>in</w> <w id = w3>this</w> <w id = w4>collection</w> <w id = w5>were</w> <w id = w6>written</w> <w id = w7>by</w> <w id = w8>Jenny</w> <w id = w9>Molyneux</w>-<w id = w10>Berry</w> <w id = w11>and</w> <w id = w12>are</w> <w id = w13>copyright</w> <w id = w14>of</w> <w id = w15>Dyslexia</w> <w id = w16>Action</w>.</sen></p><p id = p1><sen id = s1><w id = w17>They</w> <w id = w18>were</w> <w id = w19>first</w> <w id = w20>published</w> <w id = w21>as</w> <w id = w22>the</w> <w id = w23>Fact</w> <w id = w24>File</w> <w id = w25>by</w> <w id = w26>Dyslexia</w> <w id = w27>Institute</w> <w id = w28>in</w> <w id = w29>2003</w>.</sen></p>
 
 
       </body>
