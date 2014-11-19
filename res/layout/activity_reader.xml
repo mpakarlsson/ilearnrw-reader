@@ -90,7 +90,7 @@
         android:layout_above="@+id/reader_bottom"
         android:layout_toLeftOf="@+id/reader_body_highlight_speed">
         
-        <com.example.reader.types.ExtendedWebView
+        <com.ilearnrw.reader.types.ExtendedWebView
 	        android:id="@+id/webview_reader"
 	        android:layout_width="match_parent"	
 	        android:layout_height="match_parent" />     
@@ -113,7 +113,7 @@
 	        android:layout_alignParentTop="true"
 	        android:gravity="center_horizontal"/>
 	    
-	    <com.example.reader.types.VerticalSeekBar 
+	    <com.ilearnrw.reader.types.VerticalSeekBar 
 			android:id="@+id/seekbar_highLight_speed"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"

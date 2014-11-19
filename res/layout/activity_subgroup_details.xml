@@ -92,7 +92,7 @@
 	    android:layout_height="2dp"
 	    android:background="@android:color/darker_gray"/>
 	
-	<com.example.reader.types.ExpandableLayout 
+	<com.ilearnrw.reader.types.ExpandableLayout 
 	    android:id="@+id/expLayoutPresentationRules"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
@@ -196,7 +196,7 @@
 			    </RadioGroup>
 			</LinearLayout>
 		</LinearLayout>
-	</com.example.reader.types.ExpandableLayout>
+	</com.ilearnrw.reader.types.ExpandableLayout>
 	
 	
 	<View

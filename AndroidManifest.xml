@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.reader"
+    package="com.ilearnrw.reader"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -20,9 +20,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:name="com.example.reader.ReaderApplication" >
+        android:name="com.ilearnrw.reader.ReaderApplication" >
         <activity
-            android:name="com.example.reader.LoginActivity"
+            android:name="com.ilearnrw.reader.LoginActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden"
             android:configChanges="orientation|screenSize"
@@ -34,68 +34,68 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.reader.LibraryActivity"
+            android:name="com.ilearnrw.reader.LibraryActivity"
             android:label="@string/title_activity_library"
             android:theme="@style/NoActionBar">
         </activity>
         <activity
-            android:name="com.example.reader.ActiveRules"
+            android:name="com.ilearnrw.reader.ActiveRules"
             android:label="@string/title_activity_active_rules"
             android:theme="@style/NoActionBar">
         </activity>
         <activity
-            android:name="com.example.reader.GroupsActivity"
+            android:name="com.ilearnrw.reader.GroupsActivity"
             android:label="@string/title_activity_active_rules"
             android:theme="@style/NoActionBar">
         </activity>
         <activity
-            android:name="com.example.reader.SubgroupDetails"
+            android:name="com.ilearnrw.reader.SubgroupDetails"
             android:label="@string/title_activity_active_rules"
             android:theme="@style/NoActionBar">
         </activity>
         <activity
-            android:name="com.example.reader.ReaderActivity"
+            android:name="com.ilearnrw.reader.ReaderActivity"
             android:label="@string/title_activity_reader" 
             android:configChanges="orientation|screenSize"
             android:theme="@style/NoActionBar">
         </activity>
         <activity
-            android:name="com.example.reader.PresentationModule"
+            android:name="com.ilearnrw.reader.PresentationModule"
             android:label="@string/title_presentation_module"
             android:theme="@style/NoActionBar">
         </activity>
-        <activity android:name="com.example.reader.AddToLibraryExplorerActivity"
+        <activity android:name="com.ilearnrw.reader.AddToLibraryExplorerActivity"
             android:label="@string/title_activity_add_to_device_explorer"
             android:theme="@style/NoActionBar">
         </activity>
-        <activity android:name="com.example.reader.AddToLibraryORBActivity"
+        <activity android:name="com.ilearnrw.reader.AddToLibraryORBActivity"
             android:label="@string/title_activity_add_to_device_orb"
             android:theme="@style/NoActionBar">
         </activity>
         <activity
-            android:name="com.example.reader.SettingsActivity"
+            android:name="com.ilearnrw.reader.SettingsActivity"
             android:label="@string/title_reader_settings"
             android:theme="@style/NoActionBar">
         </activity>
         
         <activity
-            android:name="com.example.reader.popups.SearchActivity"
+            android:name="com.ilearnrw.reader.popups.SearchActivity"
             android:label="@string/title_activity_search" 
             android:theme="@style/NoActionBarDialog"
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
          <activity
-            android:name="com.example.reader.popups.ModeActivity"
+            android:name="com.ilearnrw.reader.popups.ModeActivity"
             android:label="@string/title_activity_mode" 
             android:theme="@style/NoActionBarDialog">
         </activity>
         <activity
-            android:name="com.example.reader.popups.RenameActivity"
+            android:name="com.ilearnrw.reader.popups.RenameActivity"
             android:label="@string/title_activity_rename" 
             android:theme="@style/NoActionBarDialog">
         </activity>
         <activity
-            android:name="com.example.reader.popups.WordActivity"
+            android:name="com.ilearnrw.reader.popups.WordActivity"
             android:label="@string/title_activity_word" 
             android:theme="@style/NoActionBarDialog">
         </activity>

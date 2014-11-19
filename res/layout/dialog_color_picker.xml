@@ -16,7 +16,7 @@
         android:padding="@dimen/spacer_8"
         tools:ignore="UselessParent" >
 
-        <com.example.reader.types.ColorSquare
+        <com.ilearnrw.reader.types.ColorSquare
             android:id="@+id/color_picker_main"
             android:layout_width="@dimen/hsv_width"
             android:layout_height="@dimen/hsv_height"

@@ -14,7 +14,7 @@
         android:src="@drawable/alpha_checkered_tiled"
         android:contentDescription="@string/empty"/>
     
-    <com.example.reader.types.ColorPickerPreferenceWidget
+    <com.ilearnrw.reader.types.ColorPickerPreferenceWidget
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/color_picker_preference_widget_box"/>

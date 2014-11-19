@@ -9,7 +9,7 @@
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal">
 	    
-	    <com.example.reader.types.ExtendedEditText 
+	    <com.ilearnrw.reader.types.ExtendedEditText 
 	        android:id="@+id/et_rename"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"

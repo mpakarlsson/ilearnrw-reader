@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:baselineAligned="true" >
     
-    <com.example.reader.types.ExtendedEditText 
+    <com.ilearnrw.reader.types.ExtendedEditText 
         android:id="@+id/et_search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
