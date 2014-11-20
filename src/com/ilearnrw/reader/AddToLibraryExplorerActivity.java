@@ -196,26 +196,23 @@ public class AddToLibraryExplorerActivity
 				final int id 		= preferences.getInt(getString(R.string.sp_user_id), -1);
 				final String token 	= preferences.getString(getString(R.string.sp_authToken), "");
 				
+				String name = file.getName();
+				StringBuilder builder = new StringBuilder(name);
+				
 				for(File f : files){
 					if(f.getName().equals(file.getName())){
-						String name = file.getName();
-						Calendar c = Calendar.getInstance();
 						SimpleDateFormat df = new SimpleDateFormat("_yyyy_MM_dd-HH_mm_ss", Locale.getDefault());
-						StringBuilder builder = new StringBuilder(name);
-						
-						builder.insert(name.lastIndexOf("."), df.format(c.getTime()));			
-						String data = FileHelper.inputStreamToString(fis);
-						fis.close();
-						
-						new AddToLibraryTask(this, this, this).run(data, Integer.toString(id), lang, token, builder.toString());
-						return;
+						builder.insert(name.lastIndexOf("."), df.format(Calendar.getInstance().getTime()));
+						break;
 					}
 				}
 				
-				String data = FileHelper.inputStreamToString(fis);
+				//String data = FileHelper.inputStreamToString(fis);
+				//String data = FileHelper.inputStreamReadBytes(fis, fSize);
+				String data = FileHelper.inputStreamBufferRead(fis);
 				fis.close();
 				
-				new AddToLibraryTask(this, this, this).run(data, Integer.toString(id), lang, token, file.getName());
+				new AddToLibraryTask(this, this, this).run(data, Integer.toString(id), lang, token, builder.toString());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

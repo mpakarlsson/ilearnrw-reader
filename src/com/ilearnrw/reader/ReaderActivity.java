@@ -6,6 +6,7 @@ import ilearnrw.textclassification.SeverityOnWordProblemInfo;
 import ilearnrw.textclassification.StringMatchesInfo;
 import ilearnrw.textclassification.Word;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import com.ilearnrw.reader.texttospeech.TextToSpeechUtils;
 import com.ilearnrw.reader.types.Pair;
 import com.ilearnrw.reader.types.singleton.AnnotatedWordsSet;
 import com.ilearnrw.reader.utils.AppLocales;
+import com.ilearnrw.reader.utils.FileHelper;
 import com.ilearnrw.reader.utils.Helper;
 
 import android.annotation.SuppressLint;
@@ -177,12 +179,17 @@ public class ReaderActivity
 		
 		Bundle libBundle 	= getIntent().getExtras();
 		
-		bundleHtml			= libBundle.getString("html");
-		cleanHtml			= libBundle.getString("cleanHtml");
-		bundleJSON			= libBundle.getString("json");
+		String htmlName		= libBundle.getString("html");
 		libraryTitle		= libBundle.getString("title");
 		annotationData		= AnnotatedWordsSet.getInstance(this.getApplicationContext()).getUserBasedAnnotatedWordsSet();
 		trickyWords			= (ArrayList<Word>) libBundle.get("trickyWords");
+		
+		
+		Pair<File> libItems = FileHelper.getFilesFromLibrary(this, htmlName);
+		bundleHtml = FileHelper.readFromFile(libItems.first());
+		bundleJSON = FileHelper.readFromFile(libItems.second());
+		
+		
 		
 		spEditor 	= sp.edit();
 		Pair<String> bookTitle = Helper.splitFileName(libraryTitle);
@@ -770,26 +777,21 @@ public class ReaderActivity
 
 	private String updateHtml(String html){
 		boolean hasHead = true;
-		int splitPos = html.indexOf("<head");
 		
-		if(splitPos == -1){
-			splitPos = html.indexOf("<html");
+		StringBuilder builder = new StringBuilder(html);
+		
+		int insertPos = builder.indexOf("<head");;
+		
+		if(insertPos == -1){
+			insertPos = builder.indexOf("<html");
 			hasHead = false;
 		}
 		
-		splitPos = html.indexOf(">", splitPos) + 1;
+		insertPos = builder.indexOf(">", insertPos) + 1;
 		
-		String firstPart = "", secondPart = "";
-		firstPart = html.substring(0, splitPos);
-		secondPart = html.substring(splitPos);
-		
-		if(hasHead){
-			int hEnd = secondPart.indexOf("</head>");
-			secondPart = secondPart.substring(hEnd);
-		}
 		if(!hasHead){
-			firstPart += "<head>";
-			secondPart = "</head>" + secondPart;
+			builder.insert(insertPos, "<head></head>");
+			insertPos += 6;
 		}
 		
 		String startScripts = "<script type=\"text/javascript\">";
@@ -986,24 +988,25 @@ public class ReaderActivity
 				"</style>" +
 				"";
 		
-		return firstPart +
-				startScripts + 
-				highlightSentence +
-				highlightPart +
-				removeHighlight +
-				unhighlightPart +
-				retrieveBodyContent +
-				scrollToElement +
-				getSentences +
-				getWords +
-				speakSentence +
-				updatePosition +
-				showToast + 
-				longClick +
-				stopScripts +
-				setCSSLink +
-				cssBody +
-				secondPart;
+		builder = builder
+				.insert(insertPos, cssBody)
+				.insert(insertPos, setCSSLink)
+				.insert(insertPos, stopScripts)
+				.insert(insertPos, longClick)
+				.insert(insertPos, showToast)
+				.insert(insertPos, updatePosition)
+				.insert(insertPos, speakSentence)
+				.insert(insertPos, getWords)
+				.insert(insertPos, getSentences)
+				.insert(insertPos, scrollToElement)
+				.insert(insertPos, retrieveBodyContent)
+				.insert(insertPos, unhighlightPart)
+				.insert(insertPos, removeHighlight)
+				.insert(insertPos, highlightPart)
+				.insert(insertPos, highlightSentence)
+				.insert(insertPos, startScripts);
+
+		return builder.toString();
 	}
 	
 	

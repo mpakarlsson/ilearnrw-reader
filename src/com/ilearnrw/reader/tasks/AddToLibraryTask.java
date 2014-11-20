@@ -145,9 +145,8 @@ public class AddToLibraryTask extends AsyncTask<String, Void, Pair<String>>{
 			FileHelper.saveFile(wordSet, jsonFile);
 
 			Intent intent=new Intent();
-		    intent.putExtra("file", newFile);
-		    intent.putExtra("json", jsonFile);
-			intent.putExtra("name", filename);
+		    intent.putExtra("file", newFile.getName());
+		    intent.putExtra("json", jsonFile.getName());
 			activity.setResult(Activity.RESULT_OK, intent);
 			activity.finish();
 		}  else {

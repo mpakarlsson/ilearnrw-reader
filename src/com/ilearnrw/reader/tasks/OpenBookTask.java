@@ -80,9 +80,9 @@ public class OpenBookTask extends AsyncTask<String, Void, ArrayList<String>> {
 	protected ArrayList<String> doInBackground(String... params) {
 		profile = ProfileUser.getInstance(context.getApplicationContext()).getProfile();
 		
-		String clean = FileHelper.readFromFile(libItem.first());
+		String clean = libItem.first().getName();
 		String json = FileHelper.readFromFile(libItem.second());
-		String name = libItem.first().getName();
+		String name = clean;
 		
 		AnnotatedWordsSet.getInstance(context.getApplicationContext()).initUserBasedAnnotatedWordsSet(json, name);
 		
@@ -92,8 +92,6 @@ public class OpenBookTask extends AsyncTask<String, Void, ArrayList<String>> {
 		
 		ArrayList<String> results = new ArrayList<String>();
 		results.add(html);
-		results.add(clean);
-		results.add(json);
 		results.add(name);		
 		return results;
 	}
@@ -106,9 +104,7 @@ public class OpenBookTask extends AsyncTask<String, Void, ArrayList<String>> {
 		
 		Intent intent = new Intent(context, ReaderActivity.class);
 		intent.putExtra("html", results.get(0));
-		intent.putExtra("cleanHtml", results.get(1));
-		intent.putExtra("json", results.get(2));
-		intent.putExtra("title", results.get(3));
+		intent.putExtra("title", results.get(1));
 		intent.putExtra("trickyWords", (ArrayList<Word>) profile.getUserProblems().getTrickyWords());
 		
 		context.startActivity(intent);

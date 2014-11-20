@@ -315,23 +315,28 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode == RESULT_OK){
+			Bundle b = data.getExtras();
+			
 			switch (requestCode) {
 			case FLAG_ADD_TO_DEVICE:
 				if(dialog != null)
 					dialog.cancel();
 				
-				File f = (File) data.getExtras().get("file");
-				File json = (File) data.getExtras().get("json");
-				String name = data.getExtras().getString("name");
+				
+				String fName = b.getString("file");
+				String jName = b.getString("json");
 				boolean exists = false;
 				
-				if(f!=null && name!= null){
-					files.add(new LibraryItem(name, f));
+				File f = FileHelper.getFile(fName, libDir);
+				File json = FileHelper.getFile(jName, libDir);
+				
+				if(f!=null){
+					files.add(new LibraryItem(fName, f));
 					exists = true;
 				}
 				boolean a = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.sp_show_all), false);
 				if(json!=null && a){
-					files.add(new LibraryItem(json.getName(), json));
+					files.add(new LibraryItem(jName, json));
 					exists = true;
 				}
 				
@@ -342,7 +347,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				break;
 				
 			case FLAG_UPDATE_FILE_NAME:
-				Bundle b = data.getExtras();
 				Pair<String> updatedName = Helper.splitFileName(b.getString("name"));
 				Pair<String> orgFilename = Helper.splitFileName(b.getString("orgName"));
 				
@@ -391,8 +395,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				break;
 
 			case FLAG_SETTINGS:
-				Bundle b2 = data.getExtras();
-				boolean showAll = b2.getBoolean("showAll");
+				boolean showAll = b.getBoolean("showAll");
 				
 				libraryFiles = (ArrayList<File>) FileHelper.getFileList(libDir, showAll);
 				files = new ArrayList<LibraryItem>();
@@ -404,7 +407,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 				library.setAdapter(adapter);
 
 				
-				if(b2.getBoolean("format")){
+				if(b.getBoolean("format")){
 					for(int i=0; i<files.size(); i++){
 						LibraryItem item = files.get(i);
 						item.getFile().delete();

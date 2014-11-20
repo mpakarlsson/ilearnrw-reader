@@ -110,6 +110,19 @@ public class FileHelper {
 		return dirFiles; 
 	}
 	
+	public static File getFile(String name, File parent){
+		File[] files = parent.listFiles();
+		
+		for(File f : files){
+			if(!f.isDirectory()){
+				String fName = f.getName();
+				if(fName.equals(name) && (fName.endsWith(".html") || fName.endsWith(".txt")))
+					return f;
+			}
+		}
+		return null;
+	}
+	
 	public static void removeFiles(File parent){
 		File[] files = parent.listFiles();
 		
@@ -152,6 +165,72 @@ public class FileHelper {
 			e.printStackTrace();
 		}
 		return "";
+	}
+	
+	public static String inputStreamBufferRead(FileInputStream fis){
+		String result = "";
+		StringBuilder builder = new StringBuilder("");
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+			char[] buffer = new char[50];
+			int numChars = -1;
+			int size = 0;
+			int limit = 5000;
+			int hardLimit = 500 + limit;
+			while((numChars = br.read(buffer)) != -1){
+				char[] buff = new char[numChars];
+				
+				for(int i=0; i<numChars; i++)
+					buff[i] = buffer[i];
+				
+				byte[] b = new String(buff).getBytes("UTF-8");
+				size += b.length;
+				
+				builder.append(buff);
+				if(size>limit){
+					boolean leave = false;
+					for(int i = buff.length-1; i>0; i--){
+						if(Helper.endOfLineCharacter(buffer[i])){
+							int offsetFromEnd = buffer.length - i;
+							builder = builder.delete(builder.length() - offsetFromEnd, builder.length());
+							result = builder.toString();
+							leave = true;
+							break;
+						}
+					}
+					if(leave)
+						break;
+					
+					if(size>hardLimit){
+						result = builder.substring(0, builder.lastIndexOf(" "));
+						break;
+					}
+				}
+				buffer = new char[50];
+			}
+			
+		} catch (IOException e ){
+			e.printStackTrace();
+		} finally {
+			if(result.isEmpty())
+				result = builder.toString();
+			if(fis!=null){
+				try {
+					fis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return result;
+	}
+	
+	public static long getFileSize(File file){
+		if(!file.exists() || !file.isFile())
+			return -1;
+		
+		return file.length();
 	}
 	
 	public static boolean copyFileToExternalStorage(File file, String fileName, String folderName){

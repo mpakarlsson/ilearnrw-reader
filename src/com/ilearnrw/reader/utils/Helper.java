@@ -46,6 +46,13 @@ public class Helper {
 		return -1;
 	}
 	
+	public static boolean endOfLineCharacter(char c){
+		if(c=='.' || c=='!' || c=='?' || c=='\n' || c=='\r')
+			return true;
+		
+		return false;
+	}
+	
 	public static int convertDpToPx(float dp, Context c){
 		return (int) ((dp * c.getResources().getDisplayMetrics().density) + 0.5f);
 	}
