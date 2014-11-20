@@ -12,7 +12,6 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ilearnrw.reader.R;
 import com.ilearnrw.reader.types.Pair;
 
 import android.content.Context;
@@ -291,9 +290,9 @@ public class FileHelper {
 	}
 	
 
-	public static Pair<File> getFilesFromLibrary(Context context, String filename){
+	public static Pair<File> getFilesFromLocation(Context context, String filename, String location){
 
-		File dir = context.getDir(context.getString(R.string.library_location), Context.MODE_PRIVATE);
+		File dir = context.getDir(location, Context.MODE_PRIVATE);
 		ArrayList<File> fileList = (ArrayList<File>)FileHelper.getFileList(dir, true);
 		
 		Pair<String> origName = Helper.splitFileName(filename);

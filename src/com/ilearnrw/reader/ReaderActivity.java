@@ -181,15 +181,15 @@ public class ReaderActivity
 		
 		String htmlName		= libBundle.getString("html");
 		libraryTitle		= libBundle.getString("title");
+		boolean isRulesAct	= libBundle.getBoolean("annotated");
 		annotationData		= AnnotatedWordsSet.getInstance(this.getApplicationContext()).getUserBasedAnnotatedWordsSet();
 		trickyWords			= (ArrayList<Word>) libBundle.get("trickyWords");
 		
+		Pair<File> libItems = FileHelper.getFilesFromLocation(this, htmlName, getString(R.string.library_location));
+		Pair<File> f = FileHelper.getFilesFromLocation(this, "annotatedData.txt", getString(R.string.temp_location));		
 		
-		Pair<File> libItems = FileHelper.getFilesFromLibrary(this, htmlName);
-		bundleHtml = FileHelper.readFromFile(libItems.first());
+		bundleHtml = isRulesAct ? FileHelper.readFromFile(f.first()) : FileHelper.readFromFile(libItems.first());
 		bundleJSON = FileHelper.readFromFile(libItems.second());
-		
-		
 		
 		spEditor 	= sp.edit();
 		Pair<String> bookTitle = Helper.splitFileName(libraryTitle);

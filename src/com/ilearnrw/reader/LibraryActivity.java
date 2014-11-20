@@ -489,7 +489,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		LibraryItem item = files.get(position);
-		Pair<File> libItems = FileHelper.getFilesFromLibrary(this, item.getName());
+		Pair<File> libItems = FileHelper.getFilesFromLocation(this, item.getName(), getString(R.string.library_location));
 		 
 		if(item.getName().endsWith(".txt") || item.getName().endsWith(".html")){
 			new OpenBookTask(this, libItems, activateRules).run();

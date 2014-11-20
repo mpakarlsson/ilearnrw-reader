@@ -6,7 +6,6 @@
     <string name="title_activity_active_rules">Active Presentation Rules</string>
     
     <string name="library_add">Add new item to library</string>
-    <string name="library_location">Library</string>
     
     <string name="annotation_succeeded">Text processing succeeded</string>
     <string name="annotation_failed">Text processing failed</string>

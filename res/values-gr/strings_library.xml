@@ -6,7 +6,6 @@
     <string name="title_activity_active_rules">Ενεργοί κανόνες παρουσίασης</string>
     
     <string name="library_add">Προσθήκη κειμένου στην βιβλιοθήκη</string>
-    <string name="library_location">Βιβλιοθήκη</string>
     
     <string name="annotation_succeeded">Επιτυχής επεξεργασία κειμένου</string>
     <string name="annotation_failed">Αποτυχία στην επεξεργασία κειμένου</string>

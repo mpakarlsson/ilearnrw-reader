@@ -14,6 +14,7 @@ import com.ilearnrw.reader.types.singleton.AnnotatedWordsSet;
 import com.ilearnrw.reader.types.singleton.ProfileUser;
 import com.ilearnrw.reader.utils.FileHelper;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -88,11 +89,11 @@ public class OpenBookTask extends AsyncTask<String, Void, ArrayList<String>> {
 		
 		String html = clean;
 		if(isRulesActivated)
-			html = fireTxModule(clean, json);
+			fireTxModule(FileHelper.readFromFile(libItem.first()), json);
 		
 		ArrayList<String> results = new ArrayList<String>();
 		results.add(html);
-		results.add(name);		
+		results.add(name);
 		return results;
 	}
 
@@ -106,7 +107,7 @@ public class OpenBookTask extends AsyncTask<String, Void, ArrayList<String>> {
 		intent.putExtra("html", results.get(0));
 		intent.putExtra("title", results.get(1));
 		intent.putExtra("trickyWords", (ArrayList<Word>) profile.getUserProblems().getTrickyWords());
-		
+		intent.putExtra("annotated", isRulesActivated ? true : false);
 		context.startActivity(intent);
 		super.onPostExecute(results);
 	}
@@ -139,6 +140,10 @@ public class OpenBookTask extends AsyncTask<String, Void, ArrayList<String>> {
 		txModule.setJSonObject(AnnotatedWordsSet.getInstance(context.getApplicationContext()).getUserBasedAnnotatedWordsSet());
 		
 		txModule.annotateText();
+		
+		File tempDir = context.getDir(context.getString(R.string.temp_location), Activity.MODE_PRIVATE);
+		FileHelper.saveFile(txModule.getAnnotatedHTMLFile(), new File(tempDir, "annotatedData.txt"));
+		
 		return txModule.getAnnotatedHTMLFile();
 	}
 }
