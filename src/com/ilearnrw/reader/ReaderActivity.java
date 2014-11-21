@@ -780,7 +780,7 @@ public class ReaderActivity
 		
 		StringBuilder builder = new StringBuilder(html);
 		
-		int insertPos = builder.indexOf("<head");;
+		int insertPos = builder.indexOf("<head");
 		
 		if(insertPos == -1){
 			insertPos = builder.indexOf("<html");
@@ -792,6 +792,9 @@ public class ReaderActivity
 		if(!hasHead){
 			builder.insert(insertPos, "<head></head>");
 			insertPos += 6;
+		} else {
+			int headEnd = html.indexOf("</head>");
+			builder.delete(insertPos, headEnd);
 		}
 		
 		String startScripts = "<script type=\"text/javascript\">";
