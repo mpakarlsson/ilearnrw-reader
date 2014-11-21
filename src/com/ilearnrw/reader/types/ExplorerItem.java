@@ -9,7 +9,7 @@ public class ExplorerItem {
 	
 	public static enum FileType{
 		Unknown("Unknown", 0),
-		Directory("Dir", 1),
+		Directory("Directory", 1),
 		File("File", 2);
 		
 		private String name;
