@@ -5,13 +5,43 @@
     android:orientation="vertical" >
     <TextView 
 	    android:id="@+id/tv_atl_path"
-	    android:layout_height="wrap_content"
 	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
 	    android:gravity="center_horizontal"
-	    android:textSize="20sp"/>
+	    android:background="#d3d3d3"
+	    android:textSize="30sp"/>
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#d7d7d7">
+        
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/explorer_item_name"
+            android:textSize="24sp"/>
+        
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/explorer_item_size"
+            android:textSize="24sp"/>
+        
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/explorer_item_type"
+            android:textSize="24sp"/>
+        
+    </LinearLayout>
 	
 	<ListView 
 	    android:id="@+id/lv_atl_list"
-	    android:layout_height="wrap_content"
-	    android:layout_width="match_parent"/>
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"/>
 </LinearLayout>

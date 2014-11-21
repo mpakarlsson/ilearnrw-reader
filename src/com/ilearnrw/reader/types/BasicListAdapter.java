@@ -151,7 +151,7 @@ public class BasicListAdapter extends ArrayAdapter<String>{
 		View view = convertView;
 		
 		if(view==null){
-			view 			= inflater.inflate(R.layout.textview_item_multiline, null);
+			view 			= inflater.inflate(R.layout.textview_item_multiline, parent, false);
 			viewHolder 		= new ViewHolder();
 			viewHolder.item = (TextView) view.findViewById(R.id.tv_spinner_item);
 			viewHolder.item.setTextSize(textSize);

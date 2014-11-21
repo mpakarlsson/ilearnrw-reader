@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -166,6 +167,10 @@ public class FileHelper {
 		return "";
 	}
 	
+	private static final long kB = 1024;
+	//private static final long MB = kB * kB;
+	private static final long amount = 5;
+	public static final long LIMIT_BYTES = kB * amount;
 	public static String inputStreamBufferRead(FileInputStream fis){
 		String result = "";
 		StringBuilder builder = new StringBuilder("");
@@ -174,8 +179,8 @@ public class FileHelper {
 			char[] buffer = new char[50];
 			int numChars = -1;
 			int size = 0;
-			int limit = 5000;
-			int hardLimit = 500 + limit;
+			long limit = LIMIT_BYTES;
+			long hardLimit = 500 + limit;
 			while((numChars = br.read(buffer)) != -1){
 				char[] buff = new char[numChars];
 				
@@ -223,6 +228,24 @@ public class FileHelper {
 		}
 
 		return result;
+	}
+	
+	public static String getFileLimit(){
+		return getReadableFileSize(LIMIT_BYTES);
+	}
+	
+	public static String getReadableFileSize(long size){
+		return getReadableFileSize(size, "#,##0.#");		
+	}
+	
+	public static String getReadableFileSize(long size, String pattern){
+		if(size<=0)
+			return "0";
+		
+		final String[] units = new String[]{ "B", "kB", "MB", "GB", "TB"};
+		int digitGroups = (int)(Math.log10(size)/Math.log10(1024));
+		
+		return new DecimalFormat(pattern).format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
 	}
 	
 	public static long getFileSize(File file){

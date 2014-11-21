@@ -27,11 +27,15 @@
     
     <string name="copy_confirm_start">Copy\u0020</string>
 	<string name="copy_confirm_end">\u0020to your library?</string>
+	<string name="file_to_large">The file you have chosen is to long and will be cut off at </string>
 	
     <string name="format_library">Format library?</string>
     
     <string name="external_storage_folder_name">Debug_IlearnRW</string>
     
+    <string name="explorer_item_name">Name</string>
+    <string name="explorer_item_type">Type</string>
+    <string name="explorer_item_size">Size</string>
     
     <string name="library_open">Open file</string>
     <string name="library_rules">Open rules</string>

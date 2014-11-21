@@ -9,6 +9,5 @@
         android:singleLine="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/default_text"/>
-
+        android:text="@string/default_text"/>    
 </LinearLayout>

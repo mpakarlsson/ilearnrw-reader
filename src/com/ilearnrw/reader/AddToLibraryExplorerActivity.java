@@ -12,14 +12,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-
-
-
 import com.ilearnrw.reader.R;
 import com.ilearnrw.reader.interfaces.OnHttpListener;
 import com.ilearnrw.reader.tasks.AddToLibraryTask;
-import com.ilearnrw.reader.types.BasicListAdapter;
 import com.ilearnrw.reader.types.ExplorerItem;
+import com.ilearnrw.reader.types.ExplorerItem.FileType;
+import com.ilearnrw.reader.types.ExplorerListAdapter;
 import com.ilearnrw.reader.utils.AppLocales;
 import com.ilearnrw.reader.utils.FileHelper;
 import com.ilearnrw.reader.utils.HttpHelper;
@@ -85,7 +83,7 @@ public class AddToLibraryExplorerActivity
 							.setPositiveButton(getString(android.R.string.ok), null).show();
 					}
 				} else {
-					new AlertDialog.Builder(view.getContext())
+					AlertDialog.Builder b = new AlertDialog.Builder(view.getContext())
 						.setTitle(getString(R.string.copy_confirm_start) + file.getName() + getString(R.string.copy_confirm_end))
 						.setNegativeButton(getString(android.R.string.no), null)
 						.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
@@ -94,7 +92,13 @@ public class AddToLibraryExplorerActivity
 							public void onClick(DialogInterface dialog, int which) {
 								copyFileToLibrary(file);
 							}
-						}).show();
+						});
+					
+					if(file.length() > FileHelper.LIMIT_BYTES){
+						StringBuilder sb = new StringBuilder(getString(R.string.file_to_large));
+						b.setMessage(sb.append(" ").append(FileHelper.getFileLimit()).toString());
+					}
+					b.show();
 				}
 			}
 			
@@ -124,10 +128,10 @@ public class AddToLibraryExplorerActivity
 		for(int i=0; i<files.length;i++){
 			File file = files[i];
 			if(file.isDirectory() && file.canRead()){
-				items.add(new ExplorerItem(file.getName()+"/", file.getPath()));
+				items.add(new ExplorerItem(file.getName()+"/", file.getPath(), 0, FileType.Directory ));
 			} else {
 				if(hasValidFileEnding(file.getName()))
-					objects.add(new ExplorerItem(file.getName(), file.getPath()));
+					objects.add(new ExplorerItem(file.getName(), file.getPath(), file.length(), FileType.File));
 			}
 		}
 		
@@ -148,19 +152,14 @@ public class AddToLibraryExplorerActivity
 		items.addAll(objects);
 		
 		if(!dir.equals(root)){
-			items.add(0, new ExplorerItem("/", root));
-			items.add(1, new ExplorerItem("../", f.getParent()));
+			items.add(0, new ExplorerItem("/", root, 0, FileType.Directory));
+			items.add(1, new ExplorerItem("../", f.getParent(), 0, FileType.Directory));
 			currentParent = f.getParent();
 		} else {
 			currentParent = "";
 		}
 		
-		String[] listItems = new String[items.size()];
-		for(int i=0; i<items.size(); i++){
-			listItems[i] = items.get(i).getItem();
-		}
-		
-		ArrayAdapter<String> adapter = new BasicListAdapter(this, R.layout.textview_item_multiline, listItems, 20, true);
+		ArrayAdapter<ExplorerItem> adapter = new ExplorerListAdapter(this, R.layout.row_explorer_item, items, 20, true);
 		lvList.setAdapter(adapter);
 	}
 
