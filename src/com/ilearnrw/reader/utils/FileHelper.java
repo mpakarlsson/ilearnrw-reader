@@ -192,18 +192,12 @@ public class FileHelper {
 				
 				builder.append(buff);
 				if(size>limit){
-					boolean leave = false;
-					for(int i = buff.length-1; i>0; i--){
-						if(Helper.endOfLineCharacter(buffer[i])){
-							int offsetFromEnd = buffer.length - i;
-							builder = builder.delete(builder.length() - offsetFromEnd, builder.length());
-							result = builder.toString();
-							leave = true;
-							break;
-						}
-					}
-					if(leave)
+					int offsetFromEnd = lastIndexOfEOLChar(buff);
+					if(offsetFromEnd != -1){
+						builder = builder.delete(builder.length() - offsetFromEnd, builder.length());
+						result = builder.toString();
 						break;
+					}
 					
 					if(size>hardLimit){
 						result = builder.substring(0, builder.lastIndexOf(" "));
@@ -228,6 +222,16 @@ public class FileHelper {
 		}
 
 		return result;
+	}
+	
+	private static int lastIndexOfEOLChar(char[] buff){
+		for(int i = buff.length-1; i>0; i--){
+			if(Helper.endOfLineCharacter(buff[i])){
+				return buff.length - i;
+			}
+		}
+		
+		return -1;
 	}
 	
 	public static String getFileLimit(){
