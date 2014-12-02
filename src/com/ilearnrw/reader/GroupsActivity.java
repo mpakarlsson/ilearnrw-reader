@@ -51,14 +51,6 @@ public class GroupsActivity
 		
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 		AppLocales.setLocales(getApplicationContext(), sp.getString(getString(R.string.sp_user_language), "en"));
-
-		int id = sp.getInt(getString(R.string.sp_user_id),-1);
-		String token = sp.getString(getString(R.string.sp_authToken), "");		
-		
-		if(id==-1 || token.isEmpty()) {
-			//finished(); // If you don't have an id something is terribly wrong
-			throw new IllegalArgumentException("Missing id or token");
-		}
 				
 		String jsonProfile = sp.getString(getString(R.string.sp_user_profile_json), "");
 		

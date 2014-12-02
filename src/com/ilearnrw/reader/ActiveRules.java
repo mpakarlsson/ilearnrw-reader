@@ -56,14 +56,6 @@ public class ActiveRules extends ListActivity {
 		activeProblems 	= new ArrayList<Problem>();
 		listAdapter = new ProblemDescriptionAdapter(this, R.layout.row_active_rules, activeProblems);
 		setListAdapter(listAdapter);
-
-		int id = sp.getInt(getString(R.string.sp_user_id),-1);
-		String token = sp.getString(getString(R.string.sp_authToken), "");		
-		
-		if(id==-1 || token.isEmpty()) {
-			//finished(); // If you don't have an id something is terribly wrong
-			throw new IllegalArgumentException("Missing id or token");
-		}
 				
 		String jsonProfile = sp.getString(getString(R.string.sp_user_profile_json), "");
 		
@@ -132,7 +124,6 @@ public class ActiveRules extends ListActivity {
 	            edit.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						System.err.println(item.category);
 						Intent intent = new Intent(context, PresentationModule.class);
 						intent.putExtra("category", item.category);
 						intent.putExtra("index", item.index);

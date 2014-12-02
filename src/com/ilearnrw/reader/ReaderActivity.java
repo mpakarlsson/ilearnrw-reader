@@ -97,8 +97,8 @@ public class ReaderActivity
 	private static String html, bundleJSON, bundleHtml, cleanHtml;
 	private String libraryTitle;
 	
-	private double highlightSpeed;
-
+	private double hlSpeed;
+	
 	private boolean isHighlighting;
 
 	private UserBasedAnnotatedWordsSet annotationData;
@@ -206,10 +206,8 @@ public class ReaderActivity
 		sbHighLightSpeed = (SeekBar) findViewById(R.id.seekbar_highLight_speed);
 		sbHighLightSpeed.setOnSeekBarChangeListener(this);
 
-		highlightSpeed = Double.longBitsToDouble(sp.getLong(getString(R.string.pref_highlighter_speed), Double.doubleToLongBits(5.5)));
-		
-		int hlSpeed = (int) (highlightSpeed * 10);
-		int flipValue = sbHighLightSpeed.getMax() - hlSpeed;
+		hlSpeed = Double.longBitsToDouble(sp.getLong(getString(R.string.pref_highlighter_speed), Double.doubleToLongBits(2)));
+		int flipValue = sbHighLightSpeed.getMax() - sp.getInt(getString(R.string.pref_highlighter_speed_seekbar_progress), sbHighLightSpeed.getProgress());
 		
 		sbHighLightSpeed.setProgress(flipValue);
 		
@@ -597,8 +595,8 @@ public class ReaderActivity
 			boolean fromUser) {
 		switch(seekBar.getId()){
 		case R.id.seekbar_highLight_speed:
-			int flipValue = seekBar.getMax() - seekBar.getProgress();
-			highlightSpeed = (flipValue * 0.1) + 0.5; // Slider values goes from 0.5 to 10.5
+			//int flipValue = seekBar.getMax() - seekBar.getProgress();
+			//highlightSpeed = (flipValue * 0.1) + 0.5; // Slider values goes from 0.5 to 10.5
 			break;
 		default:
 			break;
@@ -621,14 +619,15 @@ public class ReaderActivity
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		switch (seekBar.getId()) {
 		case R.id.seekbar_highLight_speed:
-			int flipValue = seekBar.getMax() - seekBar.getProgress();
-			highlightSpeed =  (flipValue * 0.1);
-			spEditor.putLong(getString(R.string.pref_highlighter_speed), Double.doubleToRawLongBits(highlightSpeed)).apply();
-			
-			highlightSpeed += 0.5;
+			double flipValue = seekBar.getMax() - seekBar.getProgress();
+			if(flipValue<=2)
+				flipValue=2;
+			hlSpeed = Math.log10(flipValue)*1.5;
+			spEditor.putLong(getString(R.string.pref_highlighter_speed), Double.doubleToRawLongBits(hlSpeed));
+			spEditor.putInt(getString(R.string.pref_highlighter_speed_seekbar_progress), sbHighLightSpeed.getProgress()).apply();
 			
 			if(reader_status == ReaderStatus.Enabled) {
-				long millis = (long) (highlightSpeed * 1000);
+				long millis = (long) (hlSpeed * 1000);
 				highlightHandler.postDelayed(highlightRunnable, millis);
 			}
 			break;
@@ -736,8 +735,8 @@ public class ReaderActivity
 	}
 	
 	private void resetGuidance(){
-		highlightHandler.removeCallbacks(highlightRunnable);
-		long millis = (long) (highlightSpeed * 1000);
+		highlightHandler.removeCallbacks(highlightRunnable);		
+		long millis = (long) (hlSpeed * 1000);
 		highlightHandler.postDelayed(highlightRunnable, millis);
 	}
 	
@@ -1242,7 +1241,7 @@ public class ReaderActivity
 						
 						if(reader_status == ReaderStatus.Enabled){
 								highlightHandler.removeCallbacks(highlightRunnable);
-								long millis = (long) (highlightSpeed * 1000);
+								long millis = (long) (hlSpeed * 1000);
 								highlightHandler.postDelayed(highlightRunnable, millis);							
 						}
 					} else {
@@ -1404,7 +1403,7 @@ public class ReaderActivity
 			removeHighlight(prev);
 			highlight(current);
 			
-			long millis = (long) (highlightSpeed * 1000);
+			long millis = (long) (hlSpeed * 1000);
 			highlightHandler.postDelayed(this, millis);
 		}
 	}

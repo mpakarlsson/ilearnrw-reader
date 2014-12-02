@@ -63,8 +63,6 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 	
 	private boolean activateRules;
 	
-	
-	
 	private boolean offlineMode = false;
 	
 	@Override

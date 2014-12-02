@@ -51,25 +51,27 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
-		if(v == null){
+		BookHolder holder = new BookHolder();
+		
+		if(convertView==null){
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = inflater.inflate(R.layout.row_library, parent, false);
-		}
+			
+			TextView tv = (TextView) v.findViewById(R.id.library_item);
+			holder.item = tv;
+			
+			v.setTag(holder);
+		} else
+			holder = (BookHolder) v.getTag();
 		
 		final LibraryItem item = objects.get(position);
-		if(item != null){
-			
-			TextView tv_item = (TextView) v.findViewById(R.id.library_item);
-			tv_item.setFocusable(false);
-			tv_item.setClickable(false);
-			
-			if(tv_item != null){
-				String name = item.getName();
+		if(item != null && holder.item != null){
+			holder.item.setFocusable(false);
+			String name = item.getName();
 				
-				if(name.endsWith(".txt"))
-					name = name.substring(0,name.length()-4);
-				tv_item.setText(name);
-			}
+			if(name.endsWith(".txt"))
+				name = name.substring(0,name.length()-4);
+			holder.item.setText(name);
 		}
 		return v;
 	}
@@ -118,5 +120,9 @@ public class LibraryAdapter extends ArrayAdapter<LibraryItem> implements Section
 	@Override
 	public Object[] getSections() {
 		return sections;
+	}
+	
+	private static class BookHolder {
+		public TextView item;
 	}
 }

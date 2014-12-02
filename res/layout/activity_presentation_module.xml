@@ -77,7 +77,7 @@
             android:text="@string/problem_4" />
     </RadioGroup>
 
-    <LinearLayout 
+    <RelativeLayout 
 		android:id="@+id/pm_color_layout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -85,17 +85,21 @@
 		android:layout_marginTop="@dimen/spacer_8">
         
 	    <TextView
+	        android:id="@+id/color_title"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="@string/choose_color" />
+	        android:text="@string/choose_color" 
+	        android:gravity="center_vertical"
+	        android:layout_centerVertical="true"/>
 
     	<ImageView
 	        android:id="@+id/pm_color"
-	        android:layout_width="48dp"
-	        android:layout_height="24dp" 
+	        android:layout_width="72dp"
+	        android:layout_height="48dp" 
 	        android:contentDescription="@string/empty"
-	        android:layout_marginLeft="@dimen/spacer_8"/>
-    </LinearLayout>
+	        android:layout_marginLeft="@dimen/spacer_8"
+	        android:layout_toRightOf="@id/color_title"/>
+    </RelativeLayout>
 
      <LinearLayout 
 		android:layout_width="match_parent"

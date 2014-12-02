@@ -94,9 +94,7 @@ public class
 			dialog.dismiss();
 		}
 		
-		if(result != null){
-			Toast.makeText(context, context.getString(R.string.login_succeeded), Toast.LENGTH_SHORT).show();
-			
+		if(result != null){			
 			SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
 			edit.putInt(context.getString(R.string.sp_user_id), result.id);
 			edit.putString(context.getString(R.string.sp_user_language), result.language);
@@ -113,6 +111,7 @@ public class
 	@Override
 	public void onProfileFetched(String profile) {
 		new LogTask(SystemTags.APP_SESSION_START).run(username, "Logged in: " + username + ".");
+		Toast.makeText(context, context.getString(R.string.login_succeeded), Toast.LENGTH_SHORT).show();
 		SharedPreferences.Editor edit = sp.edit();
 		edit.putString(context.getString(R.string.sp_user_profile_json), profile);
 		edit.putBoolean(context.getString(R.string.sp_user_is_logged_in), true);
