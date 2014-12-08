@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import com.ilearnrw.reader.R;
 import com.ilearnrw.reader.types.ColorPickerPreference;
+import com.ilearnrw.reader.types.SeekBarPreference;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -73,6 +74,51 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		fontFace.setOnPreferenceChangeListener(this);
 		backgroundPicker.setOnPreferenceChangeListener(this);
 		textPicker.setOnPreferenceChangeListener(this);
+		
+		
+		Preference comfy = findPreference("preset_comfy");
+		Preference cozy = findPreference("preset_cozy");
+		Preference narrow = findPreference("preset_narrow");
+
+		final SeekBarPreference fontSize = (SeekBarPreference) findPreference("pref_font_size");
+		final ListPreference lineHeight = (ListPreference) findPreference("pref_line_height");
+		final ListPreference margin = (ListPreference) findPreference("pref_margin");
+		final ListPreference letterSpacing = (ListPreference) findPreference("pref_letter_spacing");
+		
+		comfy.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				lineHeight.setValue("150");
+				margin.setValueIndex(2);
+				letterSpacing.setValue("50");
+				fontSize.setValue(18);
+				getActivity().finish();
+				return false;
+			}
+		});
+		
+		cozy.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				lineHeight.setValue("125");
+				margin.setValueIndex(3);
+				letterSpacing.setValueIndex(1);
+				fontSize.setValue(16);
+				getActivity().finish();
+				return false;
+			}
+		});
+		narrow.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				lineHeight.setValue("110");
+				margin.setValueIndex(1);
+				letterSpacing.setValueIndex(0);
+				fontSize.setValue(14);
+				getActivity().finish();
+				return false;
+			}
+		});		
 		
 		Preference format = (Preference) findPreference("pref_reader_reset");
 		format.setOnPreferenceClickListener(new OnPreferenceClickListener() {

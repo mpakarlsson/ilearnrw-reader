@@ -8,6 +8,8 @@
     <string name="pref_text_category_title">Text</string>
    	<string name="pref_presentation_rules_category_title">Presentation rules</string>
    	<string name="pref_reset_category_title">Resets</string>
+   	<string name="pref_presets_category_title">Presets</string>
+   	
    	
     <string name="pref_highlighter_speed">pref_highlighter_speed</string>
     <string name="pref_highlighter_speed_seekbar_progress">pref_highlighter_speed_seekbar_progress</string>
@@ -44,7 +46,7 @@
     
 	<string name="pref_presentation_rules_title">Change rules</string>
 	<string name="pref_presentation_rules_summary">Change presentation rules</string>	
-	
+		
 	<string-array name="pref_languages">
         <item>English</item>
         <item>Greek</item>
@@ -58,7 +60,10 @@
     <string-array name="pref_line_height">
         <item>1.0</item>
         <item>1.25</item>
+        <item>1.35</item>
         <item>1.5</item>
+        <item>1.65</item>
+        <item>1.8</item>
         <item>2.0</item>
         <item>3.0</item>
     </string-array>
@@ -66,25 +71,40 @@
     <string-array name="pref_line_height_values">
         <item>100</item>
         <item>125</item>
+        <item>135</item>
         <item>150</item>
+        <item>165</item>
+        <item>180</item>
         <item>200</item>
         <item>300</item>
     </string-array>
     
     <string-array name="pref_letter_spacing">
         <item>Default</item>
-        <item>1 pt</item>
-        <item>2 pt</item>
-        <item>4 pt</item>
-        <item>8 pt</item>
+        <item>0.2 pt</item>
+        <item>0.4 pt</item>
+        <item>0.6 pt</item>
+        <item>0.8 pt</item>
+        <item>1.0 pt</item>
+        <item>1.2 pt</item>
+        <item>1.4 pt</item>
+        <item>1.6 pt</item>
+        <item>1.8 pt</item>
+        <item>2.0 pt</item>
     </string-array>
     
     <string-array name="pref_letter_spacing_values">
         <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>4</item>
-        <item>8</item>
+        <item>20</item>
+        <item>40</item>
+        <item>60</item>
+        <item>80</item>
+        <item>100</item>
+        <item>120</item>
+        <item>140</item>
+        <item>160</item>
+        <item>180</item>
+        <item>200</item>
     </string-array>
     
     <string-array name="pref_margin">

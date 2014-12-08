@@ -6,6 +6,19 @@
     android:title="@string/reader_prefs">
     <!-- xmlns:ns="http://schemas.android.com/apk/res/com.example.reader" -->
     
+    <PreferenceCategory 
+        android:title="@string/pref_presets_category_title"
+        android:key="pref_presets_category_settings">
+        
+        <Preference android:key="preset_comfy"
+            android:title="Comfy"/>
+        <Preference android:key="preset_cozy"
+            android:title="Cozy"/>
+        <Preference android:key="preset_narrow"
+            android:title="Narrow"/>
+        
+    </PreferenceCategory>
+    
     <PreferenceCategory
         android:title="@string/pref_text_category_title"
         android:key="pref_text_settings">
@@ -16,16 +29,16 @@
 		    android:summary="Adjust font size"
 		    android:defaultValue="20"
 		    android:max="70"
-			ns:min="15"
+			ns:min="10"
 			ns:unitsLeft=""
 			ns:unitsRight="pt"
 			ns:statusNumber="true"/>
          
          <ListPreference 
             android:key="pref_font_face"
-            android:title="Font face"
-            android:dialogTitle="Font face"
-            android:summary="Set text font face"/>
+            android:title="Font"
+            android:dialogTitle="Font"
+            android:summary="Set text font"/>
         
          <ListPreference 
             android:key="pref_line_height"
@@ -82,8 +95,8 @@
          
         <com.ilearnrw.reader.types.SeekBarPreference 
 		    android:key="pref_speech_rate"
-		    android:title="Speech rate"
-		    android:summary="Adjust speech rate"
+		    android:title="Speed"
+		    android:summary="Adjust speed"
 		    android:defaultValue="9"
 		    android:max="19"
 			ns:min="4"

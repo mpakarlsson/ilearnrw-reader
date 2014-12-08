@@ -163,7 +163,22 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		mCurrent = newValue;
 		updateStatusText();
 	}
-
+	
+	public void setValue(int value){
+		if(value > mMax)
+			value = mMax;
+		else if(value < mMin)
+			value = mMin;
+		else if(mInterval != 1 && value % mInterval != 0)
+			value = Math.round(((float)value)/mInterval)*mInterval;
+		
+		mSeekBar.setProgress(value-mMin);
+		mCurrent = value;
+		updateStatusText();
+		persistInt(mCurrent);
+		notifyChanged();
+	}
+	
 	private void updateStatusText(){
 		if(mIsStatusNumber)
 			mStatusText.setText(String.valueOf(mCurrent));

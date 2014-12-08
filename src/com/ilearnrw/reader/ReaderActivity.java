@@ -392,7 +392,6 @@ public class ReaderActivity
 						startActivity(intent);
 						return;
 					}
-					
 				}
 			}
 			
@@ -969,9 +968,10 @@ public class ReaderActivity
 		String fontFamily 		= sp.getString(getString(R.string.pref_font_face_title), "default");
 		
 		lineHeight 				= lineHeight.equals("0") ? "line-height: normal;" : "line-height: " + lineHeight + "%;";
+		letterSpacing			= String.valueOf(Integer.valueOf(letterSpacing) * 0.01);
 		fontSize 				= fSize==0 ? "font-size: 20pt;" : "font-size: " + fSize + "pt;";
 		fontFamily 				= fontFamily.indexOf(".") == -1 ? fontFamily : fontFamily.substring(0, fontFamily.lastIndexOf("."));
-		
+
 		String cssBody = "" +
 				"<style type='text/css'>" +
 				"body " +
