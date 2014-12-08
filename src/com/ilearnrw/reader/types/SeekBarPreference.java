@@ -127,10 +127,9 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	protected void updateView(View view){
 		try {
 			mStatusText = (TextView) view.findViewById(R.id.seekBarPrefValue);
-			
 			updateStatusText();
 			mStatusText.setMinimumWidth(30);
-
+			
 			mSeekBar.setProgress(mCurrent-mMin);
 			
 			TextView unitsRight = (TextView) view.findViewById(R.id.seekBarPrefUnitsRight);
@@ -138,6 +137,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 			
 			TextView unitsLeft = (TextView) view.findViewById(R.id.seekBarPrefUnitsLeft);
 			unitsLeft.setText(mUnitsLeft);
+			
 		} catch (Exception e) {
 			Log.e(TAG, "Error updating seekbar preference", e);
 		}
@@ -171,15 +171,11 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 			value = mMin;
 		else if(mInterval != 1 && value % mInterval != 0)
 			value = Math.round(((float)value)/mInterval)*mInterval;
-		
-		mSeekBar.setProgress(value-mMin);
-		mCurrent = value;
-		updateStatusText();
-		persistInt(mCurrent);
-		notifyChanged();
+
+		persistInt(value);
 	}
 	
-	private void updateStatusText(){
+	private void updateStatusText(){		
 		if(mIsStatusNumber)
 			mStatusText.setText(String.valueOf(mCurrent));
 		else {

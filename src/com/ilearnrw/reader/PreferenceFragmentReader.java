@@ -79,20 +79,12 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		Preference comfy = findPreference("preset_comfy");
 		Preference cozy = findPreference("preset_cozy");
 		Preference narrow = findPreference("preset_narrow");
-
-		final SeekBarPreference fontSize = (SeekBarPreference) findPreference("pref_font_size");
-		final ListPreference lineHeight = (ListPreference) findPreference("pref_line_height");
-		final ListPreference margin = (ListPreference) findPreference("pref_margin");
-		final ListPreference letterSpacing = (ListPreference) findPreference("pref_letter_spacing");
 		
 		comfy.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				lineHeight.setValue("150");
-				margin.setValueIndex(2);
-				letterSpacing.setValue("50");
-				fontSize.setValue(18);
-				getActivity().finish();
+				onPresetClicked("150", "10", "50", "18");
+				
 				return false;
 			}
 		});
@@ -100,22 +92,14 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		cozy.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				lineHeight.setValue("125");
-				margin.setValueIndex(3);
-				letterSpacing.setValueIndex(1);
-				fontSize.setValue(16);
-				getActivity().finish();
+				onPresetClicked("125", "20", "20", "16");				
 				return false;
 			}
 		});
 		narrow.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				lineHeight.setValue("110");
-				margin.setValueIndex(1);
-				letterSpacing.setValueIndex(0);
-				fontSize.setValue(14);
-				getActivity().finish();
+				onPresetClicked("110", "5", "0", "14");
 				return false;
 			}
 		});		
@@ -159,7 +143,26 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 				return true;
 			}
 		});
-	}	
+	}
+	
+	private void onPresetClicked(final String lineHeight, final String margin, final String letterSpacing, final String fontSize){
+		new Runnable() {
+			@Override
+			public void run() {
+				SeekBarPreference fs = (SeekBarPreference) findPreference("pref_font_size");
+				ListPreference lh = (ListPreference) findPreference("pref_line_height");
+				final ListPreference m = (ListPreference) findPreference("pref_margin");
+				final ListPreference ls = (ListPreference) findPreference("pref_letter_spacing");
+				
+				lh.setValue(lineHeight);
+				m.setValue(margin);
+				ls.setValue(letterSpacing);
+				fs.setValue(Integer.valueOf(fontSize));
+				getActivity().finish();
+			}
+		}.run();
+		
+	}
 	
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {			
