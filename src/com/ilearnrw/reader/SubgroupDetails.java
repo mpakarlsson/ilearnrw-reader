@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 import com.ilearnrw.reader.R;
 import com.ilearnrw.reader.interfaces.ColorPickerListener;
+import com.ilearnrw.reader.types.ColorListAdapter;
+import com.ilearnrw.reader.types.ColorListPopupWindow;
 import com.ilearnrw.reader.types.ColorPickerDialog;
 import com.ilearnrw.reader.types.ExpandableLayout;
 import com.ilearnrw.reader.types.ExpandableLayout.OnExpandListener;
@@ -37,7 +39,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListPopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -348,53 +349,5 @@ public class SubgroupDetails extends ListActivity implements OnClickListener {
 
 	        return view;
 	    }
-	}
-	
-	class ColorListPopupWindow extends ListPopupWindow{
-		private int parentListPosition;
-		public ColorListPopupWindow(Context context) {
-			super(context);
-			this.parentListPosition = -1;
-		}
-		public int getParentListPosition() {
-			return parentListPosition;
-		}
-		public void setParentListPosition(int parentListPosition) {
-			this.parentListPosition = parentListPosition;
-		}
-	}
-	
-	public class ColorListAdapter extends ArrayAdapter<String> {
-	    private Context context;
-
-	    public ColorListAdapter(Context context, int textViewResourceId, ArrayList<String> items) {
-	        super(context, textViewResourceId, items);
-	        this.context = context;
-	    }
-
-	    public View getView(int position, View convertView, ViewGroup parent) {
-	        ViewHolderColor holder = null;
-	    	
-	        final String item = getItem(position);
-	        
-	        if(convertView == null){
-	        	holder = new ViewHolderColor();
-	        	LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	        	convertView = inflater.inflate(R.layout.color_presents_row, parent, false); 
-	        	holder.color = Integer.parseInt(item, 16) + 0xFF000000;
-	        	convertView.setTag(holder);
-	        } else {
-	        	holder = (ViewHolderColor) convertView.getTag();
-	        }
-
-			convertView.setBackgroundColor(holder.color);
-	        return convertView;
-	    }
-	}
-	
-	
-	private static class ViewHolderColor{
-		int color;
-	}
-	
+	}	
 }

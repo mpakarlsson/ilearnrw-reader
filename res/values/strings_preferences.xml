@@ -140,4 +140,11 @@
         <item>Higher</item>
         <item>Highest</item>
     </string-array>
+    
+    <string name="pref_color_title">Coloring options</string>
+    
+    <string-array name="pref_color_choices">
+        <item>Basic</item>
+        <item>Advanced</item>
+    </string-array>
 </resources>
