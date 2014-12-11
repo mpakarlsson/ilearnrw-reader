@@ -1,5 +1,6 @@
 package com.ilearnrw.reader.types;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,16 +14,20 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ilearnrw.reader.R;
 import com.ilearnrw.reader.interfaces.ColorPickerListener;
+import com.ilearnrw.reader.utils.Helper;
 
+@SuppressLint("InflateParams")
 public class ColorPickerDialog  {
 	public final AlertDialog dialog;
 	public final ColorPickerListener listener;
 	public final ColorSquare main;
 	public final View oldColor, newColor, alphaOverlay;
 	public final ImageView hue, cursor, alphaCursor, target, alphaCheckered;
+	public final TextView hexNew, hexOld;
 	public final ViewGroup container;
 	public final float[] currentColorHSV = new float[3];
 	public int alpha;
@@ -53,6 +58,9 @@ public class ColorPickerDialog  {
 		newColor 	= v.findViewById(R.id.color_picker_new_color);
 		container	= (ViewGroup) v.findViewById(R.id.color_picker_container);
 		
+		hexNew			= (TextView) v.findViewById(R.id.hexNew);
+		hexOld			= (TextView) v.findViewById(R.id.hexOld);
+		
 		alphaOverlay 	= v.findViewById(R.id.color_picker_overlay);
 		alphaCursor 	= (ImageView) v.findViewById(R.id.color_picker_alpha_cursor);
 		alphaCheckered 	= (ImageView) v.findViewById(R.id.color_picker_alpha_checkered);
@@ -65,6 +73,10 @@ public class ColorPickerDialog  {
 		main.setHue(getHue());
 		oldColor.setBackgroundColor(color);
 		newColor.setBackgroundColor(color);
+		
+		String value = new StringBuilder(Helper.colorToHex(color)).delete(1, 3).toString();
+		hexNew.setText(value);
+		hexOld.setText(value);
 		
 		hue.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -90,6 +102,9 @@ public class ColorPickerDialog  {
 					main.setHue(getHue());
 					moveCursor();
 					newColor.setBackgroundColor(getColor());
+					
+					hexNew.setText(new StringBuilder(Helper.colorToHex(getColor())).delete(1, 3).toString());
+					
 					updateAlphaView();
 					return true;
 				
@@ -122,6 +137,8 @@ public class ColorPickerDialog  {
 						int col = ColorPickerDialog.this.getColor();
 						int c = alpha << 24 | col & 0x00ffffff;
 						newColor.setBackgroundColor(c);
+						
+						hexNew.setText(new StringBuilder(Helper.colorToHex(c)).delete(1, 3).toString());
 						return true;					
 					}
 					return false;
@@ -150,6 +167,9 @@ public class ColorPickerDialog  {
 					
 					moveTarget();
 					newColor.setBackgroundColor(getColor());
+					
+					hexNew.setText(new StringBuilder(Helper.colorToHex(getColor())).delete(1, 3).toString());
+					
 					return true;
 				}
 				
