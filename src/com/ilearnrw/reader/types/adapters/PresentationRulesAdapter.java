@@ -1,4 +1,4 @@
-package com.ilearnrw.reader.types;
+package com.ilearnrw.reader.types.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;

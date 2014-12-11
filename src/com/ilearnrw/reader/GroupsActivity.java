@@ -8,8 +8,8 @@ import java.util.Set;
 
 import com.ilearnrw.reader.R;
 import com.ilearnrw.reader.types.ExpandableLayout;
-import com.ilearnrw.reader.types.ExpandableListAdapter;
 import com.ilearnrw.reader.types.ExpandableLayout.OnExpandListener;
+import com.ilearnrw.reader.types.adapters.ExpandableListAdapter;
 import com.ilearnrw.reader.types.singleton.ProfileUser;
 import com.ilearnrw.reader.utils.AppLocales;
 import com.ilearnrw.reader.utils.groups.GroupedRulesFacade;

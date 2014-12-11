@@ -17,7 +17,7 @@ import com.ilearnrw.reader.interfaces.OnHttpListener;
 import com.ilearnrw.reader.tasks.AddToLibraryTask;
 import com.ilearnrw.reader.types.ExplorerItem;
 import com.ilearnrw.reader.types.ExplorerItem.FileType;
-import com.ilearnrw.reader.types.ExplorerListAdapter;
+import com.ilearnrw.reader.types.adapters.ExplorerListAdapter;
 import com.ilearnrw.reader.utils.AppLocales;
 import com.ilearnrw.reader.utils.FileHelper;
 import com.ilearnrw.reader.utils.HttpHelper;

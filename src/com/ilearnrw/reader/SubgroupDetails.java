@@ -8,11 +8,11 @@ import java.util.ArrayList;
 
 import com.ilearnrw.reader.R;
 import com.ilearnrw.reader.interfaces.ColorPickerListener;
-import com.ilearnrw.reader.types.ColorListAdapter;
 import com.ilearnrw.reader.types.ColorListPopupWindow;
 import com.ilearnrw.reader.types.ColorPickerDialog;
 import com.ilearnrw.reader.types.ExpandableLayout;
 import com.ilearnrw.reader.types.ExpandableLayout.OnExpandListener;
+import com.ilearnrw.reader.types.adapters.ColorListAdapter;
 import com.ilearnrw.reader.types.singleton.ProfileUser;
 import com.ilearnrw.reader.utils.AppLocales;
 import com.ilearnrw.reader.utils.Helper;

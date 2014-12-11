@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 
-import com.ilearnrw.reader.types.PresentationRulesAdapter;
+import com.ilearnrw.reader.types.adapters.PresentationRulesAdapter;
 
 import ilearnrw.textadaptation.Rule;
 import ilearnrw.user.problems.ProblemDefinition;

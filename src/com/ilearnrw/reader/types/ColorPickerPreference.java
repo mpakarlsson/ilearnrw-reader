@@ -1,22 +1,14 @@
 package com.ilearnrw.reader.types;
 
-import java.util.ArrayList;
-
 import com.ilearnrw.reader.R;
 import com.ilearnrw.reader.interfaces.ColorPickerListener;
-
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListPopupWindow;
 
 public class ColorPickerPreference extends Preference {
 	//private static final String androidns = "http://schemas.android.com/apk/res/android";
@@ -26,12 +18,14 @@ public class ColorPickerPreference extends Preference {
 	
 	private boolean mSupportsAlpha = false;
 	
-	private ColorListPopupWindow colorPopup;
-	private ArrayList<String> colours;
-	
 	public ColorPickerPreference(Context context) {
 		super(context);
 		initPreference(context, null);
+	}
+	
+	public ColorPickerPreference(Context context, boolean supportsAlpha){
+		super(context);
+		setSupportsAlpha(supportsAlpha);
 	}
 	
 	public ColorPickerPreference(Context context, AttributeSet attrs) {
@@ -49,39 +43,6 @@ public class ColorPickerPreference extends Preference {
 			setValuesFromXml(context, attrs);
 		
 		setWidgetLayoutResource(R.layout.widget_preference_color_picker);
-		
-		colorPopup = new ColorListPopupWindow(context);
-		colours = new ArrayList<String>();
-		
-		String key = getKey();
-		if(key.equals("pref_text_color")){		
-			colours.add("3CB371");colours.add("ADD8E6");
-			colours.add("C0C0C0");colours.add("CCFB5D");
-			colours.add("FFF380");colours.add("F9966B");
-			colours.add("E9CFEC");colours.add("FFD700");
-		}
-		else if(key.equals("pref_background_color")){
-			colours.add("000000"); colours.add("FFFFCC");
-			colours.add("B2F173"); colours.add("E0FFFF");
-			colours.add("F4F4F4"); colours.add("FFFFFF"); 
-		} else if(key.equals("pref_highlight_color")){
-			colours.add("3CB371");colours.add("ADD8E6");
-			colours.add("C0C0C0");colours.add("CCFB5D");
-			colours.add("FFFFAA");colours.add("F9966B");
-			colours.add("E9CFEC");colours.add("FFD700");
-		}
-		
-		colorPopup.setAdapter(new ColorListAdapter(getContext(), R.layout.color_presents_row, colours));
-		colorPopup.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				colorPopup.dismiss();
-				mValue = Integer.parseInt(colours.get(position), 16) + 0xFF000000;
-				persistInt(mValue);
-				notifyChanged();
-			}
-		});
 	}
 	
 	private void setValuesFromXml(Context context, AttributeSet attrs){		
@@ -89,6 +50,10 @@ public class ColorPickerPreference extends Preference {
 		mSupportsAlpha  = ta.getBoolean(R.styleable.ColorPickerPreference_supportsAlpha, false);
 		ta.recycle();
 		//mSupportsAlpha  = attrs.getAttributeBooleanValue(applicationns, "supportsAlpha", false);
+	}
+	
+	private void setSupportsAlpha(boolean supportsAlpha){
+		mSupportsAlpha = supportsAlpha;
 	}
 
 	@Override
@@ -98,48 +63,24 @@ public class ColorPickerPreference extends Preference {
 		final View box = view.findViewById(R.id.color_picker_preference_widget_box);
 		if(box!=null){
 			box.setBackgroundColor(mValue);
-		
-			colorPopup.setParentListPosition(-1);
-			colorPopup.setAnchorView(box);
-			colorPopup.setModal(true);
-			colorPopup.setWidth(70);
-			colorPopup.setPromptPosition(ListPopupWindow.POSITION_PROMPT_BELOW);
 		}
 	}
 
 	@Override
 	protected void onClick() {
-		//Create dialog , simple, advanced
-		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-			builder.setTitle(getContext().getString(R.string.pref_color_title))
-			.setNegativeButton(android.R.string.cancel, null)
-			.setItems(R.array.pref_color_choices, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					switch (which) {
-					case 0:
-						colorPopup.show();
-						break;
-
-					case 1:
-						new ColorPickerDialog(getContext(), mValue, mSupportsAlpha, new ColorPickerListener() {
-							@Override
-							public void onOk(ColorPickerDialog dialog, int color) {
-								if(!callChangeListener(color)) return;
-								mValue = color;
-								persistInt(mValue);
-								notifyChanged();
-							}
-							
-							@Override
-							public void onCancel(ColorPickerDialog dialog) {}
-							
-						}).show();
-						break;
-					}
-					
-				}
-			});
-		builder.show();
+		new ColorPickerDialog(getContext(), mValue, mSupportsAlpha, new ColorPickerListener() {
+			@Override
+			public void onOk(ColorPickerDialog dialog, int color) {
+				if(!callChangeListener(color)) return;
+				mValue = color;
+				persistInt(mValue);
+				notifyChanged();
+			}
+			
+			@Override
+			public void onCancel(ColorPickerDialog dialog) {}
+			
+		}).show();
 		super.onClick();
 	}
 

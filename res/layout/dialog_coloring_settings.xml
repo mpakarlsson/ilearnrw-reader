@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:weightSum="10">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+    	android:layout_marginTop="@dimen/spacer_10"
+        android:layout_marginBottom="@dimen/spacer_10"
+        android:layout_marginLeft="@dimen/spacer_10"
+        android:layout_marginRight="@dimen/spacer_10"
+        android:text="@string/pref_color_preset" 
+        android:textSize="22sp"/>
+
+    <ListView
+        android:id="@+id/lv_presets"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/spacer_10"
+        android:layout_marginRight="@dimen/spacer_10"
+        android:layout_weight="4" >
+    </ListView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/spacer_10"
+        android:layout_marginRight="@dimen/spacer_10"
+        android:layout_weight="5">
+        
+        <TextView
+	        android:id="@+id/tv_basic_options"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="@dimen/spacer_10"
+	        android:layout_marginBottom="@dimen/spacer_10"
+	        android:text="@string/pref_color_basic_options"
+	        android:textSize="22sp" />
+    
+        <ListView
+	        android:id="@+id/lv_options"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/tv_basic_options">
+    </ListView>
+	    
+    </RelativeLayout>
+    
+
+</LinearLayout>

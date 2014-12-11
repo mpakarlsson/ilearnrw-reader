@@ -1,4 +1,4 @@
-package com.ilearnrw.reader.types;
+package com.ilearnrw.reader.types.adapters;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import com.ilearnrw.reader.R;
+import com.ilearnrw.reader.types.LibraryItem;
 
 import android.content.Context;
 import android.view.LayoutInflater;

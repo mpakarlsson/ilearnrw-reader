@@ -1,5 +1,7 @@
 package com.ilearnrw.reader.utils;
 
+import java.security.InvalidParameterException;
+
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -93,6 +95,76 @@ public class Helper {
 		SpannableStringBuilder builder = new SpannableStringBuilder(cSeq);
 		builder.setSpan(style, startPos, endPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		return builder;
+	}
+	
+	public static SpannableStringBuilder colorString(SpannableStringBuilder builder, CharacterStyle style, int startPos, int endPos){
+		builder.setSpan(style, startPos, endPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		return builder;
+	}
+	
+	public static String colorToHex(int color){
+		return "#" + Integer.toHexString(color);
+	}
+	
+	public static int hexToColor(String hex){
+		if(hex.startsWith("#"))
+			hex = hex.substring(1);
+		
+		if(hex.length()==8){
+			hex = hex.substring(2);
+			return Integer.parseInt(hex, 16) + 0xFF000000;
+		} else 
+			return Integer.parseInt(hex, 16) + 0xFF000000;
+	}
+	
+	public static String fixHex(String hex){
+		if(hex.length()!=9){
+			StringBuilder builder;
+			if(hex.startsWith("#"))
+				builder = new StringBuilder(hex.substring(1));
+			else
+				builder = new StringBuilder(hex);
+			
+			switch (builder.length()) {
+			case 3:
+				int cnt = 0;
+				for(char c : hex.toCharArray()){
+					builder.insert(++cnt, c);
+					cnt++;
+				}
+				break;
+
+			case 6:
+				builder.insert(0, "FF");
+				break;
+				
+				
+			case 8: 
+				break;
+			}
+			
+			builder.insert(0, "#");
+			hex = builder.toString();
+		} 
+		
+		if(hex.length()==9){
+			if(!hex.startsWith("#"))
+				throw new InvalidParameterException("Invalid hex, missing character #");
+			int cnt = 0;
+			for(char c : hex.toCharArray()){
+				if("0123456789abcdefABCDEF".indexOf(c)==-1){
+					if(cnt++==0 && c=='#')
+						continue;
+					
+					throw new InvalidParameterException("Invalid hex, invalid character");
+				}
+				
+				cnt++;
+			}
+		}
+		
+		return hex;
+		
 	}
 	
 	public static void logBundle(Bundle bundle){

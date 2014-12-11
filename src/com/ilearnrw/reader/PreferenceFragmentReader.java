@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Locale;
 
 import com.ilearnrw.reader.R;
-import com.ilearnrw.reader.types.ColorPickerPreference;
 import com.ilearnrw.reader.types.SeekBarPreference;
 
 import android.app.Activity;
@@ -33,7 +32,6 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 		
 		Activity a = getActivity();
 		
@@ -65,16 +63,7 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		if(fontFace.getValue() == null)
 			fontFace.setValueIndex(0);
 		
-		
-		String name = a.getString(R.string.pref_background_color_title);
-		ColorPickerPreference backgroundPicker = (ColorPickerPreference)findPreference(name);
-		name = a.getString(R.string.pref_text_color_title);
-		ColorPickerPreference textPicker = (ColorPickerPreference)findPreference(name);
-		
 		fontFace.setOnPreferenceChangeListener(this);
-		backgroundPicker.setOnPreferenceChangeListener(this);
-		textPicker.setOnPreferenceChangeListener(this);
-		
 		
 		Preference comfy = findPreference("preset_comfy");
 		Preference cozy = findPreference("preset_cozy");
@@ -115,7 +104,7 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 				builder.setNegativeButton(a.getString(android.R.string.no), null);
 				builder.setPositiveButton(a.getString(android.R.string.yes), new DialogInterface.OnClickListener() {
 					@Override
-					public void onClick(DialogInterface dialog, int which) {	
+					public void onClick(DialogInterface dialog, int which) {
 						Editor edit = PreferenceManager.getDefaultSharedPreferences(a.getBaseContext()).edit();
 						edit.remove(getString(R.string.pref_background_color_title));
 						edit.remove(getString(R.string.pref_background_color_posX_title));
@@ -133,7 +122,8 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 						edit.remove(getString(R.string.pref_speech_rate_title));
 						edit.remove(getString(R.string.pref_pitch_title));
 						edit.remove(getString(R.string.pref_tts_language_title));
-						edit.apply();						
+						edit.remove("pref_color_options");
+						edit.apply();
 						a.finish();
 						return;
 					}

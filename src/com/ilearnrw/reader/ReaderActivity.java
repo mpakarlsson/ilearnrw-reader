@@ -94,7 +94,7 @@ public class ReaderActivity
 	private int currSentPos, currWordPos;
 	private String touchedId;
 	
-	private static String html, bundleJSON, bundleHtml, cleanHtml;
+	private static String html, bundleHtml;
 	private String libraryTitle;
 	
 	private double hlSpeed;
@@ -189,7 +189,7 @@ public class ReaderActivity
 		Pair<File> f = FileHelper.getFilesFromLocation(this, "annotatedData.txt", getString(R.string.temp_location));		
 		
 		bundleHtml = isRulesAct ? FileHelper.readFromFile(f.first()) : FileHelper.readFromFile(libItems.first());
-		bundleJSON = FileHelper.readFromFile(libItems.second());
+		//bundleJSON = FileHelper.readFromFile(libItems.second());
 		
 		spEditor 	= sp.edit();
 		Pair<String> bookTitle = Helper.splitFileName(libraryTitle);
@@ -379,17 +379,6 @@ public class ReaderActivity
 						Intent i = new Intent(this, ActiveRules.class);
 						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						startActivity(i);
-						return;
-					} else {
-						Intent intent = new Intent(ReaderActivity.this, ActiveRules.class);
-						
-						intent.putExtra("html", bundleHtml);
-						intent.putExtra("json", bundleJSON);
-						intent.putExtra("cleanHtml", cleanHtml);
-						intent.putExtra("title", libraryTitle);
-						intent.putExtra("loadFiles", false);
-						intent.putExtra("showGUI", true);
-						startActivity(intent);
 						return;
 					}
 				}
@@ -646,7 +635,7 @@ public class ReaderActivity
 	private void updateGUI(){
 		int sliderProgressColor = 0xff555555;
 		
-		int backgroundColor = sp.getInt("pref_background_color", 0xffffffff);
+		int backgroundColor = sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,204));
 		
 		int colors[] = new int[3];
 		colors[0] = Helper.darkenColor(sliderProgressColor, 0.1f);
@@ -954,7 +943,7 @@ public class ReaderActivity
 		
 		String setCSSLink = "<link rel='stylesheet' href='css/default.css' type='text/css'>";
 		
-		String backgroundColor 	= Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,255)));
+		String backgroundColor 	= Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,204)));
 		String textColor 		= Integer.toHexString(sp.getInt(getString(R.string.pref_text_color_title), Color.argb(255,0,0,0)));
 		
 		backgroundColor 		= "#" + backgroundColor.substring(2);

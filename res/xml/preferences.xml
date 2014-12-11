@@ -66,27 +66,10 @@
              android:entries="@array/pref_margin"
              android:entryValues="@array/pref_margin_values"/>
          
-         <com.ilearnrw.reader.types.ColorPickerPreference
-             android:key="pref_background_color"
-             android:title="Background colour"
-             android:summary="Pick a background colour"
-             android:defaultValue="0xffffffff" 
-             ns:supportsAlpha="false"/>
-         
-         <com.ilearnrw.reader.types.ColorPickerPreference
-             android:key="pref_text_color"
-             android:title="Text colour"
-             android:summary="Pick a text colour"
-             android:defaultValue="0xff000000" 
-             ns:supportsAlpha="false"/>
-         
-         <com.ilearnrw.reader.types.ColorPickerPreference
-             android:key="pref_highlight_color"
-             android:title="Highlight colour"
-             android:summary="Pick a colour to highlight with"
-             android:defaultValue="0xffffffaa" 
-             ns:supportsAlpha="false"/>
-         
+         <com.ilearnrw.reader.types.ColorOptionPreference
+             android:key="pref_color_options"
+             android:title="@string/pref_color_title"/>
+                  
     </PreferenceCategory>
 
     <PreferenceCategory 

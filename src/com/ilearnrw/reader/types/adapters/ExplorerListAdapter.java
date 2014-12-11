@@ -1,8 +1,9 @@
-package com.ilearnrw.reader.types;
+package com.ilearnrw.reader.types.adapters;
 
 import java.util.List;
 
 import com.ilearnrw.reader.R;
+import com.ilearnrw.reader.types.ExplorerItem;
 import com.ilearnrw.reader.utils.FileHelper;
 
 import android.content.Context;

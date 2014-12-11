@@ -1,4 +1,4 @@
-package com.ilearnrw.reader.types;
+package com.ilearnrw.reader.types.adapters;
 
 import java.util.ArrayList;
 

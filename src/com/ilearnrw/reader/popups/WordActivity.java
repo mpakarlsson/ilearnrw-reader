@@ -9,7 +9,7 @@ import java.util.Locale;
 import com.ilearnrw.reader.R;
 import com.ilearnrw.reader.interfaces.OnTextToSpeechComplete;
 import com.ilearnrw.reader.texttospeech.TextToSpeechReader;
-import com.ilearnrw.reader.types.WordPopupDetailsAdapter;
+import com.ilearnrw.reader.types.adapters.WordPopupDetailsAdapter;
 import com.ilearnrw.reader.types.singleton.ProfileUser;
 
 import android.app.Activity;
