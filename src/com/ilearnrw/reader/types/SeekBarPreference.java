@@ -2,6 +2,7 @@ package com.ilearnrw.reader.types;
 
 import com.ilearnrw.reader.R;
 
+import android.app.Service;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -9,8 +10,12 @@ import android.preference.Preference;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -22,6 +27,11 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	private static final String androidns = "http://schemas.android.com/apk/res/android";
 	//private static final String applicationns = "http://schemas.android.com/apk/res/com.example.reader";
 	private static final String applicationns = "http://schemas.android.com/apk/res-auto";
+	
+	public static final int FLAG_SHOW_STATUS_AS_TEXT = 1;
+	public static final int FLAG_SHOW_UNITS = 2;
+	public static final int FLAG_SHOW_VALUE_AS_EDIT_TEXT = 4;
+	
 	private int mDefault = 50;
 	
 	private int mMax		= 100;
@@ -31,10 +41,16 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	private String mUnitsLeft	= "";
 	private String mUnitsRight	= "";
 	private SeekBar mSeekBar;
-	private boolean mIsStatusNumber;
+	//private boolean mIsStatusNumber;
+	private int mFlags;
+	private boolean mShowStatusAsText;
+	private boolean mShowValueAsEditText;
+	private boolean mShowUnits;
 	
 	private CharSequence[] mTextValues;
 	private TextView mStatusText;
+	private EditText mEditText;
+	
 	
 	public SeekBarPreference(Context context, AttributeSet attrs){
 		super(context, attrs);
@@ -52,7 +68,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		mSeekBar.setMax(mMax - mMin);
 		mSeekBar.setOnSeekBarChangeListener(this);
 		
-		setWidgetLayoutResource(R.layout.widget_preference_seekbar);		
+		setWidgetLayoutResource(R.layout.widget_preference_seekbar);
 	}
 	
 	private void setValuesFromXml(Context context, AttributeSet attrs){
@@ -64,7 +80,13 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		String units	= getAttributeStringValue(attrs, applicationns, "units", "");
 		mUnitsRight		= getAttributeStringValue(attrs, applicationns, "unitsRight", units);
 		
-		mIsStatusNumber	= Boolean.parseBoolean(getAttributeStringValue(attrs, applicationns, "statusNumber", "false"));
+		//mIsStatusNumber	= Boolean.parseBoolean(getAttributeStringValue(attrs, applicationns, "statusNumber", "false"));
+		
+		mFlags = attrs.getAttributeIntValue(applicationns, "seekbarOptions", 0);
+		
+		mShowStatusAsText = (mFlags & FLAG_SHOW_STATUS_AS_TEXT) == FLAG_SHOW_STATUS_AS_TEXT ? true : false;
+		mShowUnits = (mFlags & FLAG_SHOW_UNITS) == FLAG_SHOW_UNITS ? true : false;
+		mShowValueAsEditText = (mFlags & FLAG_SHOW_VALUE_AS_EDIT_TEXT) == FLAG_SHOW_VALUE_AS_EDIT_TEXT ? true : false;
 		
 		TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.PreferenceSeekBar, 0, 0);		
 		try {
@@ -126,9 +148,25 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	
 	protected void updateView(View view){
 		try {
-			mStatusText = (TextView) view.findViewById(R.id.seekBarPrefValue);
+			
+			mEditText = (EditText) view.findViewById(R.id.seekBarPrefValueEdit);
+			mStatusText = (TextView) view.findViewById(R.id.seekBarPrefValue);			
 			updateStatusText();
 			mStatusText.setMinimumWidth(30);
+			
+			mEditText.setOnFocusChangeListener(new OnFocusChangeListener() {          
+			    public void onFocusChange(View v, boolean hasFocus) {
+			        if(hasFocus) {
+			            // show keyboard
+			            InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Service.INPUT_METHOD_SERVICE);
+			            imm.showSoftInput(mEditText, 0);
+
+			        }
+			    }
+			});
+			
+			LinearLayout seekbarLayout = (LinearLayout) view.findViewById(R.id.seekBarPrefBarContainer);
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) seekbarLayout.getLayoutParams();
 			
 			mSeekBar.setProgress(mCurrent-mMin);
 			
@@ -137,6 +175,26 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 			
 			TextView unitsLeft = (TextView) view.findViewById(R.id.seekBarPrefUnitsLeft);
 			unitsLeft.setText(mUnitsLeft);
+			
+			if(!mShowUnits){
+				unitsLeft.setText("");
+				unitsRight.setText("");
+			}
+			
+			if(mShowValueAsEditText){
+				mStatusText.setVisibility(View.GONE);
+				unitsLeft.setVisibility(View.GONE);
+				unitsRight.setText("");
+				
+				params.addRule(RelativeLayout.BELOW, R.id.seekBarPrefValueEdit);
+				
+				//RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mEditText.getLayoutParams();
+				//params.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+				//params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+				
+			} else {
+				mEditText.setVisibility(View.GONE);
+			}
 			
 		} catch (Exception e) {
 			Log.e(TAG, "Error updating seekbar preference", e);
@@ -176,9 +234,11 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	}
 	
 	private void updateStatusText(){		
-		if(mIsStatusNumber)
-			mStatusText.setText(String.valueOf(mCurrent));
-		else {
+		if(!mShowStatusAsText){
+			String value = String.valueOf(mCurrent);
+			mStatusText.setText(value);
+			mEditText.setText(value);
+		} else {
 			double diff = 0.0;
 			
 			if(mCurrent == mDefault)

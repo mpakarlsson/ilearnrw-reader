@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    
+    
 	<declare-styleable name="PreferenceSeekBar">
 	    <attr name="min" 			format="integer"/>
 	    <attr name="unitsLeft"		format="string"/>
 	    <attr name="unitsRight"		format="string"/>
-	    <attr name="statusNumber"	format="boolean"/>
+	    <!-- <attr name="statusNumber"	format="boolean"/> -->
+	    <attr name="seekbarOptions">
+	        <flag name="showStatusAsText" value="1"/>
+	        <flag name="showUnits" value="2"/>
+	        <flag name="showValueAsEditText" value="4"/>
+    	</attr>
 	    <attr name="textValues"		format="reference"/>
 	</declare-styleable>
 	

@@ -303,7 +303,7 @@ public class FileHelper {
 	    return dir.mkdirs();
 	}   
 	
-	public static String fromStream(InputStream in) throws IOException
+	public static String fromStreamToString(InputStream in) throws IOException
 	{
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 	    StringBuilder out = new StringBuilder();
@@ -314,6 +314,19 @@ public class FileHelper {
 	        out.append(newLine);
 	    }
 	    return out.toString();
+	}
+	
+	public static StringBuilder fromStreamToStringBuilder(InputStream in) throws IOException
+	{
+	    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+	    StringBuilder out = new StringBuilder();
+	    String newLine = System.getProperty("line.separator");
+	    String line;
+	    while ((line = reader.readLine()) != null) {
+	        out.append(line);
+	        out.append(newLine);
+	    }
+	    return out;
 	}
 	
 

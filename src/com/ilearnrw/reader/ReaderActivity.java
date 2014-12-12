@@ -7,6 +7,8 @@ import ilearnrw.textclassification.StringMatchesInfo;
 import ilearnrw.textclassification.Word;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,6 +35,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
@@ -769,7 +772,6 @@ public class ReaderActivity
 		StringBuilder builder = new StringBuilder(html);
 		
 		int insertPos = builder.indexOf("<head");
-		
 		if(insertPos == -1){
 			insertPos = builder.indexOf("<html");
 			hasHead = false;
@@ -785,164 +787,39 @@ public class ReaderActivity
 			builder.delete(insertPos, headEnd);
 		}
 		
-		String startScripts = "<script type=\"text/javascript\">";
-		String stopScripts = "</script>";
+		AssetManager assetManager = getAssets();
+		String root = "javascript";
 		
-		String showToast = 
-				"function showToast(toast){" +
-					"ReaderInterface.showToast(toast);" +
-				"}";
+		String[] fileList=null;
+		try {
+			fileList = assetManager.list(root);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		
-		String retrieveBodyContent =
-				"function getBodyContent(str) {" +
-				"	var bodyHTML = document.body.innerHTML;" +
-				"	ReaderInterface.splitSentencesSpeak(bodyHTML, 0, 'button');" +
-				"}";
+		StringBuilder javascriptBuilder = new StringBuilder();
+		for(String filename : fileList){
+			try {
+				InputStream is=assetManager.open(root+"/"+filename);
+				javascriptBuilder.append(FileHelper.fromStreamToStringBuilder(is));				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		
-
-		String scrollToElement =
-				"function scrollToElement(id){" +
-					"var elem = document.getElementById(id);" +
-					"var x = 0;" +
-					"var y = 0;" +
-					"" +
-					"while(elem != null) {" +
-						"x += elem.offsetLeft;" +
-						"y += elem.offsetTop;" +
-						"elem = elem.offsetParent" +
-					"}" +
-					"window.scrollTo(x,y);" +
-				"}";
+		int sentTagIndex = -1, wordTagIndex = -1;
+		String tempSentTag = "**SENTENCE_TAG**", tempWordTag = "**WORD_TAG**";
+		sentTagIndex = javascriptBuilder.indexOf(tempSentTag);
+		if(sentTagIndex!=-1)
+			javascriptBuilder.replace(sentTagIndex, sentTagIndex+tempSentTag.length(), SENTENCE_TAG);
 		
-		String highlightSentence = 
-				"function highlight(id, color){" +
-					"var element = document.getElementById(id);" +
-					"element.style.backgroundColor=color;" +
-					"" +
-					"return true;" + 
-				"}";
+		wordTagIndex = javascriptBuilder.indexOf(tempWordTag);
+		if(wordTagIndex!=-1)
+			javascriptBuilder.replace(wordTagIndex, wordTagIndex+tempWordTag.length(), WORD_TAG);
 		
-		String removeHighlight =
-				"function removeHighlight(id){" +
-						"var element = document.getElementById(id);" +
-						"element.style.backgroundColor='transparent';" +
-						"" +
-						"return true;" + 
-					"}";
-		
-		String highlightPart =
-				"function highlightPart(id, start, end, color){" +
-					"var node =  document.getElementById(id);" +
-					"var range = document.createRange();" +
-					"range.setStart(node.firstChild, start);" +
-					"range.setEnd(node.firstChild, end);" +
-					"" +
-					"var span = document.createElement('span');" +
-					"span.className = id;" +
-					"span.style.backgroundColor = color;" +
-					"" +
-					"range.surroundContents(span);" +
-					"range.detach();" +
-					"ReaderInterface.saveHighlightInformation(id, start, end);" +
-					"" +
-					"return true;" +
-				"}";
-		
-		String unhighlightPart = 
-				"function unhighlight(id, start, end){" +
-					"var spans = document.getElementsByTagName(\"span\");" +
-					"for(var i=0; i<spans.length; i++){" +
-						"if(spans[i].className == id){" +
-							"var container = spans[i].parentNode;" +
-							"var node = spans[i].firstChild;" +
-							"container.insertBefore(node, spans[i]);" +
-							"container.removeChild(spans[i]);" +
-							"ReaderInterface.removeHighlightInformation(id);" +
-						"}" +
-					"}" + 
-				"}";
-		
-		String getSentences = 
-				"function getSentences(){" +
-					"var sents = document.getElementsByTagName('" + SENTENCE_TAG + "');" +
-					"var result = '';" +
-					"for(var i=0; i<sents.length; i++){" +
-						"if(i+1==sents.length){" +
-							"result += sents[i].id;" +
-						"} else {" +
-							"result += sents[i].id + ',';" +
-						"}" +
-						"sents[i].onclick = function() {" +
-							"var body = document.body.innerHTML;" +
-							"var index = body.indexOf(this.id);" +
-							"var part = body.substring(0, index);" +
-							"var lastIndex = part.lastIndexOf('<');" +
-							"part = part.substring(lastIndex);" +
-							"body = body.substring(body.indexOf(this.id));" +
-							"body = part + body;" +
-							"ReaderInterface.clickSentence(body, this.id);" +
-						"};" +
-					"}" +
-					"ReaderInterface.getSentences(result);" +
-				"}";
-		
-		String getWords =
-				"function getWords(){" +
-						
-					"var words = document.getElementsByTagName('" +  WORD_TAG + "');" +
-					"var result = '';" +
-					"for(var i=0; i<words.length; i++){" +
-						"words[i].ontouchstart = function(){" +
-							"ReaderInterface.touchWord(this.id);" +
-						"};" +
-						
-						"if(i+1==words.length){" +
-							"result += words[i].id;" +
-						"} else {" +
-							"result += words[i].id + ',';" +
-						"}" +
-							
-						"words[i].onclick = function() {" +
-							"var body = document.body.innerHTML;" +
-							"var index = body.indexOf(this.id);" +
-							"var part = body.substring(0, index);" +
-							"var lastIndex = part.lastIndexOf('<');" +
-							"part = part.substring(lastIndex);" +
-							"body = body.substring(body.indexOf(this.id));" +
-							"body = part + body;" +
-							"ReaderInterface.clickWord(body, this.id);" + 
-						"};" +
-					"}" +
-					"ReaderInterface.getWords(result);" +
-				"}";
-		
-		String updatePosition = 
-				"function updateCurrentPosition(id, checkParent){" +
-					"var node =  document.getElementById(id);" +
-					"var other = '';" +
-					"if(checkParent==1) {" +
-						"other = node.parentNode.id;" +
-					"} else {" +
-						"other = node.childNodes[0].id;" +
-					"}" +
-					"ReaderInterface.updateCurrentPosition(other, checkParent);" +
-					
-				"}";
-		
-		String speakSentence = 
-				"function speakSentence(id){" +
-					"var element = document.getElementById(id);" +
-					"ReaderInterface.speakSentence(element.innerText);" +
-				"}";
-		
-		String longClick = 
-				"function longClick(id) {" +
-					"var word = document.getElementById(id);" +
-					"ReaderInterface.longClick(word.innerHTML);" +
-				"}";
+		String js = javascriptBuilder.toString();
 		
 		String setCSSLink = "<link rel='stylesheet' href='css/default.css' type='text/css'>";
-		
 		String backgroundColor 	= Integer.toHexString(sp.getInt(getString(R.string.pref_background_color_title), Color.argb(255,255,255,204)));
 		String textColor 		= Integer.toHexString(sp.getInt(getString(R.string.pref_text_color_title), Color.argb(255,0,0,0)));
 		
@@ -983,27 +860,14 @@ public class ReaderActivity
 		builder = builder
 				.insert(insertPos, cssBody)
 				.insert(insertPos, setCSSLink)
-				.insert(insertPos, stopScripts)
-				.insert(insertPos, longClick)
-				.insert(insertPos, showToast)
-				.insert(insertPos, updatePosition)
-				.insert(insertPos, speakSentence)
-				.insert(insertPos, getWords)
-				.insert(insertPos, getSentences)
-				.insert(insertPos, scrollToElement)
-				.insert(insertPos, retrieveBodyContent)
-				.insert(insertPos, unhighlightPart)
-				.insert(insertPos, removeHighlight)
-				.insert(insertPos, highlightPart)
-				.insert(insertPos, highlightSentence)
-				.insert(insertPos, startScripts);
-
+				.insert(insertPos, "</script>")
+				.insert(insertPos, js)
+				.insert(insertPos, "<script type=\"text/javascript\">");
 		return builder.toString();
 	}
 	
 	
 	private class MyWebViewClient extends WebViewClient{
-
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			view.loadUrl(url);
@@ -1013,10 +877,8 @@ public class ReaderActivity
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
-			
-			reader.loadUrl("javascript:getSentences();");
+	    	reader.loadUrl("javascript:getSentences();");
 			reader.loadUrl("javascript:getWords();");
-			
 		}	
 	};
 	

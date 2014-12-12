@@ -32,7 +32,7 @@
 			ns:min="10"
 			ns:unitsLeft=""
 			ns:unitsRight="pt"
-			ns:statusNumber="true"/>
+			ns:seekbarOptions="showUnits"/>
          
          <ListPreference 
             android:key="pref_font_face"
@@ -85,7 +85,7 @@
 			ns:min="4"
 			ns:unitsLeft=""
 			ns:unitsRight=""
-			ns:statusNumber="false"
+			ns:seekbarOptions="showStatusAsText|showUnits"
 			ns:textValues="@array/pref_speech_rate_values"/>
         
         <com.ilearnrw.reader.types.SeekBarPreference 
@@ -97,7 +97,7 @@
 			ns:min="4"
 			ns:unitsLeft=""
 			ns:unitsRight=""
-			ns:statusNumber="false"
+			ns:seekbarOptions="showStatusAsText|showUnits"
 			ns:textValues="@array/pref_pitch_values"/>
         
     </PreferenceCategory>
