@@ -20,6 +20,29 @@ function scrollToElement(id){
 	window.scrollTo(x,y);
 }
 
+function isElementTopLeftInViewport(id){
+	var elem = document.getElementById(id);
+	var rect = elem.getBoundingClientRect();
+	var isVisible = (
+		rect.top >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+		rect.left >= 0 && rect.left <= (window.innerWidth || document.documentElement.clientWidth)
+	);
+	return ReaderInterface.isElementInViewport(id, isVisible);
+}
+
+function isElementInViewport(id) {
+	var elem = document.getElementById(id);
+	var rect = elem.getBoundingClientRect();
+
+	var isVisible = (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && 
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth) 
+    );
+    return ReaderInterface.isElementInViewport(id, isVisible);
+}
+
 function highlight(id, color){
 	var element = document.getElementById(id);
 	element.style.backgroundColor=color;
@@ -81,8 +104,8 @@ function getSentences(){
 			body = part + body;
 			ReaderInterface.clickSentence(body, this.id);
 		};
-	ReaderInterface.getSentences(result);
 	};
+	ReaderInterface.getSentences(result);
 }
 
 function getWords(){

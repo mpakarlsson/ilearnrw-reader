@@ -661,7 +661,7 @@ public class ReaderActivity
 	public void highlight(String id){
 		id = checkId(id);
 		if(id != null){
-			//reader.loadUrl("javascript:scrollToElement('" + id + "');");
+			reader.loadUrl("javascript:isElementInViewport('" + id + "');");
 			
 			String highlightColor = "#" + Integer.toHexString(sp.getInt(getString(R.string.pref_highlight_color_title),  Color.argb(255, 255, 255, 0))).substring(2);
 			reader.loadUrl("javascript:highlight('" + id + "', '" + highlightColor + "');");
@@ -1108,6 +1108,13 @@ public class ReaderActivity
 				}
 			});
 			
+		}
+		
+		@JavascriptInterface
+		public void isElementInViewport(String id, boolean isVisible){
+			if(!isVisible){
+				reader.loadUrl("javascript:scrollToElement('" + id + "');");
+			}
 		}
 	
 		@JavascriptInterface
