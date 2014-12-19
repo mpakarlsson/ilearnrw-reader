@@ -43,19 +43,32 @@ public class ColorOptionsAdapter extends ArrayAdapter<ColorOption>{
 		colors.add(new ArrayList<String>());
 		colors.add(new ArrayList<String>());
 		
-		colors.get(0).add("000000");
+		//text colors
+		colors.get(0).add("000000"); 
+		colors.get(0).add("454545"); colors.get(0).add("D2D2D2"); 
+		colors.get(0).add("505050"); colors.get(0).add("00CC00"); 
+		colors.get(0).add("70DC70"); colors.get(0).add("008000"); 
 		colors.get(0).add("F9966B"); colors.get(0).add("FFF380");
 		colors.get(0).add("CCFB5D"); colors.get(0).add("E9CFEC");
 		colors.get(0).add("ADD8E6"); colors.get(0).add("FFFFFF");
 		
-		colors.get(1).add("000000"); colors.get(1).add("FFFFCC");
+		//background color
+		colors.get(1).add("000000"); 
+		colors.get(1).add("F2F2F2"); colors.get(1).add("202020");
+		colors.get(1).add("CCCCCC"); colors.get(1).add("FFFFCC");
 		colors.get(1).add("7FE817"); colors.get(1).add("E0FFFF");
 		colors.get(1).add("F4F4F4"); colors.get(1).add("FFFFFF");
 		
-		colors.get(2).add("3CB371"); colors.get(2).add("ADD8E6");
-		colors.get(2).add("C0C0C0"); colors.get(2).add("CCFB5D");
-		colors.get(2).add("FFFFAA"); colors.get(2).add("F9966B");
-		colors.get(2).add("E9CFEC"); colors.get(2).add("FFD700");
+		//highlight color
+		colors.get(2).add("FFFF00"); colors.get(2).add("F4F4F4");
+		colors.get(2).add("698818"); colors.get(2).add("5D693F");
+		colors.get(2).add("A9BD77"); colors.get(2).add("D1E79A");
+		colors.get(2).add("100C7A"); colors.get(2).add("476687");
+		colors.get(2).add("D5D543"); colors.get(2).add("3CB371"); 
+		colors.get(2).add("ADD8E6"); colors.get(2).add("C0C0C0"); 
+		colors.get(2).add("CCFB5D"); colors.get(2).add("FFFFAA"); 
+		colors.get(2).add("F9966B"); colors.get(2).add("E9CFEC"); 
+		colors.get(2).add("FFD700");
 	}
 
 	@Override
