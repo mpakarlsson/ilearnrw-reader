@@ -63,7 +63,21 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		if(fontFace.getValue() == null)
 			fontFace.setValueIndex(0);
 		
-		fontFace.setOnPreferenceChangeListener(this);
+		fontFace.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				
+				if(preference.getKey().equals(getActivity().getString(R.string.pref_font_face_title))){
+					String val = (String) newValue;
+					if(val.startsWith("Open_Dyslexic")){
+						ListPreference lh = (ListPreference) findPreference("pref_line_height");
+						lh.setValue("150");
+					}
+				}
+				return true;
+			}
+		});
 		
 		Preference comfy = findPreference("preset_comfy");
 		Preference cozy = findPreference("preset_cozy");
@@ -72,7 +86,7 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		comfy.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				onPresetClicked("150", "10", "50", "18");
+				onPresetClicked("165", "8", "160", "34");
 				
 				return false;
 			}
@@ -81,14 +95,14 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		cozy.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				onPresetClicked("125", "20", "20", "16");				
+				onPresetClicked("135", "4", "120", "28");				
 				return false;
 			}
 		});
 		narrow.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				onPresetClicked("110", "5", "0", "14");
+				onPresetClicked("100", "4", "100", "20");
 				return false;
 			}
 		});		

@@ -56,20 +56,21 @@ public class ColorOptionPreference extends Preference implements OnSettingUpdate
 		
 		
 		ps = new ArrayList<Preset>();
-		ps.add(new Preset("Black on White", "#000000", "#FFFFFF"));
-		ps.add(new Preset("Black on White", "#303030", "#F2F2F2"));
-		ps.add(new Preset("White on Black", "#FFFFFF", "#000000"));
-		ps.add(new Preset("White on Black", "#F2F2F2", "#303030"));
-		ps.add(new Preset("Dark on Cream", "#000000", "#FFFFCC"));
-		ps.add(new Preset("Dark on Cream", "#505050", "#FFFFCC"));
-		ps.add(new Preset("Green on Black", "#00CC00", "#000000"));
-		ps.add(new Preset("Green on Black", "#70DC70", "#303030"));
-		ps.add(new Preset("Green on Cream", "#008000", "#FFFFCC"));
+		ps.add(new Preset("Black on White", 				"#000000", "#FFFFFF", "#FFFF00"));
+		ps.add(new Preset("Black on White (low contrast)", 	"#454545", "#F2F2F2", "#F4F4F4"));
+		ps.add(new Preset("White on Black", 				"#FFFFFF", "#000000", "#698818"));
+		ps.add(new Preset("White on Black (low contrast)", 	"#D2D2D2", "#202020", "#5D693F"));
+		ps.add(new Preset("Dark on Cream", 					"#000000", "#FFFFCC", "#A9BD77"));
+		ps.add(new Preset("Dark on Cream (low contrast)",	"#505050", "#FFFFCC", "#D1E79A"));
+		ps.add(new Preset("Dark on gray", 					"#454545", "#CCCCCC", "#FFFFAA"));
+		ps.add(new Preset("Green on Black", 				"#00CC00", "#000000", "#100C7A"));
+		ps.add(new Preset("Green on Black (low contrast)",	"#70DC70", "#202020", "#476687"));
+		ps.add(new Preset("Green on Cream", 				"#008000", "#FFFFCC", "#D5D543"));
 		
 		cops = new ArrayList<ColorOption>();		
 		cops.add(new ColorOption("Text", "#000000", "#000000"));
 		cops.add(new ColorOption("Background", "#FFFFCC", "#FFFFCC"));
-		cops.add(new ColorOption("Highlight", "#FFFF00", "#FFFF00"));
+		cops.add(new ColorOption("Highlight", "#D1E79A", "#D1E79A"));
 	}
 
 	@Override
@@ -113,6 +114,8 @@ public class ColorOptionPreference extends Preference implements OnSettingUpdate
 				mColorText = Helper.hexToColor(hex);
 				hex = Helper.fixHex(item.getBackgroundColor());
 				mColorBackground = Helper.hexToColor(hex);
+				hex = Helper.fixHex(item.getHighlightColor());
+				mColorHighlight = Helper.hexToColor(hex);
 				
 				mColorValues = Integer.toString(mColorText) + " " + Integer.toString(mColorBackground) + " " + Integer.toString(mColorHighlight);
 				persistString(mColorValues);
@@ -120,6 +123,7 @@ public class ColorOptionPreference extends Preference implements OnSettingUpdate
 				SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
 				sp.edit().putInt(mContext.getString(R.string.pref_text_color_title), mColorText).apply();
 				sp.edit().putInt(mContext.getString(R.string.pref_background_color_title), mColorBackground).apply();
+				sp.edit().putInt(mContext.getString(R.string.pref_highlight_color_title), mColorHighlight).apply();
 				notifyChanged();
 				alertDialog.dismiss();
 			}
@@ -153,7 +157,7 @@ public class ColorOptionPreference extends Preference implements OnSettingUpdate
 		else {
 			mColorText = Color.argb(255, 0, 0, 0);
 			mColorBackground = Color.argb(255, 255, 255, 204);
-			mColorHighlight = Color.argb(255, 255, 255, 0);
+			mColorHighlight = Color.argb(255, 209, 231, 154);
 			
 			mColorValues = Integer.toString(mColorText) + " " + Integer.toString(mColorBackground) + " " + Integer.toString(mColorHighlight);
 			persistString(mColorValues);

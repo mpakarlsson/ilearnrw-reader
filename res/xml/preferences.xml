@@ -15,7 +15,7 @@
         <Preference android:key="preset_cozy"
             android:title="Cozy"/>
         <Preference android:key="preset_narrow"
-            android:title="Narrow"/>
+            android:title="Snug"/>
         
     </PreferenceCategory>
     
@@ -27,7 +27,7 @@
 		    android:key="pref_font_size"
 		    android:title="Font size"
 		    android:summary="Adjust font size"
-		    android:defaultValue="20"
+		    android:defaultValue="26"
 		    android:max="70"
 			ns:min="10"
 			ns:unitsLeft=""
@@ -45,7 +45,7 @@
             android:title="Line spacing"
             android:dialogTitle="Line spacing"
             android:summary=""
-            android:defaultValue="125"
+            android:defaultValue="135"
             android:entries="@array/pref_line_height"
 	    	android:entryValues="@array/pref_line_height_values"/>
 
@@ -53,7 +53,7 @@
             android:key="pref_letter_spacing"
             android:title="Letter spacing"
             android:dialogTitle="Letter spacing"
-            android:defaultValue="0"
+            android:defaultValue="120"
             android:entries="@array/pref_letter_spacing"
 	    	android:entryValues="@array/pref_letter_spacing_values"/>
         
@@ -62,7 +62,7 @@
              android:title="Margins"
              android:dialogTitle="Margins"
              android:summary="Adjust text margins"
-             android:defaultValue="5"
+             android:defaultValue="4"
              android:entries="@array/pref_margin"
              android:entryValues="@array/pref_margin_values"/>
          

@@ -826,16 +826,16 @@ public class ReaderActivity
 		backgroundColor 		= "#" + backgroundColor.substring(2);
 		textColor 				= "#" + textColor.substring(2);
 		
-		String lineHeight 		= sp.getString(getString(R.string.pref_line_height_title), "125");
-		int fSize				= sp.getInt(getString(R.string.pref_font_size_title), 20);
+		String lineHeight 		= sp.getString(getString(R.string.pref_line_height_title), "135");
+		int fSize				= sp.getInt(getString(R.string.pref_font_size_title), 26);
 		String fontSize;
-		String letterSpacing 	= sp.getString(getString(R.string.pref_letter_spacing_title), "0");
-		String margin 			= sp.getString(getString(R.string.pref_margin_title), "5");
+		String letterSpacing 	= sp.getString(getString(R.string.pref_letter_spacing_title), "120");
+		String margin 			= sp.getString(getString(R.string.pref_margin_title), "4");
 		String fontFamily 		= sp.getString(getString(R.string.pref_font_face_title), "default");
 		
 		lineHeight 				= lineHeight.equals("0") ? "line-height: normal;" : "line-height: " + lineHeight + "%;";
 		letterSpacing			= String.valueOf(Integer.valueOf(letterSpacing) * 0.01);
-		fontSize 				= fSize==0 ? "font-size: 20pt;" : "font-size: " + fSize + "pt;";
+		fontSize 				= fSize==0 ? "font-size: 26pt;" : "font-size: " + fSize + "pt;";
 		fontFamily 				= fontFamily.indexOf(".") == -1 ? fontFamily : fontFamily.substring(0, fontFamily.lastIndexOf("."));
 
 		String cssBody = "" +
