@@ -17,9 +17,12 @@ import org.apache.http.protocol.HTTP;
 import com.ilearnrw.reader.R;
 import com.google.gson.Gson;
 import com.ilearnrw.reader.results.TokenResult;
+import com.ilearnrw.reader.tasks.LogTask;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
@@ -151,5 +154,26 @@ public class HttpHelper {
 		}
 		
 		return false;
+	}
+	
+	public static boolean log(Context ctx, String msg, String tag){		
+		if(!isNetworkAvailable(ctx))
+			return false;
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		String username = prefs.getString(ctx.getString(R.string.sp_user_name), "");
+		
+		if(username.isEmpty())
+			return false;
+		
+		new LogTask(tag).run(username, msg);
+		
+		return true;
+	}
+	
+	public static boolean isNetworkAvailable(Context ctx){
+		ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo ni = cm.getActiveNetworkInfo();
+		return (ni != null) && (ni.isConnected());
 	}
 }

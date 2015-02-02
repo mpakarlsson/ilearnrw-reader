@@ -110,7 +110,8 @@ public class
 
 	@Override
 	public void onProfileFetched(String profile) {
-		new LogTask(SystemTags.APP_SESSION_START).run(username, "Logged in: " + username + ".");
+		HttpHelper.log(context, "Logged in: " + username + ".", SystemTags.APP_SESSION_START);
+		
 		Toast.makeText(context, context.getString(R.string.login_succeeded), Toast.LENGTH_SHORT).show();
 		SharedPreferences.Editor edit = sp.edit();
 		edit.putString(context.getString(R.string.sp_user_profile_json), profile);
