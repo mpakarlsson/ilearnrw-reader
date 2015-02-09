@@ -156,7 +156,10 @@ public class HttpHelper {
 		return false;
 	}
 	
-	public static boolean log(Context ctx, String msg, String tag){		
+	public static boolean log(Context ctx, String msg, String tag){
+		if(msg.trim().isEmpty())
+			return false;
+		
 		if(!isNetworkAvailable(ctx))
 			return false;
 		
