@@ -14,11 +14,13 @@ import com.ilearnrw.reader.tasks.OpenBookTask;
 import com.ilearnrw.reader.texttospeech.TextToSpeechReader;
 import com.ilearnrw.reader.types.LibraryItem;
 import com.ilearnrw.reader.types.Pair;
+import com.ilearnrw.reader.types.SystemTags;
 import com.ilearnrw.reader.types.adapters.LibraryAdapter;
 import com.ilearnrw.reader.types.singleton.ProfileUser;
 import com.ilearnrw.reader.utils.AppLocales;
 import com.ilearnrw.reader.utils.FileHelper;
 import com.ilearnrw.reader.utils.Helper;
+import com.ilearnrw.reader.utils.HttpHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -454,6 +456,7 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 			break;
 		case R.id.ibtn_logout:
 			if(offlineMode){
+				HttpHelper.log(LibraryActivity.this, "Logout (Offline).", SystemTags.APP_SESSION_END);
 				Intent i = new Intent(LibraryActivity.this, LoginActivity.class);
 				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				startActivity(i);
@@ -469,6 +472,8 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 						edit.remove(getString(R.string.sp_authToken));
 						edit.remove(getString(R.string.sp_refreshToken));
 						edit.apply();
+						
+						HttpHelper.log(LibraryActivity.this, "Logout.", SystemTags.APP_SESSION_END);
 						
 						Intent i = new Intent(LibraryActivity.this, LoginActivity.class);
 						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);

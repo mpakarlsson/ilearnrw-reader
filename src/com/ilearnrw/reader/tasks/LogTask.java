@@ -17,16 +17,14 @@ public class LogTask
 {
 	private String username;
 	private String TAG;
-	private String applicationId;
+	private final String applicationId = "READER";
 
 	public LogTask(){
 		this.TAG = "";
-		this.applicationId = "READER";
 	}
 
 	public LogTask(String tag){
 		this.TAG = tag;
-		this.applicationId = "READER";
 	}
 
 	/**

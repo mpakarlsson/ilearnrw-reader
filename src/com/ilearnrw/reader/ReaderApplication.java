@@ -1,5 +1,4 @@
 package com.ilearnrw.reader;
-
 import android.app.Application;
 
 public class ReaderApplication extends Application{

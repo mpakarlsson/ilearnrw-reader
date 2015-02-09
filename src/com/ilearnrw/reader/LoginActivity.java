@@ -2,7 +2,9 @@ package com.ilearnrw.reader;
 
 import com.ilearnrw.reader.R;
 import com.ilearnrw.reader.tasks.LoginTask;
+import com.ilearnrw.reader.types.SystemTags;
 import com.ilearnrw.reader.types.singleton.ProfileUser;
+import com.ilearnrw.reader.utils.HttpHelper;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -135,6 +137,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 				Toast.makeText(this, getString(R.string.login_offline_requires_profile), Toast.LENGTH_LONG).show();
 				break;
 			}
+			
+			HttpHelper.log(this, "Login (Offline).", SystemTags.APP_SESSION_START);
 			
 			Intent i = new Intent(this, LibraryActivity.class);
 			i.putExtra("offline_mode", true);
