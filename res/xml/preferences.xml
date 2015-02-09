@@ -112,7 +112,4 @@
 	        android:summary="@string/pref_reader_reset_summary"/>
         
     </PreferenceCategory>
-    
-
-
 </PreferenceScreen>

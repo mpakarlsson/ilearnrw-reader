@@ -193,6 +193,10 @@ public class ColorOptionPreference extends Preference implements OnSettingUpdate
 		notifyChanged();
 	}
 	
+	public String getValue(){
+		return mColorValues;
+	}
+	
 	private static class SavedState extends BaseSavedState {
 		int text, background, hl;
 		

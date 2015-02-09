@@ -1,14 +1,21 @@
 package com.ilearnrw.reader;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import com.ilearnrw.reader.R;
+import com.ilearnrw.reader.types.ColorOptionPreference;
+import com.ilearnrw.reader.types.Pair;
 import com.ilearnrw.reader.types.SeekBarPreference;
+import com.ilearnrw.reader.types.SystemTags;
+import com.ilearnrw.reader.utils.Helper;
+import com.ilearnrw.reader.utils.HttpHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 
@@ -20,6 +27,12 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 
 public class PreferenceFragmentReader extends PreferenceFragment implements OnPreferenceChangeListener {
+	
+	
+	ArrayList<String> data = new ArrayList<String>();
+	ArrayList<Pair<String>> updated = new ArrayList<Pair<String>>();
+	boolean isPreset = false;
+	String presetType = "";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,8 +99,7 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		comfy.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				onPresetClicked("165", "8", "160", "34");
-				
+				onPresetClicked("165", "8", "160", "34", "comfy");
 				return false;
 			}
 		});
@@ -95,14 +107,14 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		cozy.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				onPresetClicked("135", "4", "120", "28");				
+				onPresetClicked("135", "4", "120", "28", "cozy");				
 				return false;
 			}
 		});
 		narrow.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				onPresetClicked("100", "4", "100", "20");
+				onPresetClicked("100", "4", "100", "20", "snug");
 				return false;
 			}
 		});		
@@ -128,6 +140,7 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 						edit.remove(getString(R.string.pref_text_color_posY_title));
 						edit.remove(getString(R.string.pref_highlight_color_title));
 						edit.remove(getString(R.string.pref_highlight_color_posX_title));
+						edit.remove(getString(R.string.pref_highlight_color_posY_title));
 						edit.remove(getString(R.string.pref_font_size_title));
 						edit.remove(getString(R.string.pref_font_face_title));
 						edit.remove(getString(R.string.pref_line_height_title));
@@ -147,9 +160,86 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 				return true;
 			}
 		});
+		
+		SharedPreferences prefs =  PreferenceManager.getDefaultSharedPreferences(a.getBaseContext());
+		
+		int font_size = prefs.getInt(getString(R.string.pref_font_size_title), -1);
+		int speech_rate = prefs.getInt(getString(R.string.pref_speech_rate_title), -1);
+		int pitch = prefs.getInt(getString(R.string.pref_pitch_title), -1);
+
+		ListPreference ff = (ListPreference) findPreference(getString(R.string.pref_font_face_title));
+		ListPreference lh = (ListPreference) findPreference(getString(R.string.pref_line_height_title));
+		ListPreference m = (ListPreference) findPreference(getString(R.string.pref_margin_title));
+		ColorOptionPreference cop = (ColorOptionPreference) findPreference("pref_color_options");
+		String[] colors = cop.getValue().split(" ");
+		
+		data.add(Integer.toString(font_size));
+		data.add(ff.getValue());
+		data.add(lh.getValue());
+		data.add(m.getValue());
+		data.add(colors[0]);
+		data.add(colors[1]);
+		data.add(colors[2]);
+		data.add(Integer.toString(speech_rate));
+		data.add(Integer.toString(pitch));	
+		
+		
 	}
 	
-	private void onPresetClicked(final String lineHeight, final String margin, final String letterSpacing, final String fontSize){
+	
+	
+	@Override
+	public void onDestroy() {
+		SharedPreferences prefs =  PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
+		
+		int font_size = prefs.getInt(getString(R.string.pref_font_size_title), -1);
+		int speech_rate = prefs.getInt(getString(R.string.pref_speech_rate_title), -1);
+		int pitch = prefs.getInt(getString(R.string.pref_pitch_title), -1);
+
+		ListPreference ff = (ListPreference) findPreference(getString(R.string.pref_font_face_title));
+		ListPreference lh = (ListPreference) findPreference(getString(R.string.pref_line_height_title));
+		ListPreference m = (ListPreference) findPreference(getString(R.string.pref_margin_title));
+		ColorOptionPreference cop = (ColorOptionPreference) findPreference("pref_color_options");
+		String[] colors = cop.getValue().split(" ");
+		
+		updated.add(new Pair<String>("Font size", Integer.toString(font_size)));
+		updated.add(new Pair<String>("Font face", ff.getValue()));
+		updated.add(new Pair<String>("Line height", lh.getValue()));
+		updated.add(new Pair<String>("Margin", m.getValue()));
+		updated.add(new Pair<String>("Text color", colors[0]));
+		updated.add(new Pair<String>("Background color", colors[1]));
+		updated.add(new Pair<String>("Highlight color", colors[2]));
+		updated.add(new Pair<String>("Speech rate", Integer.toString(speech_rate)));
+		updated.add(new Pair<String>("Pitch", Integer.toString(pitch)));
+		
+		String logMsg = "";
+		
+		if(isPreset)
+			logMsg = "Preset " + presetType + ",";
+		
+		for(int i=0; i<data.size(); i++){
+			Pair<String> temp = updated.get(i);
+			if(!data.get(i).equals(temp.second())){
+				String value = temp.second();
+				if(temp.first().contains("color"))
+					value = Helper.colorToHex(Integer.valueOf(value));
+				
+				logMsg += temp.first() + " " + value + ",";
+			}
+		}
+		
+		if(!logMsg.isEmpty())
+			logMsg = logMsg.substring(0, logMsg.length()-1);
+		
+		
+		HttpHelper.log(getActivity().getBaseContext(), logMsg, SystemTags.PROFILE_UPDATE);
+		
+		super.onDestroy();
+	}
+
+
+
+	private void onPresetClicked(final String lineHeight, final String margin, final String letterSpacing, final String fontSize, final String type){
 		new Runnable() {
 			@Override
 			public void run() {
@@ -162,6 +252,10 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 				m.setValue(margin);
 				ls.setValue(letterSpacing);
 				fs.setValue(Integer.valueOf(fontSize));
+				
+				isPreset = true;
+				presetType = type;
+				
 				getActivity().finish();
 			}
 		}.run();
@@ -175,4 +269,5 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		
 		return false;
 	}
+	
 }
