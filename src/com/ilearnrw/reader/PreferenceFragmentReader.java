@@ -76,16 +76,29 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		if(fontFace.getValue() == null)
 			fontFace.setValueIndex(0);
 		
+		
+		if(fontFace.getValue().startsWith("Open_Dyslexic")){
+			ListPreference lh = (ListPreference) findPreference("pref_line_height");
+			lh.setValue("150");
+			lh.setEntries(R.array.pref_line_height_open_dyslexic);
+			lh.setEntryValues(R.array.pref_line_height_values_open_dyslexic);
+		}
+		
 		fontFace.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				
 				if(preference.getKey().equals(getActivity().getString(R.string.pref_font_face_title))){
 					String val = (String) newValue;
+					ListPreference lh = (ListPreference) findPreference("pref_line_height");
 					if(val.startsWith("Open_Dyslexic")){
-						ListPreference lh = (ListPreference) findPreference("pref_line_height");
 						lh.setValue("150");
+						lh.setEntries(R.array.pref_line_height_open_dyslexic);
+						lh.setEntryValues(R.array.pref_line_height_values_open_dyslexic);
+					} else {
+						lh.setValue("135");
+						lh.setEntries(R.array.pref_line_height);
+						lh.setEntryValues(R.array.pref_line_height_values);
 					}
 				}
 				return true;

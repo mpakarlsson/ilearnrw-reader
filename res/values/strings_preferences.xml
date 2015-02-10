@@ -68,10 +68,26 @@
         <item>3.0</item>
     </string-array>
     
+    <string-array name="pref_line_height_open_dyslexic">
+        <item>1.5</item>
+        <item>1.65</item>
+        <item>1.8</item>
+        <item>2.0</item>
+        <item>3.0</item>
+    </string-array>
+    
     <string-array name="pref_line_height_values">
         <item>100</item>
         <item>125</item>
         <item>135</item>
+        <item>150</item>
+        <item>165</item>
+        <item>180</item>
+        <item>200</item>
+        <item>300</item>
+    </string-array>
+    
+    <string-array name="pref_line_height_values_open_dyslexic">
         <item>150</item>
         <item>165</item>
         <item>180</item>
