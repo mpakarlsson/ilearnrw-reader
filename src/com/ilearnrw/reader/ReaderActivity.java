@@ -555,15 +555,15 @@ public class ReaderActivity extends Activity implements OnClickListener,
 		boolean doHighlight = true;
 		int direction = forward ? -1 : 1;
 
-		final String msg = reader_mode == ReaderMode.Listen ? "Step sentence" : "Step word";
+		final String msg = reader_mode == ReaderMode.Listen ? "Sentence, step " : "Word, step ";
 		
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				if(forward)
-					HttpHelper.log(ReaderActivity.this, msg + " forwards", SystemTags.APP_POINTER);
+					HttpHelper.log(ReaderActivity.this, msg + "forward", SystemTags.APP_POINTER);
 				else
-					HttpHelper.log(ReaderActivity.this, msg + " backwards", SystemTags.APP_POINTER);
+					HttpHelper.log(ReaderActivity.this, msg + "backward", SystemTags.APP_POINTER);
 			}
 		});
 		
