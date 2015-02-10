@@ -104,6 +104,9 @@ public class ReaderActivity extends Activity implements OnClickListener,
 
 	private ArrayList<Word> trickyWords;
 
+	private long assistedStartTime;
+	private boolean isAssisting;
+	
 	public final static int FLAG_SEARCH = 10000;
 	public final static int FLAG_MODE = 10001;
 	public final static int FLAG_REFRESH_WEBVIEW = 10002;
@@ -308,9 +311,11 @@ public class ReaderActivity extends Activity implements OnClickListener,
 		ibtnPlay.setEnabled(true);
 		ibtnNext.setEnabled(true);
 		ibtnPrev.setEnabled(true);
+		
+		assistedStartTime = 0;
+		isAssisting = false;
 
-		HttpHelper.log(this, "Started reading " + libraryTitle,
-				SystemTags.APP_ROUND_SESSION_START);
+		
 
 		updateGUI();
 	}
@@ -318,11 +323,20 @@ public class ReaderActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onResume() {
 		ttsReader.activateIdDrive(this, this, this);
+		HttpHelper.log(this, "Started reading " + libraryTitle, SystemTags.APP_READ_SESSION_START);
 		super.onResume();
 	}
 
 	@Override
 	protected void onPause() {
+		stopTimer();
+		
+		if (reader_status == ReaderStatus.Enabled)
+			setPlayStatus(ReaderStatus.Disabled, true);
+		else if (reader_status == ReaderStatus.Disabled)
+			setPlayStatus(ReaderStatus.Disabled, false);
+		
+		HttpHelper.log(this, "Stopped reading " + libraryTitle, SystemTags.APP_READ_SESSION_END);
 		turnOffHandler();
 		ttsReader.deactivateIdDrive();
 		super.onPause();
@@ -331,8 +345,6 @@ public class ReaderActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onDestroy() {
 		// ttsReader.destroy();
-		HttpHelper.log(this, "Stopped reading " + libraryTitle,
-				SystemTags.APP_ROUND_SESSION_END);
 		super.onDestroy();
 	}
 
@@ -421,6 +433,8 @@ public class ReaderActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onBackPressed() {
+		stopTimer();
+		
 		Intent i = new Intent(this, LibraryActivity.class);
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -432,6 +446,8 @@ public class ReaderActivity extends Activity implements OnClickListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.ibtn_lib_reader:
+			stopTimer();
+			
 			Intent lib_intent = new Intent(this, LibraryActivity.class);
 			lib_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -440,6 +456,7 @@ public class ReaderActivity extends Activity implements OnClickListener,
 			break;
 
 		case R.id.ibtn_search_reader:
+			stopTimer();
 			Intent search_intent = new Intent(this, SearchActivity.class);
 			search_intent.putExtra("posX", ibtnSearch.getX());
 			search_intent.putExtra("posY",
@@ -449,9 +466,10 @@ public class ReaderActivity extends Activity implements OnClickListener,
 			break;
 
 		case R.id.ibtn_mode_reader:
-			if (reader_status == ReaderStatus.Enabled)
+			if (reader_status == ReaderStatus.Enabled){
 				setPlayStatus(ReaderStatus.Disabled, true);
-			else if (reader_status == ReaderStatus.Disabled)
+				stopTimer();
+			} else if (reader_status == ReaderStatus.Disabled)
 				setPlayStatus(ReaderStatus.Disabled, false);
 			highlightHandler.removeCallbacks(highlightRunnable);
 
@@ -470,8 +488,10 @@ public class ReaderActivity extends Activity implements OnClickListener,
 		case R.id.ibtn_settings_reader:
 			highlightHandler.removeCallbacks(highlightRunnable);
 
-			if (reader_status == ReaderStatus.Enabled)
+			if (reader_status == ReaderStatus.Enabled){
 				setPlayStatus(ReaderStatus.Disabled, true);
+				stopTimer();
+			}
 
 			if (ttsReader.isSpeaking())
 				ttsReader.stop();
@@ -488,11 +508,13 @@ public class ReaderActivity extends Activity implements OnClickListener,
 		case R.id.ibtn_play_reader:
 			if (reader_mode == ReaderMode.Listen) {
 				if (reader_status == ReaderStatus.Disabled) {
+					startTimer();
 					setPlayStatus(ReaderStatus.Enabled, true);
 					currSentPos = sp.getInt(CURR_SENT, 0);
 					String c = sentenceIds.get(currSentPos);
 					speakFromSentence(c);
 				} else {
+					stopTimer();
 					setPlayStatus(ReaderStatus.Disabled, true);
 					spEditor.putInt(CURR_SENT, currSentPos).apply();
 					ttsReader.stop();
@@ -500,9 +522,11 @@ public class ReaderActivity extends Activity implements OnClickListener,
 				}
 			} else if (reader_mode == ReaderMode.Guidance) {
 				if (reader_status == ReaderStatus.Disabled) {
+					startTimer();
 					setPlayStatus(ReaderStatus.Enabled, true);
 					resetGuidance();
 				} else {
+					stopTimer();
 					setPlayStatus(ReaderStatus.Disabled, true);
 					highlightHandler.removeCallbacks(highlightRunnable);
 				}
@@ -537,9 +561,9 @@ public class ReaderActivity extends Activity implements OnClickListener,
 			@Override
 			public void run() {
 				if(forward)
-					HttpHelper.log(ReaderActivity.this, msg + " forwards", SystemTags.APP_USAGE_TIME);
+					HttpHelper.log(ReaderActivity.this, msg + " forwards", SystemTags.APP_POINTER);
 				else
-					HttpHelper.log(ReaderActivity.this, msg + " backwards", SystemTags.APP_USAGE_TIME);
+					HttpHelper.log(ReaderActivity.this, msg + " backwards", SystemTags.APP_POINTER);
 			}
 		});
 		
@@ -613,6 +637,34 @@ public class ReaderActivity extends Activity implements OnClickListener,
 					+ wordIds.get(currWordPos) + "', 1);");
 			if (reader_status == ReaderStatus.Enabled)
 				resetGuidance();
+		}
+	}
+	
+	private void startTimer(){
+		assistedStartTime = System.currentTimeMillis();
+		isAssisting = true;
+	}
+	
+	private void stopTimer(){
+		if(isAssisting){
+			long millis = System.currentTimeMillis() - assistedStartTime;
+			int seconds = (int)(millis * 0.001);
+			int minutes = (int)(seconds / 60);
+			seconds %= 60;
+			
+			String time = seconds + " seconds.";
+			
+			if(minutes == 1)
+				time =  minutes + " minute " + time;
+			else if(minutes > 1)
+				time = minutes + " minutes " + time;
+				
+			if(reader_mode == ReaderMode.Listen)
+				HttpHelper.log(this, "TTS used - " + time, SystemTags.APP_USAGE_TIME);
+			else if(reader_mode == ReaderMode.Guidance)
+				HttpHelper.log(this, "Guidance used - " + time, SystemTags.APP_USAGE_TIME);
+			
+			isAssisting = false;
 		}
 	}
 

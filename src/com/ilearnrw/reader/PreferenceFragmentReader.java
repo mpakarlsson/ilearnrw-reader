@@ -232,7 +232,7 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 			logMsg = logMsg.substring(0, logMsg.length()-1);
 		
 		
-		HttpHelper.log(getActivity().getBaseContext(), logMsg, SystemTags.PROFILE_UPDATE);
+		HttpHelper.log(getActivity().getBaseContext(), logMsg, SystemTags.SETTINGS_UPDATED);
 		
 		super.onDestroy();
 	}
