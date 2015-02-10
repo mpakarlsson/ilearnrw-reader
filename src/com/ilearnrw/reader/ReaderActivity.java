@@ -1122,6 +1122,28 @@ public class ReaderActivity extends Activity implements OnClickListener,
 			for (int i = 0; i < words.size(); i++) {
 				UserBasedAnnotatedWord word = words.get(i);
 				if (_word.equals(word.getWord())) {
+					
+					stopTimer();
+					runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							if(reader_status == ReaderStatus.Enabled){
+								if(reader_mode == ReaderMode.Listen){
+									setPlayStatus(ReaderStatus.Disabled, true);
+									spEditor.putInt(CURR_SENT, currSentPos).apply();
+									ttsReader.stop();
+								} else if(reader_mode == ReaderMode.Guidance){
+									ttsReader.rehighlight();
+									setPlayStatus(ReaderStatus.Disabled, true);
+								}
+							}
+						}
+					});
+					
+					
+					
+					
 					Intent in = new Intent(getBaseContext(), WordActivity.class);
 					in.putExtra("word", word.getWord());
 					in.putExtra("stem", word.getStem());
