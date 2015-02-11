@@ -34,6 +34,8 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 	boolean isPreset = false;
 	String presetType = "";
 	
+	ListPreference fontFace;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,7 +50,7 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 		
 		Activity a = getActivity();
 		
-		ListPreference fontFace = (ListPreference) findPreference(a.getString(R.string.pref_font_face_title));
+		fontFace = (ListPreference) findPreference(a.getString(R.string.pref_font_face_title));
 		
 		int numBasicFonts = 3;
 		CharSequence[] entries = new CharSequence[fonts.length+numBasicFonts];
@@ -261,7 +263,11 @@ public class PreferenceFragmentReader extends PreferenceFragment implements OnPr
 				final ListPreference m = (ListPreference) findPreference("pref_margin");
 				final ListPreference ls = (ListPreference) findPreference("pref_letter_spacing");
 				
-				lh.setValue(lineHeight);
+				if(fontFace.getValue().startsWith("Open_Dyslexic"))
+					lh.setValue("150");
+				else
+					lh.setValue(lineHeight);
+				
 				m.setValue(margin);
 				ls.setValue(letterSpacing);
 				fs.setValue(Integer.valueOf(fontSize));
