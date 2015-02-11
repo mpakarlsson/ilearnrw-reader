@@ -323,7 +323,7 @@ public class ReaderActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onResume() {
 		ttsReader.activateIdDrive(this, this, this);
-		HttpHelper.log(this, "Resumed reading " + libraryTitle, SystemTags.APP_READ_SESSION_START);
+		HttpHelper.log(this, "Resumed reading " + libraryTitle, SystemTags.APP_READ_SESSION_RESUME);
 		super.onResume();
 	}
 
@@ -336,7 +336,7 @@ public class ReaderActivity extends Activity implements OnClickListener,
 		else if (reader_status == ReaderStatus.Disabled)
 			setPlayStatus(ReaderStatus.Disabled, false);
 		
-		HttpHelper.log(this, "Paused reading " + libraryTitle, SystemTags.APP_READ_SESSION_END);
+		HttpHelper.log(this, "Paused reading " + libraryTitle, SystemTags.APP_READ_SESSION_PAUSE);
 		turnOffHandler();
 		ttsReader.deactivateIdDrive();
 		super.onPause();
