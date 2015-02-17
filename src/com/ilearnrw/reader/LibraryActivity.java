@@ -1,8 +1,6 @@
 package com.ilearnrw.reader;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,11 +22,9 @@ import com.ilearnrw.reader.utils.HttpHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
@@ -88,37 +84,19 @@ public class LibraryActivity extends Activity implements OnClickListener , OnIte
 		boolean hiddenFiles = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.sp_show_all), false);
 		libraryFiles = (ArrayList<File>) FileHelper.getFileList(libDir, hiddenFiles);
 		
-		if(libraryFiles.isEmpty()){
-			String ulang = preferences.getString(getString(R.string.sp_user_language), "en");
-			ulang = ulang.toLowerCase(Locale.getDefault());
-			String root = "examples";
-			
-			if(ulang.equals("en"))
-				root += "/en";
-			else
-				root += "/gr";
-			
-			
-			AssetManager am=getAssets();
-		    String[] aplist=null;
-			try {
-				aplist = am.list(root);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			
-			for(String fname : aplist){
-				try {
-					InputStream is=am.open(root+"/"+fname);
-					
-					File lDir = getDir(getString(R.string.library_location), Context.MODE_PRIVATE);
-					File exampleFile = new File(lDir, fname);
-					FileHelper.saveFile(is, exampleFile);
-					
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+		String ulang = preferences.getString(getString(R.string.sp_user_language), "en");
+		ulang = ulang.toLowerCase(Locale.getDefault());
+		
+		String versionName = preferences.getString("versionName", "0.00");
+		String currVersionName = Helper.getVersionName(this);
+		if(!versionName.equals(currVersionName)){
+			FileHelper.copyBundledFiles(this, ulang);
+			libraryFiles = (ArrayList<File>) FileHelper.getFileList(libDir, hiddenFiles);
+			preferences.edit().putString("versionName", currVersionName).apply();
+		}
+		
+		if(libraryFiles.isEmpty()){	
+			FileHelper.copyBundledFiles(this, ulang);
 			libraryFiles = (ArrayList<File>) FileHelper.getFileList(libDir, hiddenFiles);
 		}
 		

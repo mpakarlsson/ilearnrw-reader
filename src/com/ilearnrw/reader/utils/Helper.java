@@ -3,6 +3,7 @@ package com.ilearnrw.reader.utils;
 import java.security.InvalidParameterException;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
@@ -210,5 +211,16 @@ public class Helper {
 			return builder;
 		
 		return builder = builder.delete(index, index+str.length());
+	}
+	
+	public static String getVersionName(Context context){
+		try {
+			PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			return pInfo.versionName;
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return "";
 	}
 }

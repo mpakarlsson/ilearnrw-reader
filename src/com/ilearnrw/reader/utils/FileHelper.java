@@ -13,9 +13,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ilearnrw.reader.R;
 import com.ilearnrw.reader.types.Pair;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.Environment;
 
 public class FileHelper {
@@ -351,5 +353,36 @@ public class FileHelper {
 		}
 		
 		return new Pair<File>(html, json);
+	}
+	
+	public static void copyBundledFiles(Context context, String lang){
+		String root = "examples";
+		
+		if(lang.equals("en"))
+			root += "/en";
+		else
+			root += "/gr";
+		
+		
+		AssetManager am= context.getAssets();
+	    String[] aplist=null;
+		try {
+			aplist = am.list(root);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		for(String fname : aplist){
+			try {
+				InputStream is=am.open(root+"/"+fname);
+				
+				File lDir = context.getDir(context.getString(R.string.library_location), Context.MODE_PRIVATE);
+				File exampleFile = new File(lDir, fname);
+				FileHelper.saveFile(is, exampleFile);
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
