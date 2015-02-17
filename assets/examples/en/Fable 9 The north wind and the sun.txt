@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
+    "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <title>
+      Read Book
+    </title> 
+          
+    <style>
+		h1 {color:black; font-size:40px; font-family:Tahoma, Geneva, sans-serif;}
+		h2 {color:black; font-size:35px; font-family:Tahoma, Geneva, sans-serif;}
+		h3 {color:black; font-size:30px; font-family:Tahoma, Geneva, sans-serif;}
+		p {color:black; font-size:23px; font-family:Tahoma, Geneva, sans-serif;}
+	</style>
+
+      </head>
+      <body>
+
+        <p id = p0><sen id = s0><w id = w0>THE</w> <w id = w1>NORTH</w> <w id = w2>WIND</w> <w id = w3>AND</w> <w id = w4>THE</w> <w id = w5>SUN</w></sen></p><p id = p1><sen id = s1><br></sen></p><p id = p2><sen id = s2><w id = w6>A</w> <w id = w7>dispute</w> <w id = w8>arose</w> <w id = w9>between</w> <w id = w10>the</w> <w id = w11>North</w> <w id = w12>Wind</w> <w id = w13>and</w> <w id = w14>the</w> <w id = w15>Sun</w>, <w id = w16>each</w> <w id = w17>claiming</w> <w id = w18>that</w> <w id = w19>he</w> <w id = w20>was</w> <w id = w21>stronger</w> <w id = w22>than</w> <w id = w23>the</w> <w id = w24>other</w>. </sen><sen id = s3><w id = w25>At</w> <w id = w26>last</w> <w id = w27>they</w> <w id = w28>agreed</w> <w id = w29>to</w> <w id = w30>try</w> <w id = w31>their</w> <w id = w32>powers</w> <w id = w33>upon</w> <w id = w34>a</w> <w id = w35>traveller</w>, <w id = w36>to</w> <w id = w37>see</w> <w id = w38>which</w> <w id = w39>could</w> <w id = w40>soonest</w> <w id = w41>strip</w> <w id = w42>him</w> <w id = w43>of</w> <w id = w44>his</w> <w id = w45>cloak</w>. </sen><sen id = s4><w id = w46>The</w> <w id = w47>North</w> <w id = w48>Wind</w> <w id = w49>had</w> <w id = w50>the</w> <w id = w51>first</w> <w id = w52>try</w>; <w id = w53>and</w>, <w id = w54>gathering</w> <w id = w55>up</w> <w id = w56>all</w> <w id = w57>his</w> <w id = w58>force</w> <w id = w59>for</w> <w id = w60>the</w> <w id = w61>attack</w>, <w id = w62>he</w> <w id = w63>came</w> <w id = w64>whirling</w> <w id = w65>furiously</w> <w id = w66>down</w> <w id = w67>upon</w> <w id = w68>the</w> <w id = w69>man</w>, <w id = w70>and</w> <w id = w71>caught</w> <w id = w72>up</w> <w id = w73>his</w> <w id = w74>cloak</w> <w id = w75>as</w> <w id = w76>though</w> <w id = w77>he</w> <w id = w78>would</w> <w id = w79>wrest</w> <w id = w80>it</w> <w id = w81>from</w> <w id = w82>him</w> <w id = w83>by</w> <w id = w84>one</w> <w id = w85>single</w> <w id = w86>effort</w>: </sen><sen id = s5><w id = w87>but</w> <w id = w88>the</w> <w id = w89>harder</w> <w id = w90>he</w> <w id = w91>blew</w>, <w id = w92>the</w> <w id = w93>more</w> <w id = w94>closely</w> <w id = w95>the</w> <w id = w96>man</w> <w id = w97>wrapped</w> <w id = w98>it</w> <w id = w99>round</w> <w id = w100>himself</w>. </sen><sen id = s6><w id = w101>Then</w> <w id = w102>came</w> <w id = w103>the</w> <w id = w104>turn</w> <w id = w105>of</w> <w id = w106>the</w> <w id = w107>Sun</w>. </sen><sen id = s7><w id = w108>At</w> <w id = w109>first</w> <w id = w110>he</w> <w id = w111>beamed</w> <w id = w112>gently</w> <w id = w113>upon</w> <w id = w114>the</w> <w id = w115>traveller</w>, <w id = w116>who</w> <w id = w117>soon</w> <w id = w118>unclasped</w> <w id = w119>his</w> <w id = w120>cloak</w> <w id = w121>and</w> <w id = w122>walked</w> <w id = w123>on</w> <w id = w124>with</w> <w id = w125>it</w> <w id = w126>hanging</w> <w id = w127>loosely</w> <w id = w128>about</w> <w id = w129>his</w> <w id = w130>shoulders</w>: </sen><sen id = s8><w id = w131>then</w> <w id = w132>he</w> <w id = w133>shone</w> <w id = w134>forth</w> <w id = w135>in</w> <w id = w136>his</w> <w id = w137>full</w> <w id = w138>strength</w>, <w id = w139>and</w> <w id = w140>the</w> <w id = w141>man</w>, <w id = w142>before</w> <w id = w143>he</w> <w id = w144>had</w> <w id = w145>gone</w> <w id = w146>many</w> <w id = w147>steps</w>, <w id = w148>was</w> <w id = w149>glad</w> <w id = w150>to</w> <w id = w151>throw</w> <w id = w152>his</w> <w id = w153>cloak</w> <w id = w154>right</w> <w id = w155>off</w> <w id = w156>and</w> <w id = w157>complete</w> <w id = w158>his</w> <w id = w159>journey</w> <w id = w160>more</w> <w id = w161>lightly</w> <w id = w162>clad</w>.</sen></p><p id = p3><sen id = s9><w id = w163>Persuasion</w> <w id = w164>is</w> <w id = w165>better</w> <w id = w166>than</w> <w id = w167>force</w></sen></p>
+
+
+      </body>
+    </html>

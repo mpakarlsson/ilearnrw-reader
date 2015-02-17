@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
+    "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <title>
+      Read Book
+    </title> 
+          
+    <style>
+		h1 {color:black; font-size:40px; font-family:Tahoma, Geneva, sans-serif;}
+		h2 {color:black; font-size:35px; font-family:Tahoma, Geneva, sans-serif;}
+		h3 {color:black; font-size:30px; font-family:Tahoma, Geneva, sans-serif;}
+		p {color:black; font-size:23px; font-family:Tahoma, Geneva, sans-serif;}
+	</style>
+
+      </head>
+      <body>
+
+        <p id = p0><sen id = s0><w id = w0>THE</w> <w id = w1>ASS</w>, <w id = w2>THE</w> <w id = w3>FOX</w>, <w id = w4>AND</w> <w id = w5>THE</w> <w id = w6>LION</w></sen></p><p id = p1><sen id = s1><br></sen></p><p id = p2><sen id = s2><w id = w7>An</w> <w id = w8>Ass</w> <w id = w9>and</w> <w id = w10>a</w> <w id = w11>Fox</w> <w id = w12>went</w> <w id = w13>into</w> <w id = w14>partnership</w> <w id = w15>and</w> <w id = w16>sallied</w> <w id = w17>out</w> <w id = w18>to</w> <w id = w19>forage</w> <w id = w20>for</w> <w id = w21>food</w> <w id = w22>together</w>. </sen><sen id = s3><w id = w23>They</w> <w id = w24>hadn</w>'<w id = w25>t</w> <w id = w26>gone</w> <w id = w27>far</w> <w id = w28>before</w> <w id = w29>they</w> <w id = w30>saw</w> <w id = w31>a</w> <w id = w32>Lion</w> <w id = w33>coming</w> <w id = w34>their</w> <w id = w35>way</w>, <w id = w36>at</w> <w id = w37>which</w> <w id = w38>they</w> <w id = w39>were</w> <w id = w40>both</w> <w id = w41>dreadfully</w> <w id = w42>frightened</w>. </sen><sen id = s4><w id = w43>But</w> <w id = w44>the</w> <w id = w45>Fox</w> <w id = w46>thought</w> <w id = w47>he</w> <w id = w48>saw</w> <w id = w49>a</w> <w id = w50>way</w> <w id = w51>of</w> <w id = w52>saving</w> <w id = w53>his</w> <w id = w54>own</w> <w id = w55>skin</w>, <w id = w56>and</w> <w id = w57>went</w> <w id = w58>boldly</w> <w id = w59>up</w> <w id = w60>to</w> <w id = w61>the</w> <w id = w62>Lion</w> <w id = w63>and</w> <w id = w64>whispered</w> <w id = w65>in</w> <w id = w66>his</w> <w id = w67>ear</w>, "<w id = w68>I</w>'<w id = w69>ll</w> <w id = w70>manage</w> <w id = w71>that</w> <w id = w72>you</w> <w id = w73>shall</w> <w id = w74>get</w> <w id = w75>hold</w> <w id = w76>of</w> <w id = w77>the</w> <w id = w78>Ass</w> <w id = w79>without</w> <w id = w80>the</w> <w id = w81>trouble</w> <w id = w82>of</w> <w id = w83>stalking</w> <w id = w84>him</w>, <w id = w85>if</w> <w id = w86>you</w>'<w id = w87>ll</w> <w id = w88>promise</w> <w id = w89>to</w> <w id = w90>let</w> <w id = w91>me</w> <w id = w92>go</w> <w id = w93>free</w>." <w id = w94>The</w> <w id = w95>Lion</w> <w id = w96>agreed</w> <w id = w97>to</w> <w id = w98>this</w>, <w id = w99>and</w> <w id = w100>the</w> <w id = w101>Fox</w> <w id = w102>then</w> <w id = w103>rejoined</w> <w id = w104>his</w> <w id = w105>companion</w> <w id = w106>and</w> <w id = w107>contrived</w> <w id = w108>before</w> <w id = w109>long</w> <w id = w110>to</w> <w id = w111>lead</w> <w id = w112>him</w> <w id = w113>by</w> <w id = w114>a</w> <w id = w115>hidden</w> <w id = w116>pit</w>, <w id = w117>which</w> <w id = w118>some</w> <w id = w119>hunter</w> <w id = w120>had</w> <w id = w121>dug</w> <w id = w122>as</w> <w id = w123>a</w> <w id = w124>trap</w> <w id = w125>for</w> <w id = w126>wild</w> <w id = w127>animals</w>, <w id = w128>and</w> <w id = w129>into</w> <w id = w130>which</w> <w id = w131>he</w> <w id = w132>fell</w>. </sen><sen id = s5><w id = w133>When</w> <w id = w134>the</w> <w id = w135>Lion</w> <w id = w136>saw</w> <w id = w137>that</w> <w id = w138>the</w> <w id = w139>Ass</w> <w id = w140>was</w> <w id = w141>safely</w> <w id = w142>caught</w> <w id = w143>and</w> <w id = w144>couldn</w>'<w id = w145>t</w> <w id = w146>get</w> <w id = w147>away</w>, <w id = w148>it</w> <w id = w149>was</w> <w id = w150>to</w> <w id = w151>the</w> <w id = w152>Fox</w> <w id = w153>that</w> <w id = w154>he</w> <w id = w155>first</w> <w id = w156>turned</w> <w id = w157>his</w> <w id = w158>attention</w>, <w id = w159>and</w> <w id = w160>he</w> <w id = w161>soon</w> <w id = w162>finished</w> <w id = w163>him</w> <w id = w164>off</w>, <w id = w165>and</w> <w id = w166>then</w> <w id = w167>at</w> <w id = w168>his</w> <w id = w169>leisure</w> <w id = w170>proceeded</w> <w id = w171>to</w> <w id = w172>feast</w> <w id = w173>upon</w> <w id = w174>the</w> <w id = w175>Ass</w>.</sen></p><p id = p3><sen id = s6><w id = w176>Betray</w> <w id = w177>a</w> <w id = w178>friend</w>, <w id = w179>and</w> <w id = w180>you</w>'<w id = w181>ll</w> <w id = w182>often</w> <w id = w183>find</w> <w id = w184>you</w> <w id = w185>have</w> <w id = w186>ruined</w> <w id = w187>yourself</w>.</sen></p>
+
+
+      </body>
+    </html>

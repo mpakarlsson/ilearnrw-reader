@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
+    "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <title>
+      Read Book
+    </title> 
+          
+    <style>
+		h1 {color:black; font-size:40px; font-family:Tahoma, Geneva, sans-serif;}
+		h2 {color:black; font-size:35px; font-family:Tahoma, Geneva, sans-serif;}
+		h3 {color:black; font-size:30px; font-family:Tahoma, Geneva, sans-serif;}
+		p {color:black; font-size:23px; font-family:Tahoma, Geneva, sans-serif;}
+	</style>
+
+      </head>
+      <body>
+
+        <p id = p0><sen id = s0><w id = w0>THE</w> <w id = w1>MAN</w> <w id = w2>AND</w> <w id = w3>THE</w> <w id = w4>LION</w></sen></p><p id = p1><sen id = s1><br></sen></p><p id = p2><sen id = s2><w id = w5>A</w> <w id = w6>Man</w> <w id = w7>and</w> <w id = w8>a</w> <w id = w9>Lion</w> <w id = w10>were</w> <w id = w11>companions</w> <w id = w12>on</w> <w id = w13>a</w> <w id = w14>journey</w>, <w id = w15>and</w> <w id = w16>in</w> <w id = w17>the</w> <w id = w18>course</w> <w id = w19>of</w> <w id = w20>conversation</w> <w id = w21>they</w> <w id = w22>began</w> <w id = w23>to</w> <w id = w24>boast</w> <w id = w25>about</w> <w id = w26>their</w> <w id = w27>prowess</w>, <w id = w28>and</w> <w id = w29>each</w> <w id = w30>claimed</w> <w id = w31>to</w> <w id = w32>be</w> <w id = w33>superior</w> <w id = w34>to</w> <w id = w35>the</w> <w id = w36>other</w> <w id = w37>in</w> <w id = w38>strength</w> <w id = w39>and</w> <w id = w40>courage</w>. </sen><sen id = s3><w id = w41>They</w> <w id = w42>were</w> <w id = w43>still</w> <w id = w44>arguing</w> <w id = w45>with</w> <w id = w46>some</w> <w id = w47>heat</w> <w id = w48>when</w> <w id = w49>they</w> <w id = w50>came</w> <w id = w51>to</w> <w id = w52>a</w> <w id = w53>cross</w>-<w id = w54>road</w> <w id = w55>where</w> <w id = w56>there</w> <w id = w57>was</w> <w id = w58>a</w> <w id = w59>statue</w> <w id = w60>of</w> <w id = w61>a</w> <w id = w62>Man</w> <w id = w63>strangling</w> <w id = w64>a</w> <w id = w65>Lion</w>. </sen><sen id = s4>"<w id = w66>There</w>!" <w id = w67>said</w> <w id = w68>the</w> <w id = w69>Man</w> <w id = w70>triumphantly</w>, "<w id = w71>look</w> <w id = w72>at</w> <w id = w73>that</w>! </sen><sen id = s5><w id = w74>Doesn</w>'<w id = w75>t</w> <w id = w76>that</w> <w id = w77>prove</w> <w id = w78>to</w> <w id = w79>you</w> <w id = w80>that</w> <w id = w81>we</w> <w id = w82>are</w> <w id = w83>stronger</w> <w id = w84>than</w> <w id = w85>you</w>?" "<w id = w86>Not</w> <w id = w87>so</w> <w id = w88>fast</w>, <w id = w89>my</w> <w id = w90>friend</w>," <w id = w91>said</w> <w id = w92>the</w> <w id = w93>Lion</w>: </sen><sen id = s6>"<w id = w94>that</w> <w id = w95>is</w> <w id = w96>only</w> <w id = w97>your</w> <w id = w98>view</w> <w id = w99>of</w> <w id = w100>the</w> <w id = w101>case</w>. </sen><sen id = s7><w id = w102>If</w> <w id = w103>we</w> <w id = w104>Lions</w> <w id = w105>could</w> <w id = w106>make</w> <w id = w107>statues</w>, <w id = w108>you</w> <w id = w109>may</w> <w id = w110>be</w> <w id = w111>sure</w> <w id = w112>that</w> <w id = w113>in</w> <w id = w114>most</w> <w id = w115>of</w> <w id = w116>them</w> <w id = w117>you</w> <w id = w118>would</w> <w id = w119>see</w> <w id = w120>the</w> <w id = w121>Man</w> <w id = w122>underneath</w>."</sen></p><p id = p3><sen id = s8><w id = w123>There</w> <w id = w124>are</w> <w id = w125>two</w> <w id = w126>sides</w> <w id = w127>to</w> <w id = w128>every</w> <w id = w129>question</w>.</sen></p>
+
+
+      </body>
+    </html>

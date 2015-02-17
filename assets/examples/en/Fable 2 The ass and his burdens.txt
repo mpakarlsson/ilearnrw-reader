@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
+    "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <title>
+      Read Book
+    </title> 
+          
+    <style>
+		h1 {color:black; font-size:40px; font-family:Tahoma, Geneva, sans-serif;}
+		h2 {color:black; font-size:35px; font-family:Tahoma, Geneva, sans-serif;}
+		h3 {color:black; font-size:30px; font-family:Tahoma, Geneva, sans-serif;}
+		p {color:black; font-size:23px; font-family:Tahoma, Geneva, sans-serif;}
+	</style>
+
+      </head>
+      <body>
+
+        <p id = p0><sen id = s0><w id = w0>THE</w> <w id = w1>ASS</w> <w id = w2>AND</w> <w id = w3>HIS</w> <w id = w4>BURDENS</w></sen></p><p id = p1><sen id = s1><br></sen></p><p id = p2><sen id = s2><w id = w5>A</w> <w id = w6>Pedlar</w> <w id = w7>who</w> <w id = w8>owned</w> <w id = w9>an</w> <w id = w10>Ass</w> <w id = w11>one</w> <w id = w12>day</w> <w id = w13>bought</w> <w id = w14>a</w> <w id = w15>quantity</w> <w id = w16>of</w> <w id = w17>salt</w>, <w id = w18>and</w> <w id = w19>loaded</w> <w id = w20>up</w> <w id = w21>his</w> <w id = w22>beast</w> <w id = w23>with</w> <w id = w24>as</w> <w id = w25>much</w> <w id = w26>as</w> <w id = w27>he</w> <w id = w28>could</w> <w id = w29>bear</w>. </sen><sen id = s3><w id = w30>On</w> <w id = w31>the</w> <w id = w32>way</w> <w id = w33>home</w> <w id = w34>the</w> <w id = w35>Ass</w> <w id = w36>stumbled</w> <w id = w37>as</w> <w id = w38>he</w> <w id = w39>was</w> <w id = w40>crossing</w> <w id = w41>a</w> <w id = w42>stream</w> <w id = w43>and</w> <w id = w44>fell</w> <w id = w45>into</w> <w id = w46>the</w> <w id = w47>water</w>. </sen><sen id = s4><w id = w48>The</w> <w id = w49>salt</w> <w id = w50>got</w> <w id = w51>thoroughly</w> <w id = w52>wetted</w> <w id = w53>and</w> <w id = w54>much</w> <w id = w55>of</w> <w id = w56>it</w> <w id = w57>melted</w> <w id = w58>and</w> <w id = w59>drained</w> <w id = w60>away</w>, <w id = w61>so</w> <w id = w62>that</w>, <w id = w63>when</w> <w id = w64>he</w> <w id = w65>got</w> <w id = w66>on</w> <w id = w67>his</w> <w id = w68>legs</w> <w id = w69>again</w>, <w id = w70>the</w> <w id = w71>Ass</w> <w id = w72>found</w> <w id = w73>his</w> <w id = w74>load</w> <w id = w75>had</w> <w id = w76>become</w> <w id = w77>much</w> <w id = w78>less</w> <w id = w79>heavy</w>. </sen><sen id = s5><w id = w80>His</w> <w id = w81>master</w>, <w id = w82>however</w>, <w id = w83>drove</w> <w id = w84>him</w> <w id = w85>back</w> <w id = w86>to</w> <w id = w87>town</w> <w id = w88>and</w> <w id = w89>bought</w> <w id = w90>more</w> <w id = w91>salt</w>, <w id = w92>which</w> <w id = w93>he</w> <w id = w94>added</w> <w id = w95>to</w> <w id = w96>what</w> <w id = w97>remained</w> <w id = w98>in</w> <w id = w99>the</w> <w id = w100>panniers</w>, <w id = w101>and</w> <w id = w102>started</w> <w id = w103>out</w> <w id = w104>again</w>. </sen><sen id = s6><w id = w105>No</w> <w id = w106>sooner</w> <w id = w107>had</w> <w id = w108>they</w> <w id = w109>reached</w> <w id = w110>a</w> <w id = w111>stream</w> <w id = w112>than</w> <w id = w113>the</w> <w id = w114>Ass</w> <w id = w115>lay</w> <w id = w116>down</w> <w id = w117>in</w> <w id = w118>it</w>, <w id = w119>and</w> <w id = w120>rose</w>, <w id = w121>as</w> <w id = w122>before</w>, <w id = w123>with</w> <w id = w124>a</w> <w id = w125>much</w> <w id = w126>lighter</w> <w id = w127>load</w>. </sen><sen id = s7><w id = w128>But</w> <w id = w129>his</w> <w id = w130>master</w> <w id = w131>detected</w> <w id = w132>the</w> <w id = w133>trick</w>, <w id = w134>and</w> <w id = w135>turning</w> <w id = w136>back</w> <w id = w137>once</w> <w id = w138>more</w>, <w id = w139>bought</w> <w id = w140>a</w> <w id = w141>large</w> <w id = w142>number</w> <w id = w143>of</w> <w id = w144>sponges</w>, <w id = w145>and</w> <w id = w146>piled</w> <w id = w147>them</w> <w id = w148>on</w> <w id = w149>the</w> <w id = w150>back</w> <w id = w151>of</w> <w id = w152>the</w> <w id = w153>Ass</w>. </sen><sen id = s8><w id = w154>When</w> <w id = w155>they</w> <w id = w156>came</w> <w id = w157>to</w> <w id = w158>the</w> <w id = w159>stream</w> <w id = w160>the</w> <w id = w161>Ass</w> <w id = w162>again</w> <w id = w163>lay</w> <w id = w164>down</w>: </sen><sen id = s9><w id = w165>but</w> <w id = w166>this</w> <w id = w167>time</w>, <w id = w168>as</w> <w id = w169>the</w> <w id = w170>sponges</w> <w id = w171>soaked</w> <w id = w172>up</w> <w id = w173>large</w> <w id = w174>quantities</w> <w id = w175>of</w> <w id = w176>water</w>, <w id = w177>he</w> <w id = w178>found</w>, <w id = w179>when</w> <w id = w180>he</w> <w id = w181>got</w> <w id = w182>up</w> <w id = w183>on</w> <w id = w184>his</w> <w id = w185>legs</w>, <w id = w186>that</w> <w id = w187>he</w> <w id = w188>had</w> <w id = w189>a</w> <w id = w190>bigger</w> <w id = w191>burden</w> <w id = w192>to</w> <w id = w193>carry</w> <w id = w194>than</w> <w id = w195>ever</w>.</sen></p><p id = p3><sen id = s10><w id = w196>You</w> <w id = w197>may</w> <w id = w198>play</w> <w id = w199>a</w> <w id = w200>good</w> <w id = w201>card</w> <w id = w202>once</w> <w id = w203>too</w> <w id = w204>often</w>.</sen></p>
+
+
+      </body>
+    </html>
