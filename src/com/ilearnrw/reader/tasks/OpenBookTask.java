@@ -2,6 +2,7 @@ package com.ilearnrw.reader.tasks;
 
 import ilearnrw.textadaptation.TextAnnotationModule;
 import ilearnrw.textclassification.Word;
+import ilearnrw.user.profile.UserProblems;
 import ilearnrw.user.profile.UserProfile;
 
 import java.io.File;
@@ -10,9 +11,12 @@ import java.util.ArrayList;
 import com.ilearnrw.reader.R;
 import com.ilearnrw.reader.ReaderActivity;
 import com.ilearnrw.reader.types.Pair;
+import com.ilearnrw.reader.types.SystemTags;
 import com.ilearnrw.reader.types.singleton.AnnotatedWordsSet;
 import com.ilearnrw.reader.types.singleton.ProfileUser;
 import com.ilearnrw.reader.utils.FileHelper;
+import com.ilearnrw.reader.utils.Helper;
+import com.ilearnrw.reader.utils.HttpHelper;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -37,6 +41,8 @@ public class OpenBookTask extends AsyncTask<String, Void, ArrayList<String>> {
 	private final int DEFAULT_COLOR = 0xffff0000;
 	private final int DEFAULT_RULE	= 3;
 	
+	private String activeRules;
+	
 	public OpenBookTask(){
 	}
 	
@@ -46,6 +52,7 @@ public class OpenBookTask extends AsyncTask<String, Void, ArrayList<String>> {
 		this.libItem = libItem;
 		this.isRulesActivated = isRulesActivated;
 		this.preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		activeRules = "";
 	}
 	
 	public void run(String... params){
@@ -129,6 +136,13 @@ public class OpenBookTask extends AsyncTask<String, Void, ArrayList<String>> {
 				int rule 			= preferences.getInt(preferences.getInt(id, 0)+"pm_rule_"+i+"_"+j, DEFAULT_RULE); 
 				boolean isChecked 	= preferences.getBoolean(preferences.getInt(id, 0)+"pm_enabled_"+i+"_"+j, false);
 				
+				if(isChecked){
+					UserProblems up = txModule.getPresentationRulesModule().getUserProfile().getUserProblems();
+					activeRules += up.getProblemDefinition(i).getUri().toString() + " ";					
+					activeRules += Helper.convertStringArray(up.getProblemDescription(i, j).getDescriptions(), " ");
+					activeRules += Helper.colorToHex(color) + ", ";
+				}
+				
 				txModule.getPresentationRulesModule().setPresentationRule(i, j, rule);
 				
 				txModule.getPresentationRulesModule().setTextColor(i, j, color);
@@ -136,6 +150,17 @@ public class OpenBookTask extends AsyncTask<String, Void, ArrayList<String>> {
 				txModule.getPresentationRulesModule().setActivated(i, j, isChecked);
 			}
 		}
+		
+		if(!activeRules.isEmpty()){
+			activeRules = activeRules.substring(0, activeRules.length()-2);
+			
+			HttpHelper.log(context, "Active rules: " + activeRules, SystemTags.APP_READ_RULES_ACTIVATED);
+			
+		} else {
+			isRulesActivated = false;
+			return html;
+		}
+		
 		txModule.setInputHTMLFile(html);
 		txModule.setJSonObject(AnnotatedWordsSet.getInstance(context.getApplicationContext()).getUserBasedAnnotatedWordsSet());
 		

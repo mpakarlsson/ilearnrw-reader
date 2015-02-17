@@ -223,4 +223,15 @@ public class Helper {
 		
 		return "";
 	}
+	
+	public static String convertStringArray(String[] arr, String delimiter){
+		StringBuilder sb = new StringBuilder();
+		for(String s : arr){
+			sb.append(s);
+			if(!delimiter.isEmpty())
+				sb.append(delimiter);
+		}
+		
+		return sb.toString();
+	}
 }
