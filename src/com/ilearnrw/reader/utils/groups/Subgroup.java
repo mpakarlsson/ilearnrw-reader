@@ -1,6 +1,8 @@
 package com.ilearnrw.reader.utils.groups;
+/*
+ * Copyright (c) 2015, iLearnRW. Licensed under Modified BSD Licence. See licence.txt for details.
+ */
 import java.util.ArrayList;
-
 
 
 public class Subgroup {

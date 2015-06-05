@@ -1,5 +1,7 @@
 package com.ilearnrw.reader.types.singleton;
-
+/*
+ * Copyright (c) 2015, iLearnRW. Licensed under Modified BSD Licence. See licence.txt for details.
+ */
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;

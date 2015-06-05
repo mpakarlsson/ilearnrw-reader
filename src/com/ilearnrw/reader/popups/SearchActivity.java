@@ -1,5 +1,7 @@
 package com.ilearnrw.reader.popups;
-
+/*
+ * Copyright (c) 2015, iLearnRW. Licensed under Modified BSD Licence. See licence.txt for details.
+ */
 import com.ilearnrw.reader.R;
 import com.ilearnrw.reader.ReaderActivity;
 import com.ilearnrw.reader.types.ExtendedEditText;

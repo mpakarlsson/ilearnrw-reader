@@ -1,5 +1,7 @@
 package com.ilearnrw.reader.types;
-
+/*
+ * Copyright (c) 2015, iLearnRW. Licensed under Modified BSD Licence. See licence.txt for details.
+ */
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;

@@ -1,5 +1,7 @@
 package com.ilearnrw.reader.types;
-
+/*
+ * Copyright (c) 2015, iLearnRW. Licensed under Modified BSD Licence. See licence.txt for details.
+ */
 import com.ilearnrw.reader.R;
 import com.ilearnrw.reader.interfaces.ColorPickerListener;
 import android.content.Context;

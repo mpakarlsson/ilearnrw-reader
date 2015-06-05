@@ -1,5 +1,7 @@
 package com.ilearnrw.reader.types;
-
+/*
+ * Copyright (c) 2015, iLearnRW. Licensed under Modified BSD Licence. See licence.txt for details.
+ */
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;

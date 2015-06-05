@@ -1,5 +1,7 @@
 package com.ilearnrw.reader.tasks;
-
+/*
+ * Copyright (c) 2015, iLearnRW. Licensed under Modified BSD Licence. See licence.txt for details.
+ */
 import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
